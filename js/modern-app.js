@@ -53,6 +53,15 @@
       .replace(/'/g, '&#39;');
   };
 
+  // --- CDN ASSET RESOLVER ---
+  const toAssetUrl = (url) => {
+    if (!url || typeof url !== 'string') return '';
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) return url;
+    const base = (typeof window !== 'undefined' && window.GEEKNOOK_CDN_URL) || 'https://ggrk52.github.io/geeknook-web/';
+    const clean = url.replace(/^\.?\//, '');
+    return base.endsWith('/') ? base + clean : base + '/' + clean;
+  };
+
   // --- DEFENSIVE MODAL & SCROLL-LOCK MANAGER ---
   const modalManager = {
     activeModals: new Set(),
@@ -726,7 +735,7 @@
 
           return `
             <div class="cart-item-row">
-              <img class="cart-item-thumb" src="${item.image}" alt="${safeTitle}" onerror="this.onerror=null;this.src='images/tild3763-3337-4662-b233-616531316364__3.jpg'" />
+              <img class="cart-item-thumb" src="${toAssetUrl(item.image)}" alt="${safeTitle}" onerror="this.onerror=null;this.src=toAssetUrl('images/tild3763-3337-4662-b233-616531316364__3.jpg')" />
               <div class="cart-item-info">
                 <div class="cart-item-top">
                   <div class="cart-item-title">${safeTitle}</div>
@@ -806,14 +815,16 @@
     const oldPriceHtml = p.oldPrice ? `<span class="old-price">${formatPrice(p.oldPrice)}</span>` : '';
     const materialTag = p.materials ? p.materials.split(',')[0].trim() : 'Инженерный массив';
     const hasHoverImg = p.images && p.images.length > 1;
+    const mainImg = toAssetUrl(p.images && p.images[0] ? p.images[0] : (p.image || ''));
+    const hoverImg = hasHoverImg ? toAssetUrl(p.images[1]) : '';
 
     return `
       <div class="product-item-card reveal-card" style="--stagger-delay: ${(idx % 4) * 0.08}s;" data-product-id="${p.id}">
         <div class="card-spotlight"></div>
         <div class="product-img-box" onclick="window.geekNookApp.openQuickView('${p.id}')">
           ${badgeHtml}
-          <img class="card-img-main" src="${p.images[0]}" alt="${p.title}" loading="lazy" decoding="async" />
-          ${hasHoverImg ? `<img class="card-img-hover" src="${p.images[1]}" alt="${p.title}" loading="lazy" decoding="async" />` : ''}
+          <img class="card-img-main" src="${mainImg}" alt="${p.title}" loading="lazy" decoding="async" />
+          ${hasHoverImg ? `<img class="card-img-hover" src="${hoverImg}" alt="${p.title}" loading="lazy" decoding="async" />` : ''}
           <div class="card-floating-glass-bar" onclick="event.stopPropagation();">
             <button class="glass-action-btn quick-view-btn" onclick="window.geekNookApp.openQuickView('${p.id}')" title="Быстрый просмотр">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -1002,8 +1013,8 @@
     const photosWrap = document.getElementById('productionPhotosRow');
     if (!photosWrap) return;
     photosWrap.innerHTML = GEEKNOOK_DATA.production.photos.map((p, idx) => `
-      <div class="prod-photo-item reveal-card" style="--stagger-delay: ${idx * 0.1}s;" onclick="window.geekNookApp.openLightbox('${p.src}', '${p.caption}')">
-        <img src="${p.src}" alt="${p.caption}" loading="lazy" />
+      <div class="prod-photo-item reveal-card" style="--stagger-delay: ${idx * 0.1}s;" onclick="window.geekNookApp.openLightbox('${toAssetUrl(p.src)}', '${p.caption}')">
+        <img src="${toAssetUrl(p.src)}" alt="${p.caption}" loading="lazy" />
         <div class="prod-photo-caption">${p.caption}</div>
       </div>
     `).join('');
@@ -1014,8 +1025,8 @@
     if (!wrap || !GEEKNOOK_DATA.clientSetups) return;
     wrap.innerHTML = GEEKNOOK_DATA.clientSetups.map((s, idx) => `
       <div class="setup-review-card reveal-card" style="--stagger-delay: ${idx * 0.08}s;">
-        <div class="setup-review-img-wrap" onclick="window.geekNookApp.openLightbox('${s.src}', '${s.title} • ${s.author}')">
-          <img src="${s.src}" alt="${s.title}" loading="lazy" decoding="async" />
+        <div class="setup-review-img-wrap" onclick="window.geekNookApp.openLightbox('${toAssetUrl(s.src)}', '${s.title} • ${s.author}')">
+          <img src="${toAssetUrl(s.src)}" alt="${s.title}" loading="lazy" decoding="async" />
           <div class="setup-review-badge">SETUP // 0${idx + 1} • ${s.tag}</div>
         </div>
         <div class="setup-review-body">
@@ -1044,8 +1055,8 @@
     const wrap = document.getElementById('galleryGrid');
     if (!wrap) return;
     wrap.innerHTML = GEEKNOOK_DATA.gallery.map((g, idx) => `
-      <div class="gallery-tile-item reveal-card" style="--stagger-delay: ${idx * 0.08}s;" onclick="window.geekNookApp.openLightbox('${g.src}', '${g.title} — ${g.subtitle}')">
-        <img src="${g.src}" alt="${g.title}" loading="lazy" decoding="async" />
+      <div class="gallery-tile-item reveal-card" style="--stagger-delay: ${idx * 0.08}s;" onclick="window.geekNookApp.openLightbox('${toAssetUrl(g.src)}', '${g.title} — ${g.subtitle}')">
+        <img src="${toAssetUrl(g.src)}" alt="${g.title}" loading="lazy" decoding="async" />
         <div class="gallery-tile-overlay">
           <div class="gallery-tile-title">${g.title}</div>
           <div class="gallery-tile-sub">${g.subtitle}</div>
@@ -1072,7 +1083,7 @@
       <div class="journal-card-item reveal-card" style="--stagger-delay: ${idx * 0.1}s;" onclick="window.geekNookApp.openArticle('${art.id}')">
         <div class="journal-img-wrap">
           <span class="journal-badge">СТАТЬЯ // ${art.readTime}</span>
-          <img src="${art.image}" alt="${art.title}" loading="lazy" decoding="async" />
+          <img src="${toAssetUrl(art.image)}" alt="${art.title}" loading="lazy" decoding="async" />
         </div>
         <div class="journal-card-body">
           <h3 class="journal-card-title">${art.title}</h3>
@@ -1158,11 +1169,11 @@
       <div class="quick-view-grid">
         <div>
           <div class="quick-gallery-main">
-            <img id="qvMainImg" src="${product.images[0]}" alt="${product.title}" />
+            <img id="qvMainImg" src="${toAssetUrl(product.images[0])}" alt="${product.title}" />
           </div>
           <div class="quick-gallery-thumbs">
             ${product.images.map((img, idx) => `
-              <img class="quick-thumb ${idx === 0 ? 'active' : ''}" src="${img}" onclick="window.geekNookApp.switchQvImage('${img}', this)" />
+              <img class="quick-thumb ${idx === 0 ? 'active' : ''}" src="${toAssetUrl(img)}" onclick="window.geekNookApp.switchQvImage('${toAssetUrl(img)}', this)" />
             `).join('')}
           </div>
         </div>
@@ -1252,7 +1263,7 @@
     const statusPill = document.getElementById('modalConfigStatusPill');
     const totalPriceEl = document.getElementById('modalConfigTotalPrice');
 
-    if (previewImg) previewImg.src = finish.img;
+    if (previewImg) previewImg.src = toAssetUrl(finish.img);
     if (statusPill) statusPill.textContent = `Focus Station • ${finish.name} • ${length.id} см`;
 
     // Calculate total price with optional laser engraving
@@ -1314,7 +1325,7 @@
                onclick="window.geekNookApp.toggleConfigAddon('${a.id}')"
                style="display:flex;align-items:center;justify-content:space-between;border:1px solid ${isSelected ? 'var(--primary)' : 'var(--border)'};border-radius:8px;padding:10px 14px;cursor:pointer;background:var(--surface-card);color:var(--text-main);margin-bottom:8px;transition:all var(--transition-fast);">
             <div style="display:flex;align-items:center;gap:12px;">
-              <img src="${a.img}" style="width:40px;height:40px;border-radius:4px;object-fit:cover;" />
+              <img src="${toAssetUrl(a.img)}" style="width:40px;height:40px;border-radius:4px;object-fit:cover;" />
               <div>
                 <div style="font-size:0.875rem;font-weight:600;">${a.name}</div>
                 <div style="font-size:0.8125rem;color:var(--primary);font-weight:700;">+${formatPrice(a.price)}</div>
@@ -2482,7 +2493,7 @@
       const safeTitle = escapeHTML(product.title);
       const safeOpt = escapeHTML(chosenOption !== 'Стандарт' ? `(${chosenOption})` : '');
       summaryEl.innerHTML = `
-        <img class="quick-buy-prod-img" src="${product.images[0]}" alt="${safeTitle}" onerror="this.onerror=null;this.src='images/tild3763-3337-4662-b233-616531316364__3.jpg'" />
+        <img class="quick-buy-prod-img" src="${toAssetUrl(product.images && product.images[0])}" alt="${safeTitle}" onerror="this.onerror=null;this.src=toAssetUrl('images/tild3763-3337-4662-b233-616531316364__3.jpg')" />
         <div>
           <div class="quick-buy-prod-title">${safeTitle} ${safeOpt}</div>
           <div class="quick-buy-prod-price">${formatPrice(product.price)}</div>
@@ -2764,7 +2775,7 @@
 
       <div class="quiz-result-box">
         <div class="quiz-result-shelf">
-          <img class="quiz-result-shelf-img" src="${shelfProduct.images[0]}" alt="${shelfProduct.title}" />
+          <img class="quiz-result-shelf-img" src="${toAssetUrl(shelfProduct.images && shelfProduct.images[0])}" alt="${shelfProduct.title}" />
           <div>
             <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--primary);font-weight:700;text-transform:uppercase;">Базовая станция</div>
             <div style="font-weight:800;font-size:1.05rem;">${shelfProduct.title}</div>
@@ -3196,7 +3207,7 @@
       <div class="bundle-card">
         <div class="bundle-badge-ribbon">${escapeHTML(b.badge)}</div>
         <div class="bundle-card-img-wrap">
-          <img src="${b.image}" alt="${escapeHTML(b.title)}" class="bundle-card-img" loading="lazy" decoding="async" onerror="this.onerror=null;this.src='images/tild3763-3337-4662-b233-616531316364__3.jpg'" />
+          <img src="${toAssetUrl(b.image)}" alt="${escapeHTML(b.title)}" class="bundle-card-img" loading="lazy" decoding="async" onerror="this.onerror=null;this.src=toAssetUrl('images/tild3763-3337-4662-b233-616531316364__3.jpg')" />
         </div>
         <div class="bundle-card-body">
           <h3 class="bundle-card-title">${escapeHTML(b.title)}</h3>
