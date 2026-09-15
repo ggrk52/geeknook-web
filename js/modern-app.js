@@ -5681,7 +5681,7 @@
         const img = e.target;
         if (!img.dataset.hasFallback) {
           img.dataset.hasFallback = 'true';
-          img.src = 'images/tild3763-3337-4662-b233-616531316364__3.jpg';
+          img.src = toAssetUrl('images/tild3763-3337-4662-b233-616531316364__3.jpg');
         }
       }
     }, true);
@@ -5835,5 +5835,16 @@
     escapeHTML
   };
 
-  document.addEventListener('DOMContentLoaded', init);
+  let isAppInitialized = false;
+  const safeInit = () => {
+    if (isAppInitialized) return;
+    isAppInitialized = true;
+    init();
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', safeInit);
+  } else {
+    safeInit();
+  }
 })();

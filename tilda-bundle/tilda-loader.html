@@ -18,12 +18,31 @@
 <style>
   @keyframes gnSpin { to { transform: rotate(360deg); } }
   
-  /* Reset Tilda Body paddings for full-screen experience */
+  /* Reset Tilda Body & Containers for full-screen experience */
   html, body {
     margin: 0 !important;
     padding: 0 !important;
     background: #0c0d10 !important;
     overflow-x: hidden !important;
+  }
+
+  /* Reset Tilda Block Wrappers */
+  .r:has(#geeknook-mount-point),
+  .t123:has(#geeknook-mount-point),
+  .t-container_100:has(#geeknook-mount-point),
+  .t-col_100:has(#geeknook-mount-point) {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  #geeknook-mount-point {
+    width: 100% !important;
+    min-height: 100vh;
+    display: block;
+    position: relative;
+    background: #0c0d10;
   }
 
   /* Ensure Tilda Cart icon stays accessible */
@@ -167,6 +186,16 @@
       await loadAsset('js', BASE_URL + 'js/products-data.js?v=' + BUILD_TS);
       await loadAsset('js', BASE_URL + 'js/modern-app.js?v=' + BUILD_TS);
       await loadAsset('js', BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_TS);
+
+      // Force initial application render in case DOMContentLoaded already fired
+      if (window.geekNookApp && typeof window.geekNookApp.init === 'function') {
+        window.geekNookApp.init();
+      }
+
+      // Ensure theme is active
+      if (!document.documentElement.getAttribute('data-theme')) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
 
       // Final sweep after all scripts executed
       setTimeout(() => {
