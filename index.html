@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeekNook — Инженерная точность на твоём столе | Модульные аксессуары</title>
+  <meta name="description" content="Премиальные аксессуары из металла, дерева и фетра для идеального рабочего пространства. Доски Focus Station, кронштейны T-Track и войлочные коврики." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="GeekNook — Инженерная точность на твоём столе" />
+  <meta property="og:description" content="Премиальные аксессуары из металла, дерева и фетра. Созданы для порядка, комфорта и концентрации." />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="images/tild3763-3337-4662-b233-616531316364__3.jpg" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+
+  <!-- Premium Modern Typography: Manrope (Display & Headings), Onest (Interface & Editorial Body), JetBrains Mono (Technical Specs & Pricing) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Early Theme Init Script (Zero-Flicker / FOUT Prevention) -->
+  <script>
+    (function() {
+      try {
+        var saved = localStorage.getItem('geeknook_theme');
+        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var theme = saved ? saved : (prefersDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {}
+    })();
+  </script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/modern-style.css" />
+</head>
+<body>
+
+  <!-- ==========================================================================
+       1. HEADER (80px, Sticky, Transparent -> White on Scroll)
+       ========================================================================== -->
+  <header class="site-header" id="siteHeader">
+    <div class="container nav-wrap">
+      <a href="#" class="brand-logo">
+        <img src="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" alt="GeekNook" />
+        <span>GEEK NOOK</span>
+      </a>
+
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#boards">Каталог</a></li>
+          <li><a href="#accessories">Аксессуары</a></li>
+          <li><a href="#mats">Коврики</a></li>
+          <li><a href="#bundles">Комплекты</a></li>
+          <li><a href="#advantages">Преимущества</a></li>
+          <li><a href="#production">Производство</a></li>
+          <li><a href="#journal">Журнал</a></li>
+          <li><a href="#footer">Контакты</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="nav-cmd-k-btn" onclick="window.geekNookApp.openCommandPalette()" title="Командная палитра (Ctrl+K / ⌘K)" aria-label="Открыть поиск и команды">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="cmd-k-kbd">⌘K</span>
+        </button>
+        <button class="nav-icon-btn theme-toggle-btn" id="themeToggleBtn" onclick="window.geekNookApp.toggleTheme()" title="Сменить тему оформления (T)" aria-label="Переключить цветовую тему">
+          <span class="theme-toggle-icon-wrap">
+            <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+        </button>
+        <button class="nav-icon-btn sound-toggle-btn" id="soundToggleBtn" onclick="window.geekNookApp.toggleSound()" title="Тактильный звук (S)" aria-label="Включить или выключить тактильный звук">
+          <svg class="sound-icon-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+          </svg>
+          <svg class="sound-icon-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+            <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+            <line x1="23" y1="9" x2="17" y2="15"></line>
+            <line x1="17" y1="9" x2="23" y2="15"></line>
+          </svg>
+        </button>
+        <button class="nav-icon-btn" onclick="window.geekNookApp.openCartDrawer()" title="Корзина">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span class="cart-counter-badge" id="cartBadge" style="display:none;">0</span>
+        </button>
+        <a href="#boards" class="btn-header-catalog">
+          Каталог
+        </a>
+        <button class="nav-icon-btn mobile-menu-btn" onclick="window.geekNookApp.openMobileNav()" title="Меню" aria-label="Открыть мобильное меню">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="4" y1="8" x2="20" y2="8"></line>
+            <line x1="4" y1="16" x2="20" y2="16"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==========================================================================
+       2. HERO (900-1000px, 100vh, Video/Image Background, Dark Overlay)
+       ========================================================================== -->
+  <section class="hero-section" id="hero">
+    <video class="hero-video-bg" autoplay loop muted playsinline preload="auto" poster="images/tild3763-3337-4662-b233-616531316364__3.jpg">
+      <source src="images/vide3931-3032-4530-a435-623531616661_______-converted.webm" type="video/webm" />
+    </video>
+    <div class="hero-overlay"></div>
+    <canvas id="antigravityCanvas" class="hero-antigravity-canvas"></canvas>
+
+    <div class="container hero-content">
+      <h1 class="hero-title">
+        Инженерная<br />
+        точность<br />
+        на твоём столе
+      </h1>
+      <p class="hero-subtitle">
+        Премиальные аксессуары из металла, дерева и фетра. Созданы для порядка, комфорта и концентрации.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#boards" class="btn-hero-primary">
+          <span>Смотреть каталог</span>
+        </a>
+        <a href="#about" class="btn-hero-outline">
+          Подробнее
+        </a>
+      </div>
+
+      <div class="hero-trust-row">
+        <div class="trust-badge-item">
+          <span class="trust-badge-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+            </svg>
+          </span>
+          <span>Разработано в России</span>
+        </div>
+        <div class="trust-badge-item">
+          <span class="trust-badge-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+          </span>
+          <span>Премиальные материалы</span>
+        </div>
+        <div class="trust-badge-item">
+          <span class="trust-badge-icon">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <polyline points="9 12 11 14 15 10"></polyline>
+            </svg>
+          </span>
+          <span>Гарантия качества</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       3. ДОСКИ GEEK NOOK (White BG, 4 in row)
+       ========================================================================== -->
+  <section class="section-white" id="boards">
+    <div class="container">
+      <div class="block-header">
+        <div class="block-header-left">
+          <span class="section-kicker">01 // ФЛАГМАНСКАЯ СИСТЕМА</span>
+          <h2 class="block-title">ДОСКИ GEEK NOOK</h2>
+        </div>
+        <a href="#boards" class="block-link-all">Смотреть все доски</a>
+      </div>
+
+      <div class="products-row-grid" id="boardsGrid"></div>
+
+      <!-- Configurator Callout -->
+      <div class="configurator-callout-box">
+        <div class="config-callout-text">
+          <span class="section-kicker kicker-dark">КОНФИГУРАТОР // WORKBENCH</span>
+          <h3>Интерактивный онлайн-конструктор сетапа</h3>
+          <p>Соберите свой индивидуальный комплект Focus Station: выберите породу дерева, длину рабочей зоны и добавьте навесные модули под ваши девайсы, либо пройдите быстрый подбор под размер ваших мониторов.</p>
+        </div>
+        <div class="config-callout-actions">
+          <button class="btn-hero-primary" onclick="window.geekNookApp.openConfigurator()" style="white-space:nowrap;">
+            <span>3D-конструктор</span>
+          </button>
+          <button class="btn-hero-outline" onclick="window.geekNookApp.openQuiz()" style="white-space:nowrap;">
+            <span>Подобрать сетап (Квиз)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       4. АКСЕССУАРЫ (Surface BG #f4f4f4, 4 in row)
+       ========================================================================== -->
+  <section class="section-surface" id="accessories">
+    <div class="container">
+      <div class="block-header">
+        <div class="block-header-left">
+          <span class="section-kicker">02 // НАПРАВЛЯЮЩИЕ И МОДУЛИ</span>
+          <h2 class="block-title">АКСЕССУАРЫ T-TRACK</h2>
+        </div>
+        <a href="#accessories" class="block-link-all">Смотреть все аксессуары</a>
+      </div>
+
+      <div class="products-row-grid" id="accessoriesGrid"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       5. КОВРИКИ (White BG, 4 in row)
+       ========================================================================== -->
+  <section class="section-white" id="mats">
+    <div class="container">
+      <div class="block-header">
+        <div class="block-header-left">
+          <span class="section-kicker">03 // ИТАЛЬЯНСКИЙ ВОЙЛОК И КОЖА</span>
+          <h2 class="block-title">КОВРИКИ</h2>
+        </div>
+        <a href="#mats" class="block-link-all">Смотреть все коврики</a>
+      </div>
+
+      <div class="products-row-grid" id="matsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       6. ГОТОВЫЕ КОМПЛЕКТЫ СО СКИДКОЙ (Surface BG #f8f9fa)
+       ========================================================================== -->
+  <section class="section-surface bundles-section" id="bundles">
+    <div class="container">
+      <div class="block-header">
+        <div class="block-header-left">
+          <span class="section-kicker">04 // ГОТОВЫЕ ИНЖЕНЕРНЫЕ КОМПЛЕКТЫ</span>
+          <h2 class="block-title">СЕТАПЫ С ВЫГОДОЙ ДО 15%</h2>
+          <p class="section-subtitle-lead">
+            Продуманные комбинации флагманских подставок, модулей T-Track и ковриков. Экономия бюджета и идеальная совместимость с первого дня.
+          </p>
+        </div>
+        <div class="block-header-actions">
+          <button class="btn-config-matcher-link" onclick="window.geekNookApp.openConfigurator()">
+            ⚡ Собрать кастомный сетап
+          </button>
+        </div>
+      </div>
+
+      <div class="bundles-grid" id="bundlesGrid"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       7. ТРАНСФОРМАЦИЯ РАБОЧЕГО ПРОСТРАНСТВА: ДО И ПОСЛЕ
+       ========================================================================== -->
+  <section class="transformation-section section-white" id="transformation">
+    <div class="container">
+      <div class="block-header block-header-center">
+        <span class="section-kicker">05 // ТРАНСФОРМАЦИЯ РАБОЧЕГО МЕСТА</span>
+        <h2 class="block-title">ХАОС ПРОТИВ СИСТЕМЫ</h2>
+        <p class="transformation-lead-text">
+          Потяните интерактивный разделитель, чтобы оценить разницу между обычным захламленным столом и организованной средой Focus Station.
+        </p>
+      </div>
+
+      <div class="before-after-card">
+        <div class="before-after-container" id="beforeAfterSlider">
+          <div class="ba-layer ba-layer-before">
+            <img src="images/tild3865-6364-4366-b431-633031353238__27.jpg" alt="Рабочее место До организации" class="ba-image" loading="lazy" decoding="async" />
+            <div class="ba-tag ba-tag-before">
+              <span class="ba-tag-dot red"></span>
+              ДО: Хаос и усталость шеи
+            </div>
+            <div class="ba-bullet-list ba-bullets-before">
+              <span class="ba-bullet-chip">Монитор слишком низко (-12 см)</span>
+              <span class="ba-bullet-chip">Спутанные клубки проводов</span>
+              <span class="ba-bullet-chip">Ноутбук перекрывает стол</span>
+            </div>
+          </div>
+
+          <div class="ba-layer ba-layer-after" id="baLayerAfter">
+            <img src="images/tild3763-3337-4662-b233-616531316364__3.jpg" alt="Рабочее место После организации" class="ba-image" loading="lazy" decoding="async" />
+            <div class="ba-tag ba-tag-after">
+              <span class="ba-tag-dot green"></span>
+              ПОСЛЕ: Focus Station Pro
+            </div>
+            <div class="ba-bullet-list ba-bullets-after">
+              <span class="ba-bullet-chip">Линия взгляда строго по ISO 9241</span>
+              <span class="ba-bullet-chip">Скрытый кабель-менеджер 360°</span>
+              <span class="ba-bullet-chip">+40% полезной площади стола</span>
+            </div>
+          </div>
+
+          <div class="ba-divider-handle" id="baDividerHandle">
+            <div class="ba-handle-line"></div>
+            <div class="ba-handle-button" aria-label="Сдвинуть слайдер сравнения">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 18 9 12 15 6"></polyline>
+              </svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+            <div class="ba-handle-line"></div>
+          </div>
+        </div>
+
+        <div class="ba-metrics-grid">
+          <div class="ba-metric-col">
+            <div class="ba-metric-val">+40%</div>
+            <div class="ba-metric-label">Полезной площади столешницы</div>
+            <div class="ba-metric-desc">Клавиатура и трекпад убираются под подставку одним движением</div>
+          </div>
+          <div class="ba-metric-col">
+            <div class="ba-metric-val">0°</div>
+            <div class="ba-metric-label">Анатомический наклон шеи</div>
+            <div class="ba-metric-desc">Монитор поднят на 90 мм — снижение нагрузки на трапецию и позвоночник</div>
+          </div>
+          <div class="ba-metric-col">
+            <div class="ba-metric-val">-85%</div>
+            <div class="ba-metric-label">Визуального шума</div>
+            <div class="ba-metric-desc">Блоки питания и излишки кабелей спрятаны в скрытом лотке</div>
+          </div>
+          <div class="ba-metric-col">
+            <div class="ba-metric-val">100%</div>
+            <div class="ba-metric-label">Кавказский дуб и сталь Д16Т</div>
+            <div class="ba-metric-desc">Экологичные материалы премиум-класса с гарантией 24 месяца</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Desk Setup Cable Management Studio -->
+      <div class="cable-physics-card" id="cableSimulatorCard">
+        <div class="cable-card-header">
+          <div class="cable-header-text">
+            <span class="section-kicker" style="color:var(--primary);">05.1 // СИМУЛЯТОР РАБОЧЕГО СТОЛА // 360° STEALTH CABLE MANAGEMENT</span>
+            <h3 class="cable-card-title">Интерактивный сетап: Как GeekNook побеждает хаос проводов</h3>
+            <p class="cable-card-subtitle">
+              Взгляните на реальный рабочий стол с монитором 5K, MacBook и гаджетами. В режиме «Хаос» провода свисают со стола и путаются под руками. Активируйте <strong>GeekNook Stealth</strong> — магнитный Т-паз подставки Focus Station мгновенно уложит все кабели в скрытый лоток, а в режиме «Рентген» вы увидите распределение потоков энергии и данных изнутри.
+            </p>
+          </div>
+          <div class="cable-controls-group">
+            <div class="cable-mode-switcher">
+              <button type="button" class="cable-mode-btn" id="cableModeChaosBtn" onclick="window.geekNookApp.setCableMode('chaos')">
+                <span>🌪️ Без GeekNook (Хаос)</span>
+              </button>
+              <button type="button" class="cable-mode-btn active" id="cableModeMagneticBtn" onclick="window.geekNookApp.setCableMode('magnetic')">
+                <span>✨ GeekNook Stealth (Дзен)</span>
+              </button>
+              <button type="button" class="cable-mode-btn" id="cableModeXrayBtn" onclick="window.geekNookApp.setCableMode('xray')">
+                <span>👁️ Рентген лотка (X-Ray)</span>
+              </button>
+            </div>
+            <button type="button" class="btn-cable-shake" onclick="window.geekNookApp.shakeCables()" title="Встряхнуть кабели и проверить упругость">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              <span>⚡ Магнитный импульс</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Connected Devices Bar -->
+        <div class="cable-devices-bar">
+          <span class="cable-devices-label">🔌 Устройства на столе:</span>
+          <button type="button" class="cable-device-pill active" id="devToggleMonitor" onclick="window.geekNookApp.toggleCableDevice('monitor')">
+            <span>🖥️ Studio Display 5K</span>
+          </button>
+          <button type="button" class="cable-device-pill active" id="devToggleMacbook" onclick="window.geekNookApp.toggleCableDevice('macbook')">
+            <span>💻 MacBook Pro M3</span>
+          </button>
+          <button type="button" class="cable-device-pill active" id="devToggleIPhone" onclick="window.geekNookApp.toggleCableDevice('iphone')">
+            <span>📱 iPhone MagSafe Stand</span>
+          </button>
+          <button type="button" class="cable-device-pill active" id="devToggleScreenbar" onclick="window.geekNookApp.toggleCableDevice('screenbar')">
+            <span>💡 Лампа ScreenBar</span>
+          </button>
+        </div>
+
+        <div class="cable-canvas-box" id="cableCanvasBox">
+          <canvas id="cablePhysicsCanvas" width="1200" height="540" class="cable-canvas"></canvas>
+          <div class="cable-canvas-hint">🖐️ Тяните кабель пальцем или курсором • Магниты N52</div>
+          <div class="cable-status-pill magnetic" id="cableStatusPill">
+            <span class="cable-status-indicator"></span>
+            <span id="cableStatusText">🧲 T-Track замок: 4 канала зафиксированы</span>
+          </div>
+        </div>
+
+        <!-- Live Desk Health Telemetry Grid -->
+        <div class="cable-desk-metrics-grid" id="cableMetricsGrid">
+          <div class="cable-metric-card">
+            <div class="cable-metric-title">Визуальный шум на столе</div>
+            <div class="cable-metric-value-row">
+              <span class="cable-metric-val" id="cableMetricNoise">0%</span>
+              <span class="cable-metric-badge badge-good" id="cableMetricNoiseBadge">Идеальный Дзен</span>
+            </div>
+            <div class="cable-metric-desc" id="cableMetricNoiseDesc">Все провода скрыты под полкой в алюминиевом профиле Т-паза</div>
+          </div>
+
+          <div class="cable-metric-card">
+            <div class="cable-metric-title">Полезная площадь стола</div>
+            <div class="cable-metric-value-row">
+              <span class="cable-metric-val" id="cableMetricSpace">+40%</span>
+              <span class="cable-metric-badge badge-good" id="cableMetricSpaceBadge">Клавиатура спрятана</span>
+            </div>
+            <div class="cable-metric-desc" id="cableMetricSpaceDesc">Клавиатура и мышь легко убираются в нишу под подставку (90 мм)</div>
+          </div>
+
+          <div class="cable-metric-card">
+            <div class="cable-metric-title">Скрыто кабелей</div>
+            <div class="cable-metric-value-row">
+              <span class="cable-metric-val" id="cableMetricHidden">4 из 4</span>
+              <span class="cable-metric-badge badge-good" id="cableMetricHiddenBadge">100% Stealth</span>
+            </div>
+            <div class="cable-metric-desc" id="cableMetricHiddenDesc">Thunderbolt 4, 8K DisplayPort, MagSafe 140W и питание 220V</div>
+          </div>
+
+          <div class="cable-metric-card">
+            <div class="cable-metric-title">Магнитная фиксация T-Track</div>
+            <div class="cable-metric-value-row">
+              <span class="cable-metric-val" id="cableMetricHold">4× N52</span>
+              <span class="cable-metric-badge badge-tech" id="cableMetricHoldBadge">1.2 кг на отрыв</span>
+            </div>
+            <div class="cable-metric-desc" id="cableMetricHoldDesc">Неодимовые фиксаторы удерживают даже массивные оплетенные корды</div>
+          </div>
+        </div>
+
+        <div class="cable-legend-row">
+          <div class="cable-legend-item">
+            <span class="cable-dot" style="background:#38bdf8;box-shadow:0 0 8px #38bdf8;"></span>
+            <span>Thunderbolt 4 (40 Gbps // 100W PD)</span>
+          </div>
+          <div class="cable-legend-item">
+            <span class="cable-dot" style="background:#fbbf24;box-shadow:0 0 8px #fbbf24;"></span>
+            <span>DisplayPort 2.1 (5K Retina // 120Hz)</span>
+          </div>
+          <div class="cable-legend-item">
+            <span class="cable-dot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></span>
+            <span>MagSafe 3 Fast Charge (140W)</span>
+          </div>
+          <div class="cable-legend-item">
+            <span class="cable-dot" style="background:#f97316;box-shadow:0 0 8px #f97316;"></span>
+            <span>AC Mains Power 220V (Скрытый блок питания)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       8. ПРЕИМУЩЕСТВА (Dark BG #0e1114, 6 Columns)
+       ========================================================================== -->
+  <section class="advantages-section" id="advantages">
+    <div class="container">
+      <div class="block-header block-header-center">
+        <span class="section-kicker kicker-dark">06 // ИНЖЕНЕРНЫЕ СТАНДАРТЫ</span>
+        <h2 class="block-title title-dark">ПРЕИМУЩЕСТВА GEEK NOOK</h2>
+      </div>
+      <div class="advantages-grid" id="advantagesGrid"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       9. ПРОИЗВОДСТВО & ВЗРЫВ-СХЕМА (White BG)
+       ========================================================================== -->
+  <section class="section-white" id="production">
+    <div class="container">
+      <div class="production-header-row">
+        <div class="production-header-text">
+          <span class="section-kicker">07 // СОБСТВЕННОЕ ПРОИЗВОДСТВО</span>
+          <h2 class="block-title">ИНЖЕНЕРИЯ И ПРОИЗВОДСТВО GEEK NOOK</h2>
+          <p class="production-lead">
+            Полный цикл создания модульных систем: от ЧПУ-фрезеровки авиационного алюминия и вакуумной сушки дуба до интерактивной 3D-студии и стресс-тестов сопромата.
+          </p>
+        </div>
+        <div class="production-view-tabs">
+          <button type="button" class="prod-tab-btn" onclick="window.geekNookApp.scrollToProductionBlock('photos')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+            <span>1. Мастерская ЧПУ</span>
+          </button>
+          <button type="button" class="prod-tab-btn" onclick="window.geekNookApp.scrollToProductionBlock('3d')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+            <span>2. 3D Студия WebGL</span>
+          </button>
+          <button type="button" class="prod-tab-btn" onclick="window.geekNookApp.scrollToProductionBlock('blueprint')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+            <span>3. Взрыв-схема</span>
+          </button>
+          <button type="button" class="prod-tab-btn" onclick="window.geekNookApp.scrollToProductionBlock('stress')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+            <span>4. FEA Сопромат</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Feature 1: Workshop Photos & 5-axis CNC Craft -->
+      <div class="production-block-item" id="productionPhotosView">
+        <div class="production-split-grid">
+          <div class="production-text-col">
+            <span class="section-kicker kicker-dark" style="color:var(--primary);margin-bottom:8px;display:block;">07.1 // ТОЧНОСТЬ И РУЧНАЯ ОТДЕЛКА</span>
+            <h3 style="font-size:1.6rem;font-weight:800;margin-bottom:14px;">5-осевая ЧПУ-фрезеровка и эко-масло Osmo</h3>
+            <p class="production-lead" style="font-size:1.05rem;line-height:1.6;margin-bottom:12px;">
+              Мы подходим к производству с ответственностью и заботой о каждом клиенте, тщательно контролируя все этапы изготовления.
+            </p>
+            <p class="production-sub">
+              Современные 5-осевые ЧПУ-станки обеспечивают микронную точность паза T-Track. Каждая подставка проходит 4 стадии ручной шлифовки абразивом зернистостью до 320 grit.
+            </p>
+            <div class="production-badges-row">
+              <div class="prod-badge-item">
+                <strong>±0.15 мм</strong>
+                <span>Точность фрезеровки</span>
+              </div>
+              <div class="prod-badge-item">
+                <strong>Osmo Pro</strong>
+                <span>Немецкий эко-воск</span>
+              </div>
+              <div class="prod-badge-item">
+                <strong>45 кг</strong>
+                <span>Запас прочности</span>
+              </div>
+            </div>
+          </div>
+          <div class="production-photos-row" id="productionPhotosRow"></div>
+        </div>
+      </div>
+
+      <!-- Feature 2: 3D Interactive WebGL Studio (Three.js) -->
+      <div class="production-block-item" id="production3dStudioView">
+        <div class="fea-lab-card" style="margin-top:40px;">
+          <div class="fea-lab-header">
+            <div class="fea-lab-title-group">
+              <span class="section-kicker kicker-dark" style="color:var(--primary);">07.2 // 3D ИНТЕРАКТИВНЫЙ СТЕНД WEBGL</span>
+              <h3 class="fea-lab-title">Интерактивная 3D Студия Focus Station</h3>
+              <p class="fea-lab-subtitle">
+                Вращайте модель на 360°, проверяйте геометрию Т-паза, меняйте текстуру дерева в реальном времени и разбирайте подставку кинематической взрыв-схемой.
+              </p>
+            </div>
+            <div class="fea-lab-actions">
+              <button type="button" class="btn-3d-explode" id="btnProd3dExplode" onclick="window.geekNookApp.toggleProduction3dExplode()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                <span>Взрыв-схема 3D</span>
+              </button>
+              <button type="button" class="btn-fea-shock" id="btnProd3dAutoRotate" onclick="window.geekNookApp.toggleProduction3dAutoRotate()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+                <span>360° Вращение</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Controls bar: Wood finish, Length, Lighting -->
+          <div class="prod-3d-toolbar">
+            <div class="prod-3d-toolbar-group">
+              <span class="prod-3d-label">Порода дерева:</span>
+              <div class="prod-3d-pills" id="prod3dFinishPills">
+                <button type="button" class="prod-pill active" data-finish="finish-oak" onclick="window.geekNookApp.setProduction3dFinish('finish-oak')">
+                  <span class="wood-swatch swatch-oak"></span>
+                  <span>Кавказский дуб</span>
+                </button>
+                <button type="button" class="prod-pill" data-finish="finish-walnut" onclick="window.geekNookApp.setProduction3dFinish('finish-walnut')">
+                  <span class="wood-swatch swatch-walnut"></span>
+                  <span>Американский орех</span>
+                </button>
+                <button type="button" class="prod-pill" data-finish="finish-black" onclick="window.geekNookApp.setProduction3dFinish('finish-black')">
+                  <span class="wood-swatch swatch-black"></span>
+                  <span>Чёрное дерево</span>
+                </button>
+              </div>
+            </div>
+
+            <div class="prod-3d-toolbar-group">
+              <span class="prod-3d-label">Длина:</span>
+              <div class="prod-3d-pills" id="prod3dLengthPills">
+                <button type="button" class="prod-pill active" data-len="85" onclick="window.geekNookApp.setProduction3dLength(85)">85 см (Компакт)</button>
+                <button type="button" class="prod-pill" data-len="116" onclick="window.geekNookApp.setProduction3dLength(116)">116 см (Два монитора)</button>
+              </div>
+            </div>
+
+            <div class="prod-3d-toolbar-group">
+              <span class="prod-3d-label">Свет:</span>
+              <div class="prod-3d-pills" id="prod3dLightPills">
+                <button type="button" class="prod-pill active" data-light="studio" onclick="window.geekNookApp.setProduction3dLighting('studio')">☀️ День</button>
+                <button type="button" class="prod-pill" data-light="cyber" onclick="window.geekNookApp.setProduction3dLighting('cyber')">🌙 Неон</button>
+                <button type="button" class="prod-pill" data-light="sunset" onclick="window.geekNookApp.setProduction3dLighting('sunset')">🌅 Закат</button>
+              </div>
+            </div>
+
+            <div class="prod-3d-toolbar-group">
+              <span class="prod-3d-label">Аксессуары Т-паза:</span>
+              <div class="prod-3d-pills" id="prod3dAddonPills">
+                <button type="button" class="prod-pill active" id="btnProdAddonLaptop" data-addon="addon-laptop-stand-open" onclick="window.geekNookApp.toggleProduction3dAddon('addon-laptop-stand-open')">💻 Ноутбук</button>
+                <button type="button" class="prod-pill active" id="btnProdAddonHp" data-addon="addon-headphone-stand" onclick="window.geekNookApp.toggleProduction3dAddon('addon-headphone-stand')">🎧 Наушники</button>
+                <button type="button" class="prod-pill active" id="btnProdAddonDock" data-addon="addon-phone-dock" onclick="window.geekNookApp.toggleProduction3dAddon('addon-phone-dock')">📱 Док-станция</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- WebGL Canvas Viewport -->
+          <div class="prod-3d-viewport" id="prod3dViewport">
+            <canvas id="production3dCanvas" class="prod-3d-canvas"></canvas>
+            <div class="prod-3d-hint">🔄 Вращайте 360° • Зум колёсиком • Сенсорный жест</div>
+            <div class="prod-3d-status-badge" id="prod3dStatusBadge">
+              Focus Station • Кавказский дуб 22 мм • 85 см • Сплав Д16Т • Т-паз 45°
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 3: Exploded View Blueprint Schematics -->
+      <div class="production-block-item" id="productionExplodedView" style="margin-top:40px;">
+        <div class="fea-lab-header" style="margin-bottom:16px;">
+          <div class="fea-lab-title-group">
+            <span class="section-kicker kicker-dark" style="color:var(--primary);">07.3 // ИНЖЕНЕРНЫЙ ЧЕРТЁЖ И ВЗРЫВ-СХЕМА</span>
+            <h3 class="fea-lab-title">Взрыв-схема компонентов Focus Station</h3>
+            <p class="fea-lab-subtitle">
+              Интерактивные хотспоты раскрывают устройство каждого узла: от вакуумной сушки древесины до прессованных резьбовых муфт и пробки.
+            </p>
+          </div>
+        </div>
+
+        <div class="production-blueprint-container">
+          <div class="blueprint-canvas-box">
+            <div class="blueprint-grid-bg"></div>
+            <div class="blueprint-watermark">GEEKNOOK // EXPLODED SCHEMATIC REV.4 // ISO-9241</div>
+            
+            <div class="blueprint-graphic-wrap">
+              <img src="images/tild6138-3463-4138-b133-323262633039__2.jpg" alt="Focus Station Exploded View" class="blueprint-base-img" loading="lazy" decoding="async" />
+              
+              <div class="blueprint-hotspot" style="top: 24%; left: 35%;" data-hotspot="wood">
+                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали массива дуба">
+                  <span class="hotspot-pulse"></span>
+                  <span class="hotspot-core">1</span>
+                </button>
+                <div class="hotspot-popover">
+                  <div class="hotspot-title">Массив кавказского дуба 22 мм</div>
+                  <div class="hotspot-desc">Селективная вакуумная сушка до влажности 8%. Глубокая шелковистая текстура, пропитка натуральным маслом Osmo. Не деформируется со временем.</div>
+                </div>
+              </div>
+
+              <div class="blueprint-hotspot" style="top: 38%; left: 62%;" data-hotspot="ttrack">
+                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали системы T-Track">
+                  <span class="hotspot-pulse"></span>
+                  <span class="hotspot-core">2</span>
+                </button>
+                <div class="hotspot-popover">
+                  <div class="hotspot-title">Фрезерованный паз T-Track 45°</div>
+                  <div class="hotspot-desc">Патентованная геометрия профиля для безинструментальной фиксации держателей ноутбука, наушников и подвесных полок.</div>
+                </div>
+              </div>
+
+              <div class="blueprint-hotspot" style="top: 66%; left: 24%;" data-hotspot="steel">
+                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали стальных опор">
+                  <span class="hotspot-pulse"></span>
+                  <span class="hotspot-core">3</span>
+                </button>
+                <div class="hotspot-popover">
+                  <div class="hotspot-title">Опоры из стали Д16Т толщиной 3 мм</div>
+                  <div class="hotspot-desc">Конструкционный сплав с матовым порошковым полимерным напылением. Выдерживает вертикальную нагрузку свыше 60 кг.</div>
+                </div>
+              </div>
+
+              <div class="blueprint-hotspot" style="top: 75%; left: 74%;" data-hotspot="screws">
+                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали крепежа">
+                  <span class="hotspot-pulse"></span>
+                  <span class="hotspot-core">4</span>
+                </button>
+                <div class="hotspot-popover">
+                  <div class="hotspot-title">Каленые винты класса прочности 8.8</div>
+                  <div class="hotspot-desc">Резьбовые стальные муфты M5, впрессованные в массив. Позволяют многократно собирать и разбирать подставку без повреждения дерева.</div>
+                </div>
+              </div>
+
+              <div class="blueprint-hotspot" style="top: 84%; left: 45%;" data-hotspot="cork">
+                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали пробковых демпферов">
+                  <span class="hotspot-pulse"></span>
+                  <span class="hotspot-core">5</span>
+                </button>
+                <div class="hotspot-popover">
+                  <div class="hotspot-title">Виброгасящая португальская пробка 2 мм</div>
+                  <div class="hotspot-desc">Акустическая развязка со столешницей. Исключает дребезжание колонок и надежно защищает полировку дорогого стола от царапин.</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="blueprint-specs-table">
+            <div class="spec-cell">
+              <span class="spec-code">MAT-01</span>
+              <strong>Кавказский дуб / Орех</strong>
+              <span>Плотность 720 кг/м³</span>
+            </div>
+            <div class="spec-cell">
+              <span class="spec-code">CNC-02</span>
+              <strong>5-осевая ЧПУ фрезеровка</strong>
+              <span>Допуск ±0.15 мм</span>
+            </div>
+            <div class="spec-cell">
+              <span class="spec-code">ISO-03</span>
+              <strong>Стандарт эргономики</strong>
+              <span>ISO 9241-5:1998</span>
+            </div>
+            <div class="spec-cell">
+              <span class="spec-code">WAR-04</span>
+              <strong>Гарантия производителя</strong>
+              <span>24 месяца сервиса</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feature 4: FEA Stress Test & Materials Lab -->
+      <div class="production-block-item" id="productionStressView" style="margin-top:40px;">
+        <div class="fea-lab-card">
+          <div class="fea-lab-header">
+            <div class="fea-lab-title-group">
+              <span class="section-kicker kicker-dark" style="color:var(--primary);">07.4 // FEA LABORATORY // МЕТОД КОНЕЧНЫХ ЭЛЕМЕНТОВ</span>
+              <h3 class="fea-lab-title">Симулятор прочности и упругой деформации</h3>
+              <p class="fea-lab-subtitle">
+                Интерактивный расчет напряженно-деформированного состояния дубовой балки (сечение 230×22 мм) и опор Д16Т по формуле Эйлера-Бернулли.
+              </p>
+            </div>
+            <div class="fea-lab-actions">
+              <button type="button" class="btn-fea-shock" id="btnFeaShockTest" onclick="window.geekNookApp.runFeaShockTest()">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                <span>Импульсный дроп-тест</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Controls row -->
+          <div class="fea-controls-bar">
+            <div class="fea-slider-group">
+              <div class="fea-slider-label-row">
+                <span>Приложенная масса:</span>
+                <strong id="feaWeightDisplay">25 кг (Два монитора)</strong>
+              </div>
+              <input type="range" id="feaWeightSlider" min="0" max="85" step="1" value="25" oninput="window.geekNookApp.updateFeaWeight(this.value)" class="fea-slider" />
+            </div>
+
+            <div class="fea-presets-row" id="feaPresetsRow">
+              <button type="button" class="fea-preset-chip" onclick="window.geekNookApp.setFeaPreset(5)">5 кг (24" LCD)</button>
+              <button type="button" class="fea-preset-chip active" onclick="window.geekNookApp.setFeaPreset(25)">25 кг (2× Studio)</button>
+              <button type="button" class="fea-preset-chip" onclick="window.geekNookApp.setFeaPreset(50)">50 кг (Два моноблока)</button>
+              <button type="button" class="fea-preset-chip" onclick="window.geekNookApp.setFeaPreset(85)">85 кг (Человек)</button>
+            </div>
+          </div>
+
+          <!-- FEA Canvas Box -->
+          <div class="fea-canvas-wrapper">
+            <div class="fea-canvas-header-info">
+              <span class="fea-indicator-live">● LIVE FEA SOLVER</span>
+              <span class="fea-colormap-label">Сжатие волокон (+) ◄ 0 МПа ► Растяжение (-)</span>
+            </div>
+            <canvas id="feaStressCanvas" width="900" height="260" class="fea-stress-canvas"></canvas>
+            
+            <div class="fea-colormap-scale">
+              <span class="fea-scale-step" style="background:#1d4ed8;">-25 МПа (Сжатие)</span>
+              <span class="fea-scale-step" style="background:#0284c7;">-10 МПа</span>
+              <span class="fea-scale-step" style="background:#10b981;">0 МПа (Нейтраль)</span>
+              <span class="fea-scale-step" style="background:#eab308;">+10 МПа</span>
+              <span class="fea-scale-step" style="background:#ef4444;">+25 МПа (Растяжение)</span>
+            </div>
+          </div>
+
+          <!-- Telemetry readouts -->
+          <div class="fea-telemetry-grid">
+            <div class="fea-telemetry-card">
+              <span class="fea-telem-name">Максимальный прогиб:</span>
+              <strong class="fea-telem-val" id="feaDeflectionVal">0.21 мм</strong>
+              <span class="fea-telem-sub">Допуск ГОСТ: до 2.0 мм</span>
+            </div>
+            <div class="fea-telemetry-card">
+              <span class="fea-telem-name">Пиковое напряжение:</span>
+              <strong class="fea-telem-val" id="feaStressVal">14.8 МПа</strong>
+              <span class="fea-telem-sub">Предел дуба: 85.0 МПа</span>
+            </div>
+            <div class="fea-telemetry-card">
+              <span class="fea-telem-name">Запас прочности:</span>
+              <strong class="fea-telem-val highlight-green" id="feaSafetyVal">5.7x (Авиационный)</strong>
+              <span class="fea-telem-sub">Коэффициент запаса K</span>
+            </div>
+            <div class="fea-telemetry-card">
+              <span class="fea-telem-name">Гашение вибрации:</span>
+              <strong class="fea-telem-val" id="feaDampingVal">0.14 с</strong>
+              <span class="fea-telem-sub">Пробка 2 мм гасит 92% волны</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       8. РАБОЧИЕ МЕСТА НАШИХ КЛИЕНТОВ (Surface BG #f4f4f4, 6 in row)
+       ========================================================================== -->
+  <section class="section-surface" id="setups">
+    <div class="container">
+      <div class="block-header">
+        <div class="block-header-left">
+          <span class="section-kicker">06 // РЕАЛЬНЫЕ СЕТАПЫ</span>
+          <h2 class="block-title">РАБОЧИЕ МЕСТА НАШИХ КЛИЕНТОВ</h2>
+        </div>
+      </div>
+
+      <div class="client-setups-row" id="clientSetupsRow"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       9. ГАЛЕРЕЯ (White BG, 6 Photos)
+       ========================================================================== -->
+  <section class="section-white" id="gallery">
+    <div class="container">
+      <div class="block-header">
+        <div class="block-header-left">
+          <span class="section-kicker">07 // МАТЕРИАЛЫ И ДЕТАЛИ</span>
+          <h2 class="block-title">ГАЛЕРЕЯ</h2>
+        </div>
+      </div>
+
+      <div class="gallery-cards-grid" id="galleryGrid"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       10. ЖУРНАЛ (Surface BG #f4f4f4, 3 Full Pop-up Articles)
+       ========================================================================== -->
+  <section class="section-surface" id="journal">
+    <div class="container">
+      <div class="block-header">
+        <div class="block-header-left">
+          <span class="section-kicker">08 // ЭРГОНОМИКА И ОРГАНИЗАЦИЯ</span>
+          <h2 class="block-title">ЖУРНАЛ GEEK NOOK</h2>
+        </div>
+      </div>
+
+      <div class="journal-cards-grid" id="journalGrid"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       11. О GEEK NOOK (Dark BG #0e1114, Photo Left + Text & Badges Right)
+       ========================================================================== -->
+  <section class="section-dark" id="about">
+    <div class="container">
+      <div class="about-split-grid">
+        <div class="about-photo-wrap" onclick="window.geekNookApp.openLightbox('images/tild6634-3865-4138-b035-306136313762___dsc2944.jpg', 'ЧПУ-фрезеровка паза T-Track')">
+          <img src="images/tild6634-3865-4138-b035-306136313762___dsc2944.jpg" alt="Производство GeekNook" loading="lazy" decoding="async" />
+        </div>
+        <div class="about-text-content">
+          <span class="section-kicker kicker-dark">09 // ФИЛОСОФИЯ БРЕНДА</span>
+          <h2 class="block-title title-dark">О GEEK NOOK</h2>
+          <p class="about-paragraph">
+            Мы создаём инженерные аксессуары, которые превращают рабочий стол в единую организованную систему.
+          </p>
+          <p class="about-paragraph">
+            Каждый продукт решает конкретную задачу: освобождает поле пространства, защищает ваши устройства и помогает сосредоточиться на главном.
+          </p>
+          <p class="about-paragraph">
+            Мы используем металл, натуральное дерево и фетр премиального качества. Тщательно продумываем конструкцию и производим с вниманием к каждой детали.
+          </p>
+
+          <div class="about-badges-grid" id="aboutBadgesGrid"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       10. ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ (Surface BG, Инженерный аккордеон)
+       ========================================================================== -->
+  <section class="section-surface" id="faq">
+    <div class="container">
+      <div class="block-header">
+        <div class="block-header-left">
+          <span class="section-kicker">10 // ИНЖЕНЕРНЫЕ ОТВЕТЫ</span>
+          <h2 class="block-title">ЧАСТО ЗАДАВАЕМЫЕ ВОПРОСЫ</h2>
+        </div>
+      </div>
+
+      <div class="faq-accordion-list" id="faqAccordionList"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       11. FOOTER (Darker BG #121212)
+       ========================================================================== -->
+  <footer class="site-footer" id="footer">
+    <div class="container">
+      <div class="footer-top-row">
+        <div>
+          <div class="footer-brand-title">GEEK NOOK</div>
+          <p class="footer-brand-copy">
+            Инженерная точность на твоём столе. Премиальные аксессуары из металла, дерева и фетра для комфорта и концентрации.
+          </p>
+          <div class="footer-social-icons">
+            <a href="https://vk.com" target="_blank" rel="noopener" class="footer-social-btn" title="VK">VK</a>
+            <a href="https://t.me/geeknook" target="_blank" rel="noopener" class="footer-social-btn" title="Telegram">TG</a>
+            <a href="https://instagram.com" target="_blank" rel="noopener" class="footer-social-btn" title="Instagram">IG</a>
+          </div>
+        </div>
+
+        <div class="footer-nav-col">
+          <h5>Каталог</h5>
+          <ul>
+            <li><a href="#boards">Доски Geek Nook</a></li>
+            <li><a href="#accessories">Аксессуары</a></li>
+            <li><a href="#mats">Коврики</a></li>
+            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openConfigurator()">Конструктор сетапа</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <h5>Инженерия & B2B</h5>
+          <ul>
+            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openErgonomicsCalculator()">Калькулятор осанки (ISO 9241)</a></li>
+            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openCadModal()">3D CAD-библиотека (.STEP / .GLB)</a></li>
+            <li><a href="#production" onclick="window.geekNookApp.switchProductionTab('blueprint')">Взрыв-схема Focus Station</a></li>
+            <li><a href="#transformation">Трансформация До / После</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <h5>Компания</h5>
+          <ul>
+            <li><a href="#about">О бренде</a></li>
+            <li><a href="#production">Производство</a></li>
+            <li><a href="#advantages">Качество</a></li>
+            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openArticle('workspace-productivity')">Журнал</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <h5>Поддержка</h5>
+          <ul>
+            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('delivery')">Доставка и оплата</a></li>
+            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('warranty')">Гарантия 2 года</a></li>
+            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('warranty')">Возврат 14 дней</a></li>
+            <li><a href="https://t.me/geeknook" target="_blank">Служба заботы</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-nav-col">
+          <h5>Контакты</h5>
+          <ul>
+            <li><a href="mailto:info@geeknook.ru" style="color:#fff;font-weight:600;">info@geeknook.ru</a></li>
+            <li>Пн–Пт: 10:00 — 18:00</li>
+            <li>Москва, быстрая доставка по всей РФ</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer-bottom-line">
+        <div>© 2026 GEEK NOOK. Все права защищены.</div>
+        <div style="display:flex;gap:20px;">
+          <a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Политика конфиденциальности</a>
+          <a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Публичная оферта</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==========================================================================
+       MODALS & DRAWERS: MOBILE NAV, CART, QUICK VIEW, CONFIGURATOR, CHECKOUT, SUCCESS, LIGHTBOX, ARTICLE
+       ========================================================================== -->
+
+  <!-- Slide-over Mobile Navigation Drawer -->
+  <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="if(event.target===this) window.geekNookApp.closeMobileNav()">
+    <div class="mobile-nav-drawer">
+      <div class="mobile-nav-header">
+        <a href="#hero" class="brand-logo" onclick="window.geekNookApp.closeMobileNav()">
+          <img src="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" alt="GeekNook" />
+          <span>GEEK NOOK</span>
+        </a>
+        <button class="btn-close-modal" style="position:static;" onclick="window.geekNookApp.closeMobileNav()" aria-label="Закрыть меню">✕</button>
+      </div>
+
+      <div class="mobile-nav-body">
+        <nav class="mobile-nav-links">
+          <a href="#boards" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Каталог досок Focus Station</span>
+            <span class="mobile-nav-sub">Флагманские деревянные органайзеры</span>
+          </a>
+          <a href="#accessories" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Аксессуары T-Track</span>
+            <span class="mobile-nav-sub">Подставки, полки, держатели и лотки</span>
+          </a>
+          <a href="#mats" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Коврики Desk Mat</span>
+            <span class="mobile-nav-sub">Натуральный войлок и экокожа</span>
+          </a>
+          <a href="#bundles" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Готовые комплекты (-15%)</span>
+            <span class="mobile-nav-sub">Developer Pro, Creator Studio, Minimalist</span>
+          </a>
+          <a href="javascript:void(0)" class="mobile-nav-item mobile-nav-highlight" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openConfigurator();">
+            <div class="mobile-nav-badge">Интерактивный 3D-конструктор</div>
+            <span class="mobile-nav-title">Собрать свой сетап</span>
+            <span class="mobile-nav-sub">Кастомная доска, модули и гравировка</span>
+          </a>
+          <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openErgonomicsCalculator();" style="border: 1px dashed rgba(16,185,129,0.4); margin: 2px 0;">
+            <span class="mobile-nav-title" style="color:#10b981;">Калькулятор эргономики (ISO)</span>
+            <span class="mobile-nav-sub">Расчет высоты подставки под ваш рост</span>
+          </a>
+          <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openCadModal();" style="border: 1px dashed rgba(59,130,246,0.4); margin: 2px 0;">
+            <span class="mobile-nav-title" style="color:var(--primary);">3D CAD библиотека & Опт B2B</span>
+            <span class="mobile-nav-sub">Файлы .STEP, .GLB и корпоративные КП</span>
+          </a>
+          <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openQuiz();">
+            <span class="mobile-nav-title">Подбор сетапа (Квиз)</span>
+            <span class="mobile-nav-sub">3 быстрых вопроса под ваши мониторы</span>
+          </a>
+          <a href="#advantages" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Преимущества</span>
+            <span class="mobile-nav-sub">Инженерия, материалы, патент</span>
+          </a>
+          <a href="#production" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Производство</span>
+            <span class="mobile-nav-sub">ЧПУ-фрезеровка и ручная отделка</span>
+          </a>
+          <a href="#setups" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Сетапы клиентов</span>
+            <span class="mobile-nav-sub">Фотографии и реальные отзывы</span>
+          </a>
+          <a href="#journal" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Журнал GeekNook</span>
+            <span class="mobile-nav-sub">Статьи об эргономике и организации</span>
+          </a>
+          <a href="#faq" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Вопросы и ответы (FAQ)</span>
+            <span class="mobile-nav-sub">Нагрузка, совместимость, доставка</span>
+          </a>
+          <a href="#footer" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+            <span class="mobile-nav-title">Контакты и доставка</span>
+            <span class="mobile-nav-sub">СДЭК, гарантия, поддержка</span>
+          </a>
+        </nav>
+
+        <div class="mobile-nav-footer">
+          <div class="mobile-theme-row">
+            <div class="mobile-theme-label">
+              <span class="mobile-theme-icon-box">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+              </span>
+              <span class="mobile-theme-text">Тёмная тема</span>
+            </div>
+            <label class="theme-switch-control" aria-label="Включить тёмную тему">
+              <input type="checkbox" id="mobileThemeCheckbox" onchange="window.geekNookApp.toggleTheme()" />
+              <span class="theme-switch-slider"></span>
+            </label>
+          </div>
+
+          <button class="mobile-nav-cart-btn" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openCartDrawer();">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span>Открыть корзину</span>
+            <span class="mobile-nav-cart-count" id="mobileNavCartCount">0</span>
+          </button>
+
+          <div class="mobile-nav-contacts">
+            <a href="https://t.me/geeknook" target="_blank" rel="noopener noreferrer" class="mobile-contact-pill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+              <span>Telegram</span>
+            </a>
+            <a href="tel:+79990000000" class="mobile-contact-pill">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <span>+7 (999) 000-00-00</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide-over Cart Drawer -->
+  <div class="cart-drawer-overlay" id="cartDrawerOverlay" onclick="if(event.target===this) window.geekNookApp.closeCartDrawer()">
+    <div class="cart-drawer">
+      <div class="cart-header">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <h3>Корзина</h3>
+          <button class="btn-clear-cart" onclick="window.geekNookApp.clearCart()" title="Очистить корзину">Очистить всё</button>
+        </div>
+        <button class="btn-close-modal" style="position:static;" onclick="window.geekNookApp.closeCartDrawer()" aria-label="Закрыть корзину">✕</button>
+      </div>
+
+      <div class="shipping-progress-wrap">
+        <div class="shipping-progress-text" id="shippingProgressText">
+          <span>Бесплатная доставка от 7 000 ₽</span>
+          <span>0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="shippingProgressBar" style="width:0%;"></div>
+        </div>
+      </div>
+
+      <div class="cart-items-list" id="cartItemsList"></div>
+
+      <div class="cart-footer">
+        <div class="promo-row">
+          <input type="text" class="promo-input" id="promoInput" placeholder="Промокод (GEEK10)" />
+          <button class="btn-apply-promo" onclick="window.geekNookApp.applyPromoCode()">Применить</button>
+        </div>
+
+        <div class="cart-totals-row">
+          <span>Товары:</span>
+          <span id="cartSubtotal">0 ₽</span>
+        </div>
+        <div class="cart-totals-row" id="cartDiscountRow">
+          <span>Скидка:</span>
+          <span id="cartDiscount" style="color:#10b981;">0 ₽</span>
+        </div>
+        <div class="cart-totals-row">
+          <span>Доставка:</span>
+          <span id="cartShipping">0 ₽</span>
+        </div>
+        <div class="cart-totals-row grand-total">
+          <span>Итого:</span>
+          <span id="cartGrandTotal">0 ₽</span>
+        </div>
+
+        <button class="btn-checkout" onclick="window.geekNookApp.openCheckout()">
+          <span>Перейти к оформлению</span>
+        </button>
+        <button class="btn-checkout-telegram" onclick="window.geekNookApp.orderViaTelegram()" style="margin-top:8px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+          <span>Заказать в Telegram</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick View Modal -->
+  <div class="modal-backdrop" id="quickViewModal" onclick="if(event.target===this) window.geekNookApp.closeModal('quickViewModal')">
+    <div class="modal-card">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('quickViewModal')" aria-label="Закрыть">✕</button>
+      <div id="quickViewContent"></div>
+    </div>
+  </div>
+
+  <!-- Configurator Modal -->
+  <div class="modal-backdrop" id="configuratorModal" onclick="if(event.target===this) window.geekNookApp.closeModal('configuratorModal')">
+    <div class="modal-card configurator-modal-card">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('configuratorModal')" aria-label="Закрыть">✕</button>
+      <h2 class="modal-title">Интерактивный конструктор Focus Station</h2>
+      <p class="modal-subtitle">Соберите свой сетап: настройте породу дерева, размер полки и модули T-Track.</p>
+
+      <div class="configurator-modal-layout">
+        <div class="configurator-preview-col">
+          <!-- View switcher bar -->
+          <div class="config-view-mode-bar">
+            <button type="button" class="config-view-btn active" id="configView2dBtn" onclick="window.geekNookApp.setConfigViewMode('2d')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              <span>Фото</span>
+            </button>
+            <button type="button" class="config-view-btn" id="configView3dBtn" onclick="window.geekNookApp.setConfigViewMode('3d')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              <span>3D Студия (WebGL)</span>
+            </button>
+          </div>
+
+          <div class="config-modal-preview-box">
+            <!-- 2D Photo layer -->
+            <div id="config2dPreviewWrap" class="config-2d-wrap">
+              <img id="modalConfigPreviewImg" src="images/tild6138-3463-4138-b133-323262633039__2.jpg" alt="Focus Station превью" loading="lazy" decoding="async" />
+              <div class="engraving-badge-overlay" id="engravingBadgeOverlay" style="display:none;">
+                <span class="engraving-screw screw-left"></span>
+                <span class="engraving-text" id="engravingBadgeText">GEEKNOOK // LAB</span>
+                <span class="engraving-screw screw-right"></span>
+              </div>
+            </div>
+
+            <!-- 3D WebGL Viewport -->
+            <div id="config3dViewport" class="config-3d-viewport" style="display:none;">
+              <canvas id="config3dCanvas" class="config-3d-canvas"></canvas>
+              
+              <!-- 3D Studio Overlays -->
+              <div class="config-3d-hint">🔄 Вращайте 360° • Зум колесиком</div>
+              
+              <div class="config-3d-top-actions">
+                <button type="button" class="btn-3d-explode" id="btn3dExplode" onclick="window.geekNookApp.toggle3dExplode()">
+                  <span>Взрыв-схема 3D</span>
+                </button>
+              </div>
+
+              <div class="config-3d-lighting-bar">
+                <button type="button" class="btn-3d-light active" id="btn3dLightStudio" onclick="window.geekNookApp.set3dLighting('studio')" title="Студийный свет">☀️ День</button>
+                <button type="button" class="btn-3d-light" id="btn3dLightCyber" onclick="window.geekNookApp.set3dLighting('cyber')" title="Киберпанк неон">🌙 Неон</button>
+                <button type="button" class="btn-3d-light" id="btn3dLightSunset" onclick="window.geekNookApp.set3dLighting('sunset')" title="Теплый закат">🌅 Закат</button>
+              </div>
+
+              <div class="config-3d-track-slider-wrap" id="config3dTrackWrap" style="display:none;">
+                <div class="track-slider-label">Позиция в Т-пазе:</div>
+                <input type="range" id="config3dTrackSlider" min="-100" max="100" value="0" step="1" oninput="window.geekNookApp.update3dModulePosition(this.value)" class="track-slider" />
+              </div>
+            </div>
+
+            <div id="modalConfigStatusPill">
+              Focus Station • Чёрное дерево • 85 см
+            </div>
+          </div>
+
+          <div class="config-modal-price-row">
+            <div>
+              <div class="config-modal-price-label">Стоимость комплекта:</div>
+              <div id="modalConfigTotalPrice" class="config-modal-price-val">27 479 ₽</div>
+            </div>
+            <div class="config-modal-delivery-badge">✓ Бесплатная доставка</div>
+          </div>
+
+          <button class="btn-checkout" onclick="window.geekNookApp.addConfiguredBundleToCart()">
+            Добавить весь сетап в корзину
+          </button>
+          <div class="config-modal-actions-row" style="display:flex;gap:10px;margin-top:10px;">
+            <button class="btn-secondary" onclick="window.geekNookApp.shareConfiguredSetup()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;font-size:0.875rem;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line></svg>
+              <span>Поделиться</span>
+            </button>
+            <button class="btn-checkout-telegram" onclick="window.geekNookApp.orderConfigViaTelegram()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:12px 14px;font-size:0.875rem;margin:0;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+              <span>Заказ в TG</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="configurator-options-col">
+          <!-- Step 1: Finish -->
+          <div class="config-step-block">
+            <div class="config-step-title">1. Порода дерева и отделка:</div>
+            <div id="modalConfigFinishes" class="config-finishes-grid"></div>
+          </div>
+
+          <!-- Step 2: Length -->
+          <div class="config-step-block">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;flex-wrap:wrap;gap:6px;">
+              <div class="config-step-title" style="margin-bottom:0;">2. Длина основания:</div>
+              <button type="button" class="btn-config-matcher-link" onclick="window.geekNookApp.openSetupMatcher()">📐 Примерщик мониторов</button>
+            </div>
+            <div id="modalConfigLengths" class="config-lengths-grid"></div>
+          </div>
+
+          <!-- Step 3: Addons -->
+          <div class="config-step-block">
+            <div class="config-step-title">3. Навесные модули T-Track:</div>
+            <div id="modalConfigAddons" class="config-addons-list"></div>
+          </div>
+
+          <!-- Step 4: Laser Engraving Personalization -->
+          <div class="config-step-block">
+            <div class="config-step-title">4. Индивидуальная гравировка:</div>
+            <div class="config-engraving-card">
+              <label class="config-engraving-toggle">
+                <input type="checkbox" id="configEngravingCheckbox" onchange="window.geekNookApp.toggleConfigEngraving(this.checked)" />
+                <span class="engraving-toggle-slider"></span>
+                <span class="engraving-toggle-label">
+                  <strong>Фирменный металлический шильдик с гравировкой</strong>
+                  <span class="engraving-toggle-price">+1 200 ₽</span>
+                </span>
+              </label>
+              <div class="config-engraving-input-wrap" id="configEngravingInputWrap" style="display:none;">
+                <input type="text" id="configEngravingInput" class="config-engraving-input" maxlength="24" placeholder="Например: STAY FOCUSED // LAB №042" oninput="window.geekNookApp.updateConfigEngravingText(this.value)" />
+                <div class="engraving-input-hint">До 24 символов (латиница, кириллица, цифры). Наносится волоконным лазером.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Checkout Modal -->
+  <div class="modal-backdrop" id="checkoutModal" onclick="if(event.target===this) window.geekNookApp.closeModal('checkoutModal')">
+    <div class="modal-card checkout-modal-card">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('checkoutModal')" aria-label="Закрыть">✕</button>
+      <h2 class="modal-title">Оформление заказа</h2>
+      
+      <form onsubmit="window.geekNookApp.handleCheckoutSubmit(event)">
+        <div class="checkout-modal-layout">
+          <div class="checkout-form-col">
+            <div class="checkout-field-group">
+              <label class="checkout-field-label">Ваше имя *</label>
+              <input type="text" name="name" class="checkout-input" placeholder="Константин" required />
+            </div>
+            <div class="checkout-field-group">
+              <label class="checkout-field-label">Номер телефона *</label>
+              <input type="tel" name="phone" class="checkout-input" placeholder="+7 (___) ___-__-__" required />
+            </div>
+            <div class="checkout-field-group">
+              <label class="checkout-field-label">Электронная почта *</label>
+              <input type="email" name="email" class="checkout-input" placeholder="konstantin@example.com" required />
+            </div>
+            <div class="checkout-field-group">
+              <label class="checkout-field-label">Город и адрес доставки / СДЭК *</label>
+              <input type="text" name="address" class="checkout-input" placeholder="г. Москва, ул. Ленина 10, кв. 4" required />
+            </div>
+          </div>
+
+          <div class="checkout-summary-col">
+            <div class="checkout-field-group">
+              <label class="checkout-field-label">Способ доставки</label>
+              <select name="delivery" class="checkout-select">
+                <option value="СДЭК — курьером до двери">СДЭК — курьером до двери</option>
+                <option value="СДЭК — пункт самовывоза">СДЭК — пункт выдачи (ПВЗ)</option>
+                <option value="Почта России">Почта России</option>
+              </select>
+            </div>
+
+            <div class="checkout-field-group">
+              <label class="checkout-field-label">Способ оплаты</label>
+              <select name="payment" class="checkout-select">
+                <option value="Банковской картой онлайн (СБП)">Банковской картой онлайн (СБП)</option>
+                <option value="При получении курьеру СДЭК">При получении (курьеру СДЭК)</option>
+                <option value="Долями (4 платежа по 25%)">Долями (рассрочка 0%)</option>
+              </select>
+            </div>
+
+            <div class="checkout-items-summary-card">
+              <div class="checkout-summary-heading">Состав заказа:</div>
+              <div id="checkoutItemsSummary"></div>
+              <div class="checkout-grand-total-row">
+                <span>К оплате:</span>
+                <span id="checkoutGrandTotalSummary">0 ₽</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn-checkout" style="margin-top:20px;">
+              Подтвердить заказ
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Success Celebration Modal -->
+  <div class="modal-backdrop" id="successModal" onclick="if(event.target===this) window.geekNookApp.closeModal('successModal')">
+    <div class="modal-card" style="max-width:540px;text-align:center;padding:48px 32px;">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('successModal')">✕</button>
+      <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:rgba(16,185,129,0.1);color:#10b981;margin-bottom:20px;border:1px solid rgba(16,185,129,0.25);">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <h2 style="font-family:var(--font-display);font-size:1.85rem;font-weight:900;margin-bottom:10px;">Заказ успешно оформлен!</h2>
+      <p style="color:var(--text-muted);font-size:0.95rem;margin-bottom:24px;">Спасибо за выбор GeekNook! Мы уже приступили к подготовке вашего заказа.</p>
+      <div id="successOrderDetails" style="background:var(--surface);padding:20px;border-radius:8px;text-align:left;font-size:0.9375rem;line-height:1.65;border:1px solid var(--border);margin-bottom:24px;"></div>
+      <button class="btn-checkout" onclick="window.geekNookApp.closeModal('successModal')">
+        Вернуться в магазин
+      </button>
+    </div>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div class="modal-backdrop" id="lightboxModal" onclick="if(event.target===this) window.geekNookApp.closeModal('lightboxModal')">
+    <div style="max-width:1100px;max-height:90vh;position:relative;display:flex;flex-direction:column;align-items:center;">
+      <button class="btn-close-modal" style="background:rgba(255,255,255,0.2);color:#fff;" onclick="window.geekNookApp.closeModal('lightboxModal')">✕</button>
+      <img id="lightboxImg" src="" alt="Увеличенное фото" style="max-height:80vh;max-width:100%;border-radius:8px;object-fit:contain;" />
+      <div id="lightboxCaption" style="margin-top:14px;color:#ffffff;font-size:1rem;font-weight:600;text-align:center;"></div>
+    </div>
+  </div>
+
+  <!-- Article Reader Modal -->
+  <div class="modal-backdrop" id="articleModal" onclick="if(event.target===this) window.geekNookApp.closeModal('articleModal')">
+    <div class="modal-card" style="max-width:960px;">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('articleModal')">✕</button>
+      <div id="articleModalContent"></div>
+    </div>
+  </div>
+
+  <!-- Quick Buy Modal (1-Click Buy) -->
+  <div class="modal-backdrop" id="quickBuyModal" onclick="if(event.target===this) window.geekNookApp.closeModal('quickBuyModal')">
+    <div class="modal-card quick-buy-card" style="max-width:480px;">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('quickBuyModal')" aria-label="Закрыть">✕</button>
+      <div class="quick-buy-header">
+        <h3 class="modal-title" style="font-size:1.4rem;">Быстрый заказ в 1 клик</h3>
+        <p class="modal-subtitle" style="margin-bottom:16px;">Менеджер свяжется с вами в течение 10 минут для уточнения адреса.</p>
+      </div>
+      <div id="quickBuyProductSummary" class="quick-buy-prod-summary"></div>
+      <form onsubmit="window.geekNookApp.handleQuickBuySubmit(event)" style="margin-top:16px;">
+        <div class="checkout-field-group">
+          <label class="checkout-field-label">Ваше имя *</label>
+          <input type="text" id="quickBuyName" class="checkout-input" placeholder="Александр" required />
+        </div>
+        <div class="checkout-field-group">
+          <label class="checkout-field-label">Телефон *</label>
+          <input type="tel" id="quickBuyPhone" class="checkout-input" placeholder="+7 (999) 000-00-00" required />
+        </div>
+        <button type="submit" class="btn-checkout" style="margin-top:14px;width:100%;">
+          Подтвердить заказ в 1 клик
+        </button>
+        <div style="text-align:center;margin:12px 0 8px;color:var(--text-muted);font-size:0.8rem;text-transform:uppercase;letter-spacing:1px;">или</div>
+        <button type="button" class="btn-checkout-telegram" onclick="window.geekNookApp.quickBuyViaTelegram()" style="width:100%;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+          <span>Заказать в Telegram напрямую</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Setup Finder Quiz Modal -->
+  <div class="modal-backdrop" id="quizModal" onclick="if(event.target===this) window.geekNookApp.closeModal('quizModal')">
+    <div class="modal-card quiz-modal-card" style="max-width:680px;">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('quizModal')" aria-label="Закрыть">✕</button>
+      <div class="quiz-header">
+        <div class="quiz-badge">Интерактивный конфигуратор</div>
+        <h2 class="modal-title" style="margin-top:8px;font-size:1.6rem;">Подберите идеальную станцию GeekNook</h2>
+        <p class="modal-subtitle">Ответьте на 3 вопроса — мы рассчитаем длину полки и оптимальный набор модулей T-Track.</p>
+        <div class="quiz-progress-bar">
+          <div class="quiz-progress-fill" id="quizProgressFill" style="width:33.3%;"></div>
+        </div>
+      </div>
+      <div id="quizContent" class="quiz-step-container"></div>
+    </div>
+  </div>
+
+  <!-- Legal & Service Modal -->
+  <div class="modal-backdrop" id="legalModal" onclick="if(event.target===this) window.geekNookApp.closeModal('legalModal')">
+    <div class="modal-card legal-modal-card" style="max-width:820px;">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('legalModal')" aria-label="Закрыть">✕</button>
+      <div class="legal-modal-tabs">
+        <button class="legal-tab-btn active" data-tab="delivery" onclick="window.geekNookApp.switchLegalTab('delivery')">Доставка и оплата</button>
+        <button class="legal-tab-btn" data-tab="warranty" onclick="window.geekNookApp.switchLegalTab('warranty')">Гарантия 2 года</button>
+        <button class="legal-tab-btn" data-tab="privacy" onclick="window.geekNookApp.switchLegalTab('privacy')">Конфиденциальность и оферта</button>
+      </div>
+      <div id="legalModalBody" class="legal-modal-body markdown-body"></div>
+    </div>
+  </div>
+
+  <!-- Command Palette (Cmd+K / Ctrl+K) -->
+  <div class="modal-backdrop command-palette-backdrop" id="commandPaletteModal" onclick="if(event.target===this) window.geekNookApp.closeCommandPalette()">
+    <div class="command-palette-card">
+      <div class="cmd-palette-search-box">
+        <svg class="cmd-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input type="text" id="cmdPaletteInput" class="cmd-palette-input" placeholder="Поиск товаров или действий (например: дуб, примерщик, корзина)..." autocomplete="off" />
+        <span class="cmd-esc-hint" onclick="window.geekNookApp.closeCommandPalette()">ESC</span>
+      </div>
+      <div class="cmd-palette-results" id="cmdPaletteResults"></div>
+      <div class="cmd-palette-footer">
+        <div class="cmd-footer-hint"><kbd>↑↓</kbd> Навигация</div>
+        <div class="cmd-footer-hint"><kbd>↵</kbd> Выбрать</div>
+        <div class="cmd-footer-hint"><kbd>ESC</kbd> Закрыть</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Setup Matcher Modal (Инженерный примерщик мониторов) -->
+  <div class="modal-backdrop" id="setupMatcherModal" onclick="if(event.target===this) window.geekNookApp.closeModal('setupMatcherModal')">
+    <div class="modal-card setup-matcher-card" style="max-width:880px;">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('setupMatcherModal')" aria-label="Закрыть">✕</button>
+      <div class="matcher-header">
+        <span class="section-kicker kicker-dark" style="color:var(--primary);">ИНЖЕНЕРНЫЙ КАЛЬКУЛЯТОР // МАСШТАБ 1:15</span>
+        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Примерщик рабочего пространства</h2>
+        <p class="modal-subtitle">Рассчитайте идеальную посадку подставки GeekNook под размер ваших мониторов и ширину стола.</p>
+      </div>
+
+      <div class="matcher-controls-grid">
+        <div class="matcher-control-col">
+          <label class="matcher-label">1. Ширина вашего стола:</label>
+          <div class="matcher-chips" id="deskWidthChips">
+            <button class="matcher-chip" data-width="120" onclick="window.geekNookApp.selectMatcherDeskWidth(120)">120 см</button>
+            <button class="matcher-chip active" data-width="140" onclick="window.geekNookApp.selectMatcherDeskWidth(140)">140 см</button>
+            <button class="matcher-chip" data-width="160" onclick="window.geekNookApp.selectMatcherDeskWidth(160)">160 см</button>
+            <button class="matcher-chip" data-width="180" onclick="window.geekNookApp.selectMatcherDeskWidth(180)">180 см</button>
+          </div>
+        </div>
+
+        <div class="matcher-control-col">
+          <label class="matcher-label">2. Сетап дисплеев:</label>
+          <div class="matcher-chips" id="monitorSetupChips">
+            <button class="matcher-chip" data-setup="single-24" onclick="window.geekNookApp.selectMatcherMonitor('single-24')">1x 24" (54 см)</button>
+            <button class="matcher-chip active" data-setup="single-27" onclick="window.geekNookApp.selectMatcherMonitor('single-27')">1x 27" (61 см)</button>
+            <button class="matcher-chip" data-setup="single-34" onclick="window.geekNookApp.selectMatcherMonitor('single-34')">1x 34" UW (81 см)</button>
+            <button class="matcher-chip" data-setup="dual-24" onclick="window.geekNookApp.selectMatcherMonitor('dual-24')">2x 24" Dual (108 см)</button>
+            <button class="matcher-chip" data-setup="dual-27" onclick="window.geekNookApp.selectMatcherMonitor('dual-27')">2x 27" Dual (122 см)</button>
+            <button class="matcher-chip" data-setup="mac-27" onclick="window.geekNookApp.selectMatcherMonitor('mac-27')">MacBook + 27" (93 см)</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="matcher-visualizer-box">
+        <div class="matcher-svg-wrap" id="matcherSvgWrap"></div>
+        <div class="matcher-specs-row" id="matcherSpecsRow"></div>
+      </div>
+
+      <div class="matcher-actions-row">
+        <div class="matcher-recommendation" id="matcherRecommendation">
+          Рекомендуемая модель: <strong>Focus Station 900 (900 мм)</strong>
+        </div>
+        <button class="btn-hero-primary" id="matcherActionBtn" onclick="window.geekNookApp.applyMatcherToConfigurator()">
+          <span>Собрать эту конфигурацию →</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ergonomics Calculator Modal (ISO 9241-5) -->
+  <div class="modal-backdrop" id="ergonomicsModal" onclick="if(event.target===this) window.geekNookApp.closeModal('ergonomicsModal')">
+    <div class="modal-card ergonomics-modal-card" style="max-width:860px;">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('ergonomicsModal')" aria-label="Закрыть">✕</button>
+      <div class="ergo-modal-header">
+        <span class="section-kicker kicker-dark" style="color:var(--primary);">МЕДИЦИНСКАЯ ЭРГОНОМИКА // ISO 9241-5</span>
+        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Инженерный калькулятор здоровой осанки</h2>
+        <p class="modal-subtitle">Рассчитайте персональную высоту расположения монитора, чтобы устранить синдром «текстовой шеи» и напряжение в трапециевидных мышцах.</p>
+      </div>
+
+      <div class="ergo-layout-grid">
+        <div class="ergo-inputs-col">
+          <div class="ergo-input-group">
+            <div class="ergo-label-row">
+              <label class="ergo-label" for="ergoUserHeight">Ваш рост:</label>
+              <span class="ergo-val-display" id="ergoUserHeightDisplay">178 см</span>
+            </div>
+            <input type="range" min="150" max="205" value="178" class="ergo-range-slider" id="ergoUserHeight" oninput="window.geekNookApp.updateErgonomicsCalc()" />
+            <div class="range-marks">
+              <span>150 см</span>
+              <span>175 см</span>
+              <span>205 см</span>
+            </div>
+          </div>
+
+          <div class="ergo-input-group">
+            <div class="ergo-label-row">
+              <label class="ergo-label" for="ergoDeskHeight">Высота столешницы:</label>
+              <span class="ergo-val-display" id="ergoDeskHeightDisplay">75 см</span>
+            </div>
+            <input type="range" min="65" max="85" value="75" class="ergo-range-slider" id="ergoDeskHeight" oninput="window.geekNookApp.updateErgonomicsCalc()" />
+            <div class="range-marks">
+              <span>65 см (Низкий)</span>
+              <span>75 см (Стандарт)</span>
+              <span>85 см (Высокий)</span>
+            </div>
+          </div>
+
+          <div class="ergo-input-group">
+            <label class="ergo-label">Диагональ вашего экрана:</label>
+            <div class="ergo-chips-grid" id="ergoMonitorChips">
+              <button type="button" class="ergo-chip" data-diag="24" onclick="window.geekNookApp.selectErgoMonitor(24)">24" (Full HD)</button>
+              <button type="button" class="ergo-chip active" data-diag="27" onclick="window.geekNookApp.selectErgoMonitor(27)">27" (2K / 4K / Studio)</button>
+              <button type="button" class="ergo-chip" data-diag="32" onclick="window.geekNookApp.selectErgoMonitor(32)">32" (4K Pro)</button>
+              <button type="button" class="ergo-chip" data-diag="34" onclick="window.geekNookApp.selectErgoMonitor(34)">34" (UltraWide)</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="ergo-results-col">
+          <div class="ergo-prescription-card">
+            <div class="ergo-rx-badge">ЭРГОНОМИЧЕСКИЙ РЕЦЕПТ GEEKNOOK</div>
+            
+            <div class="ergo-metrics-row">
+              <div class="ergo-metric-box">
+                <span class="ergo-metric-name">Линия взгляда</span>
+                <strong class="ergo-metric-value" id="ergoEyeLevelVal">118 см</strong>
+                <span class="ergo-metric-sub">от уровня пола</span>
+              </div>
+              <div class="ergo-metric-box highlight">
+                <span class="ergo-metric-name">Рекомендуемый подъем</span>
+                <strong class="ergo-metric-value" id="ergoLiftDeltaVal">+9.0 см</strong>
+                <span class="ergo-metric-sub">Focus Station 90 мм</span>
+              </div>
+              <div class="ergo-metric-box">
+                <span class="ergo-metric-name">Угол наклона шеи</span>
+                <strong class="ergo-metric-value" id="ergoNeckAngleVal">2° (Норма)</strong>
+                <span class="ergo-metric-sub">Без перегрузки C1–C7</span>
+              </div>
+            </div>
+
+            <div class="ergo-recommendation-box" id="ergoRecommendationText">
+              Без подставки при вашем росте шея наклоняется вперед под углом <strong>24°</strong>, создавая нагрузку до <strong>18 кг</strong> на шейный отдел позвоночника. Подставка Focus Station 900 поднимает верхнюю треть матрицы строго на уровень глаз, разгружая мышцы на 100%.
+            </div>
+
+            <div class="ergo-actions-row">
+              <button class="btn-checkout" onclick="window.geekNookApp.applyErgonomicsRecommendation()">
+                Выбрать подставку Focus Station (+9 см)
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B2B & 3D CAD Asset Library Modal -->
+  <div class="modal-backdrop" id="cadLibraryModal" onclick="if(event.target===this) window.geekNookApp.closeModal('cadLibraryModal')">
+    <div class="modal-card cad-library-card" style="max-width:920px;">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('cadLibraryModal')" aria-label="Закрыть">✕</button>
+      <div class="cad-header">
+        <span class="section-kicker kicker-dark" style="color:var(--primary);">B2B & ARCHITECTURE PORTAL</span>
+        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Инженерная 3D CAD библиотека и опт</h2>
+        <p class="modal-subtitle">Точные 3D-модели для дизайнеров интерьеров, архитекторов и оптовое оснащение IT-офисов со скидкой до 25%.</p>
+      </div>
+
+      <div class="cad-layout-grid">
+        <div class="cad-assets-col">
+          <h3 class="cad-subheading">Цифровые 3D-модели (STEP, GLB, DWG):</h3>
+          
+          <div class="cad-asset-item">
+            <div class="cad-asset-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            </div>
+            <div class="cad-asset-info">
+              <strong>Focus Station 900 (Full Assembly)</strong>
+              <span>Формат: .STEP (AP214) • 8.4 МБ • Сборка с винтами и пазом</span>
+            </div>
+            <button class="btn-cad-download" onclick="window.geekNookApp.downloadCadAsset('GeekNook_FocusStation900_CAD.step')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>STEP</span>
+            </button>
+          </div>
+
+          <div class="cad-asset-item">
+            <div class="cad-asset-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polygon points="10 8 16 12 10 16 10 8"></polygon></svg>
+            </div>
+            <div class="cad-asset-info">
+              <strong>Focus Station 1200 + T-Track Modules</strong>
+              <span>Формат: .GLB (glTF 2.0 PBR) • 12.1 МБ • Для 3ds Max, Blender & AR</span>
+            </div>
+            <button class="btn-cad-download" onclick="window.geekNookApp.downloadCadAsset('GeekNook_FocusStation1200_PBR.glb')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>GLB</span>
+            </button>
+          </div>
+
+          <div class="cad-asset-item">
+            <div class="cad-asset-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+            </div>
+            <div class="cad-asset-info">
+              <strong>Архитектурные разрезы узлов и паза</strong>
+              <span>Формат: .DWG / .DXF • 3.2 МБ • Для AutoCAD и планов расстановки</span>
+            </div>
+            <button class="btn-cad-download" onclick="window.geekNookApp.downloadCadAsset('GeekNook_TTrack_Blueprint.dwg')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>DWG</span>
+            </button>
+          </div>
+
+          <div class="cad-asset-item">
+            <div class="cad-asset-icon">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+            </div>
+            <div class="cad-asset-info">
+              <strong>Техническая спецификация и сертификаты</strong>
+              <span>Формат: .PDF • 1.8 МБ • Пожарный сертификат, паспорта Osmo</span>
+            </div>
+            <button class="btn-cad-download" onclick="window.geekNookApp.downloadCadAsset('GeekNook_Specification_2026.pdf')">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>PDF</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="cad-form-col">
+          <div class="b2b-quote-card">
+            <div class="b2b-quote-title">Запрос корпоративного КП</div>
+            <p class="b2b-quote-subtitle">Оснащаем офисы от 5 до 100+ рабочих мест. Индивидуальные размеры, брендирование и работа по безналичному расчету с НДС.</p>
+            <form onsubmit="window.geekNookApp.handleB2bSubmit(event)">
+              <div class="checkout-field-group">
+                <label class="checkout-field-label">Компания / Студия *</label>
+                <input type="text" id="b2bCompany" class="checkout-input" placeholder="Yandex, Ozon, Архитектурное бюро..." required />
+              </div>
+              <div class="checkout-field-group">
+                <label class="checkout-field-label">Корпоративный Email *</label>
+                <input type="email" id="b2bEmail" class="checkout-input" placeholder="procurement@company.ru" required />
+              </div>
+              <div class="checkout-field-group">
+                <label class="checkout-field-label">Количество рабочих мест *</label>
+                <select id="b2bWorkplaces" class="checkout-select">
+                  <option value="5-10">5 – 10 рабочих мест (скидка 10%)</option>
+                  <option value="11-25">11 – 25 рабочих мест (скидка 15%)</option>
+                  <option value="26-50">26 – 50 рабочих мест (скидка 20%)</option>
+                  <option value="50+">50+ мест (индивидуальный спецпроект, -25%)</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-checkout" style="margin-top:14px;width:100%;">
+                Получить коммерческое предложение
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/three.min.js"></script>
+  <script src="js/products-data.js"></script>
+  <script src="js/modern-app.js"></script>
+</body>
+</html>

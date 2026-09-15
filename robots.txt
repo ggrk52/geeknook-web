@@ -1,0 +1,16 @@
+User-Agent: *
+Disallow: /page52025385.html
+Disallow: /page52025761.html
+Disallow: /tilda/form*
+Disallow: /tilda/rec*
+Disallow: /tilda/click*
+Disallow: /tilda/scroll*
+Disallow: /tilda/popup*
+Disallow: /tilda/cart*
+Disallow: /tilda/product*
+Disallow: /tilda/event*
+Disallow:
+
+
+Sitemap: https://geeknook.ru/sitemap.xml
+Sitemap: https://geeknook.ru/sitemap-store.xml
