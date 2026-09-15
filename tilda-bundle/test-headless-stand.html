@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeekNook — Headless Tilda Full-Site Integration Test</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <base href="../" />
+  <link rel="stylesheet" href="css/modern-style.css" />
+
+  <style>
+    /* SIMULATED TILDA ADMIN BAR AT TOP */
+    .tilda-sim-bar {
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: #11141a;
+      border-bottom: 2px solid #2563eb;
+      color: #fff;
+      padding: 10px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 99999999;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13px;
+      box-sizing: border-box;
+    }
+
+    .tilda-sim-badge {
+      background: #2563eb;
+      color: #fff;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .tilda-sim-cart-status {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .tilda-sim-cart-btn {
+      background: #1e2430;
+      border: 1px solid #323b4d;
+      color: #60a5fa;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 12px;
+    }
+
+    /* MOCK TILDA SLIDE-OVER DRAWER (ST100) */
+    .t706-mock-drawer {
+      position: fixed;
+      top: 0;
+      right: -440px;
+      width: 400px;
+      max-width: 90vw;
+      height: 100vh;
+      background: #13161c;
+      border-left: 1px solid #282f3d;
+      box-shadow: -10px 0 50px rgba(0,0,0,0.8);
+      z-index: 999999999;
+      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #e6edf3;
+    }
+
+    .t706-mock-drawer.open {
+      right: 0;
+    }
+
+    .t706-mock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #282f3d;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+    }
+
+    .t706-mock-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .t706-mock-close {
+      background: none;
+      border: none;
+      color: #8b949e;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .t706-mock-list {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .t706-mock-item {
+      background: #0c0e12;
+      border: 1px solid #222834;
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .t706-mock-item-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .t706-mock-item-opts {
+      font-size: 12px;
+      color: #8b949e;
+      line-height: 1.4;
+    }
+
+    .t706-mock-item-price {
+      font-family: monospace;
+      font-size: 14px;
+      color: #60a5fa;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+
+    .t706-mock-footer {
+      border-top: 1px solid #282f3d;
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+
+    .t706-mock-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .t706-mock-checkout-btn {
+      width: 100%;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .t706-mock-checkout-btn:hover {
+      background: #1d4ed8;
+    }
+  </style>
+
+  <!-- TILDA CART & CRM EMULATION SCRIPT -->
+  <script>
+    window.GEEKNOOK_FORCE_TILDA = true;
+    window.tcart = {
+      products: [],
+      total: 0
+    };
+
+    window.tcart__addProduct = function(item) {
+      console.log('[Tilda ST100 Engine] tcart__addProduct called:', item);
+      window.tcart.products.push({
+        name: item.name,
+        price: item.price,
+        img: item.img,
+        options: item.options || [],
+        quantity: 1
+      });
+      renderMockTcart();
+      window.tcart__openCart();
+    };
+
+    window.tcart__openCart = function() {
+      document.getElementById('mockTildaDrawer').classList.add('open');
+    };
+
+    window.tcart__closeCart = function() {
+      document.getElementById('mockTildaDrawer').classList.remove('open');
+    };
+
+    function renderMockTcart() {
+      const drawerList = document.getElementById('mockTildaDrawerList');
+      const drawerTotal = document.getElementById('mockTildaDrawerTotal');
+      const topCount = document.getElementById('simCartCount');
+
+      topCount.textContent = window.tcart.products.length;
+
+      let sum = 0;
+      if (!window.tcart.products.length) {
+        drawerList.innerHTML = '<div style="text-align:center;color:#8b949e;margin-top:40px;font-size:14px;">Корзина Тильды пуста.<br>Нажмите «В корзину» у любого товара на сайте!</div>';
+        drawerTotal.textContent = '0 ₽';
+        return;
+      }
+
+      drawerList.innerHTML = window.tcart.products.map((p, idx) => {
+        sum += (p.price || 0) * (p.quantity || 1);
+        const optsHtml = (p.options || []).map(o => `<div>• <strong>${o.name}:</strong> ${o.variant}</div>`).join('');
+        return `
+          <div class="t706-mock-item">
+            <div style="display:flex;justify-content:space-between;align-items:start;">
+              <span class="t706-mock-item-name">${p.name}</span>
+              <button onclick="window.tcart.products.splice(${idx},1);renderMockTcart();" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:16px;">&times;</button>
+            </div>
+            <div class="t706-mock-item-opts">${optsHtml}</div>
+            <div class="t706-mock-item-price">${(p.price || 0).toLocaleString('ru-RU')} ₽</div>
+          </div>
+        `;
+      }).join('');
+
+      window.tcart.total = sum;
+      drawerTotal.textContent = sum.toLocaleString('ru-RU') + ' ₽';
+
+      if (window.geekNookTilda) {
+        window.geekNookTilda.syncBadge();
+      }
+    }
+  </script>
+</head>
+<body>
+
+  <!-- SIMULATED TILDA TOP BAR -->
+  <div class="tilda-sim-bar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <span class="tilda-sim-badge">TILDA HEADLESS MODE</span>
+      <span>Фронтенд: <strong>GeekNook ES6+ / Three.js</strong></span>
+      <span style="color:#64748b;">|</span>
+      <span>Бэкенд: <strong>Tilda Cart ST100 & CRM</strong></span>
+    </div>
+    <div class="tilda-sim-cart-status">
+      <span>В корзине Тильды: <strong id="simCartCount" style="color:#60a5fa;">0</strong></span>
+      <button class="tilda-sim-cart-btn" onclick="window.tcart__openCart()">Открыть корзину Тильды</button>
+    </div>
+  </div>
+
+  <!-- TILDA MOCK CART DRAWER -->
+  <div id="mockTildaDrawer" class="t706-mock-drawer">
+    <div class="t706-mock-header">
+      <div>
+        <div class="t706-mock-title">Корзина заказа</div>
+        <div style="font-size:12px;color:#8b949e;margin-top:2px;">Шлюз Тильды: ЮKassa, Сбер, Т-Банк, СДЭК</div>
+      </div>
+      <button class="t706-mock-close" onclick="window.tcart__closeCart()">&times;</button>
+    </div>
+    <div class="t706-mock-list" id="mockTildaDrawerList">
+      <!-- Items rendered dynamically -->
+    </div>
+    <div class="t706-mock-footer">
+      <div class="t706-mock-total-row">
+        <span>Итого к оплате:</span>
+        <span id="mockTildaDrawerTotal" style="color:#60a5fa;font-family:monospace;">0 ₽</span>
+      </div>
+      <button class="t706-mock-checkout-btn" onclick="alert('В продакшене Тильды здесь открывается форма с выбором доставки СДЭК и переход к онлайн-оплате картой / СБП / Долями!')">
+        Перейти к оплате (ЮKassa / Т-Банк)
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTAINER WHERE FULL SITE IS LOADED -->
+  <div id="full-site-root"></div>
+
+  <script>
+    async function loadFullSite() {
+      // Fetch index.html
+      const res = await fetch('index.html');
+      const html = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+
+      // Inject body contents (except scripts, which we will load sequentially)
+      const root = document.getElementById('full-site-root');
+      Array.from(doc.body.children).forEach(el => {
+        if (el.tagName !== 'SCRIPT') {
+          root.appendChild(el);
+        }
+      });
+
+      // Sequential Script Loading
+      function addScript(src) {
+        return new Promise((resolve, reject) => {
+          const s = document.createElement('script');
+          s.src = src;
+          s.onload = resolve;
+          s.onerror = reject;
+          document.body.appendChild(s);
+        });
+      }
+
+      await addScript('js/three.min.js');
+      await addScript('js/products-data.js');
+      await addScript('js/modern-app.js');
+      await addScript('js/modules/tilda-adapter.js');
+
+      console.log('[Test Stand] Site loaded successfully with Tilda Adapter!');
+      renderMockTcart();
+    }
+
+    loadFullSite();
+  </script>
+
+</body>
+</html>

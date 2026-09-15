@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeekNook — Tilda Hybrid Test Stand</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <base href="../" />
+  
+  <style>
+    /* Simulated Tilda Base Page Reset */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #0c0d10;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Mock Tilda Navigation Header */
+    .mock-tilda-nav {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      background: rgba(12, 13, 16, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #1e222b;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .mock-nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .mock-nav-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .mock-nav-links a {
+      color: #8b949e;
+      text-decoration: none;
+      font-size: 14px;
+      transition: color 0.2s;
+    }
+
+    .mock-nav-links a:hover {
+      color: #fff;
+    }
+
+    .mock-nav-cart-btn {
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mock-section-divider {
+      max-width: 1200px;
+      margin: 40px auto;
+      border-top: 1px dashed #252b38;
+      position: relative;
+    }
+
+    .mock-section-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #1e2430;
+      border: 1px solid #303848;
+      color: #60a5fa;
+      font-family: monospace;
+      font-size: 11px;
+      padding: 2px 12px;
+      border-radius: 999px;
+    }
+
+    /* Mock Tilda Slide-over Cart Drawer (ST100) */
+    .mock-tcart-drawer {
+      position: fixed;
+      top: 0;
+      right: -420px;
+      width: 380px;
+      max-width: 90vw;
+      height: 100vh;
+      background: #14171d;
+      border-left: 1px solid #232834;
+      box-shadow: -10px 0 40px rgba(0,0,0,0.7);
+      z-index: 999999;
+      transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      padding: 24px;
+      box-sizing: border-box;
+    }
+
+    .mock-tcart-drawer.open {
+      right: 0;
+    }
+
+    .mock-tcart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #232834;
+      padding-bottom: 16px;
+      margin-bottom: 16px;
+    }
+
+    .mock-tcart-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .mock-tcart-close {
+      background: transparent;
+      border: none;
+      color: #8b949e;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .mock-tcart-items {
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .mock-tcart-item {
+      background: #0d0e12;
+      border: 1px solid #232834;
+      border-radius: 8px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .mock-tcart-item-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .mock-tcart-item-opts {
+      font-size: 11px;
+      color: #8b949e;
+      line-height: 1.4;
+    }
+
+    .mock-tcart-item-price {
+      font-family: monospace;
+      font-size: 13px;
+      color: #60a5fa;
+      font-weight: 700;
+    }
+
+    .mock-tcart-footer {
+      border-top: 1px solid #232834;
+      padding-top: 16px;
+      margin-top: 16px;
+    }
+
+    .mock-tcart-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 14px;
+    }
+
+    .mock-tcart-checkout-btn {
+      width: 100%;
+      background: #2563eb;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- MOCK TILDA NAV -->
+  <header class="mock-tilda-nav">
+    <a href="#" class="mock-nav-brand">
+      <span style="color:#3b82f6;">◆</span> GEEK NOOK // TILDA HYBRID
+    </a>
+    <ul class="mock-nav-links">
+      <li><a href="#gn-config-widget-root">3D Конфигуратор</a></li>
+      <li><a href="#gn-fea-widget-root">FEA Сопромат</a></li>
+      <li><a href="#gn-ergo-widget-root">Калькулятор эргономики</a></li>
+    </ul>
+    <button class="mock-nav-cart-btn" onclick="window.tcart__openCart()">
+      <span>Корзина Тильды</span>
+      <span id="mockCartCount" style="background:#1d4ed8;padding:2px 8px;border-radius:10px;font-size:11px;">0</span>
+    </button>
+  </header>
+
+  <!-- TILDA MOCK CART DRAWER -->
+  <div id="mockTcartDrawer" class="mock-tcart-drawer">
+    <div class="mock-tcart-header">
+      <div class="mock-tcart-title">Корзина заказа (Тильда ST100)</div>
+      <button class="mock-tcart-close" onclick="window.tcart__closeCart()">&times;</button>
+    </div>
+    <div class="mock-tcart-items" id="mockTcartItems">
+      <div style="text-align:center;color:#8b949e;margin-top:40px;font-size:14px;">Корзина пока пуста.<br>Соберите Focus Station в конфигураторе!</div>
+    </div>
+    <div class="mock-tcart-footer">
+      <div class="mock-tcart-total-row">
+        <span>Итого к оплате:</span>
+        <span id="mockCartTotal" style="color:#60a5fa;font-family:monospace;">0 ₽</span>
+      </div>
+      <button class="mock-tcart-checkout-btn" onclick="alert('В реальной Тильде здесь открывается переход к эквайрингу (ЮKassa / Т-Банк / Сбер)!')">
+        Оформить заказ в Тильде
+      </button>
+    </div>
+  </div>
+
+  <!-- SECTION 1: 3D CONFIGURATOR (T123 WIDGET) -->
+  <div class="mock-section-divider">
+    <div class="mock-section-badge">ТИЛЬДА БЛОК T123: 3D КОНФИГУРАТОР FOCUS STATION</div>
+  </div>
+  <div id="slot-configurator">
+    <!-- Embedded via iframe or direct include -->
+  </div>
+
+  <!-- SECTION 2: FEA STRESS TEST LAB (T123 WIDGET) -->
+  <div class="mock-section-divider">
+    <div class="mock-section-badge">ТИЛЬДА БЛОК T123: FEA STRESS TEST LAB (СОПРОМАТ)</div>
+  </div>
+  <div id="slot-fea">
+    <!-- Embedded via iframe or direct include -->
+  </div>
+
+  <!-- SECTION 3: ERGONOMICS CALCULATOR (T123 WIDGET) -->
+  <div class="mock-section-divider">
+    <div class="mock-section-badge">ТИЛЬДА БЛОК T123: КАЛЬКУЛЯТОР ЭРГОНОМИКИ ISO 9241-5</div>
+  </div>
+  <div id="slot-ergo">
+    <!-- Embedded via iframe or direct include -->
+  </div>
+
+  <!-- MOCK TILDA TCART API IMPLEMENTATION -->
+  <script>
+    window.mockCart = [];
+
+    // Tilda's Native Cart API emulation
+    window.tcart__addProduct = function(item) {
+      window.mockCart.push(item);
+      renderMockCart();
+      window.tcart__openCart();
+    };
+
+    window.tcart__openCart = function() {
+      document.getElementById('mockTcartDrawer').classList.add('open');
+    };
+
+    window.tcart__closeCart = function() {
+      document.getElementById('mockTcartDrawer').classList.remove('open');
+    };
+
+    function renderMockCart() {
+      const countEl = document.getElementById('mockCartCount');
+      const totalEl = document.getElementById('mockCartTotal');
+      const itemsEl = document.getElementById('mockTcartItems');
+
+      countEl.textContent = window.mockCart.length;
+      let sum = 0;
+
+      if (!window.mockCart.length) {
+        itemsEl.innerHTML = '<div style="text-align:center;color:#8b949e;margin-top:40px;font-size:14px;">Корзина пуста</div>';
+        totalEl.textContent = '0 ₽';
+        return;
+      }
+
+      itemsEl.innerHTML = window.mockCart.map((item, idx) => {
+        sum += item.price || 0;
+        const optsHtml = (item.options || []).map(o => `<div>• <strong>${o.name}:</strong> ${o.variant}</div>`).join('');
+        return `
+          <div class="mock-tcart-item">
+            <div style="display:flex;justify-content:space-between;align-items:start;">
+              <span class="mock-tcart-item-title">${item.name}</span>
+              <button onclick="window.mockCart.splice(${idx},1);renderMockCart();" style="background:none;border:none;color:#ef4444;cursor:pointer;">&times;</button>
+            </div>
+            <div class="mock-tcart-item-opts">${optsHtml}</div>
+            <div class="mock-tcart-item-price">${(item.price || 0).toLocaleString('ru-RU')} ₽</div>
+          </div>
+        `;
+      }).join('');
+
+      totalEl.textContent = sum.toLocaleString('ru-RU') + ' ₽';
+    }
+
+    // Load widget files dynamically for test stand
+    async function loadWidgets() {
+      const cfgRes = await fetch('tilda-hybrid/widget-3d-configurator.html');
+      document.getElementById('slot-configurator').innerHTML = await cfgRes.text();
+
+      const feaRes = await fetch('tilda-hybrid/widget-fea-lab.html');
+      document.getElementById('slot-fea').innerHTML = await feaRes.text();
+
+      const ergoRes = await fetch('tilda-hybrid/widget-ergonomics.html');
+      document.getElementById('slot-ergo').innerHTML = await ergoRes.text();
+
+      const globalRes = await fetch('tilda-hybrid/tilda-global-enhancements.html');
+      const div = document.createElement('div');
+      div.innerHTML = await globalRes.text();
+      document.body.appendChild(div);
+
+      // Execute script tags from fetched html
+      document.querySelectorAll('#slot-configurator script, #slot-fea script, #slot-ergo script, #gn-global-spotlight script').forEach(s => {
+        const script = document.createElement('script');
+        script.text = s.text;
+        document.body.appendChild(script);
+      });
+    }
+
+    loadWidgets();
+  </script>
+</body>
+</html>

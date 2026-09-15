@@ -1,0 +1,923 @@
+<!-- ==========================================================================
+     GEEK NOOK — Focus Station 3D Configurator Widget for Tilda (Block T123)
+     Self-contained: Scoped CSS + Reactive Logic + Tilda Cart Bridge (tcart)
+     ========================================================================== -->
+
+<div id="gn-config-widget-root" class="gn-cfg-wrapper">
+  <div class="gn-cfg-container">
+    
+    <!-- HEADER -->
+    <div class="gn-cfg-header">
+      <div class="gn-cfg-tag">FOCUS STATION 3D LAB</div>
+      <h2 class="gn-cfg-title">Собери свой идеальный сетап</h2>
+      <p class="gn-cfg-subtitle">Выберите породу дерева, длину основания, навесные модули T-Track и добавьте персональную лазерную гравировку.</p>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="gn-cfg-grid">
+      
+      <!-- PREVIEW COLUMN -->
+      <div class="gn-cfg-visual-col">
+        <div class="gn-cfg-canvas-wrap">
+          <div class="gn-cfg-status-pill" id="gnCfgStatusPill">Focus Station • Чёрное дерево • 85 см</div>
+          
+          <img id="gnCfgPreviewImg" class="gn-cfg-preview-img" src="images/tild6138-3463-4138-b133-323262633039__2.jpg" alt="Focus Station Preview" />
+          
+          <!-- Laser Engraving Badge Overlay -->
+          <div class="gn-cfg-engraving-badge" id="gnCfgEngravingBadge" style="display:none;">
+            <div class="gn-cfg-badge-bracket">[</div>
+            <span class="gn-cfg-badge-text" id="gnCfgEngravingBadgeText">GEEKNOOK // LAB</span>
+            <div class="gn-cfg-badge-bracket">]</div>
+          </div>
+
+          <!-- Quick 360 / Interactive Hint -->
+          <div class="gn-cfg-hint-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+            </svg>
+            Интерактивный предварительный просмотр
+          </div>
+        </div>
+
+        <!-- Tech Spec Badges -->
+        <div class="gn-cfg-specs-row">
+          <div class="gn-cfg-spec-chip">
+            <span class="gn-cfg-spec-k">Предельная нагрузка:</span>
+            <span class="gn-cfg-spec-v" id="gnCfgSpecLoad">до 45 кг</span>
+          </div>
+          <div class="gn-cfg-spec-chip">
+            <span class="gn-cfg-spec-k">Крепление:</span>
+            <span class="gn-cfg-spec-v">Шина T-Track v2.4</span>
+          </div>
+          <div class="gn-cfg-spec-chip">
+            <span class="gn-cfg-spec-k">Покрытие:</span>
+            <span class="gn-cfg-spec-v">Масло-воск Osmo</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTROLS COLUMN -->
+      <div class="gn-cfg-controls-col">
+        
+        <!-- STEP 1: LENGTH -->
+        <div class="gn-cfg-step">
+          <div class="gn-cfg-step-label">1. Длина основания</div>
+          <div class="gn-cfg-length-options" id="gnCfgLengthOptions">
+            <button type="button" class="gn-cfg-len-btn active" data-length="85" onclick="gnConfigurator.setLength('85')">
+              <span class="gn-cfg-len-val">85 см</span>
+              <span class="gn-cfg-len-desc">1 монитор (до 34")</span>
+              <span class="gn-cfg-len-price">19 990 ₽</span>
+            </button>
+            <button type="button" class="gn-cfg-len-btn" data-length="116" onclick="gnConfigurator.setLength('116')">
+              <span class="gn-cfg-len-val">116 см</span>
+              <span class="gn-cfg-len-desc">2 монитора / Ноутбук</span>
+              <span class="gn-cfg-len-price">24 990 ₽</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- STEP 2: FINISH -->
+        <div class="gn-cfg-step">
+          <div class="gn-cfg-step-label">2. Порода дерева и отделка</div>
+          <div class="gn-cfg-finishes-list" id="gnCfgFinishesList">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- STEP 3: T-TRACK ADDONS -->
+        <div class="gn-cfg-step">
+          <div class="gn-cfg-step-label">3. Навесные модули T-Track</div>
+          <div class="gn-cfg-addons-list" id="gnCfgAddonsList">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- STEP 4: LASER ENGRAVING -->
+        <div class="gn-cfg-step">
+          <div class="gn-cfg-step-label">4. Индивидуальная гравировка (+1 200 ₽)</div>
+          <div class="gn-cfg-engraving-box">
+            <label class="gn-cfg-checkbox-label">
+              <input type="checkbox" id="gnCfgEngravingCheck" onchange="gnConfigurator.toggleEngraving(this.checked)" />
+              <span class="gn-cfg-checkbox-custom"></span>
+              <span class="gn-cfg-checkbox-text">Нанести персональную лазерную гравировку на стальной шильдик</span>
+            </label>
+            <div class="gn-cfg-engraving-input-wrap" id="gnCfgEngravingInputWrap" style="display:none;">
+              <input type="text" id="gnCfgEngravingInput" class="gn-cfg-input" maxlength="28" placeholder="НАПРИМЕР: ALEX // DEV LAB" oninput="gnConfigurator.setEngravingText(this.value)" />
+              <div class="gn-cfg-input-hint">До 28 символов (латиница, цифры, знаки). Выжигается прецизионным CO2-лазером.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SUMMARY & CHECKOUT BAR -->
+        <div class="gn-cfg-footer">
+          <div class="gn-cfg-price-wrap">
+            <div class="gn-cfg-price-label">Итоговая стоимость:</div>
+            <div class="gn-cfg-total-price" id="gnCfgTotalPrice">19 990 ₽</div>
+          </div>
+          <button type="button" class="gn-cfg-cta-btn" onclick="gnConfigurator.addToCart()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <path d="M16 10a4 4 0 0 1-8 0"></path>
+            </svg>
+            <span>Добавить в корзину</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ==========================================================================
+     SCOPED STYLES (No collisions with Tilda CSS)
+     ========================================================================== -->
+<style>
+  #gn-config-widget-root {
+    --gn-bg: #0f1013;
+    --gn-card-bg: #16181d;
+    --gn-card-border: #232730;
+    --gn-card-hover: #2c313d;
+    --gn-text: #f0f2f5;
+    --gn-muted: #8b949e;
+    --gn-accent: #3b82f6;
+    --gn-accent-glow: rgba(59, 130, 246, 0.25);
+    --gn-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --gn-mono: "SF Mono", Monaco, "Cascadia Code", "JetBrains Mono", Consolas, monospace;
+    font-family: var(--gn-font);
+    background-color: var(--gn-bg);
+    color: var(--gn-text);
+    padding: 40px 16px;
+    box-sizing: border-box;
+    width: 100%;
+    line-height: 1.5;
+  }
+
+  #gn-config-widget-root * {
+    box-sizing: border-box;
+  }
+
+  .gn-cfg-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .gn-cfg-header {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+
+  .gn-cfg-tag {
+    display: inline-block;
+    font-family: var(--gn-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--gn-accent);
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .gn-cfg-title {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .gn-cfg-subtitle {
+    font-size: 15px;
+    color: var(--gn-muted);
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .gn-cfg-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .gn-cfg-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* VISUAL PREVIEW */
+  .gn-cfg-visual-col {
+    position: sticky;
+    top: 24px;
+  }
+
+  .gn-cfg-canvas-wrap {
+    position: relative;
+    background: radial-gradient(circle at center, #1e222b 0%, #121418 100%);
+    border: 1px solid var(--gn-card-border);
+    border-radius: 16px;
+    overflow: hidden;
+    min-height: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  }
+
+  .gn-cfg-status-pill {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 6px 14px;
+    border-radius: 20px;
+    z-index: 2;
+  }
+
+  .gn-cfg-preview-img {
+    width: 100%;
+    max-height: 380px;
+    object-fit: contain;
+    transition: opacity 0.3s ease, transform 0.4s ease;
+    display: block;
+  }
+
+  .gn-cfg-engraving-badge {
+    position: absolute;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(18, 20, 24, 0.92);
+    border: 1px solid #444c56;
+    padding: 5px 14px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--gn-mono);
+    font-size: 11px;
+    color: #ffd166;
+    letter-spacing: 0.1em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    z-index: 2;
+  }
+
+  .gn-cfg-badge-bracket {
+    color: #8b949e;
+  }
+
+  .gn-cfg-hint-badge {
+    position: absolute;
+    bottom: 12px;
+    right: 14px;
+    color: var(--gn-muted);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .gn-cfg-specs-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+    flex-wrap: wrap;
+  }
+
+  .gn-cfg-spec-chip {
+    flex: 1;
+    min-width: 140px;
+    background: var(--gn-card-bg);
+    border: 1px solid var(--gn-card-border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+
+  .gn-cfg-spec-k {
+    display: block;
+    color: var(--gn-muted);
+    margin-bottom: 2px;
+  }
+
+  .gn-cfg-spec-v {
+    font-weight: 600;
+    color: #fff;
+  }
+
+  /* CONTROLS */
+  .gn-cfg-controls-col {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .gn-cfg-step {
+    background: var(--gn-card-bg);
+    border: 1px solid var(--gn-card-border);
+    border-radius: 14px;
+    padding: 18px 20px;
+  }
+
+  .gn-cfg-step-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 14px;
+    letter-spacing: 0.01em;
+  }
+
+  /* LENGTH BUTTONS */
+  .gn-cfg-length-options {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .gn-cfg-len-btn {
+    background: #111317;
+    border: 1px solid var(--gn-card-border);
+    border-radius: 10px;
+    padding: 14px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gn-cfg-len-btn:hover {
+    border-color: var(--gn-card-hover);
+    background: #181b22;
+  }
+
+  .gn-cfg-len-btn.active {
+    border-color: var(--gn-accent);
+    background: rgba(59, 130, 246, 0.08);
+    box-shadow: 0 0 0 1px var(--gn-accent);
+  }
+
+  .gn-cfg-len-val {
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+
+  .gn-cfg-len-desc {
+    font-size: 12px;
+    color: var(--gn-muted);
+    margin-bottom: 8px;
+  }
+
+  .gn-cfg-len-price {
+    font-family: var(--gn-mono);
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--gn-accent);
+  }
+
+  /* FINISHES */
+  .gn-cfg-finishes-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+
+  @media (max-width: 600px) {
+    .gn-cfg-finishes-list {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .gn-cfg-finish-card {
+    background: #111317;
+    border: 1px solid var(--gn-card-border);
+    border-radius: 10px;
+    padding: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .gn-cfg-finish-card:hover {
+    border-color: var(--gn-card-hover);
+  }
+
+  .gn-cfg-finish-card.active {
+    border-color: var(--gn-accent);
+    background: rgba(59, 130, 246, 0.08);
+    box-shadow: 0 0 0 1px var(--gn-accent);
+  }
+
+  .gn-cfg-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    flex-shrink: 0;
+  }
+
+  .gn-cfg-finish-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .gn-cfg-finish-sub {
+    font-size: 11px;
+    color: var(--gn-muted);
+  }
+
+  /* ADDONS */
+  .gn-cfg-addons-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .gn-cfg-addon-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #111317;
+    border: 1px solid var(--gn-card-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .gn-cfg-addon-item:hover {
+    border-color: var(--gn-card-hover);
+  }
+
+  .gn-cfg-addon-item.selected {
+    border-color: var(--gn-accent);
+    background: rgba(59, 130, 246, 0.06);
+  }
+
+  .gn-cfg-addon-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .gn-cfg-addon-thumb {
+    width: 38px;
+    height: 38px;
+    border-radius: 6px;
+    object-fit: cover;
+    background: #222;
+  }
+
+  .gn-cfg-addon-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gn-cfg-addon-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: #fff;
+  }
+
+  .gn-cfg-addon-price {
+    font-family: var(--gn-mono);
+    font-size: 12px;
+    color: var(--gn-muted);
+  }
+
+  .gn-cfg-addon-check {
+    width: 20px;
+    height: 20px;
+    border-radius: 6px;
+    border: 1.5px solid var(--gn-card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    transition: all 0.2s ease;
+  }
+
+  .gn-cfg-addon-item.selected .gn-cfg-addon-check {
+    background: var(--gn-accent);
+    border-color: var(--gn-accent);
+    color: #fff;
+  }
+
+  /* ENGRAVING */
+  .gn-cfg-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #e6edf3;
+  }
+
+  .gn-cfg-checkbox-label input {
+    display: none;
+  }
+
+  .gn-cfg-checkbox-custom {
+    width: 20px;
+    height: 20px;
+    border-radius: 5px;
+    border: 1.5px solid var(--gn-card-border);
+    background: #111317;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+  }
+
+  .gn-cfg-checkbox-label input:checked + .gn-cfg-checkbox-custom {
+    background: var(--gn-accent);
+    border-color: var(--gn-accent);
+  }
+
+  .gn-cfg-checkbox-label input:checked + .gn-cfg-checkbox-custom::after {
+    content: "";
+    position: absolute;
+    top: 2px;
+    left: 6px;
+    width: 5px;
+    height: 10px;
+    border: solid #fff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+
+  .gn-cfg-engraving-input-wrap {
+    margin-top: 14px;
+    padding-left: 32px;
+  }
+
+  .gn-cfg-input {
+    width: 100%;
+    background: #111317;
+    border: 1px solid var(--gn-card-border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: #fff;
+    font-family: var(--gn-mono);
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s ease;
+  }
+
+  .gn-cfg-input:focus {
+    border-color: var(--gn-accent);
+  }
+
+  .gn-cfg-input-hint {
+    font-size: 11px;
+    color: var(--gn-muted);
+    margin-top: 6px;
+  }
+
+  /* FOOTER */
+  .gn-cfg-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #16181d;
+    border: 1px solid var(--gn-card-border);
+    border-radius: 14px;
+    padding: 18px 24px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .gn-cfg-price-label {
+    font-size: 12px;
+    color: var(--gn-muted);
+    margin-bottom: 2px;
+  }
+
+  .gn-cfg-total-price {
+    font-family: var(--gn-mono);
+    font-size: 24px;
+    font-weight: 700;
+    color: #fff;
+    transition: transform 0.2s ease;
+  }
+
+  .gn-cfg-total-price.pulse {
+    transform: scale(1.08);
+    color: #60a5fa;
+  }
+
+  .gn-cfg-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #2563eb;
+    color: #fff;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 28px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .gn-cfg-cta-btn:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.4);
+  }
+
+  /* TOAST NOTIFICATION */
+  .gn-cfg-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #1e232d;
+    border: 1px solid #3b82f6;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-size: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: gnToastFadeIn 0.3s ease;
+  }
+
+  @keyframes gnToastFadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+
+<!-- ==========================================================================
+     CONFIGURATOR LOGIC & TILDA CART BRIDGE
+     ========================================================================== -->
+<script>
+(function() {
+  'use strict';
+
+  // --- CONFIGURATOR DATA STORE ---
+  const CONFIG_DATA = {
+    finishes: [
+      { id: "black", name: "Чёрное дерево", subtitle: "Глубокий тёмный тон", hex: "#1c1d22", img: "images/tild6138-3463-4138-b133-323262633039__2.jpg", priceDelta: 0 },
+      { id: "oak", name: "Натуральный дуб", subtitle: "Светлый сканди-уют", hex: "#d8be9b", img: "images/tild3136-6262-4465-a663-376665626135__photo.jpg", priceDelta: 0 },
+      { id: "walnut", name: "Американский орех", subtitle: "Благородный шоколад", hex: "#684832", img: "images/tild3763-3337-4662-b233-616531316364__3.jpg", priceDelta: 0 }
+    ],
+    lengths: [
+      { id: "85", title: "85 см", descr: "Для 1 монитора до 34 дюймов", priceBase: 19990, maxLoad: "до 45 кг" },
+      { id: "116", title: "116 см", descr: "Для 2 мониторов или экрана + ноутбук", priceBase: 24990, maxLoad: "до 60 кг" }
+    ],
+    addons: [
+      { id: "addon-laptop", name: "Кронштейн для ноутбука (открытый)", price: 4999, img: "images/tild6164-3836-4261-b133-303933386431__1_3.jpg" },
+      { id: "addon-headphones", name: "Стойка для наушников с фетром", price: 2999, img: "images/tild3031-6663-4663-a262-613532636338__photo.jpg" },
+      { id: "addon-gamepad", name: "Подставка для геймпада PS5 / Xbox", price: 2990, img: "images/tild3039-3737-4533-b936-653936613663__2_2.jpg" },
+      { id: "addon-phone", name: "Док-станция для смартфона", price: 2490, img: "images/tild6566-3439-4264-a237-633566656531__6.jpg" },
+      { id: "addon-mac", name: "Подвесная полка Mac Studio / Mini", price: 4999, img: "images/tild3132-6562-4533-a638-646132613661__1_1.jpg" },
+      { id: "addon-cable", name: "Кабель-органайзер Power Strip", price: 1990, img: "images/tild3931-6666-4933-a466-373836393933__1.jpg" },
+      { id: "addon-mat", name: "Войлочный коврик Desk Mat XL", price: 3490, img: "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg" }
+    ]
+  };
+
+  // State
+  const state = {
+    lengthId: "85",
+    finishId: "black",
+    selectedAddonIds: new Set(),
+    engravingEnabled: false,
+    engravingText: ""
+  };
+
+  // Format Russian price
+  function formatPrice(num) {
+    return (num || 0).toLocaleString('ru-RU') + ' ₽';
+  }
+
+  // Toast Helper
+  function showToast(msg) {
+    const existing = document.querySelector('.gn-cfg-toast');
+    if (existing) existing.remove();
+    const t = document.createElement('div');
+    t.className = 'gn-cfg-toast';
+    t.innerHTML = `
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      <span>${msg}</span>
+    `;
+    document.body.appendChild(t);
+    setTimeout(() => { t.remove(); }, 3500);
+  }
+
+  // Update Visual and Price
+  function updateUI() {
+    const finish = CONFIG_DATA.finishes.find(f => f.id === state.finishId) || CONFIG_DATA.finishes[0];
+    const length = CONFIG_DATA.lengths.find(l => l.id === state.lengthId) || CONFIG_DATA.lengths[0];
+
+    // Status Pill & Preview Image
+    const previewImg = document.getElementById('gnCfgPreviewImg');
+    const statusPill = document.getElementById('gnCfgStatusPill');
+    const specLoad = document.getElementById('gnCfgSpecLoad');
+
+    if (previewImg && previewImg.src !== finish.img) {
+      previewImg.style.opacity = '0.5';
+      setTimeout(() => {
+        previewImg.src = finish.img;
+        previewImg.style.opacity = '1';
+      }, 120);
+    }
+
+    if (statusPill) statusPill.textContent = `Focus Station • ${finish.name} • ${length.id} см`;
+    if (specLoad) specLoad.textContent = length.maxLoad;
+
+    // Engraving Overlay Badge
+    const badge = document.getElementById('gnCfgEngravingBadge');
+    const badgeText = document.getElementById('gnCfgEngravingBadgeText');
+    if (badge) badge.style.display = state.engravingEnabled ? 'flex' : 'none';
+    if (badgeText) {
+      badgeText.textContent = state.engravingText ? state.engravingText.toUpperCase() : 'GEEKNOOK // LAB';
+    }
+
+    // Length Buttons
+    document.querySelectorAll('.gn-cfg-len-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-length') === state.lengthId);
+    });
+
+    // Finish Cards
+    document.querySelectorAll('.gn-cfg-finish-card').forEach(card => {
+      card.classList.toggle('active', card.getAttribute('data-finish') === state.finishId);
+    });
+
+    // Addon Items
+    document.querySelectorAll('.gn-cfg-addon-item').forEach(item => {
+      const id = item.getAttribute('data-addon');
+      item.classList.toggle('selected', state.selectedAddonIds.has(id));
+    });
+
+    // Price Calculation
+    let total = length.priceBase + finish.priceDelta;
+    state.selectedAddonIds.forEach(id => {
+      const a = CONFIG_DATA.addons.find(x => x.id === id);
+      if (a) total += a.price;
+    });
+    if (state.engravingEnabled) total += 1200;
+
+    const priceEl = document.getElementById('gnCfgTotalPrice');
+    if (priceEl) {
+      priceEl.textContent = formatPrice(total);
+      priceEl.classList.remove('pulse');
+      void priceEl.offsetWidth;
+      priceEl.classList.add('pulse');
+    }
+  }
+
+  // Render Finishes List
+  function renderFinishes() {
+    const wrap = document.getElementById('gnCfgFinishesList');
+    if (!wrap) return;
+    wrap.innerHTML = CONFIG_DATA.finishes.map(f => `
+      <div class="gn-cfg-finish-card ${f.id === state.finishId ? 'active' : ''}" data-finish="${f.id}" onclick="gnConfigurator.setFinish('${f.id}')">
+        <span class="gn-cfg-swatch" style="background:${f.hex}"></span>
+        <div>
+          <div class="gn-cfg-finish-name">${f.name}</div>
+          <div class="gn-cfg-finish-sub">${f.subtitle}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Render Addons List
+  function renderAddons() {
+    const wrap = document.getElementById('gnCfgAddonsList');
+    if (!wrap) return;
+    wrap.innerHTML = CONFIG_DATA.addons.map(a => `
+      <div class="gn-cfg-addon-item ${state.selectedAddonIds.has(a.id) ? 'selected' : ''}" data-addon="${a.id}" onclick="gnConfigurator.toggleAddon('${a.id}')">
+        <div class="gn-cfg-addon-left">
+          <img class="gn-cfg-addon-thumb" src="${a.img}" alt="${a.name}" onerror="this.style.display='none'" />
+          <div class="gn-cfg-addon-info">
+            <span class="gn-cfg-addon-title">${a.name}</span>
+            <span class="gn-cfg-addon-price">+${formatPrice(a.price)}</span>
+          </div>
+        </div>
+        <div class="gn-cfg-addon-check">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // --- PUBLIC API EXPOSED ON WINDOW ---
+  window.gnConfigurator = {
+    setLength(lenId) {
+      state.lengthId = lenId;
+      updateUI();
+    },
+    setFinish(finishId) {
+      state.finishId = finishId;
+      updateUI();
+    },
+    toggleAddon(addonId) {
+      if (state.selectedAddonIds.has(addonId)) {
+        state.selectedAddonIds.delete(addonId);
+      } else {
+        state.selectedAddonIds.add(addonId);
+      }
+      updateUI();
+    },
+    toggleEngraving(checked) {
+      state.engravingEnabled = checked;
+      const wrap = document.getElementById('gnCfgEngravingInputWrap');
+      if (wrap) wrap.style.display = checked ? 'block' : 'none';
+      updateUI();
+    },
+    setEngravingText(text) {
+      state.engravingText = text;
+      updateUI();
+    },
+
+    // --- TILDA CART BRIDGE (tcart) ---
+    addToCart() {
+      const finish = CONFIG_DATA.finishes.find(f => f.id === state.finishId) || CONFIG_DATA.finishes[0];
+      const length = CONFIG_DATA.lengths.find(l => l.id === state.lengthId) || CONFIG_DATA.lengths[0];
+
+      let grandTotal = length.priceBase + finish.priceDelta;
+      const addonNames = [];
+      state.selectedAddonIds.forEach(id => {
+        const a = CONFIG_DATA.addons.find(x => x.id === id);
+        if (a) {
+          grandTotal += a.price;
+          addonNames.push(a.name);
+        }
+      });
+      if (state.engravingEnabled) grandTotal += 1200;
+
+      const productName = `Focus Station ${length.id} см (${finish.name})`;
+      const optionsArray = [
+        { name: 'Длина', variant: length.id + ' см' },
+        { name: 'Порода дерева', variant: finish.name },
+        { name: 'Гравировка', variant: state.engravingEnabled ? (state.engravingText || 'GEEKNOOK // LAB') : 'Без гравировки' },
+        { name: 'T-Track модули', variant: addonNames.length ? addonNames.join('; ') : 'Базовая комплектация' }
+      ];
+
+      // 1. TILDA TCART NATIVE INTEGRATION
+      if (typeof window.tcart__addProduct === 'function') {
+        window.tcart__addProduct({
+          name: productName,
+          price: grandTotal,
+          img: finish.img,
+          options: optionsArray
+        });
+        if (typeof window.tcart__openCart === 'function') {
+          window.tcart__openCart();
+        }
+        showToast(`Добавлено в корзину Тильды: ${productName}`);
+        return;
+      }
+
+      // 2. EMULATION / FALLBACK (outside Tilda or local testing)
+      console.log('[GeekNook Configurator] Tilda Cart Bridge dispatched:', {
+        name: productName,
+        price: grandTotal,
+        options: optionsArray
+      });
+
+      // Dispatch global custom event for local test stands or external listeners
+      window.dispatchEvent(new CustomEvent('geeknook:cart:add', {
+        detail: {
+          id: `focus-station-${length.id}-${finish.id}`,
+          title: productName,
+          price: grandTotal,
+          image: finish.img,
+          option: optionsArray.map(o => `${o.name}: ${o.variant}`).join(' | ')
+        }
+      }));
+
+      showToast(`Товар добавлен: ${productName} (${formatPrice(grandTotal)})`);
+    }
+  };
+
+  // Initialization
+  renderFinishes();
+  renderAddons();
+  updateUI();
+
+})();
+</script>

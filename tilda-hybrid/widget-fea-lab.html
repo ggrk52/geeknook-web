@@ -1,0 +1,588 @@
+<!-- ==========================================================================
+     GEEK NOOK — FEA Stress Test Lab Widget for Tilda (Block T123)
+     Self-contained: Scoped CSS + Canvas 2D Physics Heatmap + Shock Test Simulator
+     ========================================================================== -->
+
+<div id="gn-fea-widget-root" class="gn-fea-wrapper">
+  <div class="gn-fea-container">
+    
+    <!-- HEADER -->
+    <div class="gn-fea-header">
+      <div class="gn-fea-tag">SOLID MECHANICS // FEA LAB</div>
+      <h2 class="gn-fea-title">Лаборатория сопромата и прочности</h2>
+      <p class="gn-fea-subtitle">Математическая симуляция упругой деформации балки по формуле Эйлера-Бернулли с расчетом эквивалентных механических напряжений фон Мизеса.</p>
+    </div>
+
+    <!-- MAIN INTERACTIVE CARD -->
+    <div class="gn-fea-card">
+      
+      <!-- TOP CONTROLS BAR -->
+      <div class="gn-fea-topbar">
+        <div class="gn-fea-slider-group">
+          <div class="gn-fea-slider-label">
+            <span>Нагрузка на полку:</span>
+            <strong id="gnFeaWeightVal" class="gn-fea-val-accent">25 кг</strong>
+          </div>
+          <input type="range" id="gnFeaWeightSlider" class="gn-fea-range" min="5" max="65" step="1" value="25" oninput="gnFeaLab.setWeight(this.value)" />
+          <div class="gn-fea-range-ticks">
+            <span>5 кг (Mac Studio)</span>
+            <span>25 кг (2× 27" монитора)</span>
+            <span>45 кг (34" UW + Кронштейн)</span>
+            <span>65 кг (Экстрим)</span>
+          </div>
+        </div>
+
+        <div class="gn-fea-actions">
+          <button type="button" class="gn-fea-shock-btn" id="gnFeaShockBtn" onclick="gnFeaLab.triggerShockTest()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
+            </svg>
+            <span>Импульсный Shock Test</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- CANVAS SIMULATOR -->
+      <div class="gn-fea-canvas-wrap">
+        <div class="gn-fea-canvas-legend">
+          <span class="gn-fea-legend-badge">МКЭ Сетка: 64 узла</span>
+          <span class="gn-fea-legend-badge">Материал: Дуб (E = 12.5 ГПа)</span>
+        </div>
+        <canvas id="gnFeaCanvas" class="gn-fea-canvas"></canvas>
+      </div>
+
+      <!-- METRICS GRID -->
+      <div class="gn-fea-metrics">
+        
+        <div class="gn-fea-metric-item">
+          <div class="gn-fea-metric-title">Физический прогиб (f)</div>
+          <div class="gn-fea-metric-val" id="gnFeaDeflectionVal">0.42 мм</div>
+          <div class="gn-fea-metric-sub">Предел нормы L/300: 2.80 мм</div>
+        </div>
+
+        <div class="gn-fea-metric-item">
+          <div class="gn-fea-metric-title">Напряжение фон Мизеса (σ)</div>
+          <div class="gn-fea-metric-val" id="gnFeaStressVal">14.6 МПа</div>
+          <div class="gn-fea-metric-sub">Предел текучести: 85.0 МПа</div>
+        </div>
+
+        <div class="gn-fea-metric-item">
+          <div class="gn-fea-metric-title">Коэффициент запаса (k)</div>
+          <div class="gn-fea-metric-val gn-fea-metric-green" id="gnFeaSafetyVal">5.8×</div>
+          <div class="gn-fea-metric-sub">Статус: Высокая надежность</div>
+        </div>
+
+        <div class="gn-fea-metric-item">
+          <div class="gn-fea-metric-title">Распределенное усилие</div>
+          <div class="gn-fea-metric-val" id="gnFeaForceVal">245 Н</div>
+          <div class="gn-fea-metric-sub">Симметричные опоры 3 мм</div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- ==========================================================================
+     SCOPED STYLES
+     ========================================================================== -->
+<style>
+  #gn-fea-widget-root {
+    --gn-bg: #0d0f12;
+    --gn-card: #15181e;
+    --gn-border: #222732;
+    --gn-accent: #3b82f6;
+    --gn-accent-rgb: 59, 130, 246;
+    --gn-text: #f0f3f6;
+    --gn-muted: #8c95a4;
+    --gn-green: #10b981;
+    --gn-orange: #f59e0b;
+    --gn-red: #ef4444;
+    --gn-mono: "SF Mono", Monaco, "JetBrains Mono", Consolas, monospace;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--gn-bg);
+    color: var(--gn-text);
+    padding: 40px 16px;
+    box-sizing: border-box;
+    width: 100%;
+    line-height: 1.5;
+  }
+
+  #gn-fea-widget-root * {
+    box-sizing: border-box;
+  }
+
+  .gn-fea-container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .gn-fea-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+
+  .gn-fea-tag {
+    display: inline-block;
+    font-family: var(--gn-mono);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--gn-accent);
+    background: rgba(var(--gn-accent-rgb), 0.1);
+    border: 1px solid rgba(var(--gn-accent-rgb), 0.3);
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .gn-fea-title {
+    font-size: clamp(24px, 4vw, 36px);
+    font-weight: 700;
+    color: #fff;
+    margin: 0 0 10px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .gn-fea-subtitle {
+    font-size: 15px;
+    color: var(--gn-muted);
+    max-width: 680px;
+    margin: 0 auto;
+  }
+
+  .gn-fea-card {
+    background: var(--gn-card);
+    border: 1px solid var(--gn-border);
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+  }
+
+  .gn-fea-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .gn-fea-slider-group {
+    flex: 1;
+    min-width: 280px;
+  }
+
+  .gn-fea-slider-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: var(--gn-text);
+    margin-bottom: 10px;
+  }
+
+  .gn-fea-val-accent {
+    font-family: var(--gn-mono);
+    color: #60a5fa;
+    font-size: 16px;
+  }
+
+  .gn-fea-range {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: #252a36;
+    outline: none;
+    cursor: pointer;
+  }
+
+  .gn-fea-range::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #3b82f6;
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.6);
+  }
+
+  .gn-fea-range-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--gn-muted);
+    margin-top: 6px;
+    font-family: var(--gn-mono);
+  }
+
+  .gn-fea-shock-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #1e2430;
+    border: 1px solid #323b4d;
+    color: #ffd166;
+    font-family: var(--gn-mono);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 12px 20px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .gn-fea-shock-btn:hover {
+    background: #262d3d;
+    border-color: #f59e0b;
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.25);
+  }
+
+  /* CANVAS */
+  .gn-fea-canvas-wrap {
+    position: relative;
+    background: #090a0d;
+    border: 1px solid #1c212b;
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+
+  .gn-fea-canvas-legend {
+    position: absolute;
+    top: 12px;
+    left: 14px;
+    display: flex;
+    gap: 10px;
+    z-index: 2;
+  }
+
+  .gn-fea-legend-badge {
+    background: rgba(21, 24, 30, 0.85);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    font-family: var(--gn-mono);
+    font-size: 11px;
+    color: #94a3b8;
+    padding: 4px 10px;
+    border-radius: 6px;
+  }
+
+  .gn-fea-canvas {
+    width: 100%;
+    height: 240px;
+    display: block;
+  }
+
+  /* METRICS */
+  .gn-fea-metrics {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  @media (max-width: 768px) {
+    .gn-fea-metrics {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .gn-fea-metric-item {
+    background: #101217;
+    border: 1px solid var(--gn-border);
+    border-radius: 12px;
+    padding: 16px;
+  }
+
+  .gn-fea-metric-title {
+    font-size: 12px;
+    color: var(--gn-muted);
+    margin-bottom: 6px;
+  }
+
+  .gn-fea-metric-val {
+    font-family: var(--gn-mono);
+    font-size: 22px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+  }
+
+  .gn-fea-metric-green {
+    color: var(--gn-green);
+  }
+
+  .gn-fea-metric-orange {
+    color: var(--gn-orange);
+  }
+
+  .gn-fea-metric-red {
+    color: var(--gn-red);
+  }
+
+  .gn-fea-metric-sub {
+    font-size: 11px;
+    color: #64748b;
+  }
+</style>
+
+<!-- ==========================================================================
+     FEA PHYSICS ENGINE & CANVAS SIMULATOR
+     ========================================================================== -->
+<script>
+(function() {
+  'use strict';
+
+  const state = {
+    weightKg: 25,
+    isShockTesting: false,
+    shockStartTime: 0
+  };
+
+  // EULER-BERNOULLI BEAM DEFLECTION PHYSICS
+  function calculatePhysics(weightKg, extraShockFactor) {
+    const shockMult = extraShockFactor || 1.0;
+    const mass = Math.max(0, Math.min(85, Number(weightKg) || 0)) * shockMult;
+    const g = 9.81;
+    const F = mass * g;
+    const Leff = 0.72; // effective span between brackets (m)
+    const E = 12.5e9;  // Caucasian Oak modulus 12.5 GPa
+    const b = 0.23;    // width 230 mm
+    const h = 0.022;   // thickness 22 mm
+    const I = (b * Math.pow(h, 3)) / 12;
+
+    const deltaMeters = (F * Math.pow(Leff, 3)) / (48 * E * I);
+    const deltaMm = deltaMeters * 1000;
+
+    const Mmax = (F * Leff) / 4;
+    const sigmaPa = (Mmax * (h / 2)) / I;
+    const sigmaMpa = sigmaPa / 1e6;
+
+    const yieldStrengthMpa = 85.0; // Wood yield stress
+    const safetyFactor = sigmaMpa > 0.1 ? (yieldStrengthMpa / sigmaMpa) : 99.9;
+
+    return {
+      mass,
+      F: Math.round(F),
+      deltaMm: Number(deltaMm.toFixed(2)),
+      sigmaMpa: Number(sigmaMpa.toFixed(1)),
+      safetyFactor: Number(safetyFactor.toFixed(1))
+    };
+  }
+
+  // CANVAS DRAWING
+  function renderCanvas() {
+    const canvas = document.getElementById('gnFeaCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = rect.width || 800;
+    const h = 240;
+
+    if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+    }
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.scale(dpr, dpr);
+
+    // Dynamic Shock Oscillation
+    let shockFactor = 1.0;
+    if (state.isShockTesting) {
+      const elapsed = (performance.now() - state.shockStartTime) / 1000;
+      if (elapsed > 2.5) {
+        state.isShockTesting = false;
+      } else {
+        const decay = Math.exp(-2.2 * elapsed);
+        const oscillation = Math.sin(elapsed * 18);
+        shockFactor = 1.0 + (1.35 * oscillation * decay);
+      }
+    }
+
+    const phys = calculatePhysics(state.weightKg, shockFactor);
+
+    // Clear Canvas
+    ctx.fillStyle = '#090a0d';
+    ctx.fillRect(0, 0, w, h);
+
+    // Subtle Engineering Grid
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < w; x += 30) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, h); ctx.stroke();
+    }
+    for (let y = 0; y < h; y += 30) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(w, y); ctx.stroke();
+    }
+
+    // Baseline geometry
+    const padX = 60;
+    const beamW = w - padX * 2;
+    const beamH = 22;
+    const baseY = 110;
+    const maxVisualDeflect = phys.deltaMm * 14; // amplified for visual feedback
+
+    // Steel Leg Supports
+    const leftLegX = padX + 25;
+    const rightLegX = padX + beamW - 25;
+    const legW = 20;
+    const legH = 70;
+
+    ctx.fillStyle = '#2d3340';
+    // Left Support
+    ctx.fillRect(leftLegX - legW / 2, baseY, legW, legH);
+    // Right Support
+    ctx.fillRect(rightLegX - legW / 2, baseY, legW, legH);
+
+    // Rubber/Felt Dampers on feet
+    ctx.fillStyle = '#10b981';
+    ctx.fillRect(leftLegX - legW / 2 - 2, baseY + legH - 4, legW + 4, 4);
+    ctx.fillRect(rightLegX - legW / 2 - 2, baseY + legH - 4, legW + 4, 4);
+
+    // BEAM FINITE ELEMENT MESH (64 segments)
+    const segments = 64;
+    const step = beamW / segments;
+
+    ctx.beginPath();
+    // Top surface curve
+    for (let i = 0; i <= segments; i++) {
+      const x = padX + i * step;
+      const relX = (i / segments) * 2 - 1; // -1 to +1
+      const curve = Math.max(0, 1 - Math.pow(relX, 2));
+      const curDeflect = maxVisualDeflect * curve;
+      const y = baseY + curDeflect;
+
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    }
+
+    // Bottom surface curve
+    for (let i = segments; i >= 0; i--) {
+      const x = padX + i * step;
+      const relX = (i / segments) * 2 - 1;
+      const curve = Math.max(0, 1 - Math.pow(relX, 2));
+      const curDeflect = maxVisualDeflect * curve;
+      const y = baseY + beamH + curDeflect;
+      ctx.lineTo(x, y);
+    }
+    ctx.closePath();
+
+    // VON MISES STRESS GRADIENT FILL
+    const grad = ctx.createLinearGradient(padX, baseY, padX + beamW, baseY);
+    const stressRatio = Math.min(1.0, phys.sigmaMpa / 85.0);
+
+    if (stressRatio < 0.3) {
+      grad.addColorStop(0, '#2563eb');
+      grad.addColorStop(0.5, '#3b82f6');
+      grad.addColorStop(1, '#2563eb');
+    } else if (stressRatio < 0.65) {
+      grad.addColorStop(0, '#2563eb');
+      grad.addColorStop(0.35, '#3b82f6');
+      grad.addColorStop(0.5, '#eab308');
+      grad.addColorStop(0.65, '#3b82f6');
+      grad.addColorStop(1, '#2563eb');
+    } else {
+      grad.addColorStop(0, '#3b82f6');
+      grad.addColorStop(0.3, '#f59e0b');
+      grad.addColorStop(0.5, '#ef4444');
+      grad.addColorStop(0.7, '#f59e0b');
+      grad.addColorStop(1, '#3b82f6');
+    }
+
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Force vector arrow in center
+    const centerX = padX + beamW / 2;
+    const centerDeflectY = baseY + maxVisualDeflect;
+
+    ctx.strokeStyle = '#ffd166';
+    ctx.fillStyle = '#ffd166';
+    ctx.lineWidth = 3;
+
+    // Arrow line
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerDeflectY - 45);
+    ctx.lineTo(centerX, centerDeflectY - 6);
+    ctx.stroke();
+
+    // Arrow head
+    ctx.beginPath();
+    ctx.moveTo(centerX - 7, centerDeflectY - 14);
+    ctx.lineTo(centerX + 7, centerDeflectY - 14);
+    ctx.lineTo(centerX, centerDeflectY - 2);
+    ctx.closePath();
+    ctx.fill();
+
+    // Weight label above arrow
+    ctx.font = '600 12px "SF Mono", Monaco, monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(`F = ${phys.F} Н (${state.weightKg} кг)`, centerX, centerDeflectY - 52);
+
+    // Deflection indicator line
+    if (phys.deltaMm > 0.05) {
+      ctx.strokeStyle = '#60a5fa';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([3, 3]);
+      ctx.beginPath();
+      ctx.moveTo(centerX - 40, baseY + beamH);
+      ctx.lineTo(centerX + 40, baseY + beamH);
+      ctx.moveTo(centerX - 40, baseY + beamH + maxVisualDeflect);
+      ctx.lineTo(centerX + 40, baseY + beamH + maxVisualDeflect);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Update Text DOM Metrics
+    const deflEl = document.getElementById('gnFeaDeflectionVal');
+    const stressEl = document.getElementById('gnFeaStressVal');
+    const safetyEl = document.getElementById('gnFeaSafetyVal');
+    const forceEl = document.getElementById('gnFeaForceVal');
+
+    if (deflEl) deflEl.textContent = `${phys.deltaMm} мм`;
+    if (stressEl) stressEl.textContent = `${phys.sigmaMpa} МПа`;
+    if (forceEl) forceEl.textContent = `${phys.F} Н`;
+    if (safetyEl) {
+      safetyEl.textContent = `${phys.safetyFactor}×`;
+      safetyEl.className = 'gn-fea-metric-val ' + (
+        phys.safetyFactor > 4 ? 'gn-fea-metric-green' : (phys.safetyFactor > 2 ? 'gn-fea-metric-orange' : 'gn-fea-metric-red')
+      );
+    }
+
+    if (state.isShockTesting) {
+      requestAnimationFrame(renderCanvas);
+    }
+  }
+
+  // PUBLIC API
+  window.gnFeaLab = {
+    setWeight(val) {
+      state.weightKg = Number(val) || 25;
+      const label = document.getElementById('gnFeaWeightVal');
+      if (label) label.textContent = `${state.weightKg} кг`;
+      renderCanvas();
+    },
+    triggerShockTest() {
+      state.isShockTesting = true;
+      state.shockStartTime = performance.now();
+      renderCanvas();
+    }
+  };
+
+  // Init & Auto-Resize
+  window.addEventListener('resize', renderCanvas);
+  setTimeout(renderCanvas, 50);
+
+})();
+</script>

@@ -1,0 +1,120 @@
+<!-- ==========================================================================
+     GEEK NOOK — Universal Headless Loader for Tilda (Block T123)
+     Loads 100% of the GeekNook site into Tilda while connecting native:
+     • Tilda Cart (ST100 / tcart)
+     • Payment Gateways (YooKassa, Tinkoff, Sber, SBP, Dolame)
+     • Delivery calculation (CDEK)
+     • Tilda CRM & Telegram Lead Generation
+     ========================================================================== -->
+
+<div id="geeknook-mount-point" class="geeknook-tilda-wrapper">
+  <!-- Loading Skeleton -->
+  <div id="gn-site-loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0c0d10;color:#3b82f6;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;font-family:sans-serif;">
+    <div style="width:40px;height:40px;border:3px solid #1e2430;border-top-color:#3b82f6;border-radius:50%;animation:gnSpin 0.8s linear infinite;"></div>
+    <div style="margin-top:16px;font-size:13px;letter-spacing:0.1em;color:#8b949e;">GEEK NOOK // СИСТЕМА ЗАГРУЖАЕТСЯ...</div>
+  </div>
+</div>
+
+<style>
+  @keyframes gnSpin { to { transform: rotate(360deg); } }
+  
+  /* Reset Tilda Body paddings for full-screen experience */
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #0c0d10 !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Ensure Tilda Cart icon stays accessible */
+  .t706__carticon {
+    z-index: 999999 !important;
+  }
+</style>
+
+<script>
+(function() {
+  'use strict';
+
+  // =========================================================================
+  // ВСТАВЬТЕ СЮДА ВАШУ ССЫЛКУ ИЗ ЧАСТИ 1 ГАЙДА (обязательно со слэшем / на конце!):
+  // Пример: const BASE_URL = 'https://geeknook-app.netlify.app/';
+  // =========================================================================
+  const BASE_URL = window.GEEKNOOK_CDN_URL || 'https://YOUR-SITE-URL.netlify.app/';
+
+  function loadAsset(type, url) {
+    return new Promise((resolve, reject) => {
+      if (type === 'css') {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = url;
+        link.onload = resolve;
+        link.onerror = resolve; // graceful fallback
+        document.head.appendChild(link);
+      } else if (type === 'js') {
+        const script = document.createElement('script');
+        script.src = url;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.body.appendChild(script);
+      }
+    });
+  }
+
+  async function mountGeekNook() {
+    try {
+      // 1. Load Fonts & Main Stylesheet
+      await loadAsset('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap');
+      await loadAsset('css', BASE_URL + 'css/modern-style.css');
+
+      // 2. Fetch HTML template and inject body
+      const htmlRes = await fetch(BASE_URL + 'index.html');
+      const htmlText = await htmlRes.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+
+      // Extract body contents (excluding existing scripts)
+      const mountPoint = document.getElementById('geeknook-mount-point');
+      const bodyChildren = Array.from(doc.body.children).filter(el => el.tagName !== 'SCRIPT');
+      
+      bodyChildren.forEach(child => {
+        mountPoint.appendChild(child);
+      });
+
+      // 3. Sequential Scripts Loading
+      await loadAsset('js', BASE_URL + 'js/three.min.js');
+      await loadAsset('js', BASE_URL + 'js/products-data.js');
+      await loadAsset('js', BASE_URL + 'js/modern-app.js');
+      await loadAsset('js', BASE_URL + 'js/modules/tilda-adapter.js');
+
+      // 4. Remove Loader
+      const loader = document.getElementById('gn-site-loader');
+      if (loader) {
+        loader.style.opacity = '0';
+        loader.style.transition = 'opacity 0.4s ease';
+        setTimeout(() => loader.remove(), 400);
+      }
+
+      console.log('[GeekNook] Successfully mounted on Tilda with Tcart integration!');
+    } catch (err) {
+      console.error('[GeekNook] Failed to mount on Tilda:', err);
+      const loader = document.getElementById('gn-site-loader');
+      if (loader) {
+        loader.innerHTML = `
+          <div style="color:#ef4444;font-size:14px;text-align:center;">
+            Не удалось загрузить сайт.<br>
+            <span style="font-size:12px;color:#8b949e;">Проверьте путь BASE_URL или доступность файлов.</span>
+          </div>
+        `;
+      }
+    }
+  }
+
+  // Start mount
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mountGeekNook);
+  } else {
+    mountGeekNook();
+  }
+})();
+</script>
