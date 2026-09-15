@@ -17,13 +17,13 @@ if (-not $targetDesktop) {
 }
 
 $zipPath = Join-Path $targetDesktop "geeknook-website.zip"
+$tarExe = Join-Path $env:SystemRoot "System32\tar.exe"
 
 Write-Host "Packing GeekNook website into: $zipPath ..." -ForegroundColor Cyan
 
-# Use tar to generate clean zip archive
 Push-Location $root
 try {
-  tar -a -c -f $zipPath index.html 404.html .htaccess README.md robots.txt sitemap.xml favicon.ico css js images
+  & $tarExe -a -c -f $zipPath index.html 404.html .htaccess README.md robots.txt sitemap.xml favicon.ico css js images
   
   # Also sync to alternate desktop path if exists
   foreach ($p in $desktopPaths) {
