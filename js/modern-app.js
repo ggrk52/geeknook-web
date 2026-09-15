@@ -2389,7 +2389,14 @@
     const captionEl = document.getElementById('lightboxCaption');
     if (!modal || !img) return;
 
-    img.src = src;
+    let finalSrc = src || '';
+    if (typeof window.getGeekNookAssetUrl === 'function') {
+      finalSrc = window.getGeekNookAssetUrl(finalSrc);
+    } else if (finalSrc && (finalSrc.startsWith('images/') || finalSrc.startsWith('./images/')) && !finalSrc.startsWith('http') && window.GEEKNOOK_CDN_URL) {
+      finalSrc = window.GEEKNOOK_CDN_URL + finalSrc.replace(/^\.?\//, '');
+    }
+
+    img.src = finalSrc;
     if (captionEl) captionEl.textContent = escapeHTML(caption);
 
     modalManager.open('lightboxModal');

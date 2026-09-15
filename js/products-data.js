@@ -816,3 +816,97 @@ GEEKNOOK_DATA.allProducts = [
   ...GEEKNOOK_DATA.accessories,
   ...GEEKNOOK_DATA.mats
 ];
+
+if (typeof window !== 'undefined') {
+  window.GEEKNOOK_DATA = GEEKNOOK_DATA;
+}
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = GEEKNOOK_DATA;
+}
+
+// --- CDN & HEADLESS TILDA ASSET NORMALIZER ---
+(function normalizeGeekNookAssetUrls() {
+  const isExternalHost = typeof window !== 'undefined' && 
+    window.location.hostname !== 'localhost' && 
+    window.location.hostname !== '127.0.0.1' && 
+    window.location.protocol !== 'file:';
+  
+  const cdn = (typeof window !== 'undefined' && window.GEEKNOOK_CDN_URL) 
+    ? window.GEEKNOOK_CDN_URL 
+    : (isExternalHost ? 'https://ggrk52.github.io/geeknook-web/' : '');
+
+  if (typeof window !== 'undefined') {
+    window.GEEKNOOK_CDN_URL = cdn;
+  }
+
+  const prefix = (url) => {
+    if (!url || typeof url !== 'string') return url;
+    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) return url;
+    if (!cdn) return url;
+    const cleanUrl = url.replace(/^\.?\//, '');
+    return cdn.endsWith('/') ? cdn + cleanUrl : cdn + '/' + cleanUrl;
+  };
+
+  if (typeof window !== 'undefined') {
+    window.getGeekNookAssetUrl = prefix;
+  }
+
+  if (!cdn) return;
+
+  // 1. Catalog Products
+  ['boards', 'accessories', 'mats'].forEach(cat => {
+    if (Array.isArray(GEEKNOOK_DATA[cat])) {
+      GEEKNOOK_DATA[cat].forEach(p => {
+        if (p.images && Array.isArray(p.images)) {
+          p.images = p.images.map(prefix);
+        }
+        if (p.image) p.image = prefix(p.image);
+      });
+    }
+  });
+
+  if (Array.isArray(GEEKNOOK_DATA.allProducts)) {
+    GEEKNOOK_DATA.allProducts.forEach(p => {
+      if (p.images && Array.isArray(p.images)) {
+        p.images = p.images.map(prefix);
+      }
+      if (p.image) p.image = prefix(p.image);
+    });
+  }
+
+  // 2. 3D Configurator Finishes & Addons
+  if (GEEKNOOK_DATA.configurator) {
+    if (Array.isArray(GEEKNOOK_DATA.configurator.finishes)) {
+      GEEKNOOK_DATA.configurator.finishes.forEach(f => { if (f.img) f.img = prefix(f.img); });
+    }
+    if (Array.isArray(GEEKNOOK_DATA.configurator.addons)) {
+      GEEKNOOK_DATA.configurator.addons.forEach(a => { if (a.img) a.img = prefix(a.img); });
+    }
+  }
+
+  // 3. Bundles
+  if (Array.isArray(GEEKNOOK_DATA.bundles)) {
+    GEEKNOOK_DATA.bundles.forEach(b => { if (b.image) b.image = prefix(b.image); });
+  }
+
+  // 4. Articles
+  if (Array.isArray(GEEKNOOK_DATA.articles)) {
+    GEEKNOOK_DATA.articles.forEach(a => { if (a.image) a.image = prefix(a.image); });
+  }
+
+  // 5. Gallery
+  if (Array.isArray(GEEKNOOK_DATA.gallery)) {
+    GEEKNOOK_DATA.gallery.forEach(g => { if (g.src) g.src = prefix(g.src); });
+  }
+
+  // 6. Client Setups
+  if (Array.isArray(GEEKNOOK_DATA.clientSetups)) {
+    GEEKNOOK_DATA.clientSetups.forEach(s => { if (s.src) s.src = prefix(s.src); });
+  }
+
+  // 7. Production Photos
+  if (GEEKNOOK_DATA.production && Array.isArray(GEEKNOOK_DATA.production.photos)) {
+    GEEKNOOK_DATA.production.photos.forEach(p => { if (p.src) p.src = prefix(p.src); });
+  }
+})();
+

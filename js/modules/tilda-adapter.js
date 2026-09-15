@@ -33,6 +33,14 @@
     console.log('[GeekNook] ⚡ Tilda Headless Adapter activated! Connecting cart & CRM...');
 
     const originalApp = window.geekNookApp;
+    const cdnBase = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
+
+    function toFullCdnUrl(path) {
+      if (!path) return '';
+      if (path.startsWith('http://') || path.startsWith('https://')) return path;
+      const clean = path.replace(/^\.?\//, '');
+      return cdnBase.endsWith('/') ? cdnBase + clean : cdnBase + '/' + clean;
+    }
 
     // Helper: Map GeekNook product to Tilda Cart format
     function mapProductToTilda(productId, optionName) {
@@ -45,7 +53,7 @@
           return {
             name: b.title,
             price: b.price,
-            img: b.image ? (b.image.startsWith('http') ? b.image : `https://static.tildacdn.com/${b.image.replace(/^images\//, '').replace('__', '/')}`) : '',
+            img: toFullCdnUrl(b.image),
             options: [
               { name: 'Комплектация', variant: (b.items || []).join(', ') }
             ]
@@ -54,13 +62,12 @@
         return null;
       }
 
-      const imgPath = (p.images && p.images[0]) ? p.images[0] : '';
-      const fullImgUrl = imgPath.startsWith('http') ? imgPath : (imgPath ? `https://static.tildacdn.com/${imgPath.replace(/^images\//, '').replace('__', '/')}` : '');
+      const imgPath = (p.images && p.images[0]) ? p.images[0] : (p.image || '');
 
       return {
         name: p.title,
         price: p.price,
-        img: fullImgUrl,
+        img: toFullCdnUrl(imgPath),
         options: [
           { name: 'Вариант', variant: optionName || 'Стандарт' }
         ]
@@ -142,7 +149,7 @@
         { name: 'T-Track аксессуары', variant: addonNames.length ? addonNames.join('; ') : 'Базовая комплектация' }
       ];
 
-      const imgUrl = finish.img ? (finish.img.startsWith('http') ? finish.img : `https://static.tildacdn.com/${finish.img.replace(/^images\//, '').replace('__', '/')}`) : '';
+      const imgUrl = toFullCdnUrl(finish.img);
 
       if (typeof window.tcart__addProduct === 'function') {
         window.tcart__addProduct({
