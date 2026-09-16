@@ -374,9 +374,9 @@
       this.updateButtonUI();
       if (this.enabled) {
         this.play('toggle');
-        showToast('Тактильный звук включен 🔊');
+        showToast('Тактильный звук включен');
       } else {
-        showToast('Звук выключен 🔇');
+        showToast('Звук выключен');
       }
       return this.enabled;
     }
@@ -477,9 +477,9 @@
       if (showToastNotification && typeof showToast === 'function') {
         soundEngine.play('toggle');
         if (this.currentTheme === 'dark') {
-          showToast('Тёмная тема включена 🌙');
+          showToast('Тёмная тема включена');
         } else {
-          showToast('Светлая тема включена ☀️');
+          showToast('Светлая тема включена');
         }
       }
     },
@@ -3882,7 +3882,7 @@
       screenbar: 'Лампа ScreenBar'
     };
 
-    showToast(`${titles[deviceId]}: ${cableState.devices[deviceId] ? 'подключен к сетапу ⚡' : 'отключен 🔌'}`);
+    showToast(`${titles[deviceId]}: ${cableState.devices[deviceId] ? 'подключен к сетапу' : 'отключен'}`);
     updateCableMetrics();
   };
 
@@ -4088,18 +4088,27 @@
       buildCables();
     }, { passive: true });
 
-    // Interactive pointer handling
+    // Interactive pointer handling with cached rect (zero layout thrashing)
+    let cachedCanvasRect = null;
+    const updateCanvasRect = () => {
+      if (canvas) cachedCanvasRect = canvas.getBoundingClientRect();
+    };
+
+    window.addEventListener('resize', () => { cachedCanvasRect = null; }, { passive: true });
+    window.addEventListener('scroll', () => { cachedCanvasRect = null; }, { passive: true });
+
     const getPos = (e) => {
-      const rect = canvas.getBoundingClientRect();
+      if (!cachedCanvasRect) updateCanvasRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
+        x: clientX - (cachedCanvasRect ? cachedCanvasRect.left : 0),
+        y: clientY - (cachedCanvasRect ? cachedCanvasRect.top : 0)
       };
     };
 
     canvas.addEventListener('mousedown', (e) => {
+      updateCanvasRect();
       const pos = getPos(e);
       cableState.mousePos = pos;
       let closest = null;
@@ -4165,7 +4174,7 @@
               color: '#38bdf8'
             });
           }
-          showToast(`🧲 ${cableState.draggedCable.name} защелкнут в Т-паз N52!`);
+          showToast(`${cableState.draggedCable.name} зафиксирован в Т-пазе N52`);
         }
       }
       cableState.draggedPoint = null;
@@ -4173,6 +4182,7 @@
     });
 
     canvas.addEventListener('touchstart', (e) => {
+      updateCanvasRect();
       const pos = getPos(e);
       cableState.mousePos = pos;
       let closest = null;
@@ -4653,7 +4663,7 @@
           ctx.font = 'bold 7px monospace';
           ctx.fillStyle = '#38bdf8';
           ctx.textAlign = 'center';
-          ctx.fillText(`🧲 ${slotLabels[sIdx]}`, sx, railY - 4);
+          ctx.fillText(slotLabels[sIdx].toUpperCase(), sx, railY - 4);
           ctx.restore();
         }
       });
@@ -5023,14 +5033,14 @@
     }
 
     if (mode === 'magnetic') {
-      if (statusText) statusText.textContent = '🧲 T-Track замок: 4 канала зафиксированы';
-      showToast('✨ GeekNook Stealth: Все кабели уложены в скрытый магнитный желоб!');
+      if (statusText) statusText.textContent = 'T-Track замок: 4 канала зафиксированы';
+      showToast('GeekNook Stealth: Все кабели уложены в скрытый желоб');
     } else if (mode === 'xray') {
-      if (statusText) statusText.textContent = '👁️ Рентген лотка: Разделение шин 220V и данных';
-      showToast('👁️ Инженерный Рентген: внутренняя архитектура Т-паза и потоки данных');
+      if (statusText) statusText.textContent = 'Рентген лотка: Разделение шин 220V и данных';
+      showToast('Инженерный Рентген: внутренняя архитектура Т-паза');
     } else {
       if (statusText) statusText.textContent = 'Свободное провисание (Хаос на столе)';
-      showToast('🌪️ Режим без GeekNook: хаос проводов на рабочей поверхности стола');
+      showToast('Режим без GeekNook: хаос проводов на рабочей поверхности');
     }
 
     updateCableMetrics();
@@ -5176,18 +5186,18 @@
         id: 'action-theme-toggle',
         category: 'Настройки',
         title: 'Сменить тему: Тёмная / Светлая',
-        sub: `Сейчас: ${themeManager.currentTheme === 'dark' ? 'Тёмная тема 🌙' : 'Светлая тема ☀️'} (горячая клавиша: T)`,
+        sub: `Сейчас: ${themeManager.currentTheme === 'dark' ? 'Тёмная тема' : 'Светлая тема'} (горячая клавиша: T)`,
         badge: 'Тема (T)',
-        icon: themeManager.currentTheme === 'dark' ? '☀️' : '🌙',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.2 4.2l1.4 1.4M18.4 18.4l1.4 1.4M1 12h2M21 12h2M4.2 19.8l1.4-1.4M18.4 5.6l1.4-1.4"></path></svg>',
         action: () => { closeCommandPalette(); themeManager.toggleTheme(true); }
       },
       {
         id: 'action-sound-toggle',
         category: 'Настройки',
         title: 'Тактильный звук (Micro-Haptics)',
-        sub: `Сейчас: ${soundEngine.enabled ? 'Включен 🔊' : 'Выключен 🔇'} (горячая клавиша: S)`,
+        sub: `Сейчас: ${soundEngine.enabled ? 'Включен' : 'Выключен'} (горячая клавиша: S)`,
         badge: 'Звук (S)',
-        icon: soundEngine.enabled ? '🔊' : '🔇',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>',
         action: () => { closeCommandPalette(); toggleSound(); }
       },
       {
@@ -5196,7 +5206,7 @@
         title: 'Готовые инженерные комплекты (-15%)',
         sub: 'Developer Pro, Creator Studio, Minimalist Focus',
         badge: 'Скидки',
-        icon: '🎁',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"></polyline><line x1="1" y1="3" x2="23" y2="3"></line><path d="M10 12h4"></path></svg>',
         action: () => {
           closeCommandPalette();
           const el = document.getElementById('bundles');
@@ -5209,7 +5219,7 @@
         title: 'Сравнение До / После (Трансформация)',
         sub: 'Интерактивный слайдер организации рабочего места',
         badge: 'Сравнение',
-        icon: '↔️',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 3 21 3 21 8"></polyline><line x1="4" y1="20" x2="21" y2="3"></line><polyline points="21 16 21 21 16 21"></polyline><line x1="15" y1="15" x2="21" y2="21"></line><line x1="4" y1="4" x2="9" y2="9"></line></svg>',
         action: () => {
           closeCommandPalette();
           const el = document.getElementById('transformation');
@@ -5222,7 +5232,7 @@
         title: 'Калькулятор эргономики осанки (ISO 9241)',
         sub: 'Расчет высоты монитора и разгрузка шеи под ваш рост',
         badge: 'ISO-9241',
-        icon: '🩺',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>',
         action: () => { closeCommandPalette(); openErgonomicsCalculator(); }
       },
       {
@@ -5231,7 +5241,7 @@
         title: '3D CAD-библиотека (.STEP / .GLB)',
         sub: 'Файлы для архитекторов и оптовое КП для офисов',
         badge: 'B2B CAD',
-        icon: '📐',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.3 15.3l-6.6 6.6c-.4.4-1 .4-1.4 0l-9.9-9.9c-.4-.4-.4-1 0-1.4l6.6-6.6c.4-.4 1-.4 1.4 0l9.9 9.9c.4.4.4 1 0 1.4z"></path></svg>',
         action: () => { closeCommandPalette(); openCadModal(); }
       },
       {
@@ -5240,7 +5250,7 @@
         title: 'Взрыв-схема Focus Station (Blueprint)',
         sub: 'Интерактивные узлы: Д16Т, каленые винты 8.8, пробка 2 мм',
         badge: 'Чертеж',
-        icon: '🔬',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18h8"></path><path d="M3 22h18"></path><path d="M14 22a7 7 0 1 0-14 0"></path></svg>',
         action: () => {
           closeCommandPalette();
           const el = document.getElementById('production');
@@ -5268,7 +5278,7 @@
         title: 'Симулятор кабель-менеджмента 360° (Verlet)',
         sub: 'Интерактивная физика кабелей и магнитная укладка T-Track',
         badge: 'Физика',
-        icon: '🧲',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4a2 2 0 0 0-4 0v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4z"></path></svg>',
         action: () => {
           closeCommandPalette();
           const el = document.getElementById('cableSimulatorCard');
@@ -5281,7 +5291,7 @@
         title: '3D Студия Focus Station (WebGL Three.js)',
         sub: 'Орбитальная 3D-модель, монтаж в Т-паз и 3D взрыв-схема',
         badge: 'WebGL 3D',
-        icon: '🕹️',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>',
         action: () => {
           closeCommandPalette();
           openConfigurator();
@@ -5303,7 +5313,7 @@
         title: 'Примерщик мониторов (Setup Matcher)',
         sub: 'Проверить размер подставки под 24", 27", 34" Ultrawide',
         badge: 'Калькулятор',
-        icon: '📐',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.3 15.3l-6.6 6.6c-.4.4-1 .4-1.4 0l-9.9-9.9c-.4-.4-.4-1 0-1.4l6.6-6.6c.4-.4 1-.4 1.4 0l9.9 9.9c.4.4.4 1 0 1.4z"></path></svg>',
         action: () => { closeCommandPalette(); openSetupMatcher(); }
       },
       {
@@ -5312,7 +5322,7 @@
         title: 'Квиз подбора сетапа',
         sub: 'Ответьте на 3 вопроса для идеальной станции',
         badge: 'Квиз',
-        icon: '🎯',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>',
         action: () => { closeCommandPalette(); openQuiz(); }
       },
       {
@@ -5321,7 +5331,7 @@
         title: 'Открыть корзину',
         sub: `В корзине: ${state.cart.reduce((s, i) => s + (parseInt(i.quantity, 10) || 1), 0)} шт.`,
         badge: 'Корзина',
-        icon: '🛒',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>',
         action: () => { closeCommandPalette(); openCartDrawer(); }
       },
       {
@@ -5330,7 +5340,7 @@
         title: 'Очистить всю корзину',
         sub: 'Удалить все добавленные товары',
         badge: 'Корзина',
-        icon: '🗑️',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>',
         action: () => { closeCommandPalette(); clearCart(); }
       },
       {
@@ -5339,7 +5349,7 @@
         title: 'Связаться с инженером в Telegram',
         sub: 'Быстрая консультация по сетапу и размерам',
         badge: 'Чат',
-        icon: '💬',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>',
         action: () => { closeCommandPalette(); window.open('https://t.me/geeknook', '_blank'); }
       },
       {
@@ -5348,7 +5358,7 @@
         title: 'Доставка и гарантия 2 года',
         sub: 'СДЭК по всей России, возврат 14 дней',
         badge: 'Сервис',
-        icon: '🛡️',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
         action: () => { closeCommandPalette(); openLegalModal('delivery'); }
       }
     ];
@@ -5360,7 +5370,7 @@
         title: b.title,
         sub: `${formatPrice(b.price)} • ${b.badge} • ${b.savings}`,
         badge: `${formatPrice(b.price)}`,
-        icon: '🎁',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 8 21 21 3 21 3 8"></polyline><line x1="1" y1="3" x2="23" y2="3"></line><path d="M10 12h4"></path></svg>',
         action: () => { closeCommandPalette(); addBundleToCart(b.id); }
       });
     });
@@ -5372,7 +5382,7 @@
         title: p.title,
         sub: `${formatPrice(p.price)} • ${p.materials ? p.materials.split(',')[0] : 'Массив дерева'}`,
         badge: `${formatPrice(p.price)}`,
-        icon: '📦',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="21 16 21 21 3 21 3 16"></polyline><line x1="12" y1="1" x2="12" y2="16"></line><line x1="8" y1="12" x2="12" y2="16"></line><line x1="16" y1="12" x2="12" y2="16"></line></svg>',
         action: () => { closeCommandPalette(); openQuickView(p.id); }
       });
     });
@@ -5519,6 +5529,23 @@
   };
 
   const initSetupMatcher = () => {
+    try {
+      const saved = safeStorage.getItem('geeknook_matcher_state');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && typeof parsed === 'object') {
+          if (parsed.deskWidth) matcherState.deskWidth = parsed.deskWidth;
+          if (parsed.monitorSetup && MONITOR_SETUPS[parsed.monitorSetup]) matcherState.monitorSetup = parsed.monitorSetup;
+          document.querySelectorAll('#deskWidthChips .matcher-chip').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.width, 10) === matcherState.deskWidth);
+          });
+          document.querySelectorAll('#monitorSetupChips .matcher-chip').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.setup === matcherState.monitorSetup);
+          });
+        }
+      }
+    } catch (e) {}
+
     const svgWrap = document.getElementById('matcherSvgWrap');
     if (svgWrap) {
       renderMatcherVisualizer();
@@ -5535,6 +5562,7 @@
     document.querySelectorAll('#deskWidthChips .matcher-chip').forEach(btn => {
       btn.classList.toggle('active', parseInt(btn.dataset.width, 10) === matcherState.deskWidth);
     });
+    safeStorage.setItem('geeknook_matcher_state', JSON.stringify({ deskWidth: matcherState.deskWidth, monitorSetup: matcherState.monitorSetup }));
     renderMatcherVisualizer();
   };
 
@@ -5544,6 +5572,7 @@
     document.querySelectorAll('#monitorSetupChips .matcher-chip').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.setup === setupKey);
     });
+    safeStorage.setItem('geeknook_matcher_state', JSON.stringify({ deskWidth: matcherState.deskWidth, monitorSetup: matcherState.monitorSetup }));
     renderMatcherVisualizer();
   };
 
@@ -5673,6 +5702,34 @@
     showToast(`Выбрана длина подставки ${targetLen} см под ваш сетап!`, 'success');
   };
 
+  // --- TELEPHONE NUMBER AUTO-FORMATTING MASK ---
+  const initPhoneMasks = () => {
+    const attachMask = (el) => {
+      if (!el || el.dataset.maskAttached) return;
+      el.dataset.maskAttached = 'true';
+      el.addEventListener('input', () => {
+        let val = el.value.replace(/\D/g, '');
+        if (!val) {
+          el.value = '';
+          return;
+        }
+        if (val.startsWith('7') || val.startsWith('8')) {
+          val = val.substring(1);
+        }
+        val = val.substring(0, 10);
+        let formatted = '+7';
+        if (val.length > 0) formatted += ' (' + val.substring(0, 3);
+        if (val.length >= 3) formatted += ') ' + val.substring(3, 6);
+        if (val.length >= 6) formatted += '-' + val.substring(6, 8);
+        if (val.length >= 8) formatted += '-' + val.substring(8, 10);
+        el.value = formatted;
+      });
+    };
+
+    attachMask(document.getElementById('checkoutPhone'));
+    attachMask(document.getElementById('quickBuyPhone'));
+  };
+
   // --- INITIALIZE APPLICATION ---
   const init = () => {
     // 1. Global image fallback (Capture phase handles non-bubbling img error events)
@@ -5705,6 +5762,8 @@
     initAntigravitySphere();
     initCommandPalette();
     initSetupMatcher();
+    initPhoneMasks();
+
     initHeaderScroll();
     renderBoards();
     renderAccessories();

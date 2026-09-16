@@ -519,7 +519,7 @@ window.GeekNook = window.GeekNook || {};
       screenbar: 'Лампа ScreenBar'
     };
 
-    showToast(`${titles[deviceId]}: ${cableState.devices[deviceId] ? 'подключен к сетапу ⚡' : 'отключен 🔌'}`);
+    showToast(`${titles[deviceId]}: ${cableState.devices[deviceId] ? 'подключен к сетапу' : 'отключен'}`);
     updateCableMetrics();
   };
 
@@ -725,18 +725,27 @@ window.GeekNook = window.GeekNook || {};
       buildCables();
     }, { passive: true });
 
-    // Interactive pointer handling
+    // Interactive pointer handling with cached rect (zero layout thrashing)
+    let cachedCanvasRect = null;
+    const updateCanvasRect = () => {
+      if (canvas) cachedCanvasRect = canvas.getBoundingClientRect();
+    };
+
+    window.addEventListener('resize', () => { cachedCanvasRect = null; }, { passive: true });
+    window.addEventListener('scroll', () => { cachedCanvasRect = null; }, { passive: true });
+
     const getPos = (e) => {
-      const rect = canvas.getBoundingClientRect();
+      if (!cachedCanvasRect) updateCanvasRect();
       const clientX = e.touches ? e.touches[0].clientX : e.clientX;
       const clientY = e.touches ? e.touches[0].clientY : e.clientY;
       return {
-        x: clientX - rect.left,
-        y: clientY - rect.top
+        x: clientX - (cachedCanvasRect ? cachedCanvasRect.left : 0),
+        y: clientY - (cachedCanvasRect ? cachedCanvasRect.top : 0)
       };
     };
 
     canvas.addEventListener('mousedown', (e) => {
+      updateCanvasRect();
       const pos = getPos(e);
       cableState.mousePos = pos;
       let closest = null;
@@ -802,7 +811,7 @@ window.GeekNook = window.GeekNook || {};
               color: '#38bdf8'
             });
           }
-          showToast(`🧲 ${cableState.draggedCable.name} защелкнут в Т-паз N52!`);
+          showToast(`${cableState.draggedCable.name} зафиксирован в Т-пазе N52`);
         }
       }
       cableState.draggedPoint = null;
@@ -810,6 +819,7 @@ window.GeekNook = window.GeekNook || {};
     });
 
     canvas.addEventListener('touchstart', (e) => {
+      updateCanvasRect();
       const pos = getPos(e);
       cableState.mousePos = pos;
       let closest = null;
@@ -1290,7 +1300,7 @@ window.GeekNook = window.GeekNook || {};
           ctx.font = 'bold 7px monospace';
           ctx.fillStyle = '#38bdf8';
           ctx.textAlign = 'center';
-          ctx.fillText(`🧲 ${slotLabels[sIdx]}`, sx, railY - 4);
+          ctx.fillText(slotLabels[sIdx].toUpperCase(), sx, railY - 4);
           ctx.restore();
         }
       });
@@ -1660,14 +1670,14 @@ window.GeekNook = window.GeekNook || {};
     }
 
     if (mode === 'magnetic') {
-      if (statusText) statusText.textContent = '🧲 T-Track замок: 4 канала зафиксированы';
-      showToast('✨ GeekNook Stealth: Все кабели уложены в скрытый магнитный желоб!');
+      if (statusText) statusText.textContent = 'T-Track замок: 4 канала зафиксированы';
+      showToast('GeekNook Stealth: Все кабели уложены в скрытый желоб');
     } else if (mode === 'xray') {
-      if (statusText) statusText.textContent = '👁️ Рентген лотка: Разделение шин 220V и данных';
-      showToast('👁️ Инженерный Рентген: внутренняя архитектура Т-паза и потоки данных');
+      if (statusText) statusText.textContent = 'Рентген лотка: Разделение шин 220V и данных';
+      showToast('Инженерный Рентген: внутренняя архитектура Т-паза');
     } else {
       if (statusText) statusText.textContent = 'Свободное провисание (Хаос на столе)';
-      showToast('🌪️ Режим без GeekNook: хаос проводов на рабочей поверхности стола');
+      showToast('Режим без GeekNook: хаос проводов на рабочей поверхности');
     }
 
     updateCableMetrics();

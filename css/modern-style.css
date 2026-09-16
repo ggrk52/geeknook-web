@@ -170,6 +170,16 @@ button {
   cursor: pointer;
 }
 
+/* Accessibility: High-contrast focus-visible ring */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 /* Layout Container */
 .container {
   width: 100%;
@@ -1614,11 +1624,13 @@ button {
 
 .btn-close-modal {
   position: absolute;
-  top: 20px;
-  right: 20px;
+  top: 18px;
+  right: 18px;
   z-index: 10;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
   border-radius: 50%;
   background: var(--surface);
   color: var(--text-main);
@@ -1626,7 +1638,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--transition-fast);
+  transition: background var(--transition-fast), transform var(--transition-fast);
 }
 
 .btn-close-modal:hover {
@@ -6093,6 +6105,7 @@ button {
   background: none;
   border: none;
   padding: 8px 18px;
+  min-height: 42px;
   border-radius: var(--radius-full);
   font-family: var(--font-main);
   font-size: 0.875rem;
@@ -6192,8 +6205,9 @@ button {
 .cable-device-pill {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
   padding: 6px 14px;
+  min-height: 38px;
   background: #ffffff;
   border: 1px solid var(--border);
   border-radius: var(--radius-full);
@@ -6333,6 +6347,7 @@ button {
   font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
   color: var(--text-main);
   transition: color var(--transition-fast);
 }
@@ -6517,13 +6532,24 @@ button {
 .btn-3d-light {
   background: none;
   border: none;
-  padding: 4px 10px;
+  padding: 6px 12px;
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   border-radius: var(--radius-full);
-  font-size: 0.775rem;
+  font-size: 0.8rem;
   font-weight: 600;
   color: #cbd5e1;
   cursor: pointer;
   transition: all var(--transition-fast);
+}
+
+@media (max-width: 768px) {
+  .btn-3d-light {
+    min-height: 40px;
+    padding: 8px 14px;
+  }
 }
 
 .btn-3d-light.active {
