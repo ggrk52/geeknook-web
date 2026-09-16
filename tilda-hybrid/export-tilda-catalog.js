@@ -10,7 +10,7 @@ const productsDataPath = path.resolve(__dirname, '../js/products-data.js');
 const rawCode = fs.readFileSync(productsDataPath, 'utf8') + '\n;globalThis.GEEKNOOK_DATA = GEEKNOOK_DATA;';
 
 // Execute products-data.js in a safe sandbox context
-const sandbox = { window: {}, console };
+const sandbox = { window: { location: { hostname: 'localhost', href: 'http://localhost' } }, console };
 sandbox.globalThis = sandbox;
 vm.createContext(sandbox);
 vm.runInContext(rawCode, sandbox);
