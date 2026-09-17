@@ -20,3 +20,7 @@ yarn-error.log*
 *.tmp
 *.bak
 *.swp
+
+# Agent skills cache / local plugins
+.agents/skills/
+
