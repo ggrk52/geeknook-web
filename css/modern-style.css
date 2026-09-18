@@ -784,6 +784,43 @@ textarea:focus-visible {
   gap: 24px;
 }
 
+/* Focus Station (Boards Grid): 3 centered premium cards */
+#boardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 440px));
+  justify-content: center;
+  gap: 28px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) and (min-width: 641px) {
+  #boardsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+    justify-content: center;
+  }
+  #boardsGrid > :last-child {
+    grid-column: 1 / -1;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  #boardsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  #boardsGrid > :last-child {
+    grid-column: auto;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
 .product-item-card {
   background: var(--surface-card);
   border: 1px solid var(--border);
