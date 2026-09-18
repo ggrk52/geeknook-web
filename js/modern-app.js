@@ -534,9 +534,17 @@
       return;
     }
 
-    const cleanOption = String(optionName || 'Стандарт').trim();
+    let cleanOption = String(optionName || 'Стандарт').trim();
+    if (cleanOption === 'Стандарт' && product.options && product.options.lengths && product.options.lengths.length) {
+      cleanOption = product.options.lengths[0];
+    }
     const cartKey = `${product.id}_${cleanOption}`;
     const existing = state.cart.find(i => i.cartKey === cartKey);
+
+    let finalPrice = typeof product.price === 'number' ? product.price : 0;
+    if (product.optionPrices && product.optionPrices[cleanOption]) {
+      finalPrice = product.optionPrices[cleanOption];
+    }
 
     if (existing) {
       existing.quantity = Math.min(99, (parseInt(existing.quantity, 10) || 1) + 1);
@@ -546,7 +554,7 @@
         id: product.id,
         title: product.title,
         option: cleanOption,
-        price: typeof product.price === 'number' ? product.price : 0,
+        price: finalPrice,
         image: (product.images && product.images[0]) ? product.images[0] : 'images/tild3763-3337-4662-b233-616531316364__3.jpg',
         quantity: 1
       });
@@ -555,7 +563,7 @@
     saveCart();
     triggerBadgeBounce();
     soundEngine.play('cart');
-    showToast(`«${product.title}» добавлен в корзину!`);
+    showToast(`«${product.title} (${cleanOption})» добавлен в корзину!`);
     if (openDrawer) {
       openCartDrawer();
     }
@@ -570,9 +578,17 @@
       return;
     }
 
-    const cleanOption = String(optionName || 'Стандарт').trim();
+    let cleanOption = String(optionName || 'Стандарт').trim();
+    if (cleanOption === 'Стандарт' && product.options && product.options.lengths && product.options.lengths.length) {
+      cleanOption = product.options.lengths[0];
+    }
     const cartKey = `${product.id}_${cleanOption}`;
     const existing = state.cart.find(i => i.cartKey === cartKey);
+
+    let finalPrice = typeof product.price === 'number' ? product.price : 0;
+    if (product.optionPrices && product.optionPrices[cleanOption]) {
+      finalPrice = product.optionPrices[cleanOption];
+    }
 
     if (existing) {
       existing.quantity = Math.min(99, (parseInt(existing.quantity, 10) || 1) + 1);
@@ -582,7 +598,7 @@
         id: product.id,
         title: product.title,
         option: cleanOption,
-        price: typeof product.price === 'number' ? product.price : 0,
+        price: finalPrice,
         image: (product.images && product.images[0]) ? product.images[0] : 'images/tild3763-3337-4662-b233-616531316364__3.jpg',
         quantity: 1
       });
@@ -836,11 +852,11 @@
             </button>
           </div>
         </div>
-        <div class="card-meta-tag">${materialTag}</div>
+        <div class="card-meta-tag">${materialTag}${p.options && p.options.lengths ? ' • 2 размера: 85 и 116 см' : ''}</div>
         <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('${p.id}')">${p.title}</h4>
         <div class="product-card-sub">${p.subtitle || p.shortDescr || ''}</div>
         <div class="product-card-price">
-          <span class="price-current">${formatPrice(p.price)}</span>
+          <span class="price-current">${p.options && p.options.lengths ? `от ${formatPrice(p.price)}` : formatPrice(p.price)}</span>
           ${oldPriceHtml}
         </div>
         <div class="card-actions-row">
@@ -1137,10 +1153,12 @@
     if (product.options && product.options.lengths) {
       optionsHtml = `
         <div style="margin-bottom:18px;">
-          <div style="font-size:0.8125rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;">Длина основания:</div>
+          <div style="font-size:0.8125rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;">Размер основания:</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             ${product.options.lengths.map((len, idx) => `
-              <button class="option-chip ${idx === 0 ? 'active' : ''}" data-val="${len}" style="padding:6px 14px;border-radius:4px;border:1px solid var(--border);font-size:0.875rem;cursor:pointer;">${len}</button>
+              <button type="button" class="option-chip ${idx === 0 ? 'active' : ''}" data-val="${len}" style="padding:8px 16px;border-radius:6px;border:1px solid var(--border);font-size:0.875rem;font-weight:600;cursor:pointer;transition:all var(--transition-fast);">
+                ${len} ${len.includes('85') ? '(Компакт)' : '(Простор)'}
+              </button>
             `).join('')}
           </div>
         </div>
@@ -1151,7 +1169,7 @@
           <div style="font-size:0.8125rem;font-weight:600;color:var(--text-muted);margin-bottom:8px;">Размер коврика:</div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
             ${product.options.sizes.map((sz, idx) => `
-              <button class="option-chip ${idx === 0 ? 'active' : ''}" data-val="${sz}" style="padding:6px 14px;border-radius:4px;border:1px solid var(--border);font-size:0.875rem;cursor:pointer;">${sz}</button>
+              <button type="button" class="option-chip ${idx === 0 ? 'active' : ''}" data-val="${sz}" style="padding:8px 16px;border-radius:6px;border:1px solid var(--border);font-size:0.875rem;font-weight:600;cursor:pointer;transition:all var(--transition-fast);">${sz}</button>
             `).join('')}
           </div>
         </div>
@@ -1159,9 +1177,9 @@
     }
 
     const specsHtml = Object.entries(product.specs || {}).map(([k, v]) => `
-      <tr>
+      <tr data-spec-key="${k}">
         <td>${k}</td>
-        <td>${v}</td>
+        <td class="spec-val-cell">${v}</td>
       </tr>
     `).join('');
 
@@ -1186,8 +1204,8 @@
           <div style="font-size:0.9375rem;color:var(--text-muted);margin-bottom:18px;">${product.subtitle || ''}</div>
 
           <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:20px;">
-            <span style="font-family:var(--font-mono);font-size:1.85rem;font-weight:800;letter-spacing:-0.02em;color:var(--text-main);">${formatPrice(product.price)}</span>
-            ${product.oldPrice ? `<span style="font-family:var(--font-mono);font-size:1.1rem;color:var(--text-subtle);text-decoration:line-through;">${formatPrice(product.oldPrice)}</span>` : ''}
+            <span id="qvPriceCurrent" style="font-family:var(--font-mono);font-size:1.85rem;font-weight:800;letter-spacing:-0.02em;color:var(--text-main);">${formatPrice(product.price)}</span>
+            <span id="qvPriceOld" style="font-family:var(--font-mono);font-size:1.1rem;color:var(--text-subtle);text-decoration:line-through;">${product.oldPrice ? formatPrice(product.oldPrice) : ''}</span>
           </div>
 
           <p style="font-size:0.9375rem;line-height:1.65;color:var(--text-main);margin-bottom:20px;">${product.fullDescr || product.shortDescr || ''}</p>
@@ -1212,11 +1230,38 @@
       </div>
     `;
 
-    // Option chips click event
+    // Dynamic Option Chips Click Handler (Price & Specs Switching)
     content.querySelectorAll('.option-chip').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', () => {
         btn.parentElement.querySelectorAll('.option-chip').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
+
+        const val = btn.getAttribute('data-val');
+        if (!val) return;
+
+        // Dynamic price update
+        if (product.optionPrices && product.optionPrices[val]) {
+          const curEl = document.getElementById('qvPriceCurrent');
+          const oldEl = document.getElementById('qvPriceOld');
+          if (curEl) {
+            curEl.textContent = formatPrice(product.optionPrices[val]);
+            curEl.classList.remove('price-pulse');
+            void curEl.offsetWidth;
+            curEl.classList.add('price-pulse');
+          }
+          if (oldEl) {
+            oldEl.textContent = (product.optionOldPrices && product.optionOldPrices[val]) ? formatPrice(product.optionOldPrices[val]) : '';
+          }
+        }
+
+        // Dynamic dimensions update in specs table
+        if (product.skus && product.skus[val]) {
+          const skuInfo = product.skus[val];
+          const dimRow = content.querySelector('tr[data-spec-key="Габариты"] .spec-val-cell');
+          if (dimRow && skuInfo.dimensions) {
+            dimRow.textContent = skuInfo.dimensions;
+          }
+        }
       });
     });
 
@@ -2269,16 +2314,18 @@
     const mainShelfPrice = length.priceBase + finish.priceDelta + (state.config.engravingEnabled ? 1200 : 0);
     
     // Custom shelf cart key
-    const shelfKey = `focus-station-900_${finish.name}_${length.id}_${state.config.engravingEnabled ? 'engraved' : 'plain'}`;
+    const boardId = finish.id === 'oak' ? 'focus-station-oak' : (finish.id === 'black' ? 'focus-station-black' : 'focus-station-walnut');
+    const boardTitle = `Focus Station ${length.id} (${finish.name})`;
+    const shelfKey = `${boardId}_${length.id}_${state.config.engravingEnabled ? 'engraved' : 'plain'}`;
     const existingShelf = state.cart.find(i => i.cartKey === shelfKey);
     if (existingShelf) {
       existingShelf.quantity += 1;
     } else {
       state.cart.push({
         cartKey: shelfKey,
-        id: 'focus-station-900',
-        title: 'Focus Station 900',
-        option: `${finish.name} (${length.id} см)${engravingSuffix}`,
+        id: boardId,
+        title: boardTitle,
+        option: `${length.id} см (${finish.name})${engravingSuffix}`,
         price: mainShelfPrice,
         image: finish.img,
         quantity: 1
@@ -2650,10 +2697,10 @@
         id: 'setupType',
         title: '1. Какой тип вашего рабочего сетапа?',
         options: [
-          { val: 'laptop_only', title: 'Один ноутбук (13–16")', desc: 'Компактное рабочее место, акцент на мобильность и минимализм', shelf: '65', shelfTitle: 'Focus Station 650 (Компакт)' },
-          { val: 'laptop_monitor', title: 'Ноутбук + Монитор 27–32"', desc: 'Самый популярный баланс для разработки, дизайна и аналитики', shelf: '85', shelfTitle: 'Focus Station 900 (Стандарт 85 см)' },
-          { val: 'dual_ultrawide', title: 'Два монитора или Ultrawide 34–49"', desc: 'Широкая рабочая плоскость, требуется основание 120 см', shelf: '120', shelfTitle: 'Focus Station 1200 (Макси)' },
-          { val: 'creative_studio', title: 'Ноутбук + Планшет/Звуковая карта', desc: 'Сетап креатора: стриминг, аудиомонтаж или иллюстрация', shelf: '85', shelfTitle: 'Focus Station 900 (Стандарт 85 см)' }
+          { val: 'laptop_only', title: 'Один ноутбук (13–16")', desc: 'Компактное рабочее место, акцент на мобильность и минимализм', shelf: '85', shelfTitle: 'Focus Station 85 (85 см)' },
+          { val: 'laptop_monitor', title: 'Ноутбук + Монитор 27–32"', desc: 'Самый популярный баланс для разработки, дизайна и аналитики', shelf: '85', shelfTitle: 'Focus Station 85 (85 см)' },
+          { val: 'dual_ultrawide', title: 'Два монитора или Ultrawide 34–49"', desc: 'Широкая рабочая плоскость, требуется основание 116 см', shelf: '116', shelfTitle: 'Focus Station 116 (116 см)' },
+          { val: 'creative_studio', title: 'Ноутбук + Планшет/Звуковая карта', desc: 'Сетап креатора: стриминг, аудиомонтаж или иллюстрация', shelf: '116', shelfTitle: 'Focus Station 116 (116 см)' }
         ]
       },
       {
@@ -2738,8 +2785,9 @@
     const step2Choice = QUIZ_DATA.steps[1].options.find(o => o.val === state.quiz.answers.laptopUsage) || QUIZ_DATA.steps[1].options[0];
     const step3Choice = QUIZ_DATA.steps[2].options.find(o => o.val === state.quiz.answers.focusPriority) || QUIZ_DATA.steps[2].options[0];
 
-    const recommendedShelfId = step1Choice.shelf === '65' ? 'focus-station-650' : (step1Choice.shelf === '120' ? 'focus-station-1200' : 'focus-station-900');
-    const shelfProduct = GEEKNOOK_DATA.boards.find(b => b.id === recommendedShelfId) || GEEKNOOK_DATA.boards[0];
+    const recommendedLength = step1Choice.shelf === '116' ? '116 см' : '85 см';
+    const shelfProduct = GEEKNOOK_DATA.boards.find(b => b.id === 'focus-station-oak') || GEEKNOOK_DATA.boards[0];
+    const shelfPrice = (shelfProduct.optionPrices && shelfProduct.optionPrices[recommendedLength]) || (recommendedLength === '116 см' ? 24990 : 19990);
 
     const addonList = [];
     if (step2Choice.addon) {
@@ -2755,10 +2803,11 @@
       recommendedMat = GEEKNOOK_DATA.mats[0];
     }
 
-    const itemsTotal = shelfProduct.price + addonList.reduce((s, a) => s + a.price, 0) + (recommendedMat ? recommendedMat.price : 0);
+    const itemsTotal = shelfPrice + addonList.reduce((s, a) => s + a.price, 0) + (recommendedMat ? recommendedMat.price : 0);
 
     state.quizBundle = {
       shelf: shelfProduct,
+      length: recommendedLength,
       addons: addonList,
       mat: recommendedMat,
       total: itemsTotal
@@ -2778,9 +2827,9 @@
           <img class="quiz-result-shelf-img" src="${toAssetUrl(shelfProduct.images && shelfProduct.images[0])}" alt="${shelfProduct.title}" />
           <div>
             <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--primary);font-weight:700;text-transform:uppercase;">Базовая станция</div>
-            <div style="font-weight:800;font-size:1.05rem;">${shelfProduct.title}</div>
+            <div style="font-weight:800;font-size:1.05rem;">${shelfProduct.title} (${recommendedLength})</div>
             <div style="font-size:0.8125rem;color:var(--text-muted);">${shelfProduct.shortDescr || ''}</div>
-            <div style="font-family:var(--font-mono);font-weight:700;color:var(--text-main);margin-top:4px;">${formatPrice(shelfProduct.price)}</div>
+            <div style="font-family:var(--font-mono);font-weight:700;color:var(--text-main);margin-top:4px;">${formatPrice(shelfPrice)}</div>
           </div>
         </div>
 
@@ -2824,9 +2873,9 @@
 
   const addQuizBundleToCart = () => {
     if (!state.quizBundle) return;
-    const { shelf, addons, mat } = state.quizBundle;
+    const { shelf, addons, mat, length } = state.quizBundle;
 
-    addToCart(shelf.id, 'Стандарт', false);
+    addToCart(shelf.id, length || '85 см', false);
     addons.forEach(a => addToCart(a.id, 'Стандарт', false));
     if (mat) addToCart(mat.id, 'Стандарт', false);
 
@@ -5586,8 +5635,8 @@
     const mon = MONITOR_SETUPS[matcherState.monitorSetup];
     const monWidthMm = mon.widthMm;
 
-    const recommendedShelfMm = monWidthMm >= 800 ? 1150 : 900;
-    const recommendedShelfName = recommendedShelfMm === 1150 ? 'Focus Station 1150 (115 см)' : 'Focus Station 900 (85-90 см)';
+    const recommendedShelfMm = monWidthMm >= 800 ? 1160 : 850;
+    const recommendedShelfName = recommendedShelfMm === 1160 ? 'Focus Station 116 (116 см)' : 'Focus Station 85 (85 см)';
     const remainingSideCm = Math.max(0, Math.round(((deskWidthMm - Math.max(recommendedShelfMm, monWidthMm)) / 2) / 10));
 
     const svgW = 860;
@@ -5695,7 +5744,7 @@
 
   const applyMatcherToConfigurator = () => {
     const mon = MONITOR_SETUPS[matcherState.monitorSetup];
-    const targetLen = (mon && mon.widthMm >= 800) ? '115' : '85';
+    const targetLen = (mon && mon.widthMm >= 800) ? '116' : '85';
     closeModal('setupMatcherModal');
     openConfigurator();
     selectConfigLength(targetLen);

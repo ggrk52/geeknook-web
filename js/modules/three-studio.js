@@ -1032,16 +1032,18 @@ window.GeekNook = window.GeekNook || {};
     const mainShelfPrice = length.priceBase + finish.priceDelta + (state.config.engravingEnabled ? 1200 : 0);
     
     // Custom shelf cart key
-    const shelfKey = `focus-station-900_${finish.name}_${length.id}_${state.config.engravingEnabled ? 'engraved' : 'plain'}`;
+    const boardId = finish.id === 'oak' ? 'focus-station-oak' : (finish.id === 'black' ? 'focus-station-black' : 'focus-station-walnut');
+    const boardTitle = `Focus Station ${length.id} (${finish.name})`;
+    const shelfKey = `${boardId}_${length.id}_${state.config.engravingEnabled ? 'engraved' : 'plain'}`;
     const existingShelf = state.cart.find(i => i.cartKey === shelfKey);
     if (existingShelf) {
       existingShelf.quantity += 1;
     } else {
       state.cart.push({
         cartKey: shelfKey,
-        id: 'focus-station-900',
-        title: 'Focus Station 900',
-        option: `${finish.name} (${length.id} см)${engravingSuffix}`,
+        id: boardId,
+        title: boardTitle,
+        option: `${length.id} см (${finish.name})${engravingSuffix}`,
         price: mainShelfPrice,
         image: finish.img,
         quantity: 1

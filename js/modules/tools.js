@@ -61,10 +61,10 @@ window.GeekNook = window.GeekNook || {};
         id: 'setupType',
         title: '1. Какой тип вашего рабочего сетапа?',
         options: [
-          { val: 'laptop_only', title: 'Один ноутбук (13–16")', desc: 'Компактное рабочее место, акцент на мобильность и минимализм', shelf: '65', shelfTitle: 'Focus Station 650 (Компакт)' },
-          { val: 'laptop_monitor', title: 'Ноутбук + Монитор 27–32"', desc: 'Самый популярный баланс для разработки, дизайна и аналитики', shelf: '85', shelfTitle: 'Focus Station 900 (Стандарт 85 см)' },
-          { val: 'dual_ultrawide', title: 'Два монитора или Ultrawide 34–49"', desc: 'Широкая рабочая плоскость, требуется основание 120 см', shelf: '120', shelfTitle: 'Focus Station 1200 (Макси)' },
-          { val: 'creative_studio', title: 'Ноутбук + Планшет/Звуковая карта', desc: 'Сетап креатора: стриминг, аудиомонтаж или иллюстрация', shelf: '85', shelfTitle: 'Focus Station 900 (Стандарт 85 см)' }
+          { val: 'laptop_only', title: 'Один ноутбук (13–16")', desc: 'Компактное рабочее место, акцент на мобильность и минимализм', shelf: '85', shelfTitle: 'Focus Station 85 (85 см)' },
+          { val: 'laptop_monitor', title: 'Ноутбук + Монитор 27–32"', desc: 'Самый популярный баланс для разработки, дизайна и аналитики', shelf: '85', shelfTitle: 'Focus Station 85 (85 см)' },
+          { val: 'dual_ultrawide', title: 'Два монитора или Ultrawide 34–49"', desc: 'Широкая рабочая плоскость, требуется основание 116 см', shelf: '116', shelfTitle: 'Focus Station 116 (116 см)' },
+          { val: 'creative_studio', title: 'Ноутбук + Планшет/Звуковая карта', desc: 'Сетап креатора: стриминг, аудиомонтаж или иллюстрация', shelf: '116', shelfTitle: 'Focus Station 116 (116 см)' }
         ]
       },
       {
@@ -149,8 +149,9 @@ window.GeekNook = window.GeekNook || {};
     const step2Choice = QUIZ_DATA.steps[1].options.find(o => o.val === state.quiz.answers.laptopUsage) || QUIZ_DATA.steps[1].options[0];
     const step3Choice = QUIZ_DATA.steps[2].options.find(o => o.val === state.quiz.answers.focusPriority) || QUIZ_DATA.steps[2].options[0];
 
-    const recommendedShelfId = step1Choice.shelf === '65' ? 'focus-station-650' : (step1Choice.shelf === '120' ? 'focus-station-1200' : 'focus-station-900');
-    const shelfProduct = GEEKNOOK_DATA.boards.find(b => b.id === recommendedShelfId) || GEEKNOOK_DATA.boards[0];
+    const recommendedLength = step1Choice.shelf === '116' ? '116 см' : '85 см';
+    const shelfProduct = GEEKNOOK_DATA.boards.find(b => b.id === 'focus-station-oak') || GEEKNOOK_DATA.boards[0];
+    const shelfPrice = (shelfProduct.optionPrices && shelfProduct.optionPrices[recommendedLength]) || (recommendedLength === '116 см' ? 24990 : 19990);
 
     const addonList = [];
     if (step2Choice.addon) {
@@ -166,10 +167,11 @@ window.GeekNook = window.GeekNook || {};
       recommendedMat = GEEKNOOK_DATA.mats[0];
     }
 
-    const itemsTotal = shelfProduct.price + addonList.reduce((s, a) => s + a.price, 0) + (recommendedMat ? recommendedMat.price : 0);
+    const itemsTotal = shelfPrice + addonList.reduce((s, a) => s + a.price, 0) + (recommendedMat ? recommendedMat.price : 0);
 
     state.quizBundle = {
       shelf: shelfProduct,
+      length: recommendedLength,
       addons: addonList,
       mat: recommendedMat,
       total: itemsTotal
@@ -189,9 +191,9 @@ window.GeekNook = window.GeekNook || {};
           <img class="quiz-result-shelf-img" src="${shelfProduct.images[0]}" alt="${shelfProduct.title}" />
           <div>
             <div style="font-family:var(--font-mono);font-size:0.72rem;color:var(--primary);font-weight:700;text-transform:uppercase;">Базовая станция</div>
-            <div style="font-weight:800;font-size:1.05rem;">${shelfProduct.title}</div>
+            <div style="font-weight:800;font-size:1.05rem;">${shelfProduct.title} (${recommendedLength})</div>
             <div style="font-size:0.8125rem;color:var(--text-muted);">${shelfProduct.shortDescr || ''}</div>
-            <div style="font-family:var(--font-mono);font-weight:700;color:var(--text-main);margin-top:4px;">${formatPrice(shelfProduct.price)}</div>
+            <div style="font-family:var(--font-mono);font-weight:700;color:var(--text-main);margin-top:4px;">${formatPrice(shelfPrice)}</div>
           </div>
         </div>
 
@@ -235,9 +237,9 @@ window.GeekNook = window.GeekNook || {};
 
   const addQuizBundleToCart = () => {
     if (!state.quizBundle) return;
-    const { shelf, addons, mat } = state.quizBundle;
+    const { shelf, addons, mat, length } = state.quizBundle;
 
-    addToCart(shelf.id, 'Стандарт', false);
+    addToCart(shelf.id, length || '85 см', false);
     addons.forEach(a => addToCart(a.id, 'Стандарт', false));
     if (mat) addToCart(mat.id, 'Стандарт', false);
 

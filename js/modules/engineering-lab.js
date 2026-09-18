@@ -1867,8 +1867,8 @@ window.GeekNook = window.GeekNook || {};
     const mon = MONITOR_SETUPS[matcherState.monitorSetup];
     const monWidthMm = mon.widthMm;
 
-    const recommendedShelfMm = monWidthMm >= 800 ? 1150 : 900;
-    const recommendedShelfName = recommendedShelfMm === 1150 ? 'Focus Station 1150 (115 см)' : 'Focus Station 900 (85-90 см)';
+    const recommendedShelfMm = monWidthMm >= 800 ? 1160 : 850;
+    const recommendedShelfName = recommendedShelfMm === 1160 ? 'Focus Station 116 (116 см)' : 'Focus Station 85 (85 см)';
     const remainingSideCm = Math.max(0, Math.round(((deskWidthMm - Math.max(recommendedShelfMm, monWidthMm)) / 2) / 10));
 
     const svgW = 860;
@@ -1976,7 +1976,7 @@ window.GeekNook = window.GeekNook || {};
 
   const applyMatcherToConfigurator = () => {
     const mon = MONITOR_SETUPS[matcherState.monitorSetup];
-    const targetLen = (mon && mon.widthMm >= 800) ? '115' : '85';
+    const targetLen = (mon && mon.widthMm >= 800) ? '116' : '85';
     closeModal('setupMatcherModal');
     openConfigurator();
     selectConfigLength(targetLen);

@@ -99,7 +99,7 @@ function processProductList(list, catKey, defaultSkuPrefix) {
     const matChar = item.materials || specs['Материал полки'] || specs['Материал'] || '';
     const mountChar = specs['Система крепления'] || specs['Крепление'] || '';
     const loadChar = specs['Предельная нагрузка'] || '';
-    const sizeChar = specs['Размеры'] || specs['Длина основания'] || '';
+    const sizeChar = specs['Габариты'] || specs['Размеры'] || specs['Длина основания'] || '';
 
     // Format modifications / options
     let modifStr = '';

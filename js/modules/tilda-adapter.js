@@ -42,6 +42,16 @@
       return cdnBase.endsWith('/') ? cdnBase + clean : cdnBase + '/' + clean;
     }
 
+    // Official warehouse SKU map for Focus Station variants (85 cm and 116 cm)
+    const FOCUS_STATION_SKUS = {
+      'walnut_85': { sku: '1000830012', part: 'G4N-202404201', name: 'Monitor Stand GEEK NOOK Focus Station 85x9x23 cm, Walnut', price: 19990, dimensions: '85 × 9 × 23 см' },
+      'walnut_116': { sku: '1000830013', part: 'G4N-202404202', name: 'Monitor Stand GEEK NOOK Focus Station 116x9x23 cm, Walnut', price: 24990, dimensions: '116 × 9 × 23 см' },
+      'oak_85': { sku: '1000830014', part: 'G4N-2024042003', name: 'Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Oak', price: 19990, dimensions: '85 × 9 × 23 см' },
+      'oak_116': { sku: '1000830015', part: 'G4N-2024042004', name: 'Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Oak', price: 24990, dimensions: '116 × 9 × 23 см' },
+      'black_85': { sku: '1000830016', part: 'G4N-202404205', name: 'Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Black', price: 19990, dimensions: '85 × 9 × 23 см' },
+      'black_116': { sku: '1000830017', part: 'G4N-2024042006', name: 'Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Black', price: 24990, dimensions: '116 × 9 × 23 см' }
+    };
+
     // Helper: Map GeekNook product to Tilda Cart format
     function mapProductToTilda(productId, optionName) {
       if (!window.GEEKNOOK_DATA) return null;
@@ -63,14 +73,29 @@
       }
 
       const imgPath = (p.images && p.images[0]) ? p.images[0] : (p.image || '');
+      const opt = optionName || 'Стандарт';
+      let resolvedPrice = p.price;
+      if (p.optionPrices && p.optionPrices[opt]) {
+        resolvedPrice = p.optionPrices[opt];
+      }
+
+      const itemOptions = [
+        { name: 'Вариант', variant: opt }
+      ];
+
+      // If product has warehouse SKU definitions for this option, attach them for CRM & 1C
+      if (p.skus && p.skus[opt]) {
+        const skuInfo = p.skus[opt];
+        itemOptions.push({ name: 'Габариты', variant: skuInfo.dimensions });
+        itemOptions.push({ name: 'Артикул', variant: skuInfo.part });
+        itemOptions.push({ name: 'SKU', variant: skuInfo.sku });
+      }
 
       return {
         name: p.title,
-        price: p.price,
+        price: resolvedPrice,
         img: toFullCdnUrl(imgPath),
-        options: [
-          { name: 'Вариант', variant: optionName || 'Стандарт' }
-        ]
+        options: itemOptions
       };
     }
 
@@ -141,10 +166,17 @@
       });
       if (config.engravingEnabled) grandTotal += 1200;
 
+      const finishKey = finish.id === 'oak' ? 'oak' : (finish.id === 'black' ? 'black' : 'walnut');
+      const skuKey = `${finishKey}_${length.id}`;
+      const skuInfo = FOCUS_STATION_SKUS[skuKey];
+
       const title = `Focus Station ${length.id} см (${finish.name})`;
       const options = [
         { name: 'Длина основания', variant: length.id + ' см' },
+        { name: 'Габариты', variant: skuInfo ? skuInfo.dimensions : `${length.id} × 9 × 23 см` },
         { name: 'Порода дерева', variant: finish.name },
+        { name: 'Артикул', variant: skuInfo ? skuInfo.part : 'G4N-FOCUS' },
+        { name: 'SKU', variant: skuInfo ? skuInfo.sku : '' },
         { name: 'Лазерная гравировка', variant: config.engravingEnabled ? (config.engravingText || 'GEEKNOOK // LAB') : 'Без гравировки' },
         { name: 'T-Track аксессуары', variant: addonNames.length ? addonNames.join('; ') : 'Базовая комплектация' }
       ];
