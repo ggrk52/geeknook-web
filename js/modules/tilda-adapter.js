@@ -63,9 +63,10 @@
           return {
             name: b.title,
             price: b.price,
+            sku: b.sku || `BUNDLE-${b.id}`,
             img: toFullCdnUrl(b.image),
             options: [
-              { name: 'Комплектация', variant: (b.items || []).join(', ') }
+              { option: 'Комплектация', name: 'Комплектация', variant: (b.items || []).join(', ') }
             ]
           };
         }
@@ -73,27 +74,42 @@
       }
 
       const imgPath = (p.images && p.images[0]) ? p.images[0] : (p.image || '');
-      const opt = optionName || 'Стандарт';
+      let opt = optionName;
+      if (!opt || opt === 'Стандарт') {
+        if (p.options && p.options.lengths && p.options.lengths.length) {
+          opt = p.options.lengths[0];
+        } else {
+          opt = 'Стандарт';
+        }
+      }
+
       let resolvedPrice = p.price;
       if (p.optionPrices && p.optionPrices[opt]) {
         resolvedPrice = p.optionPrices[opt];
       }
 
-      const itemOptions = [
-        { name: 'Вариант', variant: opt }
-      ];
+      let resolvedSku = p.sku || '';
+      const itemOptions = [];
+
+      // For products that actually have variants (e.g. Focus Station boards with 85/116 cm, or custom variants)
+      const hasRealVariants = (p.options && p.options.lengths && p.options.lengths.length) || (opt !== 'Стандарт');
+      if (hasRealVariants) {
+        itemOptions.push({ option: 'Вариант', name: 'Вариант', variant: opt });
+      }
 
       // If product has warehouse SKU definitions for this option, attach them for CRM & 1C
       if (p.skus && p.skus[opt]) {
         const skuInfo = p.skus[opt];
-        itemOptions.push({ name: 'Габариты', variant: skuInfo.dimensions });
-        itemOptions.push({ name: 'Артикул', variant: skuInfo.part });
-        itemOptions.push({ name: 'SKU', variant: skuInfo.sku });
+        resolvedSku = skuInfo.sku || resolvedSku;
+        itemOptions.push({ option: 'Габариты', name: 'Габариты', variant: skuInfo.dimensions });
+        itemOptions.push({ option: 'Артикул', name: 'Артикул', variant: skuInfo.part });
+        itemOptions.push({ option: 'SKU', name: 'SKU', variant: skuInfo.sku });
       }
 
       return {
         name: p.title,
         price: resolvedPrice,
+        sku: resolvedSku,
         img: toFullCdnUrl(imgPath),
         options: itemOptions
       };
@@ -125,9 +141,35 @@
     // --- 2. OVERRIDE: quickAddWithFeedback ---
     window.geekNookApp.quickAddWithFeedback = function(btnEl, productId, optionName = 'Стандарт') {
       window.geekNookApp.addToCart(productId, optionName, true);
+      if (btnEl) {
+        btnEl.classList.add('added');
+        const isGlassBtn = btnEl.classList.contains('quick-add-btn');
+        const origHtml = btnEl.innerHTML;
+        btnEl.innerHTML = isGlassBtn
+          ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Добавлено!</span>`
+          : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+        setTimeout(() => {
+          btnEl.classList.remove('added');
+          btnEl.innerHTML = origHtml;
+        }, 1200);
+      }
     };
 
-    // --- 3. OVERRIDE: openCartDrawer ---
+    // --- 3. OVERRIDE: addFromQuickView ---
+    window.geekNookApp.addFromQuickView = function(productId) {
+      const modal = document.getElementById('quickViewModal');
+      let opt = 'Стандарт';
+      const activeChip = modal ? modal.querySelector('.option-chip.active') : null;
+      if (activeChip) {
+        opt = activeChip.getAttribute('data-val') || 'Стандарт';
+      }
+      window.geekNookApp.addToCart(productId, opt, true);
+      if (typeof window.geekNookApp.closeModal === 'function') {
+        window.geekNookApp.closeModal('quickViewModal');
+      }
+    };
+
+    // --- 4. OVERRIDE: openCartDrawer ---
     window.geekNookApp.openCartDrawer = function() {
       if (typeof window.tcart__openCart === 'function') {
         window.tcart__openCart();
@@ -137,12 +179,12 @@
       syncTildaCartBadge();
     };
 
-    // --- 4. OVERRIDE: openCheckout / QuickBuy ---
+    // --- 5. OVERRIDE: openCheckout / QuickBuy ---
     window.geekNookApp.openQuickBuy = function(productId) {
       window.geekNookApp.addToCart(productId, 'Стандарт', true);
     };
 
-    // --- 5. OVERRIDE: addConfiguredBundleToCart (Focus Station 3D Configurator) ---
+    // --- 6. OVERRIDE: addConfiguredBundleToCart (Focus Station 3D Configurator) ---
     window.geekNookApp.addConfiguredBundleToCart = function() {
       const data = window.GEEKNOOK_DATA;
       if (!data || !data.configurator) {
@@ -172,13 +214,13 @@
 
       const title = `Focus Station ${length.id} см (${finish.name})`;
       const options = [
-        { name: 'Длина основания', variant: length.id + ' см' },
-        { name: 'Габариты', variant: skuInfo ? skuInfo.dimensions : `${length.id} × 9 × 23 см` },
-        { name: 'Порода дерева', variant: finish.name },
-        { name: 'Артикул', variant: skuInfo ? skuInfo.part : 'G4N-FOCUS' },
-        { name: 'SKU', variant: skuInfo ? skuInfo.sku : '' },
-        { name: 'Лазерная гравировка', variant: config.engravingEnabled ? (config.engravingText || 'GEEKNOOK // LAB') : 'Без гравировки' },
-        { name: 'T-Track аксессуары', variant: addonNames.length ? addonNames.join('; ') : 'Базовая комплектация' }
+        { option: 'Длина основания', name: 'Длина основания', variant: length.id + ' см' },
+        { option: 'Габариты', name: 'Габариты', variant: skuInfo ? skuInfo.dimensions : `${length.id} × 9 × 23 см` },
+        { option: 'Порода дерева', name: 'Порода дерева', variant: finish.name },
+        { option: 'Артикул', name: 'Артикул', variant: skuInfo ? skuInfo.part : 'G4N-FOCUS' },
+        { option: 'SKU', name: 'SKU', variant: skuInfo ? skuInfo.sku : '' },
+        { option: 'Лазерная гравировка', name: 'Лазерная гравировка', variant: config.engravingEnabled ? (config.engravingText || 'GEEKNOOK // LAB') : 'Без гравировки' },
+        { option: 'T-Track аксессуары', name: 'T-Track аксессуары', variant: addonNames.length ? addonNames.join('; ') : 'Базовая комплектация' }
       ];
 
       const imgUrl = toFullCdnUrl(finish.img);
@@ -187,6 +229,7 @@
         window.tcart__addProduct({
           name: title,
           price: grandTotal,
+          sku: skuInfo ? skuInfo.sku : 'G4N-FOCUS',
           img: imgUrl,
           options: options
         });

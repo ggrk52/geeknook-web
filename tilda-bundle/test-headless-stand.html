@@ -224,7 +224,7 @@
 
       drawerList.innerHTML = window.tcart.products.map((p, idx) => {
         sum += (p.price || 0) * (p.quantity || 1);
-        const optsHtml = (p.options || []).map(o => `<div>• <strong>${o.name}:</strong> ${o.variant}</div>`).join('');
+        const optsHtml = (p.options || []).map(o => `<div>• <strong>${o.option || o.name}:</strong> ${o.variant}</div>`).join('');
         return `
           <div class="t706-mock-item">
             <div style="display:flex;justify-content:space-between;align-items:start;">

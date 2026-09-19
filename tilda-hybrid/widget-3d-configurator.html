@@ -869,12 +869,27 @@
       });
       if (state.engravingEnabled) grandTotal += 1200;
 
+      const finishKey = finish.id === 'oak' ? 'oak' : (finish.id === 'black' ? 'black' : 'walnut');
+      const skuKey = `${finishKey}_${length.id}`;
+      const skuMap = {
+        'walnut_85': { sku: '1000830012', part: 'G4N-202404201', dimensions: '85 × 9 × 23 см' },
+        'walnut_116': { sku: '1000830013', part: 'G4N-202404202', dimensions: '116 × 9 × 23 см' },
+        'oak_85': { sku: '1000830014', part: 'G4N-2024042003', dimensions: '85 × 9 × 23 см' },
+        'oak_116': { sku: '1000830015', part: 'G4N-2024042004', dimensions: '116 × 9 × 23 см' },
+        'black_85': { sku: '1000830016', part: 'G4N-202404205', dimensions: '85 × 9 × 23 см' },
+        'black_116': { sku: '1000830017', part: 'G4N-2024042006', dimensions: '116 × 9 × 23 см' }
+      };
+      const skuInfo = skuMap[skuKey];
+
       const productName = `Focus Station ${length.id} см (${finish.name})`;
       const optionsArray = [
-        { name: 'Длина', variant: length.id + ' см' },
-        { name: 'Порода дерева', variant: finish.name },
-        { name: 'Гравировка', variant: state.engravingEnabled ? (state.engravingText || 'GEEKNOOK // LAB') : 'Без гравировки' },
-        { name: 'T-Track модули', variant: addonNames.length ? addonNames.join('; ') : 'Базовая комплектация' }
+        { option: 'Длина основания', name: 'Длина основания', variant: length.id + ' см' },
+        { option: 'Габариты', name: 'Габариты', variant: skuInfo ? skuInfo.dimensions : `${length.id} × 9 × 23 см` },
+        { option: 'Порода дерева', name: 'Порода дерева', variant: finish.name },
+        { option: 'Артикул', name: 'Артикул', variant: skuInfo ? skuInfo.part : 'G4N-FOCUS' },
+        { option: 'SKU', name: 'SKU', variant: skuInfo ? skuInfo.sku : '' },
+        { option: 'Лазерная гравировка', name: 'Лазерная гравировка', variant: state.engravingEnabled ? (state.engravingText || 'GEEKNOOK // LAB') : 'Без гравировки' },
+        { option: 'T-Track аксессуары', name: 'T-Track аксессуары', variant: addonNames.length ? addonNames.join('; ') : 'Базовая комплектация' }
       ];
 
       // 1. TILDA TCART NATIVE INTEGRATION
@@ -882,6 +897,7 @@
         window.tcart__addProduct({
           name: productName,
           price: grandTotal,
+          sku: skuInfo ? skuInfo.sku : 'G4N-FOCUS',
           img: finish.img,
           options: optionsArray
         });

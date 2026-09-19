@@ -101,9 +101,17 @@ window.GeekNook = window.GeekNook || {};
       return;
     }
 
-    const cleanOption = String(optionName || 'Стандарт').trim();
+    let cleanOption = String(optionName || 'Стандарт').trim();
+    if (cleanOption === 'Стандарт' && product.options && product.options.lengths && product.options.lengths.length) {
+      cleanOption = product.options.lengths[0];
+    }
     const cartKey = `${product.id}_${cleanOption}`;
     const existing = state.cart.find(i => i.cartKey === cartKey);
+
+    let finalPrice = typeof product.price === 'number' ? product.price : 0;
+    if (product.optionPrices && product.optionPrices[cleanOption]) {
+      finalPrice = product.optionPrices[cleanOption];
+    }
 
     if (existing) {
       existing.quantity = Math.min(99, (parseInt(existing.quantity, 10) || 1) + 1);
@@ -113,7 +121,7 @@ window.GeekNook = window.GeekNook || {};
         id: product.id,
         title: product.title,
         option: cleanOption,
-        price: typeof product.price === 'number' ? product.price : 0,
+        price: finalPrice,
         image: (product.images && product.images[0]) ? product.images[0] : 'images/tild3763-3337-4662-b233-616531316364__3.jpg',
         quantity: 1
       });
@@ -122,7 +130,7 @@ window.GeekNook = window.GeekNook || {};
     saveCart();
     triggerBadgeBounce();
     soundEngine.play('cart');
-    showToast(`«${product.title}» добавлен в корзину!`);
+    showToast(`«${product.title} (${cleanOption})» добавлен в корзину!`);
     if (openDrawer) {
       openCartDrawer();
     }
@@ -137,9 +145,17 @@ window.GeekNook = window.GeekNook || {};
       return;
     }
 
-    const cleanOption = String(optionName || 'Стандарт').trim();
+    let cleanOption = String(optionName || 'Стандарт').trim();
+    if (cleanOption === 'Стандарт' && product.options && product.options.lengths && product.options.lengths.length) {
+      cleanOption = product.options.lengths[0];
+    }
     const cartKey = `${product.id}_${cleanOption}`;
     const existing = state.cart.find(i => i.cartKey === cartKey);
+
+    let finalPrice = typeof product.price === 'number' ? product.price : 0;
+    if (product.optionPrices && product.optionPrices[cleanOption]) {
+      finalPrice = product.optionPrices[cleanOption];
+    }
 
     if (existing) {
       existing.quantity = Math.min(99, (parseInt(existing.quantity, 10) || 1) + 1);
@@ -149,7 +165,7 @@ window.GeekNook = window.GeekNook || {};
         id: product.id,
         title: product.title,
         option: cleanOption,
-        price: typeof product.price === 'number' ? product.price : 0,
+        price: finalPrice,
         image: (product.images && product.images[0]) ? product.images[0] : 'images/tild3763-3337-4662-b233-616531316364__3.jpg',
         quantity: 1
       });

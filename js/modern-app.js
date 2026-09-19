@@ -1282,7 +1282,8 @@
     if (activeChip) {
       opt = activeChip.getAttribute('data-val') || 'Стандарт';
     }
-    addToCart(productId, opt);
+    const cartAdd = (window.geekNookApp && window.geekNookApp.addToCart) ? window.geekNookApp.addToCart : addToCart;
+    cartAdd(productId, opt);
     closeModal('quickViewModal');
   };
 
@@ -2875,15 +2876,17 @@
     if (!state.quizBundle) return;
     const { shelf, addons, mat, length } = state.quizBundle;
 
-    addToCart(shelf.id, length || '85 см', false);
-    addons.forEach(a => addToCart(a.id, 'Стандарт', false));
-    if (mat) addToCart(mat.id, 'Стандарт', false);
+    const cartAdd = (window.geekNookApp && window.geekNookApp.addToCart) ? window.geekNookApp.addToCart : addToCart;
+    cartAdd(shelf.id, length || '85 см', false);
+    addons.forEach(a => cartAdd(a.id, 'Стандарт', false));
+    if (mat) cartAdd(mat.id, 'Стандарт', false);
 
     saveCart();
     triggerBadgeBounce();
     closeModal('quizModal');
     showToast('Персональный комплект добавлен в корзину!', 'success');
-    openCartDrawer();
+    const openDrawerFn = (window.geekNookApp && window.geekNookApp.openCartDrawer) ? window.geekNookApp.openCartDrawer : openCartDrawer;
+    openDrawerFn();
   };
 
   // --- LEGAL MODAL TABS ---
