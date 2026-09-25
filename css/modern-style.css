@@ -7404,8 +7404,9 @@ textarea:focus-visible {
 }
 
 /* Submit button */
-.t706__submit .t-submit,
-.t706__submit .t-btnflex.t-btnflex_type_submit {
+.t706 .t-form__submit,
+.t706 .t-submit,
+.t706 .t-btnflex.t-btnflex_type_submit {
   background: #ffffff !important;
   background-color: #ffffff !important;
   color: #0c0c0e !important;
@@ -7421,19 +7422,19 @@ textarea:focus-visible {
   box-shadow: 0 4px 20px rgba(255, 255, 255, 0.15) !important;
 }
 
-.t706__submit .t-btnflex__text {
+.t706 .t-btnflex__text {
   color: #0c0c0e !important;
   font-weight: 700 !important;
 }
 
-.t706__submit .t-submit:hover,
-.t706__submit .t-btnflex.t-btnflex_type_submit:hover {
+.t706 .t-submit:hover,
+.t706 .t-btnflex.t-btnflex_type_submit:hover {
   transform: translateY(-1px) !important;
   box-shadow: 0 6px 24px rgba(255, 255, 255, 0.25) !important;
 }
 
-.t706__submit .t-submit:active,
-.t706__submit .t-btnflex.t-btnflex_type_submit:active {
+.t706 .t-submit:active,
+.t706 .t-btnflex.t-btnflex_type_submit:active {
   transform: translateY(1px) !important;
 }
 

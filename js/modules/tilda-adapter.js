@@ -379,7 +379,7 @@
 
     // --- 9. ENSURE RUSSIAN BUTTON TEXT ("Оформить заказ") ---
     function ensureRussianButtonText() {
-      const texts = document.querySelectorAll('.t706__submit .t-btnflex__text, .t706__submit .t-submit');
+      const texts = document.querySelectorAll('.t706 .t-btnflex__text, .t706 .t-submit, .t-form__submit .t-btnflex__text, .t-form__submit .t-submit');
       texts.forEach(el => {
         if (el.tagName === 'INPUT' && (el.value.toLowerCase().includes('check') || el.value.toLowerCase().includes('order'))) {
           el.value = 'Оформить заказ';
@@ -390,7 +390,7 @@
         }
       });
     }
-    setInterval(ensureRussianButtonText, 500);
+    setInterval(ensureRussianButtonText, 300);
     ensureRussianButtonText();
 
     // Export global helper
