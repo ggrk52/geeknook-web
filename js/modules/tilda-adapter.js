@@ -60,12 +60,16 @@
         // Check if bundle
         const b = (window.GEEKNOOK_DATA.bundles || []).find(item => item.id === productId);
         if (b) {
+          const bSku = b.sku || `GN-BDL-${b.id}`;
           return {
             name: b.title,
             price: b.price,
-            sku: b.sku || `BUNDLE-${b.id}`,
+            sku: bSku,
+            uid: bSku,
             img: toFullCdnUrl(b.image),
             options: [
+              { option: 'Артикул', name: 'Артикул', variant: b.part || bSku },
+              { option: 'SKU', name: 'SKU', variant: bSku },
               { option: 'Комплектация', name: 'Комплектация', variant: (b.items || []).join(', ') }
             ]
           };
@@ -104,12 +108,20 @@
         itemOptions.push({ option: 'Габариты', name: 'Габариты', variant: skuInfo.dimensions });
         itemOptions.push({ option: 'Артикул', name: 'Артикул', variant: skuInfo.part });
         itemOptions.push({ option: 'SKU', name: 'SKU', variant: skuInfo.sku });
+      } else {
+        if (p.part) {
+          itemOptions.push({ option: 'Артикул', name: 'Артикул', variant: p.part });
+        }
+        if (resolvedSku) {
+          itemOptions.push({ option: 'SKU', name: 'SKU', variant: resolvedSku });
+        }
       }
 
       return {
         name: p.title,
         price: resolvedPrice,
         sku: resolvedSku,
+        uid: resolvedSku || p.id,
         img: toFullCdnUrl(imgPath),
         options: itemOptions
       };
@@ -230,6 +242,7 @@
           name: title,
           price: grandTotal,
           sku: skuInfo ? skuInfo.sku : 'G4N-FOCUS',
+          uid: skuInfo ? skuInfo.sku : '1000830012',
           img: imgUrl,
           options: options
         });
