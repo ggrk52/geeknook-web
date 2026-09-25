@@ -5843,11 +5843,47 @@
         modalManager.closeAll();
       }
     });
+
+    // 5. Close support widget dropdown on outside click
+    document.addEventListener('click', (e) => {
+      const widget = document.getElementById('supportWidget');
+      const dropdown = document.getElementById('supportWidgetDropdown');
+      if (widget && dropdown && dropdown.style.display === 'block') {
+        if (!widget.contains(e.target)) {
+          toggleSupportWidget();
+        }
+      }
+    });
+  };
+
+  const toggleSupportWidget = () => {
+    const dropdown = document.getElementById('supportWidgetDropdown');
+    const trigger = document.getElementById('supportTriggerBtn');
+    if (!dropdown || !trigger) return;
+    
+    const isHidden = dropdown.style.display === 'none' || !dropdown.style.display;
+    dropdown.style.display = isHidden ? 'block' : 'none';
+    
+    const chatIcon = trigger.querySelector('.support-icon-chat');
+    const closeIcon = trigger.querySelector('.support-icon-close');
+    const ping = trigger.querySelector('.support-btn-ping');
+    
+    if (chatIcon && closeIcon) {
+      chatIcon.style.display = isHidden ? 'none' : 'block';
+      closeIcon.style.display = isHidden ? 'block' : 'none';
+    }
+    if (ping) {
+      ping.style.display = isHidden ? 'none' : 'block';
+    }
+    if (soundEngine && typeof soundEngine.play === 'function') {
+      soundEngine.play('click');
+    }
   };
 
   // Public API
   window.geekNookApp = {
     init,
+    toggleSupportWidget,
     addToCart,
     quickAddWithFeedback,
     updateCartQuantity,
