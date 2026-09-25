@@ -23,7 +23,7 @@ Write-Host "Packing GeekNook website into: $zipPath ..." -ForegroundColor Cyan
 
 Push-Location $root
 try {
-  & $tarExe -a -c -f $zipPath index.html 404.html .htaccess LICENSE README.md robots.txt sitemap.xml favicon.ico css js images
+  & $tarExe -a -c -f $zipPath index.html 404.html .htaccess LICENSE README.md robots.txt sitemap.xml favicon.ico yandex_72c8b34ebfb18c1b.html css js images
   
   # Also sync to alternate desktop path if exists
   foreach ($p in $desktopPaths) {
