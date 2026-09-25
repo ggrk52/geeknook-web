@@ -319,6 +319,64 @@
     setInterval(syncTildaCartBadge, 800);
     syncTildaCartBadge();
 
+    // --- 8. SMART CDEK PVZ SANITIZER & MAP HELPER ---
+    function setupCdekFieldSanitizer() {
+      const translitMap = {
+        'А': 'A', 'Б': 'B', 'В': 'B', 'Г': 'G', 'Д': 'D', 'Е': 'E', 'Ё': 'E', 'Ж': 'ZH', 'З': 'Z',
+        'И': 'I', 'Й': 'Y', 'К': 'K', 'Л': 'L', 'М': 'M', 'Н': 'H', 'О': 'O', 'П': 'P', 'Р': 'P',
+        'С': 'C', 'Т': 'T', 'У': 'Y', 'Ф': 'F', 'Х': 'X', 'Ц': 'TS', 'Ч': 'CH', 'Ш': 'SH', 'Щ': 'SHCH',
+        'Ы': 'Y', 'Э': 'E', 'Ю': 'YU', 'Я': 'YA'
+      };
+
+      function sanitizeCdekVal(raw) {
+        if (!raw) return '';
+        let s = raw.toString().toUpperCase().trim();
+        let res = '';
+        for (let i = 0; i < s.length; i++) {
+          const ch = s[i];
+          res += translitMap[ch] || ch;
+        }
+        return res.replace(/[^A-Z0-9]/g, '').slice(0, 8);
+      }
+
+      function attachListenerToCdekInput() {
+        const inp = document.querySelector('input[name="Доставка СДЕК"], #input_1790269790207, input[name*="СДЕК"], input[name*="сдек"], input[name*="cdek"], input[name*="CDEK"]');
+        if (!inp || inp.dataset.cdekSanitizerAttached) return;
+
+        inp.dataset.cdekSanitizerAttached = 'true';
+        inp.setAttribute('autocomplete', 'off');
+        inp.setAttribute('autocapitalize', 'characters');
+
+        inp.addEventListener('input', function() {
+          const clean = sanitizeCdekVal(this.value);
+          if (this.value !== clean) {
+            this.value = clean;
+          }
+        });
+
+        // Add helper link below input if not already present
+        const parent = inp.closest('.t-input-group');
+        if (parent && !parent.querySelector('.cdek-map-helper-link')) {
+          const helper = document.createElement('div');
+          helper.className = 'cdek-map-helper-link';
+          helper.style.cssText = 'margin-top: 6px; font-size: 12px; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 6px;';
+          helper.innerHTML = `
+            <span>Не знаете код?</span>
+            <a href="https://www.cdek.ru/ru/offices" target="_blank" rel="noopener noreferrer" style="color: #60a5fa; text-decoration: underline; font-weight: 500;">
+              Найти свой ПВЗ на карте cdek.ru ↗
+            </a>
+          `;
+          parent.appendChild(helper);
+        }
+      }
+
+      document.addEventListener('focusin', attachListenerToCdekInput);
+      setInterval(attachListenerToCdekInput, 1000);
+      attachListenerToCdekInput();
+    }
+
+    setupCdekFieldSanitizer();
+
     // Export global helper
     window.geekNookTilda = {
       isTildaActive,
