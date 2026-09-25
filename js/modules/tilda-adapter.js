@@ -379,16 +379,18 @@
 
     // --- 9. ENSURE RUSSIAN BUTTON TEXT ("Оформить заказ") ---
     function ensureRussianButtonText() {
-      const btns = document.querySelectorAll('.t706__submit .t-submit');
-      btns.forEach(btn => {
-        if (btn.tagName === 'INPUT' && (btn.value.toLowerCase().includes('check') || btn.value.toLowerCase().includes('order'))) {
-          btn.value = 'Оформить заказ';
-        } else if (btn.textContent && (btn.textContent.toLowerCase().includes('check') || btn.textContent.toLowerCase().includes('order'))) {
-          btn.textContent = 'Оформить заказ';
+      const texts = document.querySelectorAll('.t706__submit .t-btnflex__text, .t706__submit .t-submit');
+      texts.forEach(el => {
+        if (el.tagName === 'INPUT' && (el.value.toLowerCase().includes('check') || el.value.toLowerCase().includes('order'))) {
+          el.value = 'Оформить заказ';
+        } else if (el.classList.contains('t-btnflex__text') && (el.textContent.trim().toLowerCase() === 'checkout' || el.textContent.trim().toLowerCase() === 'order')) {
+          el.textContent = 'Оформить заказ';
+        } else if (el.tagName === 'BUTTON' && !el.querySelector('.t-btnflex__text') && el.textContent.trim().toLowerCase().includes('check')) {
+          el.textContent = 'Оформить заказ';
         }
       });
     }
-    setInterval(ensureRussianButtonText, 800);
+    setInterval(ensureRussianButtonText, 500);
     ensureRussianButtonText();
 
     // Export global helper
