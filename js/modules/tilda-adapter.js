@@ -377,6 +377,20 @@
 
     setupCdekFieldSanitizer();
 
+    // --- 9. ENSURE RUSSIAN BUTTON TEXT ("Оформить заказ") ---
+    function ensureRussianButtonText() {
+      const btns = document.querySelectorAll('.t706__submit .t-submit');
+      btns.forEach(btn => {
+        if (btn.tagName === 'INPUT' && (btn.value.toLowerCase().includes('check') || btn.value.toLowerCase().includes('order'))) {
+          btn.value = 'Оформить заказ';
+        } else if (btn.textContent && (btn.textContent.toLowerCase().includes('check') || btn.textContent.toLowerCase().includes('order'))) {
+          btn.textContent = 'Оформить заказ';
+        }
+      });
+    }
+    setInterval(ensureRussianButtonText, 800);
+    ensureRussianButtonText();
+
     // Export global helper
     window.geekNookTilda = {
       isTildaActive,

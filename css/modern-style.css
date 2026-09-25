@@ -7238,9 +7238,18 @@ textarea:focus-visible {
 /* ==========================================================================
    GEEK NOOK TILDA CART (ST100 / .t706) LUXURY DARK THEME & RESPONSIVE POLISH
    ========================================================================== */
-.t706__cartwin {
+.t706__cartwin,
+.t706__cartwin-content,
+.t706__cartwin-top,
+.t706__cartwin-bottom,
+.t706__cartwin-products,
+.t706__orderform {
   background: #111114 !important;
+  background-color: #111114 !important;
   color: #f4f4f5 !important;
+}
+
+.t706__cartwin {
   border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
   box-shadow: -20px 0 60px rgba(0, 0, 0, 0.6) !important;
   font-family: inherit !important;
@@ -7330,7 +7339,8 @@ textarea:focus-visible {
   margin-bottom: 14px !important;
 }
 
-.t706__orderform .t-input-title {
+.t706__orderform .t-input-title,
+.t706 .t-input-title {
   color: rgba(255, 255, 255, 0.85) !important;
   font-size: 0.8125rem !important;
   font-weight: 600 !important;
@@ -7339,15 +7349,18 @@ textarea:focus-visible {
   margin-bottom: 6px !important;
 }
 
-.t706__orderform .t-input-subtitle {
+.t706__orderform .t-input-subtitle,
+.t706 .t-input-subtitle {
   color: rgba(255, 255, 255, 0.5) !important;
   font-size: 0.775rem !important;
   margin-bottom: 6px !important;
 }
 
-.t706__orderform .t-input {
-  background: rgba(255, 255, 255, 0.04) !important;
-  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+.t706__orderform .t-input,
+.t706 .t-input {
+  background: #1a1a1e !important;
+  background-color: #1a1a1e !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
   border-radius: 10px !important;
   color: #ffffff !important;
   font-size: 0.9375rem !important;
@@ -7355,32 +7368,39 @@ textarea:focus-visible {
   outline: none !important;
   transition: all 0.2s ease !important;
   box-sizing: border-box !important;
+  box-shadow: none !important;
 }
 
-.t706__orderform .t-input:focus {
+.t706__orderform .t-input:focus,
+.t706 .t-input:focus {
   border-color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.07) !important;
+  background: #222228 !important;
+  background-color: #222228 !important;
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12) !important;
 }
 
-.t706__orderform .t-input::placeholder {
-  color: rgba(255, 255, 255, 0.3) !important;
+.t706__orderform .t-input::placeholder,
+.t706 .t-input::placeholder {
+  color: rgba(255, 255, 255, 0.35) !important;
 }
 
 /* Payment system radio cards */
 .t706__orderform .t-input-group_pm {
-  background: rgba(255, 255, 255, 0.02) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   border-radius: 12px !important;
   padding: 12px 14px !important;
 }
 
-.t706__orderform .t-radio__wrapper {
+.t706__orderform .t-radio__wrapper,
+.t706 .t-radio__wrapper,
+.t706 .t-radio__title {
   color: #ffffff !important;
 }
 
-.t706__orderform .t-radio__control {
-  border-color: rgba(255, 255, 255, 0.3) !important;
+.t706__orderform .t-radio__control,
+.t706 .t-radio__control {
+  border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
 /* Submit button */
