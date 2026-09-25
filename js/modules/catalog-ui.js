@@ -527,10 +527,18 @@ window.GeekNook = window.GeekNook || {};
     if (body && GEEKNOOK_DATA.legal && GEEKNOOK_DATA.legal[tabId]) {
       const legalItem = GEEKNOOK_DATA.legal[tabId];
       body.innerHTML = typeof legalItem === 'object' ? legalItem.content : legalItem;
+      body.scrollTop = 0;
+    }
+    const extLink = document.getElementById('legalModalExtLink');
+    if (extLink) {
+      extLink.href = 'legal.html#' + tabId;
     }
     document.querySelectorAll('.legal-tab-btn').forEach(btn => {
       if (btn.getAttribute('data-tab') === tabId) {
         btn.classList.add('active');
+        if (typeof btn.scrollIntoView === 'function') {
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
       } else {
         btn.classList.remove('active');
       }

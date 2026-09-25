@@ -543,14 +543,30 @@
       }
     }
 
+    // 4. SETUP LEGAL CONSENT NOTICE ABOVE SUBMIT BUTTON
+    function setupLegalCartNotice() {
+      const form = document.querySelector('.t706__orderform, .t-form__inputsbox');
+      if (!form || form.querySelector('.t-cart-legal-notice')) return;
+      const submitWrap = form.querySelector('.t-form__submit, .t706__submit');
+      if (!submitWrap) return;
+
+      const notice = document.createElement('div');
+      notice.className = 't-cart-legal-notice';
+      notice.style.cssText = 'font-size: 11.5px; line-height: 1.45; color: rgba(255, 255, 255, 0.55); margin: 12px 0 10px; text-align: center;';
+      notice.innerHTML = 'Нажимая «Оформить заказ», вы соглашаетесь с <a href="legal.html#offer" target="_blank" style="color: #cba870; text-decoration: underline;">Публичной офертой</a> и <a href="legal.html#privacy" target="_blank" style="color: #cba870; text-decoration: underline;">Политикой конфиденциальности</a> ООО «ГИК НУК»';
+      submitWrap.parentNode.insertBefore(notice, submitWrap);
+    }
+
     document.addEventListener('focusin', attachListenerToCdekInput);
     setInterval(attachListenerToCdekInput, 800);
     setInterval(ensureRussianButtonText, 300);
     setInterval(setupCdekPaymentLabels, 400);
+    setInterval(setupLegalCartNotice, 500);
 
     attachListenerToCdekInput();
     ensureRussianButtonText();
     setupCdekPaymentLabels();
+    setupLegalCartNotice();
   }
 
   initTildaDomEnhancements();

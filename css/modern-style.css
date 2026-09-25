@@ -3859,6 +3859,10 @@ textarea:focus-visible {
   border-radius: var(--radius-full);
   transition: all var(--transition-fast);
   white-space: nowrap;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .legal-tab-btn:hover {
@@ -3867,9 +3871,10 @@ textarea:focus-visible {
 }
 
 .legal-tab-btn.active {
-  color: #ffffff;
-  background: var(--text-main);
+  color: #0c0c0e;
+  background: var(--primary, #cba870);
   font-weight: 700;
+  box-shadow: 0 2px 8px rgba(203, 168, 112, 0.3);
 }
 
 .legal-modal-body {
@@ -3881,31 +3886,81 @@ textarea:focus-visible {
   padding-right: 8px;
 }
 
-.legal-modal-body h4 {
+.legal-modal-body h3,
+.legal-modal-body .legal-h3 {
   font-family: var(--font-display);
-  font-size: 1.15rem;
+  font-size: 1.35rem;
   font-weight: 800;
-  margin: 20px 0 10px;
-  color: var(--text-main);
+  margin: 24px 0 12px;
+  color: #ffffff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 8px;
 }
 
+.legal-modal-body h4,
+.legal-modal-body .legal-h4 {
+  font-family: var(--font-main);
+  font-size: 1.12rem;
+  font-weight: 700;
+  margin: 20px 0 10px;
+  color: var(--primary, #cba870);
+}
+
+.legal-modal-body h5,
+.legal-modal-body .legal-h5 {
+  font-family: var(--font-main);
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 16px 0 8px;
+  color: #ffffff;
+}
+
+.legal-modal-body h3:first-child,
 .legal-modal-body h4:first-child {
   margin-top: 0;
 }
 
 .legal-modal-body p {
   margin-bottom: 14px;
-  color: var(--text-muted);
+  color: var(--text-main);
 }
 
-.legal-modal-body ul {
+.legal-modal-body ul,
+.legal-modal-body ol {
   padding-left: 20px;
   margin-bottom: 16px;
-  color: var(--text-muted);
+  color: var(--text-main);
 }
 
 .legal-modal-body li {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.legal-modal-body code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #e0be86;
+  font-family: monospace;
+}
+
+.legal-modal-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0;
+  font-size: 0.9rem;
+}
+
+.legal-modal-body th,
+.legal-modal-body td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 10px 12px;
+  text-align: left;
+}
+
+.legal-modal-body th {
+  background: rgba(255, 255, 255, 0.05);
+  font-weight: 600;
 }
 
 /* ==========================================================================

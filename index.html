@@ -1094,10 +1094,11 @@
         <div class="footer-nav-col">
           <h5>Поддержка</h5>
           <ul>
-            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('delivery')">Доставка и оплата</a></li>
-            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('warranty')">Гарантия 2 года</a></li>
-            <li><a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('warranty')">Возврат 14 дней</a></li>
-            <li><a href="https://t.me/geeknook" target="_blank">Служба заботы</a></li>
+            <li><a href="legal.html#delivery" onclick="window.geekNookApp.openLegalModal('delivery'); return false;">Доставка и оплата</a></li>
+            <li><a href="legal.html#warranty" onclick="window.geekNookApp.openLegalModal('warranty'); return false;">Гарантия и возврат</a></li>
+            <li><a href="legal.html#requisites" onclick="window.geekNookApp.openLegalModal('requisites'); return false;">Реквизиты</a></li>
+            <li><a href="legal.html#certification" onclick="window.geekNookApp.openLegalModal('certification'); return false;">Сертификация</a></li>
+            <li><a href="https://t.me/geeknook" target="_blank" rel="noopener">Служба заботы</a></li>
           </ul>
         </div>
 
@@ -1105,17 +1106,21 @@
           <h5>Контакты</h5>
           <ul>
             <li><a href="mailto:info@geeknook.ru" style="color:#fff;font-weight:600;">info@geeknook.ru</a></li>
-            <li>Пн–Пт: 10:00 — 18:00</li>
-            <li>Москва, быстрая доставка по всей РФ</li>
+            <li>Пн–Вс: 10:00 — 20:00 (МСК)</li>
+            <li>Москва, быстрая доставка через СДЭК</li>
           </ul>
         </div>
       </div>
 
       <div class="footer-bottom-line">
-        <div>© 2026 GEEK NOOK. Все права защищены.</div>
-        <div style="display:flex;gap:20px;">
-          <a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Политика конфиденциальности</a>
-          <a href="javascript:void(0)" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Публичная оферта</a>
+        <div>© 2026 ООО «ГИК НУК» (ИНН 9723239478, ОГРН 1247700620265). Все права защищены.</div>
+        <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:center;">
+          <a href="legal.html#offer" onclick="window.geekNookApp.openLegalModal('offer'); return false;">Публичная оферта</a>
+          <a href="legal.html#privacy" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Политики и согласия</a>
+          <a href="legal.html#terms" onclick="window.geekNookApp.openLegalModal('terms'); return false;">Условия использования</a>
+          <a href="legal.html" target="_blank" style="color:#cba870;display:inline-flex;align-items:center;gap:4px;">
+            <span>Правовой центр ↗</span>
+          </a>
         </div>
       </div>
     </div>
@@ -1599,12 +1604,23 @@
 
   <!-- Legal & Service Modal -->
   <div class="modal-backdrop" role="dialog" aria-modal="true" id="legalModal" onclick="if(event.target===this) window.geekNookApp.closeModal('legalModal')">
-    <div class="modal-card legal-modal-card" style="max-width:820px;">
+    <div class="modal-card legal-modal-card" style="max-width:880px;width:95%;">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('legalModal')" aria-label="Закрыть">✕</button>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.08);flex-wrap:wrap;gap:8px;">
+        <span style="font-size:0.85rem;color:var(--text-muted);font-weight:500;">ООО «ГИК НУК» • Официальные документы</span>
+        <a id="legalModalExtLink" href="legal.html#offer" target="_blank" style="font-size:0.88rem;color:#cba870;text-decoration:none;display:inline-flex;align-items:center;gap:4px;">
+          <span>Открыть на весь экран</span>
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+        </a>
+      </div>
       <div class="legal-modal-tabs">
-        <button class="legal-tab-btn active" data-tab="delivery" onclick="window.geekNookApp.switchLegalTab('delivery')">Доставка и оплата</button>
-        <button class="legal-tab-btn" data-tab="warranty" onclick="window.geekNookApp.switchLegalTab('warranty')">Гарантия 2 года</button>
-        <button class="legal-tab-btn" data-tab="privacy" onclick="window.geekNookApp.switchLegalTab('privacy')">Конфиденциальность и оферта</button>
+        <button class="legal-tab-btn active" data-tab="offer" onclick="window.geekNookApp.switchLegalTab('offer')">Оферта</button>
+        <button class="legal-tab-btn" data-tab="privacy" onclick="window.geekNookApp.switchLegalTab('privacy')">Политики и согласия</button>
+        <button class="legal-tab-btn" data-tab="terms" onclick="window.geekNookApp.switchLegalTab('terms')">Условия сайта</button>
+        <button class="legal-tab-btn" data-tab="requisites" onclick="window.geekNookApp.switchLegalTab('requisites')">Реквизиты</button>
+        <button class="legal-tab-btn" data-tab="delivery" onclick="window.geekNookApp.switchLegalTab('delivery')">Доставка и оплата</button>
+        <button class="legal-tab-btn" data-tab="warranty" onclick="window.geekNookApp.switchLegalTab('warranty')">Гарантия и возврат</button>
+        <button class="legal-tab-btn" data-tab="certification" onclick="window.geekNookApp.switchLegalTab('certification')">Сертификация</button>
       </div>
       <div id="legalModalBody" class="legal-modal-body markdown-body"></div>
     </div>

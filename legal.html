@@ -1,837 +1,472 @@
-/**
- * GeekNook Product Catalog & Content Data
- * Structured strictly according to the new 11-block mockup specification
- */
-
-const GEEKNOOK_DATA = {
-  // --- 1. ДОСКИ GEEK NOOK ---
-  boards: [
-    {
-      id: "focus-station-walnut",
-      legacyId: "focus-station-1200",
-      title: "Focus Station Walnut",
-      subtitle: "Благородный американский орех • 85 см и 116 см",
-      category: "boards",
-      price: 19990,
-      oldPrice: 25000,
-      rating: 5.0,
-      reviewsCount: 38,
-      materials: "Натуральный американский орех, анодированная сталь",
-      specs: {
-        "Габариты": "85 × 9 × 23 см (или 116 × 9 × 23 см)",
-        "Высота": "9 см",
-        "Глубина": "23 см",
-        "Длина основания": "85 см (Компакт) / 116 см (Простор)",
-        "Материал полки": "Натуральный шпон благородного ореха",
-        "Опоры": "Стальной профиль с защитным порошковым покрытием",
-        "Система крепления": "Фирменный направляющий паз T-Track",
-        "Предельная нагрузка": "до 60 кг",
-        "Артикул (85 см)": "G4N-202404201 (SKU 1000830012)",
-        "Артикул (116 см)": "G4N-202404202 (SKU 1000830013)"
-      },
-      shortDescr: "Премиальная подставка под монитор из американского ореха. Доступна в 2 размерах: 85 см и 116 см.",
-      fullDescr: "Подставка под монитор GEEK NOOK Focus Station из натурального американского ореха с модульной системой T-Track. Поднимает монитор на эргономичную высоту 9 см для глаз, снижая напряжение в шее. Верхний и нижний пазы позволяют закрепить держатели для ноутбука, планшета, наушников или смартфона. Доступна в двух версиях: 85 см (85×9×23 см) и 116 см (116×9×23 см).",
-      images: [
-        "images/tild3763-3337-4662-b233-616531316364__3.jpg",
-        "images/tild6335-3035-4235-b932-393935393563__26.jpg",
-        "images/tild3466-6262-4864-b463-663737363436__7.jpg"
-      ],
-      options: {
-        lengths: ["85 см", "116 см"]
-      },
-      optionPrices: {
-        "85 см": 19990,
-        "116 см": 24990
-      },
-      optionOldPrices: {
-        "85 см": 25000,
-        "116 см": 29000
-      },
-      skus: {
-        "85 см": { sku: "1000830012", part: "G4N-202404201", officialName: "Monitor Stand GEEK NOOK Focus Station 85x9x23 cm, Walnut", dimensions: "85 × 9 × 23 см", price: 19990, oldPrice: 25000 },
-        "116 см": { sku: "1000830013", part: "G4N-202404202", officialName: "Monitor Stand GEEK NOOK Focus Station 116x9x23 cm, Walnut", dimensions: "116 × 9 × 23 см", price: 24990, oldPrice: 29000 }
-      }
-    },
-    {
-      id: "focus-station-oak",
-      legacyId: "focus-board-600",
-      title: "Focus Station Oak",
-      subtitle: "Натуральный дуб • 85 см и 116 см",
-      category: "boards",
-      price: 19990,
-      oldPrice: 25000,
-      rating: 4.9,
-      reviewsCount: 34,
-      materials: "Натуральный массив и шпон дуба, матовая сталь",
-      specs: {
-        "Габариты": "85 × 9 × 23 см (или 116 × 9 × 23 см)",
-        "Высота": "9 см",
-        "Глубина": "23 см",
-        "Длина основания": "85 см (Компакт) / 116 см (Простор)",
-        "Материал полки": "Натуральный шпон светлого дуба",
-        "Опоры": "Сталь с защитным порошковым покрытием",
-        "Система крепления": "T-Track модульная система",
-        "Предельная нагрузка": "до 60 кг",
-        "Артикул (85 см)": "G4N-2024042003 (SKU 1000830014)",
-        "Артикул (116 см)": "G4N-2024042004 (SKU 1000830015)"
-      },
-      shortDescr: "Компактная настольная подставка из натурального дуба с тёплым золотистым отливом. 2 размера: 85 см и 116 см.",
-      fullDescr: "Тёплый оттенок натурального дуба придает рабочему месту скандинавский уют и визуальную лёгкость. Фирменная модульная система T-Track позволяет закрепить любые аксессуары GeekNook. Доступна в двух версиях: 85 см (85×9×23 см) и 116 см (116×9×23 см).",
-      images: [
-        "images/tild3136-6262-4465-a663-376665626135__photo.jpg",
-        "images/tild3637-3261-4364-b133-386465326266__16.jpg",
-        "images/tild3865-6364-4366-b431-633031353238__27.jpg"
-      ],
-      options: {
-        lengths: ["85 см", "116 см"]
-      },
-      optionPrices: {
-        "85 см": 19990,
-        "116 см": 24990
-      },
-      optionOldPrices: {
-        "85 см": 25000,
-        "116 см": 29000
-      },
-      skus: {
-        "85 см": { sku: "1000830014", part: "G4N-2024042003", officialName: "Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Oak", dimensions: "85 × 9 × 23 см", price: 19990, oldPrice: 25000 },
-        "116 см": { sku: "1000830015", part: "G4N-2024042004", officialName: "Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Oak", dimensions: "116 × 9 × 23 см", price: 24990, oldPrice: 29000 }
-      }
-    },
-    {
-      id: "focus-station-black",
-      legacyId: "focus-station-900",
-      title: "Focus Station Black",
-      subtitle: "Чёрное дерево • 85 см и 116 см",
-      category: "boards",
-      price: 19990,
-      oldPrice: 25000,
-      rating: 5.0,
-      reviewsCount: 42,
-      materials: "Натуральное чёрное дерево, анодированная сталь",
-      specs: {
-        "Габариты": "85 × 9 × 23 см (или 116 × 9 × 23 см)",
-        "Высота": "9 см",
-        "Глубина": "23 см",
-        "Длина основания": "85 см (Компакт) / 116 см (Простор)",
-        "Материал полки": "Натуральный шпон чёрного дерева",
-        "Опоры": "Стальной профиль с защитным порошковым покрытием",
-        "Система крепления": "Фирменный направляющий паз T-Track",
-        "Предельная нагрузка": "до 60 кг",
-        "Артикул (85 см)": "G4N-202404205 (SKU 1000830016)",
-        "Артикул (116 см)": "G4N-2024042006 (SKU 1000830017)"
-      },
-      shortDescr: "Флагманская подставка под монитор с модульной направляющей T-Track. Идеальная геометрия и премиальная текстура тёмного дерева. 2 размера: 85 см и 116 см.",
-      fullDescr: "Подставка под монитор GEEK NOOK Focus Station из натурального чёрного дерева с модульной системой T-Track для удобной настройки под себя. Поднимает монитор на эргономичную высоту 9 см для глаз, снижая напряжение в шее. Верхний и нижний пазы позволяют закрепить держатели для ноутбука, планшета, наушников или смартфона. Доступна в двух версиях: 85 см (85×9×23 см) и 116 см (116×9×23 см).",
-      images: [
-        "images/tild6138-3463-4138-b133-323262633039__2.jpg",
-        "images/tild3763-3337-4662-b233-616531316364__3.jpg",
-        "images/tild3739-6130-4661-a434-643832633933__4.jpg",
-        "images/tild6633-3236-4433-a537-306430356538__6.jpg"
-      ],
-      options: {
-        lengths: ["85 см", "116 см"]
-      },
-      optionPrices: {
-        "85 см": 19990,
-        "116 см": 24990
-      },
-      optionOldPrices: {
-        "85 см": 25000,
-        "116 см": 29000
-      },
-      skus: {
-        "85 см": { sku: "1000830016", part: "G4N-202404205", officialName: "Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Black", dimensions: "85 × 9 × 23 см", price: 19990, oldPrice: 25000 },
-        "116 см": { sku: "1000830017", part: "G4N-2024042006", officialName: "Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Black", dimensions: "116 × 9 × 23 см", price: 24990, oldPrice: 29000 }
-      }
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Правовой центр и документы | GEEK NOOK</title>
+  <meta name="description" content="Официальные документы ООО «ГИК НУК»: Публичная оферта, Политика обработки персональных данных, Условия использования сайта, Доставка, Гарантия и Реквизиты.">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0c0c0e;
+      --bg-card: #141418;
+      --bg-card-hover: #1a1a20;
+      --text-main: #f0f0f3;
+      --text-muted: #9595a2;
+      --accent-gold: #cba870;
+      --accent-gold-hover: #e0be86;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(203, 168, 112, 0.4);
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
-  ],
-
-  // --- 2. АКСЕССУАРЫ ---
-  accessories: [
-    {
-      id: "headphone-stand",
-      title: "Headphone Stand",
-      subtitle: "Подставка для наушников",
-      category: "accessories",
-      price: 2999,
-      oldPrice: 3800,
-      sku: "GN-ACC-001",
-      part: "G4N-ACC-HP01",
-      rating: 4.9,
-      reviewsCount: 42,
-      materials: "Сталь, премиальный шерстяной фетр",
-      specs: {
-        "Артикул": "G4N-ACC-HP01 (SKU GN-ACC-001)",
-        "Совместимость": "Все типы полноразмерных наушников (AirPods Max, Sony, Bose, Sennheiser)",
-        "Крепление": "В паз T-Track подставки Focus Station",
-        "Защита": "Мягкая накладка из плотного шерстяного фетра",
-        "Цвет": "Матовый чёрный"
-      },
-      shortDescr: "Кронштейн для наушников с фетровой подложкой. Крепится в паз T-Track и всегда держит наушники под рукой.",
-      fullDescr: "Кронштейн для наушников подходит для всех полноразмерных моделей. Крепится к любой модели подставки GEEK NOOK Focus Station, свободно перемещается по длине и фиксируется. Изготавливается из стали, контактная дуга проложена плотным фетром, исключающим царапины и деформацию оголовья.",
-      images: [
-        "images/tild3031-6663-4663-a262-613532636338__photo.jpg"
-      ]
-    },
-    {
-      id: "gamepad-stand",
-      title: "Gamepad Stand",
-      subtitle: "Подставка для геймпада",
-      category: "accessories",
-      price: 2990,
-      oldPrice: 3600,
-      sku: "GN-ACC-002",
-      part: "G4N-ACC-GP02",
-      rating: 4.9,
-      reviewsCount: 22,
-      materials: "Анодированная сталь, фетровые вставки",
-      specs: {
-        "Артикул": "G4N-ACC-GP02 (SKU GN-ACC-002)",
-        "Совместимость": "Контроллеры DualSense (PS5), Xbox Wireless Controller, Nintendo Pro",
-        "Крепление": "Паз T-Track или отдельная настольная установка",
-        "Покрытие": "Матовая износостойкая порошковая краска"
-      },
-      shortDescr: "Эргономичная подставка для геймпадов PlayStation и Xbox. Фиксирует контроллер под удобным углом.",
-      fullDescr: "Держатель для контроллера спроектирован с учетом геометрии современных геймпадов. Фетровые демпферы бережно фиксируют корпус, не допуская люфтов и потертостей.",
-      images: [
-        "images/tild3039-3737-4533-b936-653936613663__2_2.jpg",
-        "images/tild3165-3839-4064-b237-353264643561__3_1.jpg"
-      ]
-    },
-    {
-      id: "phone-dock",
-      title: "Phone Dock",
-      subtitle: "Док-станция для телефона",
-      category: "accessories",
-      price: 2490,
-      oldPrice: 3200,
-      sku: "GN-ACC-003",
-      part: "G4N-ACC-PD03",
-      rating: 4.8,
-      reviewsCount: 35,
-      materials: "Сталь, шерстяной фетр, силикон",
-      specs: {
-        "Артикул": "G4N-ACC-PD03 (SKU GN-ACC-003)",
-        "Совместимость": "iPhone всех поколений (включая Pro Max), Android-смартфоны",
-        "Угол наклона": "70 градусов (оптимально для FaceID и видеозвонков)",
-        "Крепление": "Нижний направляющий паз Focus Station"
-      },
-      shortDescr: "Подвесная док-станция для смартфона. Уведомления считываются взглядом, а стол остаётся свободным.",
-      fullDescr: "Закрепляется по центру или сбоку подставки Focus Station. Позволяет разблокировать телефон взглядом через FaceID прямо во время набора текста на клавиатуре.",
-      images: [
-        "images/tild6566-3439-4264-a237-633566656531__6.jpg",
-        "images/tild3232-6365-4338-b132-623837373036__21.jpg"
-      ]
-    },
-    {
-      id: "cable-organizer",
-      title: "Cable Organizer",
-      subtitle: "Органайзер для кабелей",
-      category: "accessories",
-      price: 1990,
-      oldPrice: 2500,
-      sku: "GN-ACC-004",
-      part: "G4N-ACC-CO04",
-      rating: 4.9,
-      reviewsCount: 28,
-      materials: "Конструкционная сталь, порошковое покрытие",
-      specs: {
-        "Артикул": "G4N-ACC-CO04 (SKU GN-ACC-004)",
-        "Назначение": "Скрытый лоток для сетевого фильтра и блоков питания",
-        "Крепление": "Задняя грань Focus Station",
-        "Вместимость": "Удлинитель до 6 розеток + блоки питания"
-      },
-      shortDescr: "Подвесной металлический кабель-менеджер для сетевых фильтров и блоков питания. Никаких проводов на столе.",
-      fullDescr: "Скрывает визуальный шум проводов позади подставки. Все блоки питания и излишки кабелей аккуратно укладываются в вентилируемый металлический лоток.",
-      images: [
-        "images/tild3931-6666-4933-a466-373836393933__1.jpg",
-        "images/tild3164-3565-4065-b830-316632303363__3_2.jpg"
-      ]
-    },
-    {
-      id: "laptop-open",
-      title: "Laptop Stand Open",
-      subtitle: "Держатель ноутбука (открытый экран)",
-      category: "accessories",
-      price: 4999,
-      oldPrice: 6200,
-      sku: "GN-ACC-005",
-      part: "G4N-ACC-LO05",
-      rating: 4.9,
-      reviewsCount: 29,
-      materials: "Легированная сталь, защитный фетр",
-      specs: {
-        "Артикул": "G4N-ACC-LO05 (SKU GN-ACC-005)",
-        "Совместимость": "Ноутбуки 13–17 дюймов любого бренда",
-        "Положение": "Открытый экран вровень с монитором",
-        "Крепление": "Система T-Track"
-      },
-      shortDescr: "Поднимает экран ноутбука в одну линию с основным монитором, разгружая шею.",
-      fullDescr: "Позволяет комфортно работать с двумя экранами. Устанавливается в боковой паз подставки Focus Station.",
-      images: [
-        "images/tild6164-3836-4261-b133-303933386431__1_3.jpg",
-        "images/tild3964-6430-4136-a462-383932396266___.jpg"
-      ]
-    },
-    {
-      id: "laptop-closed",
-      title: "Laptop Stand Closed",
-      subtitle: "Вертикальный держатель ноутбука",
-      category: "accessories",
-      price: 4490,
-      oldPrice: 5500,
-      sku: "GN-ACC-006",
-      part: "G4N-ACC-LC06",
-      rating: 4.9,
-      reviewsCount: 19,
-      materials: "Легированная сталь, фетровый защитный слот",
-      specs: {
-        "Артикул": "G4N-ACC-LC06 (SKU GN-ACC-006)",
-        "Совместимость": "MacBook Pro / Air, любые ноутбуки толщиной до 22 мм",
-        "Назначение": "Вертикальное хранение в закрытом виде (режим Clamshell)",
-        "Крепление": "Система T-Track"
-      },
-      shortDescr: "Вертикальный фиксатор закрытого ноутбука. Освобождает максимум места на столе.",
-      fullDescr: "Специальный карман с мягким фетровым ложем удерживает ноутбук вертикально. Идеально для работы с внешним монитором.",
-      images: [
-        "images/tild6336-3964-4636-b638-653866643238__1_2.jpg",
-        "images/tild6164-3836-4261-b133-303933386431__1_3.jpg"
-      ]
-    },
-    {
-      id: "mac-shelf",
-      title: "Mac Studio / Mini Shelf",
-      subtitle: "Подвесная полка под системный блок",
-      category: "accessories",
-      price: 4999,
-      oldPrice: 5900,
-      sku: "GN-ACC-007",
-      part: "G4N-ACC-MS07",
-      rating: 5.0,
-      reviewsCount: 16,
-      materials: "Сталь с вентиляционной перфорацией, фетр",
-      specs: {
-        "Артикул": "G4N-ACC-MS07 (SKU GN-ACC-007)",
-        "Совместимость": "Apple Mac Studio, Mac mini (M1/M2/M3/M4)",
-        "Охлаждение": "Сквозная перфорация дна для отвода тепла",
-        "Защита": "Мягкие фетровые прокладки"
-      },
-      shortDescr: "Подвешивает Mac Studio или Mac mini под полку Focus Station. Полное освобождение стола.",
-      fullDescr: "Специальная инженерная полка подвешивает ваш Mac снизу основания, сохраняя идеальную циркуляцию воздуха и свободный доступ к разъёмам.",
-      images: [
-        "images/tild3132-6562-4533-a638-646132613661__1_1.jpg",
-        "images/tild6565-3263-4938-b233-376334646532__14.jpg"
-      ]
-    },
-    {
-      id: "u-shelf",
-      title: "U-Shelf",
-      subtitle: "Подвесная полка",
-      category: "accessories",
-      price: 4999,
-      oldPrice: 5900,
-      sku: "GN-ACC-008",
-      part: "G4N-ACC-US08",
-      rating: 4.9,
-      reviewsCount: 18,
-      materials: "Высокопрочная сталь, порошковое покрытие",
-      specs: {
-        "Артикул": "G4N-ACC-US08 (SKU GN-ACC-008)",
-        "Габариты техники": "до 19,5 × 4 × 19,5 см",
-        "Крепление": "Система T-Track подставки Focus Station",
-        "Цвет": "Глубокий чёрный матовый",
-        "Назначение": "Размещение периферии, аудиокарт, хабов, консолей и девайсов"
-      },
-      shortDescr: "Подвесной кронштейн-полка для размещения вспомогательной техники и девайсов.",
-      fullDescr: "Кронштейн-полка для размещения техники габаритом до 19,5 × 4 × 19,5 см. Крепится к любой модели подставки GEEK NOOK Focus Station, регулируется под удобное положение. Сделан из прочного металла — долговечный и надёжный.",
-      images: [
-        "images/tild3163-3638-4266-a466-333336306565__3_3.jpg"
-      ]
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-  ],
-
-  // --- 3. КОВРИКИ ---
-  mats: [
-    {
-      id: "desk-mat-light",
-      title: "Desk Mat Light",
-      subtitle: "Коврик для рабочего стола светлый",
-      category: "mats",
-      price: 1990,
-      oldPrice: 2600,
-      sku: "GN-MAT-001",
-      part: "G4N-MAT-LT01",
-      rating: 4.8,
-      reviewsCount: 31,
-      materials: "Натуральный войлок 4 мм, противоскользящая силиконовая основа",
-      specs: {
-        "Артикул": "G4N-MAT-LT01 (SKU GN-MAT-001)",
-        "Размер": "80 × 30 см (М)",
-        "Толщина": "4 мм",
-        "Цвет": "Светло-серый меланж",
-        "Основание": "Силиконовые микроточки против скольжения"
-      },
-      shortDescr: "Светло-серый шерстяной войлок. Акустический комфорт, глухой приятный звук клавиатуры и тепло для рук.",
-      fullDescr: "Плотный прессованный фетр гасит паразитные резонансы при быстрой печати, согревает запястья в прохладной комнате и защищает столешницу.",
-      images: [
-        "images/tild3332-3332-4262-b533-663938666636__1_4.jpg",
-        "images/tild3136-6262-4465-a663-376665626135__photo.jpg"
-      ],
-      options: {
-        sizes: ["80 × 30 см", "90 × 43 см"]
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.65;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    a {
+      color: var(--accent-gold);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    a:hover {
+      color: var(--accent-gold-hover);
+      text-decoration: underline;
+    }
+    .legal-header {
+      background: rgba(14, 14, 18, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-subtle);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      font-size: 1.15rem;
+      text-decoration: none;
+    }
+    .brand-link:hover {
+      text-decoration: none;
+      color: var(--accent-gold);
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-subtle);
+      color: var(--text-main);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--accent-gold);
+      text-decoration: none;
+      color: #fff;
+    }
+    .legal-main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+    .legal-hero {
+      margin-bottom: 32px;
+      text-align: center;
+    }
+    .legal-hero h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #ffffff 40%, #cba870 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .legal-hero p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      max-width: 680px;
+      margin: 0 auto;
+    }
+    .legal-nav-tabs {
+      display: flex;
+      gap: 8px;
+      padding: 6px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 28px;
+      scrollbar-width: none;
+    }
+    .legal-nav-tabs::-webkit-scrollbar {
+      display: none;
+    }
+    .tab-btn {
+      flex: 0 0 auto;
+      padding: 10px 18px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+      min-height: 44px;
+      display: flex;
+      align-items: center;
+    }
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .tab-btn.active {
+      color: #0c0c0e;
+      background: var(--accent-gold);
+      box-shadow: 0 2px 10px rgba(203, 168, 112, 0.3);
+    }
+    .tab-panel {
+      display: none;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 40px;
+      animation: fadeIn 0.25s ease;
+    }
+    .tab-panel.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .legal-heading-1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+    .legal-heading-2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-top: 28px;
+      margin-bottom: 14px;
+    }
+    .legal-heading-3 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #fff;
+      margin-top: 20px;
+      margin-bottom: 10px;
+    }
+    p {
+      margin-bottom: 14px;
+      color: var(--text-main);
+    }
+    ul, ol {
+      margin-left: 24px;
+      margin-bottom: 18px;
+    }
+    li {
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+    code {
+      background: rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #e0be86;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+    .requisites-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .req-item {
+      display: flex;
+      flex-direction: column;
+      padding: 14px 18px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+    }
+    @media (min-width: 640px) {
+      .req-item {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
       }
-    },
-    {
-      id: "desk-mat-dark",
-      title: "Desk Mat Dark",
-      subtitle: "Коврик для рабочего стола тёмный",
-      category: "mats",
-      price: 2490,
-      oldPrice: 3100,
-      sku: "GN-MAT-002",
-      part: "G4N-MAT-DK02",
-      rating: 5.0,
-      reviewsCount: 45,
-      materials: "Акустический шерстяной фетр, силикон",
-      specs: {
-        "Артикул": "G4N-MAT-DK02 (SKU GN-MAT-002)",
-        "Размер": "80 × 35 см",
-        "Толщина": "4 мм",
-        "Цвет": "Глубокий графит / тёмно-серый",
-        "Кромка": "Лазерная запайка торцов без распушивания"
-      },
-      shortDescr: "Классический тёмный графитовый коврик. Прекрасно гармонирует с чёрными девайсами и тёмным деревом.",
-      fullDescr: "Самый практичный коврик для темных сетапов. Высокая плотность фетра обеспечивает плавное и четкое скольжение мыши.",
-      images: [
-        "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg",
-        "images/tild3139-3036-4738-b765-383337383336__dsc_3319.jpg"
-      ],
-      options: {
-        sizes: ["80 × 35 см", "90 × 43 см"]
-      }
-    },
-    {
-      id: "desk-mat-xl",
-      title: "Desk Mat XL",
-      subtitle: "Увеличенный коврик 90×43 см",
-      category: "mats",
-      price: 3490,
-      oldPrice: 4200,
-      sku: "GN-MAT-003",
-      part: "G4N-MAT-XL03",
-      rating: 4.9,
-      reviewsCount: 39,
-      materials: "Плотный войлок 4 мм, силиконовый грип",
-      specs: {
-        "Артикул": "G4N-MAT-XL03 (SKU GN-MAT-003)",
-        "Размер": "90 × 43 см (XL)",
-        "Толщина": "4 мм",
-        "Цвет": "Антрацит меланж",
-        "Зонирование": "Клавиатура + мышь + трекпад + планшет"
-      },
-      shortDescr: "Большой коврик для полной организации рабочей зоны. Вмещает полноразмерную клавиатуру и мышь с широким размахом.",
-      fullDescr: "Формат XL покрывает всё ключевое пространство перед монитором. Руки полностью лежат на приятном материале, не касаясь холодного стола.",
-      images: [
-        "images/tild3139-3036-4738-b765-383337383336__dsc_3319.jpg",
-        "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg"
-      ],
-      options: {
-        sizes: ["90 × 43 см", "100 × 50 см"]
-      }
-    },
-    {
-      id: "desk-mat-double",
-      title: "Desk Mat Double",
-      subtitle: "Двусторонний коврик (фетр + экокожа)",
-      category: "mats",
-      price: 2990,
-      oldPrice: 3800,
-      sku: "GN-MAT-004",
-      part: "G4N-MAT-DB04",
-      rating: 4.9,
-      reviewsCount: 18,
-      materials: "Комбинация шерстяного фетра и экокожи премиум-класса",
-      specs: {
-        "Артикул": "G4N-MAT-DB04 (SKU GN-MAT-004)",
-        "Размер": "85 × 40 см",
-        "Сторона 1": "Натуральный серый шерстяной фетр",
-        "Сторона 2": "Гладкая матовая экокожа с влагозащитой",
-        "Прошивка": "Усиленный периметр шелковой нитью"
-      },
-      shortDescr: "Универсальный двусторонний коврик: уютный фетр с одной стороны и влагостойкая кожа с другой.",
-      fullDescr: "Меняйте настроение стола за одну секунду. Фетровая сторона идеальна для печати и комфорта, кожаная — для быстрого скольжения и лёгкой очистки от кофе.",
-      images: [
-        "images/tild3163-3433-4266-a564-373463643232__dsc_3411_.jpg",
-        "images/tild3332-3332-4262-b533-663938666636__1_4.jpg"
-      ],
-      options: {
-        sizes: ["85 × 40 см"]
+      .requisites-grid {
+        grid-template-columns: 1fr;
       }
     }
-  ],
-
-  // --- 4. ПРЕИМУЩЕСТВА (6 колонок на темном фоне) ---
-  advantages: [
-    {
-      icon: "cnc",
-      title: "Сталь",
-      descr: "Прочная конструкция из стали с защитным покрытием."
-    },
-    {
-      icon: "wood",
-      title: "Дерево",
-      descr: "Натуральный шпон ореха. Тёплый и приятный на ощупь."
-    },
-    {
-      icon: "felt",
-      title: "Фетр",
-      descr: "Плотный фетр защищает устройства и поверхность от царапин."
-    },
-    {
-      icon: "track",
-      title: "Точность",
-      descr: "Идеальная геометрия и внимание к каждой детали."
-    },
-    {
-      icon: "warranty",
-      title: "Надёжность",
-      descr: "Созданы для ежедневного использования на годы."
-    },
-    {
-      icon: "ruler",
-      title: "Минимализм",
-      descr: "Чистый дизайн, который не перегружает пространство."
+    .req-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
     }
-  ],
-
-  // --- 5. ПРОИЗВОДСТВО (Манифест + 3 фото цеха в ряд) ---
-  production: {
-    title: "ПРОИЗВОДСТВО",
-    lead: "Мы подходим к производству с ответственностью и заботой о каждом клиенте, тщательно контролируя все этапы изготовления.",
-    descr: "Современные технологии, качественные материалы и внимание к деталям позволяют создавать надёжные решения для любых задач.",
-    photos: [
-      {
-        src: "images/tild6634-3865-4138-b035-306136313762___dsc2944.jpg",
-        caption: "ЧПУ-фрезеровка направляющего паза T-Track и гравировка логотипа"
-      },
-      {
-        src: "images/tild6233-6461-4435-a232-613034643330___dsc3024.jpg",
-        caption: "Фрезеровка кромок и снятие радиусной фаски по углам полки"
-      },
-      {
-        src: "images/tild3662-6661-4163-a436-623936386366___dsc4074.jpg",
-        caption: "Покраска полки в камере с сохранением открытых пор дерева"
+    .req-val {
+      color: #fff;
+      font-weight: 600;
+      text-align: right;
+    }
+    @media (max-width: 639px) {
+      .req-val {
+        text-align: left;
+        margin-top: 4px;
       }
-    ]
-  },
-
-  // --- 6. РАБОЧИЕ МЕСТА НАШИХ КЛИЕНТОВ (Реальные отзывы и фото) ---
-  clientSetups: [
-    {
-      src: "images/tild6264-3532-4630-b339-653731393531__noroot.png",
-      title: "Тёмный минималистичный сетап",
-      tag: "Focus Station Чёрное дерево + Mac Studio",
-      author: "Алексей Романов",
-      role: "Lead Product Designer",
-      rating: 5.0,
-      text: "Полка полностью преобразила рабочий процесс. Пространство под монитором освободилось для клавиатуры и трекпада, а подвес под Mac Studio решил проблему охлаждения и проводов раз и навсегда."
-    },
-    {
-      src: "images/tild6465-3266-4533-a430-386238316561__noroot.png",
-      title: "Творческая аудио-станция",
-      tag: "Focus Station Орех + Наушники",
-      author: "Михаил Савельев",
-      role: "Sound Producer & Composer",
-      rating: 5.0,
-      text: "Натуральный американский орех выглядит благородно и дорого. Стойка для наушников в пазу T-Track сидит как влитая, фетровая вставка бережёт оголовье. Тактильность на высоте."
-    },
-    {
-      src: "images/tild6337-3037-4130-b431-313237393034__noroot.png",
-      title: "Рабочее место разработчика",
-      tag: "Focus Station 116 см + Два монитора",
-      author: "Константин Мельников",
-      role: "Senior Go Developer",
-      rating: 5.0,
-      text: "База 116 см без проблем держит два 27-дюймовых монитора. Шея перестала болеть уже к концу первой недели, потому что экраны встали ровно на линию горизонтали глаз."
-    },
-    {
-      src: "images/tild3336-6362-4438-b464-353462393033__noroot.png",
-      title: "Чистый стол для концентрации",
-      tag: "Focus Station Дуб + Войлочный коврик",
-      author: "Екатерина Волкова",
-      role: "Архитектор-урбанист",
-      rating: 5.0,
-      text: "Светлый дуб и плотный войлочный коврик создают идеальную скандинавскую атмосферу. Никакого визуального шума — садишься за стол и моментально входишь в состояние глубокого фокуса."
-    },
-    {
-      src: "images/tild6166-6164-4438-a332-393734376130__noroot.png",
-      title: "Архитектурная симметрия",
-      tag: "Focus Station Чёрное дерево + Геймпад",
-      author: "Даниил Морозов",
-      role: "3D Motion Artist",
-      rating: 5.0,
-      text: "Качество обработки металла и фрезеровки дерева поражает. Ни единого люфта, идеальная геометрия. Все кабели спрятаны в задний кабель-канал, стол идеально чистый."
-    },
-    {
-      src: "images/tild3061-6130-4334-b165-653434346664__noroot.png",
-      title: "Скандинавская студия",
-      tag: "Focus Station Натуральный дуб",
-      author: "Сергей Ковалёв",
-      role: "Tech Lead & Creator",
-      rating: 5.0,
-      text: "Лучшая инвестиция в рабочее место за последние годы. Ощущение премиальной инженерной вещи, сделанной с душой и пониманием эргономики."
     }
-  ],
-
-  // --- 7. ГАЛЕРЕЯ (6 эстетичных фото деталей) ---
-  gallery: [
-    {
-      src: "images/tild3031-6663-4663-a262-613532636338__photo.jpg",
-      title: "Кронштейн для наушников",
-      subtitle: "Матовая сталь и защитный фетр"
-    },
-    {
-      src: "images/tild3466-6262-4864-b463-663737363436__7.jpg",
-      title: "Шпон американского ореха",
-      subtitle: "Глубокая натуральная текстура"
-    },
-    {
-      src: "images/tild6163-6538-4533-b663-343731613565__noroot.png",
-      title: "Вечерний рабочий фокус",
-      subtitle: "Организация стола с мягким светом"
-    },
-    {
-      src: "images/tild6633-3236-4433-a537-306430356538__6.jpg",
-      title: "Прецизионный паз T-Track",
-      subtitle: "Модульное подключение аксессуаров"
-    },
-    {
-      src: "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg",
-      title: "Акустический войлочный коврик",
-      subtitle: "Глухой благородный звук клавиш"
-    },
-    {
-      src: "images/tild3739-6130-4661-a434-643832633933__4.jpg",
-      title: "Радиусное скругление кромки",
-      subtitle: "Идеальная эргономика и тактильность"
+    .legal-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 16px;
+      margin-bottom: 24px;
+      font-size: 0.92rem;
     }
-  ],
-
-  // --- 8. О GEEK NOOK (Манифест + фото ЧПУ + 4 бейджа) ---
-  about: {
-    title: "О GEEK NOOK",
-    photo: "images/tild6634-3865-4138-b035-306136313762___dsc2944.jpg",
-    paragraphs: [
-      "Мы создаём инженерные аксессуары, которые превращают рабочий стол в единую организованную систему.",
-      "Каждый продукт решает конкретную задачу: освобождает поле пространства, защищает ваши устройства и помогает сосредоточиться на главном.",
-      "Мы используем металл, натуральное дерево и фетр премиального качества. Тщательно продумываем конструкцию и производим с вниманием к каждой детали."
-    ],
-    badges: [
-      { icon: "russia", title: "Разработка в России" },
-      { icon: "design", title: "Продуманный дизайн" },
-      { icon: "materials", title: "Премиальные материалы" },
-      { icon: "quality", title: "Контроль качества" }
-    ]
-  },
-
-  // --- КОНФИГУРАТОР FOCUS STATION ---
-  configurator: {
-    finishes: [
-      { id: "black", name: "Чёрное дерево", subtitle: "Глубокий тёмный тон", hex: "#1c1d22", img: "images/tild6138-3463-4138-b133-323262633039__2.jpg", priceDelta: 0 },
-      { id: "oak", name: "Натуральный дуб", subtitle: "Светлый сканди-уют", hex: "#d8be9b", img: "images/tild3136-6262-4465-a663-376665626135__photo.jpg", priceDelta: 0 },
-      { id: "walnut", name: "Американский орех", subtitle: "Благородный шоколад", hex: "#684832", img: "images/tild3763-3337-4662-b233-616531316364__3.jpg", priceDelta: 0 }
-    ],
-    lengths: [
-      { id: "85", title: "85 см (Компакт)", descr: "Габариты 85 × 9 × 23 см • Для 1 монитора до 34\"", priceBase: 19990, dimensions: "85 × 9 × 23 см" },
-      { id: "116", title: "116 см (Простор)", descr: "Габариты 116 × 9 × 23 см • Для 2 мониторов или экрана + ноутбук", priceBase: 24990, dimensions: "116 × 9 × 23 см" }
-    ],
-    addons: [
-      { id: "addon-laptop", name: "Кронштейн для ноутбука (открытый)", price: 4999, img: "images/tild6164-3836-4261-b133-303933386431__1_3.jpg" },
-      { id: "addon-headphones", name: "Стойка для наушников с фетром", price: 2999, img: "images/tild3031-6663-4663-a262-613532636338__photo.jpg" },
-      { id: "addon-gamepad", name: "Подставка для геймпада PS5 / Xbox", price: 2990, img: "images/tild3039-3737-4533-b936-653936613663__2_2.jpg" },
-      { id: "addon-phone", name: "Док-станция для смартфона", price: 2490, img: "images/tild6566-3439-4264-a237-633566656531__6.jpg" },
-      { id: "addon-mac", name: "Подвесная полка Mac Studio / Mini", price: 4999, img: "images/tild3132-6562-4533-a638-646132613661__1_1.jpg" },
-      { id: "addon-cable", name: "Кабель-органайзер Power Strip", price: 1990, img: "images/tild3931-6666-4933-a466-373836393933__1.jpg" },
-      { id: "addon-mat", name: "Войлочный коврик Desk Mat XL", price: 3490, img: "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg" }
-    ]
-  },
-
-  // --- ПОЛНЫЕ СТАТЬИ ЖУРНАЛА ДЛЯ ПОП-АПА ---
-  articles: [
-    {
-      id: "workspace-productivity",
-      title: "Как изменение рабочего пространства может повлиять на работоспособность?",
-      readTime: "6–7 минут",
-      image: "images/tild3139-3036-4738-b765-383337383336__dsc_3319.jpg",
-      preview: "Разбираем, как организация рабочего стола влияет на концентрацию, продуктивность и комфорт, почему мозг реагирует на беспорядок и какие простые изменения помогут работать легче каждый день.",
-      content: `
-        <p class="article-lead">В этой статье вы узнаете, как рабочее место влияет на продуктивность, почему мозг реагирует на беспорядок и какие простые изменения помогут работать с большим комфортом каждый день.</p>
-
-        <h3>Вы замечали, что иногда работать невозможно?</h3>
-        <p>Открываете ноутбук. До дедлайна осталось совсем немного. В голове уже есть план действий, но спустя несколько минут ловите себя на том, что снова отвлеклись.</p>
-        <p>Телефон лежит рядом. Провода переплелись между собой. Кружка занимает половину свободного места. Чтобы найти флешку или блокнот, приходится перебирать весь стол. Кажется, что проблема в отсутствии мотивации. Но очень часто причина намного проще — <strong>ваше рабочее пространство постоянно отвлекает мозг</strong>.</p>
-        <p>Исследования показывают, что окружающая среда напрямую влияет на концентрацию внимания, скорость принятия решений и уровень усталости. Поэтому организация рабочего места — это не вопрос эстетики, а один из инструментов продуктивности.</p>
-
-        <div class="article-callout">
-          <h4>Главный принцип:</h4>
-          <p>Всё, что находится в поле периферического зрения и не относится к текущей задаче — ворует оперативную память вашего мозга.</p>
-        </div>
-
-        <h3>Почему беспорядок заставляет нас работать хуже</h3>
-        <p>Наш мозг постоянно анализирует окружающую информацию. Даже если вам кажется, что вы не обращаете внимания на кружку, лежащие документы или спутанные кабели, мозг все равно обрабатывает эти объекты.</p>
-        <p>Каждый лишний предмет становится дополнительным источником информации. В результате:</p>
-        <ul>
-          <li><strong>Внимание рассеивается</strong> — когнитивные ресурсы уходят на фильтрацию зрительного шума;</li>
-          <li><strong>Становится сложнее концентрироваться</strong> на сложных задачах и коде;</li>
-          <li><strong>Появляется ощущение перегруженности</strong> ещё до середины рабочего дня;</li>
-          <li><strong>Возрастает утомляемость</strong> зрительного анализатора.</li>
-        </ul>
-
-        <h3>Почему красивое рабочее место мотивирует</h3>
-        <p>Человек намного охотнее возвращается туда, где ему приятно находиться. Поэтому дизайнеры интерьеров уделяют большое внимание не только функциональности, но и визуальному восприятию пространства:</p>
-        <ul>
-          <li><strong>Чистый стол создает ощущение контроля</strong> над текущими процессами и делами.</li>
-          <li><strong>Организованное пространство снижает фоновый стресс</strong> при горящих дедлайнах.</li>
-          <li><strong>А качественные тактильные аксессуары</strong> (натуральное дерево, сталь, войлок) делают сам процесс работы более приятным.</li>
-        </ul>
-
-        <h3>Достаточно начать с нескольких простых вещей:</h3>
-        <ol>
-          <li><strong>Убрать лишние предметы:</strong> Оставьте на столе только то, что используете прямо сейчас.</li>
-          <li><strong>Организовать хранение мелочей:</strong> Подвесьте наушники и геймпад, уберите зарядки под стойку.</li>
-          <li><strong>Спрятать кабели:</strong> Кабель-менеджмент освобождает ноги и убирает визуальные «сопли» из проводов.</li>
-          <li><strong>Освободить пространство перед клавиатурой:</strong> Добавьте большой войлочный коврик, дающий свободу рукам.</li>
-          <li><strong>Добавить правильное освещение:</strong> Направленный свет без бликов на экране монитора.</li>
-        </ol>
-
-        <h3>Что вы получите в итоге</h3>
-        <p>После грамотной организации рабочего пространства большинство людей замечают:</p>
-        <ul>
-          <li>Легче сосредоточиться на сложных аналитических задачах;</li>
-          <li>Меньше устает спина и шея благодаря правильному положению монитора;</li>
-          <li>Появляется внутреннее желание поддерживать порядок автоматически;</li>
-          <li>Рабочий день проходит значительно спокойнее и результативнее.</li>
-        </ul>
-      `
-    },
-    {
-      id: "minimalist-desk-essentials",
-      title: "Минималистичный рабочий стол: что действительно стоит купить?",
-      readTime: "4 минуты",
-      image: "images/tild3163-3433-4266-a564-373463643232__dsc_3411_.jpg",
-      preview: "Собрали аксессуары, которые действительно делают рабочее место комфортнее и помогают сосредоточиться на работе, без бесполезных безделушек.",
-      content: `
-        <p class="article-lead">Минимализм — это не стерильная пустота, а осознанная концентрация на предметах, приносящих максимальную пользу. Когда вы организуете стол для ежедневной 8-часовой работы, каждый элемент должен работать на ваш комфорт.</p>
-
-        <h3>1. Подставка под монитор (Desk Shelf)</h3>
-        <p>Это фундамент любого функционального стола. Обычная подставка занимает много места на столешнице, тогда как модульная полка-подставка вроде <strong>GeekNook Focus Station</strong> создаёт два полноценных уровня пространства:</p>
-        <ul>
-          <li><strong>Верхний уровень:</strong> Поднимает монитор строго на линию глаз, избавляя от сутулости.</li>
-          <li><strong>Нижний уровень:</strong> Пространство под полкой, куда одним движением убирается клавиатура.</li>
-          <li><strong>Модульная направляющая:</strong> Инженерный паз T-Track позволяет вешать аксессуары по бокам, не занимая ни миллиметра столешницы.</li>
-        </ul>
-
-        <h3>2. Плотный войлочный коврик увеличенного формата</h3>
-        <p>Пластиковые или дешевые тканевые коврики быстро стираются и скользят. Натуральный прессованный шерстяной фетр на силиконовой подложке решает сразу 3 задачи:</p>
-        <ul>
-          <li><strong>Акустический комфорт:</strong> Снижает стук клавиш механической клавиатуры.</li>
-          <li><strong>Тактильное тепло:</strong> Защищает запястья от соприкосновения с холодной столешницей.</li>
-          <li><strong>Визуальное зонирование:</strong> Объединяет клавиатуру и мышь в строгую композицию.</li>
-        </ul>
-
-        <h3>3. Подвесы для ноутбука и системного блока</h3>
-        <p>Ноутбук в открытом виде, стоящий на столе рядом с большим монитором, создаёт перепад уровней глаз в 20 сантиметров. Шея вынуждена постоянно поворачиваться и опускаться. Подвесной наклонный кронштейн для ноутбука ставит оба экрана в одну линию.</p>
-      `
-    },
-    {
-      id: "5-desk-mistakes",
-      title: "5 ошибок в организации рабочего стола, которые снижают продуктивность",
-      readTime: "7–8 минут",
-      image: "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg",
-      preview: "Рассказываем о 5 самых распространенных эргономических ошибках на рабочих местах и простых способах их избежать раз и навсегда.",
-      content: `
-        <p class="article-lead">Большинство людей винят в усталости к концу дня нехватку сна или сложный проект. Но очень часто настоящая причина — скрытые микронагрузки, возникающие из-за неочевидных ошибок в расстановке техники на столе.</p>
-
-        <h3>Ошибка 1. Монитор расположен ниже горизонтали взгляда</h3>
-        <p>Человеческая голова весит около 5 кг при нейтральном вертикальном положении. Наклон головы вперед всего на 15 градусов увеличивает нагрузку на шейные позвонки до 12 кг, а наклон на 30 градусов — до невероятных 18 кг!</p>
-        <p><strong>Решение:</strong> Верхняя треть экрана монитора должна находиться ровно на уровне глаз при прямой посадке. Подставка Focus Station поднимает экран на 9 см, возвращая шее естественный изгиб.</p>
-
-        <h3>Ошибка 2. «Хаотичный склад» перед клавиатурой</h3>
-        <p>Когда между клавиатурой и краем стола лежат телефон, ключи, флешки и чеки, запястья опираются на острый край стола. Это пережимает срединный нерв и приводит к развитию туннельного синдрома.</p>
-
-        <h3>Ошибка 3. Свободно свисающие кабели питания</h3>
-        <p>Каждый свисающий провод — это потенциальный риск зацепить его ногой и сбросить ноутбук. Спрячьте удлинитель в подвесной кронштейн Power Strip.</p>
-      `
+    .legal-table th, .legal-table td {
+      padding: 12px 16px;
+      border: 1px solid var(--border-subtle);
+      text-align: left;
     }
-  ],
-
-  // --- 11. FAQ (Часто задаваемые вопросы) ---
-  faq: [
-    {
-      q: "Выдержит ли полка тяжелый монитор или кронштейн на струбцине?",
-      a: "Да, запас прочности огромный. Опоры выполнены из конструкционной стали толщиной 3 мм с лазерным раскроем, а сама полка имеет внутреннее усиление. Конструкция рассчитана на распределенную нагрузку до 45 кг (для версии 85–90 см) и до 60 кг (для версии 116–120 см). Вы можете смело ставить тяжелые 34–49\" ультраширокие мониторы или фиксировать мониторные кронштейны."
-    },
-    {
-      q: "Не поцарапает ли подставка поверхность моего рабочего стола?",
-      a: "Исключено. На подошвах всех стальных опор снизу установлены толстые демпферы из плотного прессованного шерстяного фетра и виброгасящего силикона. Подставка не только не оставляет микроцарапин даже на деликатных лакированных столешницах, но и намертво сцепляется со столом, не скользя при случайных толчках."
-    },
-    {
-      q: "Подходят ли аксессуары T-Track к подставкам других производителей?",
-      a: "Фирменный паз T-Track — это наша собственная инженерная разработка GeekNook. Геометрия профиля, ширина фаски и допуски фрезеровки рассчитаны так, чтобы наши модули (стойка для наушников, держатель ноутбука, полка для Mac) скользили плавно и фиксировались без малейшего люфта. Для гарантии идеальной посадки мы рекомендуем использовать аксессуары вместе с подставками серии Focus Station."
-    },
-    {
-      q: "Подходит ли держатель Laptop Stand под ноутбуки на Windows?",
-      a: "Да, абсолютно. Мы спроектировали кронштейны Laptop Stand Open и Closed универсальными: они подходят для любых ноутбуков с диагональю от 13 до 17 дюймов (MacBook, Lenovo ThinkPad, ASUS ROG/ZenBook, Dell XPS, HP и других) толщиной корпуса до 22 мм. Все контактные зоны оклеены мягким фетром, исключающим появление потертостей."
-    },
-    {
-      q: "Как правильно ухаживать за натуральным деревом и шпоном?",
-      a: "Все деревянные элементы покрыты немецким премиальным масло-воском Osmo. Оно оставляет поры дерева открытыми («дышащими»), подчеркивает глубокую текстуру и защищает поверхность от влаги, кофе и пыли. Для ухода достаточно протирать полку сухой или слегка влажной салфеткой из микрофибры. Не используйте агрессивные спиртовые или абразивные чистящие средства."
-    },
-    {
-      q: "Как устроена доставка по России и возможен ли возврат?",
-      a: "Мы надежно упаковываем каждый заказ в ударопрочные коробки с индивидуальными вспененными ложементами. Доставка осуществляется курьерской службой СДЭК (курьером до двери или в удобный пункт выдачи по всей РФ). При заказе от 7 000 ₽ доставка бесплатна. Срок отправки — 1–2 рабочих дня. Если товар вам не подойдет, вы можете вернуть его в течение 14 дней без лишних вопросов."
+    .legal-table th {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+      font-weight: 600;
     }
-  ],
-  // --- 12. ЮРИДИЧЕСКАЯ ИНФОРМАЦИЯ И СЕРВИС ---
-  legal: {
-    offer: {
-      title: "Публичная оферта",
-      content: `<h3 class="legal-h3"><strong>ПУБЛИЧНАЯ ОФЕРТА</strong></h3>
+    .legal-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+    .cert-alert {
+      background: rgba(203, 168, 112, 0.1);
+      border: 1px solid var(--border-active);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      color: #e0be86;
+    }
+    .legal-actions-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .legal-btn-primary, .legal-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 44px;
+      transition: all 0.2s;
+    }
+    .legal-btn-primary {
+      background: var(--accent-gold);
+      color: #0c0c0e;
+      border: none;
+    }
+    .legal-btn-primary:hover {
+      background: var(--accent-gold-hover);
+      text-decoration: none;
+      color: #000;
+    }
+    .legal-btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      border: 1px solid var(--border-subtle);
+    }
+    .legal-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      text-decoration: none;
+      color: #fff;
+    }
+    .legal-footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+    @media (max-width: 768px) {
+      .tab-panel {
+        padding: 24px 16px;
+      }
+      .legal-hero h1 {
+        font-size: 1.6rem;
+      }
+      .legal-actions-bar {
+        flex-direction: column;
+      }
+      .legal-btn-primary, .legal-btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+    @media print {
+      body, html {
+        background: #fff !important;
+        color: #000 !important;
+      }
+      .legal-header, .legal-nav-tabs, .legal-actions-bar, .legal-footer, .back-btn {
+        display: none !important;
+      }
+      .tab-panel {
+        display: block !important;
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+      }
+      .legal-heading-1, .legal-heading-2, .legal-heading-3, p, li, span, td, th {
+        color: #000 !important;
+      }
+      a {
+        color: #000 !important;
+        text-decoration: underline !important;
+      }
+      code {
+        background: #eee !important;
+        color: #000 !important;
+      }
+      .legal-table th, .legal-table td {
+        border-color: #999 !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="legal-header">
+    <div class="header-container">
+      <a href="index.html" class="brand-link">
+        <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#cba870"/>
+          <path d="M8 10h16M8 16h16M8 22h10" stroke="#0c0c0e" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        GEEK NOOK
+      </a>
+      <a href="index.html" class="back-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        В магазин
+      </a>
+    </div>
+  </header>
+
+  <main class="legal-main">
+    <div class="legal-hero">
+      <h1>Правовой центр GEEK NOOK</h1>
+      <p>Официальные нормативные документы, оферта, политика обработки данных и реквизиты ООО «ГИК НУК»</p>
+    </div>
+
+    <div class="legal-actions-bar">
+      <button class="legal-btn-secondary" onclick="window.print()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        Распечатать документ
+      </button>
+      <button class="legal-btn-secondary" onclick="copyCurrentLink()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+        <span id="copyLinkText">Скопировать ссылку</span>
+      </button>
+      <a href="Информационное_письмо_о_сертификации_ООО_ГИК_НУК.docx" download class="legal-btn-secondary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        Письмо о сертификации (.docx)
+      </a>
+    </div>
+
+    <nav class="legal-nav-tabs" id="legalTabs" aria-label="Вкладки правового центра">
+      <button class="tab-btn active" data-tab="offer" onclick="switchTab('offer')">Публичная оферта</button>
+      <button class="tab-btn" data-tab="privacy" onclick="switchTab('privacy')">Политики и согласия</button>
+      <button class="tab-btn" data-tab="terms" onclick="switchTab('terms')">Условия использования</button>
+      <button class="tab-btn" data-tab="requisites" onclick="switchTab('requisites')">Реквизиты</button>
+      <button class="tab-btn" data-tab="delivery" onclick="switchTab('delivery')">Доставка и оплата</button>
+      <button class="tab-btn" data-tab="warranty" onclick="switchTab('warranty')">Гарантия и возврат</button>
+      <button class="tab-btn" data-tab="certification" onclick="switchTab('certification')">Сертификация</button>
+    </nav>
+
+    <section id="panel-offer" class="tab-panel active" aria-labelledby="tab-offer">
+      <h2 class="legal-heading-1"><strong>ПУБЛИЧНАЯ ОФЕРТА</strong></h2>
 <p><strong>о заключении договора розничной купли-продажи товаров дистанционным способом</strong></p>
 <p>Настоящий документ является официальным предложением Общества с ограниченной ответственностью «ГИК НУК» заключить договор розничной купли-продажи товаров, представленных на сайте <strong>geeknook.ru</strong>, на изложенных ниже условиях.</p>
 <p>Настоящая Оферта применяется к продаже Товаров физическим лицам для личных, семейных, домашних и иных нужд, не связанных с осуществлением предпринимательской деятельности.</p>
 <p>Продажа товаров юридическим лицам и индивидуальным предпринимателям осуществляется на отдельных условиях. Для приобретения товаров юридическим лицам и индивидуальным предпринимателям необходимо обратиться по адресу .</p>
-<h4 class="legal-h4"><strong>1. Термины и определения</strong></h4>
+<h3 class="legal-heading-2"><strong>1. Термины и определения</strong></h3>
 <p><strong>1.1. Продавец</strong> — Общество с ограниченной ответственностью «ГИК НУК» (ООО «ГИК НУК»), осуществляющее продажу Товаров дистанционным способом через Сайт.</p>
 <p><strong>1.2. Покупатель</strong> — физическое лицо, приобретающее Товар для личных, семейных, домашних и иных нужд, не связанных с осуществлением предпринимательской деятельности.</p>
 <p><strong>1.3. Сайт</strong> — интернет-сайт, расположенный по адресу , посредством которого Покупатель может ознакомиться с Товарами и оформить Заказ.</p>
-<h5 class="legal-h5"><strong>1.4. Товар</strong> — непродовольственный товар, представленный для продажи на Сайте.</h5>
+<h4 class="legal-heading-3"><strong>1.4. Товар</strong> — непродовольственный товар, представленный для продажи на Сайте.</h4>
 <p><strong>1.5. Заказ</strong> — оформленный Покупателем посредством функционала Сайта запрос на приобретение выбранного Товара или Товаров на условиях настоящей Оферты.</p>
 <p><strong>1.6. СДЭК</strong> — организация, привлекаемая Продавцом для доставки Заказов Покупателям и приема оплаты за Заказы при их получении.</p>
-<h5 class="legal-h5"><strong>1.7. ПВЗ</strong> — пункт выдачи заказов СДЭК, выбранный Покупателем при оформлении Заказа.</h5>
-<h4 class="legal-h4"><strong>2. Общие положения</strong></h4>
-<h5 class="legal-h5"><strong>2.1.</strong> Настоящая Оферта регулирует отношения между Продавцом и Покупателем при дистанционной продаже Товаров через Сайт.</h5>
+<h4 class="legal-heading-3"><strong>1.7. ПВЗ</strong> — пункт выдачи заказов СДЭК, выбранный Покупателем при оформлении Заказа.</h4>
+<h3 class="legal-heading-2"><strong>2. Общие положения</strong></h3>
+<h4 class="legal-heading-3"><strong>2.1.</strong> Настоящая Оферта регулирует отношения между Продавцом и Покупателем при дистанционной продаже Товаров через Сайт.</h4>
 <p><strong>2.2.</strong> Отношения между Продавцом и Покупателем регулируются Гражданским кодексом Российской Федерации, Законом Российской Федерации от 07.02.1992 № 2300-1 «О защите прав потребителей», Правилами продажи товаров по договору розничной купли-продажи и иными применимыми нормативными правовыми актами Российской Федерации.</p>
 <p><strong>2.3.</strong> До оформления Заказа Покупатель имеет возможность ознакомиться на Сайте с основными потребительскими свойствами Товара, его внешним видом, ценой, условиями приобретения и иной предоставленной Продавцом информацией.</p>
-<h5 class="legal-h5"><strong>2.4.</strong> Оформление Заказа осуществляется Покупателем самостоятельно посредством функционала Сайта.</h5>
+<h4 class="legal-heading-3"><strong>2.4.</strong> Оформление Заказа осуществляется Покупателем самостоятельно посредством функционала Сайта.</h4>
 <p><strong>2.5.</strong> Оформляя Заказ, Покупатель подтверждает, что предоставленные им сведения являются достоверными и достаточными для исполнения Заказа.</p>
-<h5 class="legal-h5"><strong>2.6.</strong> Продавец осуществляет продажу и доставку Товаров по настоящей Оферте только на территории Российской Федерации.</h5>
-<h4 class="legal-h4"><strong>3. Предмет договора</strong></h4>
+<h4 class="legal-heading-3"><strong>2.6.</strong> Продавец осуществляет продажу и доставку Товаров по настоящей Оферте только на территории Российской Федерации.</h4>
+<h3 class="legal-heading-2"><strong>3. Предмет договора</strong></h3>
 <p><strong>3.1.</strong> Продавец обязуется передать Покупателю заказанный Товар, а Покупатель обязуется принять и оплатить Товар на условиях настоящей Оферты с учетом предусмотренного законодательством права Покупателя отказаться от Товара.</p>
 <p><strong>3.2.</strong> Наименование, количество, цена и иные характеристики приобретаемого Товара определяются на основании оформленного Покупателем Заказа.</p>
 <p><strong>3.3.</strong> Изображения Товаров на Сайте предназначены для ознакомления с их внешним видом. Отображение цвета и отдельных визуальных характеристик Товара может незначительно отличаться в зависимости от характеристик экрана устройства Покупателя, освещения при фотосъемке и иных технических факторов.</p>
 <p><strong>3.4.</strong> Основные потребительские свойства и существенные характеристики конкретного Товара указываются в его описании на Сайте.</p>
-<h4 class="legal-h4"><strong>4. Цена Товара и стоимость доставки</strong></h4>
-<h5 class="legal-h5"><strong>4.1.</strong> Цена каждого Товара указывается на Сайте в российских рублях.</h5>
-<h5 class="legal-h5"><strong>4.2.</strong> Цена Товара, применяемая к Заказу Покупателя, отображается при оформлении Заказа до его направления Продавцу.</h5>
-<h5 class="legal-h5"><strong>4.3.</strong> После заключения договора Продавец не изменяет цену заказанного Товара в одностороннем порядке.</h5>
+<h3 class="legal-heading-2"><strong>4. Цена Товара и стоимость доставки</strong></h3>
+<h4 class="legal-heading-3"><strong>4.1.</strong> Цена каждого Товара указывается на Сайте в российских рублях.</h4>
+<h4 class="legal-heading-3"><strong>4.2.</strong> Цена Товара, применяемая к Заказу Покупателя, отображается при оформлении Заказа до его направления Продавцу.</h4>
+<h4 class="legal-heading-3"><strong>4.3.</strong> После заключения договора Продавец не изменяет цену заказанного Товара в одностороннем порядке.</h4>
 <p><strong>4.4.</strong> В случае обнаружения очевидной технической ошибки в отображении цены или иной информации о Товаре стороны действуют в соответствии с законодательством Российской Федерации.</p>
 <p><strong>4.5.</strong> Стоимость доставки, если она подлежит оплате Покупателем, отображается при оформлении Заказа либо определяется в соответствии с условиями доставки, размещенными на Сайте.</p>
 <p><strong>4.6.</strong> При общей стоимости Товаров в одном Заказе <strong>от 5 000 (Пяти тысяч) рублей включительно</strong> доставка Заказа до ПВЗ СДЭК осуществляется за счет Продавца.</p>
 <p><strong>4.7.</strong> Для Заказов общей стоимостью менее 5 000 рублей стоимость доставки определяется в соответствии с условиями доставки, действующими на Сайте на момент оформления Заказа.</p>
-<h4 class="legal-h4"><strong>5. Оформление Заказа и заключение договора</strong></h4>
-<h5 class="legal-h5"><strong>5.1.</strong> Для оформления Заказа Покупатель:</h5>
+<h3 class="legal-heading-2"><strong>5. Оформление Заказа и заключение договора</strong></h3>
+<h4 class="legal-heading-3"><strong>5.1.</strong> Для оформления Заказа Покупатель:</h4>
 <p>выбирает Товар и добавляет его в корзину;</p>
 <p>переходит к оформлению Заказа;</p>
 <p>указывает необходимые контактные данные;</p>
@@ -844,7 +479,7 @@ const GEEKNOOK_DATA = {
 <p><strong>5.4.</strong> Договор розничной купли-продажи считается заключенным с момента получения Продавцом указанного сообщения Покупателя.</p>
 <p><strong>5.5.</strong> После оформления Заказа Продавец предоставляет Покупателю подтверждение заключения договора на условиях настоящей Оферты. Подтверждение содержит номер Заказа или иной способ его идентификации, позволяющий Покупателю получить информацию о заключенном договоре и его условиях.</p>
 <p><strong>5.6.</strong> Подтверждение Заказа может быть предоставлено Покупателю посредством Сайта, электронной почты, SMS-сообщения или иным способом с использованием контактных данных, указанных Покупателем при оформлении Заказа.</p>
-<h4 class="legal-h4"><strong>6. Доставка и получение Товара</strong></h4>
+<h3 class="legal-heading-2"><strong>6. Доставка и получение Товара</strong></h3>
 <p><strong>6.1.</strong> Доставка Товаров осуществляется исключительно посредством службы доставки СДЭК до выбранного Покупателем ПВЗ СДЭК на территории Российской Федерации.</p>
 <p><strong>6.2.</strong> Возможность доставки в конкретный населенный пункт или ПВЗ определяется доступностью соответствующего направления доставки СДЭК.</p>
 <p><strong>6.3.</strong> Информация о предполагаемом сроке доставки предоставляется при оформлении Заказа и/или посредством уведомлений Продавца или СДЭК.</p>
@@ -852,29 +487,29 @@ const GEEKNOOK_DATA = {
 <p><strong>6.5.</strong> При получении Заказа Покупателю предоставляется возможность произвести внешний осмотр отправления и Товара в объеме, допускаемом правилами соответствующего ПВЗ СДЭК, <strong>без вскрытия заводской упаковки Товара</strong>.</p>
 <p><strong>6.6.</strong> При получении Заказа Покупателю рекомендуется проверить соответствие количества и наименования Товаров Заказу, а также отсутствие видимых повреждений транспортной и доступной для осмотра заводской упаковки.</p>
 <p><strong>6.7.</strong> Если при получении обнаружены явные повреждения отправления либо несоответствие Заказа, Покупателю рекомендуется сообщить об этом сотруднику ПВЗ СДЭК и обратиться к Продавцу по адресу .</p>
-<h5 class="legal-h5"><strong>6.8.</strong> Если Покупатель не получает Заказ в течение установленного СДЭК срока хранения, отправление возвращается Продавцу.</h5>
+<h4 class="legal-heading-3"><strong>6.8.</strong> Если Покупатель не получает Заказ в течение установленного СДЭК срока хранения, отправление возвращается Продавцу.</h4>
 <p><strong>6.9.</strong> Неполучение Заказа либо его возврат Продавцу не ограничивает предусмотренные законодательством Российской Федерации права Покупателя.</p>
-<h4 class="legal-h4"><strong>7. Оплата</strong></h4>
-<h5 class="legal-h5"><strong>7.1.</strong> Оплата Товара непосредственно на Сайте не производится.</h5>
-<h5 class="legal-h5"><strong>7.2.</strong> Покупатель оплачивает Заказ при его получении в ПВЗ СДЭК доступным в соответствующем ПВЗ способом.</h5>
-<h5 class="legal-h5"><strong>7.3.</strong> Денежные средства за Заказ принимаются СДЭК в рамках исполнения поручения по доставке Заказа и приему платежа.</h5>
+<h3 class="legal-heading-2"><strong>7. Оплата</strong></h3>
+<h4 class="legal-heading-3"><strong>7.1.</strong> Оплата Товара непосредственно на Сайте не производится.</h4>
+<h4 class="legal-heading-3"><strong>7.2.</strong> Покупатель оплачивает Заказ при его получении в ПВЗ СДЭК доступным в соответствующем ПВЗ способом.</h4>
+<h4 class="legal-heading-3"><strong>7.3.</strong> Денежные средства за Заказ принимаются СДЭК в рамках исполнения поручения по доставке Заказа и приему платежа.</h4>
 <p><strong>7.4.</strong> Обязанность Покупателя по оплате получаемого Заказа считается исполненной после внесения полной суммы, подлежащей оплате при его получении.</p>
 <p><strong>7.5.</strong> Документ, подтверждающий расчет, предоставляется Покупателю в порядке, предусмотренном законодательством Российской Федерации.</p>
-<h4 class="legal-h4"><strong>8. Отказ от Товара надлежащего качества и возврат</strong></h4>
-<h5 class="legal-h5"><strong>8.1.</strong> Покупатель вправе отказаться от Товара в любое время до его передачи.</h5>
-<h5 class="legal-h5"><strong>8.2.</strong> После передачи Товара Покупатель вправе отказаться от Товара надлежащего качества в течение <strong>7 (семи) дней</strong>.</h5>
-<h5 class="legal-h5"><strong>8.3.</strong> Возврат Товара надлежащего качества возможен при сохранении его товарного вида и потребительских свойств.</h5>
+<h3 class="legal-heading-2"><strong>8. Отказ от Товара надлежащего качества и возврат</strong></h3>
+<h4 class="legal-heading-3"><strong>8.1.</strong> Покупатель вправе отказаться от Товара в любое время до его передачи.</h4>
+<h4 class="legal-heading-3"><strong>8.2.</strong> После передачи Товара Покупатель вправе отказаться от Товара надлежащего качества в течение <strong>7 (семи) дней</strong>.</h4>
+<h4 class="legal-heading-3"><strong>8.3.</strong> Возврат Товара надлежащего качества возможен при сохранении его товарного вида и потребительских свойств.</h4>
 <p><strong>8.4.</strong> Отсутствие у Покупателя документа, подтверждающего факт и условия приобретения Товара у Продавца, не лишает Покупателя возможности ссылаться на иные доказательства приобретения Товара.</p>
 <p><strong>8.5.</strong> Для организации возврата Покупателю рекомендуется предварительно обратиться к Продавцу по адресу , указав номер Заказа, наименование возвращаемого Товара и контактные данные.</p>
-<h5 class="legal-h5"><strong>8.6.</strong> Продавец сообщает Покупателю актуальный адрес и доступные способы возврата Товара.</h5>
+<h4 class="legal-heading-3"><strong>8.6.</strong> Продавец сообщает Покупателю актуальный адрес и доступные способы возврата Товара.</h4>
 <p><strong>8.7.</strong> Покупатель вправе осуществить возврат Товара надлежащего качества дистанционным способом, в том числе посредством перевозчика или организации связи, способом, обеспечивающим возможность получения Товара Продавцом и проверки его состояния.</p>
-<h5 class="legal-h5"><strong>8.8.</strong> Расходы на доставку возвращаемого Товара надлежащего качества Продавцу несет Покупатель.</h5>
+<h4 class="legal-heading-3"><strong>8.8.</strong> Расходы на доставку возвращаемого Товара надлежащего качества Продавцу несет Покупатель.</h4>
 <p><strong>8.9.</strong> Риск случайной гибели или повреждения возвращаемого Товара надлежащего качества во время его транспортировки до получения Продавцом несет Покупатель в случаях и пределах, предусмотренных законодательством Российской Федерации.</p>
 <p><strong>8.10.</strong> При отказе Покупателя от Товара надлежащего качества Продавец возвращает Покупателю сумму, уплаченную за Товар, за исключением расходов Продавца на доставку от Покупателя возвращенного Товара.</p>
 <p><strong>8.11.</strong> Возврат денежных средств производится не позднее <strong>10 (десяти) дней</strong> со дня предъявления Покупателем соответствующего требования.</p>
 <p><strong>8.12.</strong> Возврат денежных средств производится способом, предусмотренным законодательством Российской Федерации, с учетом способа первоначальной оплаты и технической возможности осуществления возврата.</p>
 <p><strong>8.13.</strong> Ограничения права на отказ от отдельных категорий товаров применяются только в случаях, прямо предусмотренных законодательством Российской Федерации.</p>
-<h4 class="legal-h4"><strong>9. Товар ненадлежащего качества</strong></h4>
+<h3 class="legal-heading-2"><strong>9. Товар ненадлежащего качества</strong></h3>
 <p><strong>9.1.</strong> В случае обнаружения недостатков Товара Покупатель вправе предъявить Продавцу требования, предусмотренные законодательством Российской Федерации.</p>
 <p><strong>9.2.</strong> Для обращения по вопросу Товара ненадлежащего качества Покупатель направляет сообщение на , указав номер Заказа, наименование Товара, описание обнаруженного недостатка и контактные данные.</p>
 <p><strong>9.3.</strong> При наличии фотографий, видеозаписей или иных материалов, позволяющих предварительно оценить характер недостатка, Покупатель может приложить их к обращению.</p>
@@ -882,82 +517,82 @@ const GEEKNOOK_DATA = {
 <p><strong>9.5.</strong> Продавец вправе провести проверку качества Товара в порядке, предусмотренном законодательством Российской Федерации.</p>
 <p><strong>9.6.</strong> В случае возникновения спора о причинах появления недостатков Товара экспертиза проводится в случаях и порядке, установленных законодательством Российской Федерации.</p>
 <p><strong>9.7.</strong> Расходы на возврат, доставку, проверку качества и иные расходы в отношении Товара ненадлежащего качества распределяются между Продавцом и Покупателем в соответствии с законодательством Российской Федерации.</p>
-<h4 class="legal-h4"><strong>10. Гарантия</strong></h4>
-<h5 class="legal-h5"><strong>10.1.</strong> Гарантийный срок на Товары устанавливается в зависимости от категории Товара:</h5>
+<h3 class="legal-heading-2"><strong>10. Гарантия</strong></h3>
+<h4 class="legal-heading-3"><strong>10.1.</strong> Гарантийный срок на Товары устанавливается в зависимости от категории Товара:</h4>
 <p>на подставки GEEK NOOK и аксессуары к ним — <strong>12 (двенадцать) месяцев</strong> с даты передачи Товара Покупателю;</p>
 <p>на коврики для мыши, а также иные изделия из текстиля, натуральной кожи или искусственной кожи — <strong>3 (три) месяца</strong> с даты передачи Товара Покупателю.</p>
 <p><strong>10.2.</strong> В течение установленного гарантийного срока Продавец отвечает за недостатки Товара в соответствии с законодательством Российской Федерации.</p>
 <p><strong>10.3.</strong> Продавец не отвечает за недостатки Товара, если докажет, что они возникли после передачи Товара Покупателю вследствие нарушения Покупателем правил использования, хранения или транспортировки Товара, действий третьих лиц или обстоятельств непреодолимой силы.</p>
-<h5 class="legal-h5"><strong>10.4.</strong> Для обращения по гарантии Покупатель направляет сообщение на .</h5>
-<h4 class="legal-h4"><strong>11. Права и обязанности сторон</strong></h4>
-<h5 class="legal-h5"><strong>11.1. Покупатель вправе:</strong></h5>
+<h4 class="legal-heading-3"><strong>10.4.</strong> Для обращения по гарантии Покупатель направляет сообщение на .</h4>
+<h3 class="legal-heading-2"><strong>11. Права и обязанности сторон</strong></h3>
+<h4 class="legal-heading-3"><strong>11.1. Покупатель вправе:</strong></h4>
 <p>получать необходимую и достоверную информацию о Товаре;</p>
 <p>выбирать Товары из представленного на Сайте ассортимента;</p>
 <p>отказаться от Товара в случаях и порядке, предусмотренных законодательством Российской Федерации и настоящей Офертой;</p>
 <p>предъявлять требования в отношении недостатков Товара в соответствии с законодательством Российской Федерации;</p>
 <p>обращаться к Продавцу по вопросам Заказа, доставки, возврата и гарантии.</p>
-<h5 class="legal-h5"><strong>11.2. Покупатель обязан:</strong></h5>
+<h4 class="legal-heading-3"><strong>11.2. Покупатель обязан:</strong></h4>
 <p>предоставлять при оформлении Заказа достоверные сведения, необходимые для его исполнения;</p>
 <p>ознакомиться с информацией о выбранном Товаре и условиями настоящей Оферты;</p>
 <p>при принятии Заказа оплатить его в установленном порядке;</p>
 <p>соблюдать предусмотренные для Товара правила использования и хранения.</p>
-<h5 class="legal-h5"><strong>11.3. Продавец вправе:</strong></h5>
+<h4 class="legal-heading-3"><strong>11.3. Продавец вправе:</strong></h4>
 <p>изменять ассортимент Товаров на Сайте;</p>
 <p>устанавливать и изменять цены на Товары до заключения договора в отношении соответствующего Товара;</p>
 <p>проводить акции и устанавливать скидки;</p>
 <p>привлекать третьих лиц для исполнения своих обязательств, в том числе СДЭК для доставки Товаров и приема оплаты;</p>
 <p>запрашивать у Покупателя сведения, необходимые для исполнения Заказа и рассмотрения обращений.</p>
-<h5 class="legal-h5"><strong>11.4. Продавец обязан:</strong></h5>
+<h4 class="legal-heading-3"><strong>11.4. Продавец обязан:</strong></h4>
 <p>предоставить Покупателю предусмотренную законодательством информацию о Продавце и Товаре;</p>
 <p>передать Покупателю Товар, соответствующий условиям заключенного договора;</p>
 <p>соблюдать права Покупателя, установленные законодательством Российской Федерации;</p>
 <p>рассматривать обращения Покупателей в порядке и сроки, установленные законодательством Российской Федерации.</p>
-<h4 class="legal-h4"><strong>12. Скидки, акции и промокоды</strong></h4>
-<h5 class="legal-h5"><strong>12.1.</strong> Продавец вправе проводить акции, предоставлять скидки и использовать промокоды.</h5>
+<h3 class="legal-heading-2"><strong>12. Скидки, акции и промокоды</strong></h3>
+<h4 class="legal-heading-3"><strong>12.1.</strong> Продавец вправе проводить акции, предоставлять скидки и использовать промокоды.</h4>
 <p><strong>12.2.</strong> Условия конкретной акции, размер скидки, срок действия промокода, перечень участвующих Товаров и иные специальные условия могут указываться на Сайте или в соответствующих информационных материалах Продавца.</p>
 <p><strong>12.3.</strong> Скидки, акции и промокоды могут не суммироваться между собой, если иное прямо не предусмотрено условиями соответствующего предложения.</p>
 <p><strong>12.4.</strong> Цена Товара с учетом примененной скидки или промокода отображается Покупателю при оформлении Заказа до его направления Продавцу.</p>
 <p><strong>12.5.</strong> Если условиями конкретной акции не предусмотрено иное, применение скидки или промокода не изменяет предусмотренные законодательством права Покупателя в отношении качества Товара, гарантии и возврата.</p>
-<h4 class="legal-h4"><strong>13. Персональные данные</strong></h4>
+<h3 class="legal-heading-2"><strong>13. Персональные данные</strong></h3>
 <p><strong>13.1.</strong> При оформлении Заказа Покупатель предоставляет сведения, необходимые Продавцу для заключения и исполнения договора, доставки Товара, взаимодействия с Покупателем и выполнения иных обязанностей, связанных с Заказом.</p>
 <p><strong>13.2.</strong> Обработка персональных данных осуществляется Продавцом в соответствии с законодательством Российской Федерации о персональных данных и соответствующими документами Продавца, размещенными на Сайте.</p>
 <p><strong>13.3.</strong> В случаях, необходимых для исполнения Заказа, сведения Покупателя могут передаваться лицам, участвующим в его исполнении, в частности СДЭК, в объеме, необходимом для доставки, выдачи и оплаты Заказа.</p>
-<h5 class="legal-h5"><strong>13.4.</strong> Порядок обработки персональных данных определяется соответствующими документами, размещенными на Сайте.</h5>
-<h4 class="legal-h4"><strong>14. Ответственность сторон</strong></h4>
+<h4 class="legal-heading-3"><strong>13.4.</strong> Порядок обработки персональных данных определяется соответствующими документами, размещенными на Сайте.</h4>
+<h3 class="legal-heading-2"><strong>14. Ответственность сторон</strong></h3>
 <p><strong>14.1.</strong> За неисполнение или ненадлежащее исполнение обязательств по договору Продавец и Покупатель несут ответственность в соответствии с законодательством Российской Федерации.</p>
 <p><strong>14.2.</strong> Продавец не отвечает за последствия предоставления Покупателем неверных или неполных сведений, необходимых для исполнения Заказа, в той мере, в которой соответствующие последствия вызваны такими действиями Покупателя.</p>
 <p><strong>14.3.</strong> Привлечение СДЭК или иных третьих лиц для исполнения обязательств не освобождает Продавца от ответственности перед Покупателем в случаях, когда такая ответственность возложена на Продавца законодательством Российской Федерации.</p>
 <p><strong>14.4.</strong> Стороны освобождаются от ответственности за неисполнение обязательств в случаях и пределах, предусмотренных законодательством Российской Федерации, в том числе вследствие обстоятельств непреодолимой силы.</p>
 <p><strong>14.5.</strong> Никакое положение настоящей Оферты не может толковаться как ограничивающее права Покупателя, предоставленные ему императивными нормами законодательства Российской Федерации.</p>
-<h4 class="legal-h4"><strong>15. Обращения Покупателей и разрешение споров</strong></h4>
+<h3 class="legal-heading-2"><strong>15. Обращения Покупателей и разрешение споров</strong></h3>
 <p><strong>15.1.</strong> По вопросам оформления и исполнения Заказов, доставки, возврата Товаров, гарантии и качества Покупатель может обратиться к Продавцу по электронной почте:</p>
 <p>info@geeknook.ru</p>
 <p><strong>15.2.</strong> Для более быстрого рассмотрения обращения Покупателю рекомендуется указать номер Заказа и сведения, позволяющие идентифицировать покупку.</p>
 <p><strong>15.3.</strong> Продавец и Покупатель вправе урегулировать возникающие разногласия путем переговоров и обмена необходимой информацией.</p>
 <p><strong>15.4.</strong> Если спор не урегулирован сторонами, он разрешается в порядке, установленном законодательством Российской Федерации.</p>
 <p><strong>15.5.</strong> Настоящая Оферта не ограничивает предусмотренное законодательством право потребителя обратиться за защитой своих прав в суд, государственные органы или иные уполномоченные организации.</p>
-<h4 class="legal-h4"><strong>16. Срок действия и изменение Оферты</strong></h4>
-<h5 class="legal-h5"><strong>16.1.</strong> Настоящая Оферта действует с момента ее размещения на Сайте до момента ее отзыва или замены новой редакцией.</h5>
-<h5 class="legal-h5"><strong>16.2.</strong> Продавец вправе вносить изменения в настоящую Оферту путем размещения новой редакции на Сайте.</h5>
+<h3 class="legal-heading-2"><strong>16. Срок действия и изменение Оферты</strong></h3>
+<h4 class="legal-heading-3"><strong>16.1.</strong> Настоящая Оферта действует с момента ее размещения на Сайте до момента ее отзыва или замены новой редакцией.</h4>
+<h4 class="legal-heading-3"><strong>16.2.</strong> Продавец вправе вносить изменения в настоящую Оферту путем размещения новой редакции на Сайте.</h4>
 <p><strong>16.3.</strong> Новая редакция Оферты применяется к договорам, заключенным после вступления такой редакции в силу, если иное не предусмотрено законодательством Российской Федерации.</p>
 <p><strong>16.4.</strong> К ранее заключенным договорам применяются условия Оферты, действовавшие на момент заключения соответствующего договора, если иное не установлено законодательством Российской Федерации или соглашением сторон.</p>
 <p><strong>16.5.</strong> Признание отдельного положения настоящей Оферты недействительным или неприменимым не влечет недействительность остальных положений Оферты.</p>
-<h4 class="legal-h4"><strong>17. Сведения о Продавце</strong></h4>
+<h3 class="legal-heading-2"><strong>17. Сведения о Продавце</strong></h3>
 <p><strong>Полное наименование:</strong>
 Общество с ограниченной ответственностью «ГИК НУК»</p>
 <p><strong>Сокращенное наименование:</strong>
 ООО «ГИК НУК»</p>
-<h3 class="legal-h3"><strong>ИНН:</strong> 9723239478</h3>
-<h3 class="legal-h3"><strong>КПП:</strong> 772301001</h3>
-<h3 class="legal-h3"><strong>ОГРН:</strong> 1247700620265</h3>
+<h2 class="legal-heading-1"><strong>ИНН:</strong> 9723239478</h2>
+<h2 class="legal-heading-1"><strong>КПП:</strong> 772301001</h2>
+<h2 class="legal-heading-1"><strong>ОГРН:</strong> 1247700620265</h2>
 <p><strong>Юридический адрес:</strong>
 115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5</p>
 <p><strong>Сайт:</strong></p>
-<p><strong>Электронная почта:</strong></p>`
-    },
-    privacy: {
-      title: "Политики и согласия",
-      content: `<h3 class="legal-h3"><strong>Политики и согласия</strong></h3>
+<p><strong>Электронная почта:</strong></p>
+    </section>
+
+    <section id="panel-privacy" class="tab-panel" aria-labelledby="tab-privacy">
+      <h2 class="legal-heading-1"><strong>Политики и согласия</strong></h2>
 <p><strong>Редакция от 25 сентября 2026 года</strong></p>
 <p>Настоящая страница содержит документы ООО «ГИК НУК», регулирующие обработку персональных данных пользователей сайта geeknook.ru, покупателей продукции GEEK NOOK и иных лиц, взаимодействующих с ООО «ГИК НУК».</p>
 <p>На странице размещены:</p>
@@ -967,21 +602,21 @@ const GEEKNOOK_DATA = {
 Определяет условия обработки персональных данных, на которую пользователь дает отдельное согласие посредством соответствующего действия на сайте.</p>
 <p><strong>3. Согласие на получение рекламных и информационных сообщений</strong>
 Определяет условия получения пользователем рекламных, маркетинговых и информационных сообщений GEEK NOOK.</p>
-<h4 class="legal-h4"><strong>1. Политика в отношении обработки персональных данных</strong></h4>
-<h5 class="legal-h5"><strong>1.1. Общие положения</strong></h5>
+<h3 class="legal-heading-2"><strong>1. Политика в отношении обработки персональных данных</strong></h3>
+<h4 class="legal-heading-3"><strong>1.1. Общие положения</strong></h4>
 <p>Настоящая Политика в отношении обработки персональных данных (далее — Политика) определяет порядок и условия обработки персональных данных Обществом с ограниченной ответственностью «ГИК НУК», а также меры, принимаемые для обеспечения безопасности персональных данных.</p>
 <p>Политика разработана в соответствии с законодательством Российской Федерации, в том числе Федеральным законом от 27.07.2006 № 152-ФЗ «О персональных данных».</p>
 <p><strong>Оператор персональных данных</strong></p>
 <p>Общество с ограниченной ответственностью «ГИК НУК»</p>
 <p>Сокращенное наименование: ООО «ГИК НУК»</p>
-<h3 class="legal-h3">ИНН: 9723239478</h3>
-<h3 class="legal-h3">ОГРН: 1247700620265</h3>
+<h2 class="legal-heading-1">ИНН: 9723239478</h2>
+<h2 class="legal-heading-1">ОГРН: 1247700620265</h2>
 <p>Адрес: 115193, г. Москва, ул. Петра Романова, д. 7, стр. 1, помещение 20/5</p>
 <p>Сайт:</p>
 <p>Электронная почта:</p>
 <p>Далее — Оператор.</p>
 <p>Политика распространяется на персональные данные, которые Оператор получает или может получать при использовании сайта geeknook.ru, приобретении товаров, использовании сервисов GEEK NOOK и иных формах взаимодействия с Оператором.</p>
-<h5 class="legal-h5"><strong>1.2. Основные понятия</strong></h5>
+<h4 class="legal-heading-3"><strong>1.2. Основные понятия</strong></h4>
 <p><strong>Персональные данные</strong> — любая информация, относящаяся прямо или косвенно к определенному или определяемому физическому лицу.</p>
 <p><strong>Субъект персональных данных</strong> — физическое лицо, к которому относятся персональные данные.</p>
 <p><strong>Обработка персональных данных</strong> — любое действие или совокупность действий с персональными данными, совершаемых с использованием средств автоматизации или без их использования.</p>
@@ -993,7 +628,7 @@ const GEEKNOOK_DATA = {
 <p><strong>Обезличивание персональных данных</strong> — действия, в результате которых без использования дополнительной информации становится невозможным определить принадлежность персональных данных конкретному субъекту.</p>
 <p><strong>Трансграничная передача персональных данных</strong> — передача персональных данных на территорию иностранного государства иностранному государственному органу, физическому или юридическому лицу.</p>
 <p><strong>Cookies</strong> — небольшие фрагменты данных, сохраняемые на устройстве пользователя при использовании сайта.</p>
-<h5 class="legal-h5"><strong>1.3. Принципы обработки персональных данных</strong></h5>
+<h4 class="legal-heading-3"><strong>1.3. Принципы обработки персональных данных</strong></h4>
 <p>Оператор осуществляет обработку персональных данных на основе следующих принципов:</p>
 <p>законности и справедливости;</p>
 <p>обработки данных только для конкретных, заранее определенных и законных целей;</p>
@@ -1004,7 +639,7 @@ const GEEKNOOK_DATA = {
 <p>обеспечения точности и актуальности данных;</p>
 <p>хранения данных не дольше, чем этого требуют цели обработки или законодательство;</p>
 <p>обеспечения конфиденциальности и безопасности персональных данных.</p>
-<h5 class="legal-h5"><strong>1.4. Категории субъектов персональных данных</strong></h5>
+<h4 class="legal-heading-3"><strong>1.4. Категории субъектов персональных данных</strong></h4>
 <p>Оператор может обрабатывать данные:</p>
 <p>посетителей сайта;</p>
 <p>зарегистрированных пользователей;</p>
@@ -1020,7 +655,7 @@ const GEEKNOOK_DATA = {
 <p>авторов отзывов;</p>
 <p>представителей покупателей;</p>
 <p>иных лиц, взаимодействующих с Оператором.</p>
-<h5 class="legal-h5"><strong>1.5. Какие персональные данные могут обрабатываться</strong></h5>
+<h4 class="legal-heading-3"><strong>1.5. Какие персональные данные могут обрабатываться</strong></h4>
 <p>В зависимости от характера взаимодействия с Оператором могут обрабатываться следующие сведения.</p>
 <p><strong>Идентификационные данные</strong></p>
 <p>фамилия;</p>
@@ -1125,10 +760,10 @@ const GEEKNOOK_DATA = {
 <p>cookie и иные технические идентификаторы;</p>
 <p>журналы событий;</p>
 <p>сведения о технических ошибках.</p>
-<h5 class="legal-h5"><strong>1.6. Специальные и биометрические данные</strong></h5>
+<h4 class="legal-heading-3"><strong>1.6. Специальные и биометрические данные</strong></h4>
 <p>Оператор не ставит своей целью обработку специальных категорий персональных данных, касающихся расовой или национальной принадлежности, политических взглядов, религиозных или философских убеждений, состояния здоровья или интимной жизни.</p>
 <p>Оператор также не осуществляет целенаправленный сбор биометрических персональных данных через сайт, если соответствующая функция специально не внедрена и для такой обработки не обеспечены необходимые правовые основания.</p>
-<h5 class="legal-h5"><strong>1.7. Цели обработки персональных данных</strong></h5>
+<h4 class="legal-heading-3"><strong>1.7. Цели обработки персональных данных</strong></h4>
 <p>Персональные данные могут обрабатываться для следующих целей.</p>
 <p><strong>Работа сайта</strong></p>
 <p>обеспечение функционирования сайта;</p>
@@ -1238,7 +873,7 @@ const GEEKNOOK_DATA = {
 <p>исполнение законных запросов государственных органов;</p>
 <p>исполнение судебных актов;</p>
 <p>выполнение иных установленных законом обязанностей.</p>
-<h5 class="legal-h5"><strong>1.8. Правовые основания обработки</strong></h5>
+<h4 class="legal-heading-3"><strong>1.8. Правовые основания обработки</strong></h4>
 <p>В зависимости от конкретной цели основаниями обработки могут являться:</p>
 <p>согласие субъекта персональных данных;</p>
 <p>необходимость заключения или исполнения договора;</p>
@@ -1246,11 +881,11 @@ const GEEKNOOK_DATA = {
 <p>осуществление прав и законных интересов Оператора или третьих лиц в случаях, допускаемых законодательством и при соблюдении прав субъекта;</p>
 <p>иные предусмотренные законодательством основания.</p>
 <p>Если обработка может осуществляться на основании договора или непосредственно закона, отзыв согласия сам по себе не обязательно влечет прекращение такой обработки.</p>
-<h5 class="legal-h5"><strong>1.9. Получение согласия</strong></h5>
+<h4 class="legal-heading-3"><strong>1.9. Получение согласия</strong></h4>
 <p>Когда для обработки требуется согласие, Оператор получает его в форме, позволяющей подтвердить факт его предоставления.</p>
 <p>Согласие может выражаться посредством отдельного checkbox, кнопки или иного однозначного действия пользователя либо иным способом, допускаемым законодательством.</p>
 <p>Согласие на обработку персональных данных и согласие на рекламные коммуникации являются самостоятельными волеизъявлениями пользователя.</p>
-<h5 class="legal-h5"><strong>1.10. Источники получения данных</strong></h5>
+<h4 class="legal-heading-3"><strong>1.10. Источники получения данных</strong></h4>
 <p>Как правило, Оператор получает данные непосредственно от субъекта.</p>
 <p>В предусмотренных случаях данные также могут поступать:</p>
 <p>от представителя субъекта;</p>
@@ -1260,7 +895,7 @@ const GEEKNOOK_DATA = {
 <p>от маркетплейсов и торговых площадок;</p>
 <p>от подрядчиков;</p>
 <p>из иных законных источников.</p>
-<h5 class="legal-h5"><strong>1.11. Операции с персональными данными</strong></h5>
+<h4 class="legal-heading-3"><strong>1.11. Операции с персональными данными</strong></h4>
 <p>Оператор может осуществлять:</p>
 <p>сбор;</p>
 <p>запись;</p>
@@ -1280,7 +915,7 @@ const GEEKNOOK_DATA = {
 <p>удаление;</p>
 <p>уничтожение.</p>
 <p>Обработка может осуществляться автоматизированным, неавтоматизированным или смешанным способом.</p>
-<h5 class="legal-h5"><strong>1.12. Передача третьим лицам</strong></h5>
+<h4 class="legal-heading-3"><strong>1.12. Передача третьим лицам</strong></h4>
 <p>Оператор не продает персональные данные пользователей.</p>
 <p>При наличии соответствующего правового основания данные могут передаваться лицам, участие которых необходимо для работы сайта, исполнения договора, обслуживания пользователей или выполнения обязанностей Оператора.</p>
 <p>К ним могут относиться:</p>
@@ -1307,23 +942,23 @@ const GEEKNOOK_DATA = {
 <p>иные лица, участие которых необходимо для соответствующей цели обработки.</p>
 <p>Таким лицам предоставляется только тот объем данных, который необходим для соответствующей цели.</p>
 <p>Персональные данные также могут предоставляться государственным органам, судам и иным уполномоченным лицам в случаях, предусмотренных законодательством.</p>
-<h5 class="legal-h5"><strong>1.13. Поручение обработки</strong></h5>
+<h4 class="legal-heading-3"><strong>1.13. Поручение обработки</strong></h4>
 <p>Оператор вправе поручать обработку персональных данных третьим лицам при наличии соответствующего правового основания.</p>
 <p>При поручении обработки определяются цели, перечень данных, допустимые операции, требования к конфиденциальности и безопасности и иные необходимые условия.</p>
-<h5 class="legal-h5"><strong>1.14. Доставка</strong></h5>
+<h4 class="legal-heading-3"><strong>1.14. Доставка</strong></h4>
 <p>Для исполнения заказа Оператор может передать службе доставки сведения, необходимые для передачи товара получателю, включая:</p>
-<h3 class="legal-h3">ФИО;</h3>
+<h2 class="legal-heading-1">ФИО;</h2>
 <p>телефон;</p>
 <p>электронную почту;</p>
 <p>адрес доставки;</p>
 <p>номер заказа;</p>
 <p>сведения об отправлении.</p>
 <p>Конкретная служба доставки определяется способом доставки, регионом и условиями заказа.</p>
-<h5 class="legal-h5"><strong>1.15. Оплата</strong></h5>
+<h4 class="legal-heading-3"><strong>1.15. Оплата</strong></h4>
 <p>Для приема платежей могут использоваться банки и платежные сервисы.</p>
 <p>При использовании внешней защищенной платежной страницы обработка реквизитов карты осуществляется соответствующей платежной организацией.</p>
 <p>Оператор обрабатывает только те платежные сведения, которые фактически получает и которые необходимы для оплаты, возврата, учета и исполнения требований законодательства.</p>
-<h5 class="legal-h5"><strong>1.16. Cookies</strong></h5>
+<h4 class="legal-heading-3"><strong>1.16. Cookies</strong></h4>
 <p>Сайт может использовать следующие категории cookies:</p>
 <p><strong>Необходимые</strong> — для основных функций сайта, безопасности, корзины и авторизации.</p>
 <p><strong>Функциональные</strong> — для сохранения настроек пользователя.</p>
@@ -1331,7 +966,7 @@ const GEEKNOOK_DATA = {
 <p><strong>Маркетинговые</strong> — для оценки рекламных кампаний и иных маркетинговых задач при наличии необходимого правового основания.</p>
 <p>Пользователь может управлять cookies посредством браузера и, если соответствующая функция реализована, интерфейса управления cookies на сайте.</p>
 <p>Отключение необходимых cookies может повлиять на работу сайта.</p>
-<h5 class="legal-h5"><strong>1.17. Аналитические и рекламные технологии</strong></h5>
+<h4 class="legal-heading-3"><strong>1.17. Аналитические и рекламные технологии</strong></h4>
 <p>На сайте могут использоваться собственные и сторонние инструменты для:</p>
 <p>веб-аналитики;</p>
 <p>анализа посещаемости;</p>
@@ -1341,13 +976,13 @@ const GEEKNOOK_DATA = {
 <p>персонализации сайта;</p>
 <p>формирования статистики.</p>
 <p>При использовании конкретного стороннего сервиса Оператор обеспечивает наличие необходимого правового основания для соответствующей обработки.</p>
-<h5 class="legal-h5"><strong>1.18. Персонализация</strong></h5>
+<h4 class="legal-heading-3"><strong>1.18. Персонализация</strong></h4>
 <p>При наличии соответствующего основания могут использоваться сведения об истории просмотров, заказах, интересах, настройках и взаимодействии пользователя с сайтом для адаптации интерфейса, рекомендаций и предложений.</p>
 <p>Если для конкретного вида персонализации требуется отдельное согласие, такая обработка осуществляется после его получения.</p>
-<h5 class="legal-h5"><strong>1.19. Социальные сети и мессенджеры</strong></h5>
+<h4 class="legal-heading-3"><strong>1.19. Социальные сети и мессенджеры</strong></h4>
 <p>При взаимодействии с GEEK NOOK через социальные сети и мессенджеры часть данных может независимо обрабатываться владельцем соответствующей платформы.</p>
 <p>Оператор обрабатывает полученную через такой канал информацию в объеме, необходимом для обработки обращения или иной законной цели.</p>
-<h5 class="legal-h5"><strong>1.20. Запись телефонных разговоров</strong></h5>
+<h4 class="legal-heading-3"><strong>1.20. Запись телефонных разговоров</strong></h4>
 <p>При наличии соответствующего правового основания и информировании пользователя телефонные разговоры могут записываться для:</p>
 <p>контроля качества;</p>
 <p>подтверждения содержания обращения;</p>
@@ -1355,19 +990,19 @@ const GEEKNOOK_DATA = {
 <p>обучения сотрудников;</p>
 <p>обеспечения безопасности;</p>
 <p>защиты прав сторон.</p>
-<h5 class="legal-h5"><strong>1.21. Сервисные и рекламные сообщения</strong></h5>
+<h4 class="legal-heading-3"><strong>1.21. Сервисные и рекламные сообщения</strong></h4>
 <p>Оператор разделяет сервисные и рекламные коммуникации.</p>
 <p>Сервисные сообщения связаны с заказом, оплатой, доставкой, гарантией, поддержкой, безопасностью и исполнением обязательств перед пользователем.</p>
 <p>Рекламные и маркетинговые сообщения направляются при наличии необходимого предварительного согласия.</p>
 <p>Отказ от рекламы не препятствует направлению необходимых сервисных сообщений.</p>
-<h5 class="legal-h5"><strong>1.22. Локализация персональных данных</strong></h5>
+<h4 class="legal-heading-3"><strong>1.22. Локализация персональных данных</strong></h4>
 <p>При сборе персональных данных граждан Российской Федерации через Интернет Оператор выполняет установленные законодательством Российской Федерации требования о локализации персональных данных.</p>
 <p>В случаях, установленных законодательством, запись, систематизация, накопление, хранение, уточнение и извлечение таких данных осуществляются с использованием баз данных, находящихся на территории Российской Федерации.</p>
-<h5 class="legal-h5"><strong>1.23. Трансграничная передача</strong></h5>
+<h4 class="legal-heading-3"><strong>1.23. Трансграничная передача</strong></h4>
 <p>В процессе развития GEEK NOOK может возникнуть необходимость взаимодействия с иностранными сервисами или организациями.</p>
 <p>Настоящее положение само по себе не означает, что Оператор в настоящее время осуществляет трансграничную передачу персональных данных.</p>
 <p>Если такая передача осуществляется, Оператор выполняет предусмотренные законодательством требования до ее начала и обеспечивает наличие необходимого правового основания.</p>
-<h5 class="legal-h5"><strong>1.24. Сроки обработки и хранения</strong></h5>
+<h4 class="legal-heading-3"><strong>1.24. Сроки обработки и хранения</strong></h4>
 <p>Данные обрабатываются не дольше, чем этого требуют цели обработки, если иной срок не установлен законодательством, договором или иным правовым основанием.</p>
 <p>В частности:</p>
 <p>данные учетной записи могут храниться в период существования учетной записи и далее в пределах необходимых сроков;</p>
@@ -1378,7 +1013,7 @@ const GEEKNOOK_DATA = {
 <p>маркетинговые данные — до отзыва согласия или прекращения соответствующей цели, если отсутствует иное основание;</p>
 <p>технические и аналитические сведения — в течение периода, необходимого для соответствующей цели.</p>
 <p>После прекращения необходимости обработки данные удаляются, уничтожаются либо обезличиваются, если дальнейшее хранение не требуется по закону.</p>
-<h5 class="legal-h5"><strong>1.25. Безопасность персональных данных</strong></h5>
+<h4 class="legal-heading-3"><strong>1.25. Безопасность персональных данных</strong></h4>
 <p>Оператор принимает необходимые правовые, организационные и технические меры для защиты персональных данных.</p>
 <p>Такие меры в зависимости от характера обработки могут включать:</p>
 <p>назначение ответственных лиц;</p>
@@ -1396,9 +1031,9 @@ const GEEKNOOK_DATA = {
 <p>внутренний контроль;</p>
 <p>реагирование на инциденты.</p>
 <p>Доступ к данным предоставляется только лицам, которым он необходим для выполнения соответствующих обязанностей.</p>
-<h5 class="legal-h5"><strong>1.26. Конфиденциальность</strong></h5>
+<h4 class="legal-heading-3"><strong>1.26. Конфиденциальность</strong></h4>
 <p>Оператор и лица, получившие доступ к персональным данным, обязаны соблюдать их конфиденциальность и не раскрывать их без законного основания.</p>
-<h5 class="legal-h5"><strong>1.27. Инциденты безопасности</strong></h5>
+<h4 class="legal-heading-3"><strong>1.27. Инциденты безопасности</strong></h4>
 <p>При выявлении неправомерного или случайного доступа, передачи, предоставления, распространения либо иной компрометации персональных данных Оператор принимает меры по:</p>
 <p>прекращению нарушения;</p>
 <p>установлению причин;</p>
@@ -1406,10 +1041,10 @@ const GEEKNOOK_DATA = {
 <p>минимизации возможного вреда;</p>
 <p>предотвращению повторных инцидентов;</p>
 <p>выполнению предусмотренных законом обязанностей перед уполномоченными органами и субъектами персональных данных.</p>
-<h5 class="legal-h5"><strong>1.28. Автоматизированная обработка</strong></h5>
+<h4 class="legal-heading-3"><strong>1.28. Автоматизированная обработка</strong></h4>
 <p>Оператор может использовать автоматизированные средства при обработке заказов, аналитике, обеспечении безопасности, маркетинге и иных законных процессах.</p>
 <p>Оператор не принимает исключительно на основании автоматизированной обработки решения, порождающие юридические последствия для пользователя или иным образом существенно затрагивающие его права и законные интересы, кроме предусмотренных законодательством случаев.</p>
-<h5 class="legal-h5"><strong>1.29. Права субъекта персональных данных</strong></h5>
+<h4 class="legal-heading-3"><strong>1.29. Права субъекта персональных данных</strong></h4>
 <p>Субъект вправе в предусмотренных законодательством случаях:</p>
 <p>получать информацию об обработке своих данных;</p>
 <p>требовать уточнения неточных данных;</p>
@@ -1420,20 +1055,20 @@ const GEEKNOOK_DATA = {
 <p>обжаловать действия или бездействие Оператора;</p>
 <p>обращаться в уполномоченный орган или суд;</p>
 <p>реализовывать иные предусмотренные законодательством права.</p>
-<h5 class="legal-h5"><strong>1.30. Обращения субъектов</strong></h5>
+<h4 class="legal-heading-3"><strong>1.30. Обращения субъектов</strong></h4>
 <p>Для реализации своих прав субъект может обратиться по адресу:</p>
 <p>info@geeknook.ru</p>
 <p>В обращении рекомендуется указать:</p>
-<h3 class="legal-h3">ФИО;</h3>
+<h2 class="legal-heading-1">ФИО;</h2>
 <p>контактные сведения;</p>
 <p>содержание требования;</p>
 <p>сведения, позволяющие определить соответствующее взаимодействие с Оператором.</p>
 <p>Для защиты персональных данных от неправомерного доступа Оператор вправе запросить сведения, необходимые для подтверждения личности заявителя.</p>
-<h5 class="legal-h5"><strong>1.31. Отзыв согласия</strong></h5>
+<h4 class="legal-heading-3"><strong>1.31. Отзыв согласия</strong></h4>
 <p>Согласие на обработку персональных данных может быть отозвано путем обращения на:</p>
 <p>info@geeknook.ru</p>
 <p>После получения отзыва Оператор прекращает обработку, осуществляемую исключительно на основании соответствующего согласия, если отсутствуют иные предусмотренные законодательством основания для продолжения обработки.</p>
-<h5 class="legal-h5"><strong>1.32. Отказ от предоставления данных</strong></h5>
+<h4 class="legal-heading-3"><strong>1.32. Отказ от предоставления данных</strong></h4>
 <p>Пользователь самостоятельно принимает решение о предоставлении персональных данных, если обязанность их предоставления не установлена законом.</p>
 <p>При этом без некоторых сведений может быть невозможно:</p>
 <p>оформить заказ;</p>
@@ -1443,14 +1078,14 @@ const GEEKNOOK_DATA = {
 <p>обработать обращение;</p>
 <p>выполнить гарантийное обслуживание;</p>
 <p>предоставить определенную функцию сайта или сервиса.</p>
-<h5 class="legal-h5"><strong>1.33. Данные третьих лиц</strong></h5>
+<h4 class="legal-heading-3"><strong>1.33. Данные третьих лиц</strong></h4>
 <p>Если пользователь предоставляет данные другого лица, например получателя заказа, пользователь должен иметь законное основание для такой передачи.</p>
 <p>Оператор обрабатывает полученные сведения только в пределах соответствующих целей и правовых оснований.</p>
-<h5 class="legal-h5"><strong>1.34. Персональные данные несовершеннолетних</strong></h5>
+<h4 class="legal-heading-3"><strong>1.34. Персональные данные несовершеннолетних</strong></h4>
 <p>Сайт GEEK NOOK не предназначен специально для сбора персональных данных детей.</p>
 <p>Оператор не осуществляет целенаправленный сбор таких данных без соответствующего правового основания.</p>
 <p>Если законодательство требует согласия или участия законного представителя несовершеннолетнего, обработка осуществляется с соблюдением соответствующих требований.</p>
-<h5 class="legal-h5"><strong>1.35. Обезличенные и агрегированные сведения</strong></h5>
+<h4 class="legal-heading-3"><strong>1.35. Обезличенные и агрегированные сведения</strong></h4>
 <p>Оператор вправе использовать обезличенные и агрегированные сведения для:</p>
 <p>статистики;</p>
 <p>аналитики;</p>
@@ -1459,11 +1094,11 @@ const GEEKNOOK_DATA = {
 <p>улучшения сайта;</p>
 <p>развития сервисов;</p>
 <p>бизнес-планирования.</p>
-<h5 class="legal-h5"><strong>1.36. Сторонние сайты и сервисы</strong></h5>
+<h4 class="legal-heading-3"><strong>1.36. Сторонние сайты и сервисы</strong></h4>
 <p>Сайт может содержать ссылки на ресурсы третьих лиц.</p>
 <p>Если такие лица самостоятельно определяют цели и порядок обработки данных, их деятельность регулируется их собственными документами.</p>
 <p>Пользователю рекомендуется знакомиться с политиками соответствующих сервисов.</p>
-<h5 class="legal-h5"><strong>1.37. Изменение Политики</strong></h5>
+<h4 class="legal-heading-3"><strong>1.37. Изменение Политики</strong></h4>
 <p>Оператор вправе изменять настоящую Политику в связи с:</p>
 <p>изменением законодательства;</p>
 <p>развитием сайта;</p>
@@ -1476,17 +1111,17 @@ const GEEKNOOK_DATA = {
 <p>изменением процессов обработки персональных данных.</p>
 <p>Актуальная редакция размещается на geeknook.ru.</p>
 <p>Если для новой обработки требуется отдельное согласие пользователя, само по себе изменение Политики не заменяет получение такого согласия.</p>
-<h4 class="legal-h4"><strong>2. Согласие на обработку персональных данных</strong></h4>
-<h5 class="legal-h5"><strong>2.1. Общие положения</strong></h5>
+<h3 class="legal-heading-2"><strong>2. Согласие на обработку персональных данных</strong></h3>
+<h4 class="legal-heading-3"><strong>2.1. Общие положения</strong></h4>
 <p>Проставляя отметку в поле «Я согласен на обработку персональных данных» либо совершая иное предусмотренное интерфейсом сайта однозначное действие, я свободно, своей волей и в своем интересе даю согласие:</p>
-<h3 class="legal-h3"><strong>ООО «ГИК НУК»</strong></h3>
-<h3 class="legal-h3">ИНН: 9723239478</h3>
-<h3 class="legal-h3">ОГРН: 1247700620265</h3>
+<h2 class="legal-heading-1"><strong>ООО «ГИК НУК»</strong></h2>
+<h2 class="legal-heading-1">ИНН: 9723239478</h2>
+<h2 class="legal-heading-1">ОГРН: 1247700620265</h2>
 <p>Адрес: 115193, г. Москва, ул. Петра Романова, д. 7, стр. 1, помещение 20/5</p>
 <p>Сайт:</p>
 <p>E-mail:</p>
 <p>на обработку моих персональных данных на условиях настоящего Согласия.</p>
-<h5 class="legal-h5"><strong>2.2. Персональные данные</strong></h5>
+<h4 class="legal-heading-3"><strong>2.2. Персональные данные</strong></h4>
 <p>Согласие распространяется на персональные данные, которые я предоставляю Оператору посредством соответствующей формы сайта и в процессе дальнейшего взаимодействия, в зависимости от характера такого взаимодействия, включая:</p>
 <p>фамилию, имя, отчество;</p>
 <p>номер телефона;</p>
@@ -1504,7 +1139,7 @@ const GEEKNOOK_DATA = {
 <p>технические сведения, связанные с использованием сайта, в случаях, когда их обработка осуществляется на основании настоящего Согласия;</p>
 <p>иные данные, добровольно предоставленные мной Оператору в рамках соответствующего взаимодействия.</p>
 <p>Конкретный объем обрабатываемых данных определяется характером используемой мной формы, функции, заказа или обращения.</p>
-<h5 class="legal-h5"><strong>2.3. Цели обработки</strong></h5>
+<h4 class="legal-heading-3"><strong>2.3. Цели обработки</strong></h4>
 <p>Я даю согласие на обработку персональных данных в целях:</p>
 <p>обработки направленной мной формы или запроса;</p>
 <p>оформления и обработки заказа;</p>
@@ -1523,7 +1158,7 @@ const GEEKNOOK_DATA = {
 <p>выполнения иных действий, непосредственно связанных с инициированным мной взаимодействием с Оператором.</p>
 <p>Настоящее Согласие не является согласием на получение рекламных сообщений.</p>
 <p>Рекламные и маркетинговые коммуникации регулируются отдельным Согласием на получение рекламных и информационных сообщений.</p>
-<h5 class="legal-h5"><strong>2.4. Действия с персональными данными</strong></h5>
+<h4 class="legal-heading-3"><strong>2.4. Действия с персональными данными</strong></h4>
 <p>Я разрешаю Оператору осуществлять с моими персональными данными следующие действия:</p>
 <p>сбор;</p>
 <p>запись;</p>
@@ -1541,7 +1176,7 @@ const GEEKNOOK_DATA = {
 <p>удаление;</p>
 <p>уничтожение.</p>
 <p>Обработка может осуществляться с использованием средств автоматизации, без их использования либо смешанным способом.</p>
-<h5 class="legal-h5"><strong>2.5. Передача данных</strong></h5>
+<h4 class="legal-heading-3"><strong>2.5. Передача данных</strong></h4>
 <p>Я понимаю и соглашаюсь, что для достижения указанных целей Оператор при наличии соответствующего правового основания может поручать обработку данных другим лицам либо предоставлять им необходимые данные.</p>
 <p>К таким лицам могут относиться:</p>
 <p>службы доставки;</p>
@@ -1557,15 +1192,15 @@ const GEEKNOOK_DATA = {
 <p>сервисные и ремонтные организации;</p>
 <p>иные подрядчики, участие которых необходимо для соответствующей цели.</p>
 <p>Передаче подлежит только необходимый для соответствующей цели объем данных.</p>
-<h5 class="legal-h5"><strong>2.6. Срок действия Согласия</strong></h5>
+<h4 class="legal-heading-3"><strong>2.6. Срок действия Согласия</strong></h4>
 <p>Настоящее Согласие действует с момента его предоставления до достижения целей обработки или до его отзыва, если иной срок обработки не установлен законодательством, договором или иным законным основанием.</p>
 <p>После отзыва Согласия Оператор вправе продолжить обработку данных в случаях, когда для нее имеется другое предусмотренное законодательством основание.</p>
-<h5 class="legal-h5"><strong>2.7. Отзыв Согласия</strong></h5>
+<h4 class="legal-heading-3"><strong>2.7. Отзыв Согласия</strong></h4>
 <p>Я вправе отозвать настоящее Согласие, направив обращение на:</p>
 <p>info@geeknook.ru</p>
 <p>В обращении необходимо предоставить сведения, позволяющие Оператору идентифицировать заявителя и соответствующее взаимодействие.</p>
 <p>Отзыв Согласия не влияет на законность обработки, осуществленной до его получения Оператором.</p>
-<h5 class="legal-h5"><strong>2.8. Подтверждение</strong></h5>
+<h4 class="legal-heading-3"><strong>2.8. Подтверждение</strong></h4>
 <p>Предоставляя настоящее Согласие, я подтверждаю, что:</p>
 <p>действую свободно, своей волей и в своем интересе;</p>
 <p>предоставляю достоверные сведения;</p>
@@ -1573,19 +1208,19 @@ const GEEKNOOK_DATA = {
 <p>понимаю цели и условия обработки;</p>
 <p>понимаю возможность отзыва Согласия;</p>
 <p>понимаю, что настоящее Согласие не является согласием на получение рекламы.</p>
-<h4 class="legal-h4"><strong>3. Согласие на получение рекламных и информационных сообщений</strong></h4>
-<h5 class="legal-h5"><strong>3.1. Общие положения</strong></h5>
+<h3 class="legal-heading-2"><strong>3. Согласие на получение рекламных и информационных сообщений</strong></h3>
+<h4 class="legal-heading-3"><strong>3.1. Общие положения</strong></h4>
 <p>Проставляя отдельную отметку в поле «Я согласен получать рекламные и информационные сообщения» либо совершая иное предусмотренное интерфейсом сайта отдельное однозначное действие, я свободно, своей волей и в своем интересе даю:</p>
-<h3 class="legal-h3"><strong>ООО «ГИК НУК»</strong></h3>
-<h3 class="legal-h3">ИНН: 9723239478</h3>
-<h3 class="legal-h3">ОГРН: 1247700620265</h3>
+<h2 class="legal-heading-1"><strong>ООО «ГИК НУК»</strong></h2>
+<h2 class="legal-heading-1">ИНН: 9723239478</h2>
+<h2 class="legal-heading-1">ОГРН: 1247700620265</h2>
 <p>Адрес: 115193, г. Москва, ул. Петра Романова, д. 7, стр. 1, помещение 20/5</p>
 <p>Сайт:</p>
 <p>E-mail:</p>
 <p>согласие на получение рекламных, маркетинговых и информационных сообщений на условиях настоящего Согласия.</p>
 <p>Предоставление настоящего Согласия является добровольным и необязательным.</p>
 <p>Отказ от его предоставления не препятствует оформлению заказа, приобретению товара или использованию основных возможностей сайта, если соответствующая функция не связана непосредственно с подпиской на такие сообщения.</p>
-<h5 class="legal-h5"><strong>3.2. Содержание сообщений</strong></h5>
+<h4 class="legal-heading-3"><strong>3.2. Содержание сообщений</strong></h4>
 <p>Я соглашаюсь получать сообщения, которые могут содержать:</p>
 <p>новости GEEK NOOK;</p>
 <p>информацию о продукции GEEK NOOK;</p>
@@ -1603,17 +1238,17 @@ const GEEKNOOK_DATA = {
 <p>подборки товаров и материалов;</p>
 <p>рекомендации;</p>
 <p>иные рекламные, маркетинговые и информационные материалы GEEK NOOK.</p>
-<h5 class="legal-h5"><strong>3.3. Каналы коммуникации</strong></h5>
+<h4 class="legal-heading-3"><strong>3.3. Каналы коммуникации</strong></h4>
 <p>Сообщения могут направляться посредством тех контактных данных, которые я предоставил Оператору, в том числе посредством:</p>
 <p>электронной почты;</p>
-<h3 class="legal-h3">SMS;</h3>
+<h2 class="legal-heading-1">SMS;</h2>
 <p>телефонной связи;</p>
 <p>push-уведомлений;</p>
 <p>мессенджеров;</p>
 <p>сообщений в социальных сетях;</p>
 <p>иных электронных каналов связи, доступных Оператору и разрешенных законодательством.</p>
 <p>Использование конкретного канала зависит от предоставленных мной контактных данных, доступности соответствующего сервиса и моих настроек.</p>
-<h5 class="legal-h5"><strong>3.4. Персональные данные</strong></h5>
+<h4 class="legal-heading-3"><strong>3.4. Персональные данные</strong></h4>
 <p>Для осуществления рекламных и информационных коммуникаций могут обрабатываться:</p>
 <p>имя;</p>
 <p>номер телефона;</p>
@@ -1630,7 +1265,7 @@ const GEEKNOOK_DATA = {
 <p>использование промокодов;</p>
 <p>пользовательские предпочтения;</p>
 <p>технические идентификаторы, необходимые для соответствующего канала коммуникации.</p>
-<h5 class="legal-h5"><strong>3.5. Цели обработки</strong></h5>
+<h4 class="legal-heading-3"><strong>3.5. Цели обработки</strong></h4>
 <p>Персональные данные в рамках настоящего Согласия могут использоваться для:</p>
 <p>направления рекламных и информационных сообщений;</p>
 <p>информирования о продукции и предложениях GEEK NOOK;</p>
@@ -1641,7 +1276,7 @@ const GEEKNOOK_DATA = {
 <p>улучшения маркетинговых коммуникаций;</p>
 <p>проведения опросов и исследований;</p>
 <p>развития программ лояльности.</p>
-<h5 class="legal-h5"><strong>3.6. Персонализация сообщений</strong></h5>
+<h4 class="legal-heading-3"><strong>3.6. Персонализация сообщений</strong></h4>
 <p>При наличии необходимых правовых оснований содержание сообщений может адаптироваться с учетом:</p>
 <p>приобретенных товаров;</p>
 <p>просмотренных страниц и товаров;</p>
@@ -1651,7 +1286,7 @@ const GEEKNOOK_DATA = {
 <p>истории взаимодействия с сообщениями;</p>
 <p>указанных пользователем предпочтений.</p>
 <p>Такая информация может использоваться для того, чтобы не направлять пользователю заведомо нерелевантные предложения и лучше подбирать содержание коммуникаций.</p>
-<h5 class="legal-h5"><strong>3.7. Привлечение подрядчиков</strong></h5>
+<h4 class="legal-heading-3"><strong>3.7. Привлечение подрядчиков</strong></h4>
 <p>Для организации рассылок Оператор может использовать специализированные сервисы и подрядчиков, включая поставщиков:</p>
 <p>email-рассылок;</p>
 <p>SMS-сервисов;</p>
@@ -1661,9 +1296,9 @@ const GEEKNOOK_DATA = {
 <p>аналитических инструментов;</p>
 <p>иных коммуникационных и маркетинговых сервисов.</p>
 <p>Таким лицам предоставляется только необходимый для выполнения соответствующей задачи объем данных.</p>
-<h5 class="legal-h5"><strong>3.8. Срок действия Согласия</strong></h5>
+<h4 class="legal-heading-3"><strong>3.8. Срок действия Согласия</strong></h4>
 <p>Настоящее Согласие действует с момента его предоставления до его отзыва пользователем либо прекращения Оператором соответствующих коммуникаций.</p>
-<h5 class="legal-h5"><strong>3.9. Отказ от рекламных и информационных сообщений</strong></h5>
+<h4 class="legal-heading-3"><strong>3.9. Отказ от рекламных и информационных сообщений</strong></h4>
 <p>Я вправе в любое время отказаться от получения рекламных и маркетинговых сообщений.</p>
 <p>Это можно сделать:</p>
 <p>с помощью ссылки или функции отказа от подписки в сообщении;</p>
@@ -1671,7 +1306,7 @@ const GEEKNOOK_DATA = {
 <p>путем направления обращения на .</p>
 <p>После получения требования Оператор прекращает рекламные коммуникации в соответствии с требованиями законодательства.</p>
 <p>Отказ от рекламных и маркетинговых сообщений не препятствует получению сервисных сообщений, необходимых для исполнения заказа, договора, гарантийного обслуживания, обеспечения безопасности или обработки обращения.</p>
-<h5 class="legal-h5"><strong>3.10. Подтверждение пользователя</strong></h5>
+<h4 class="legal-heading-3"><strong>3.10. Подтверждение пользователя</strong></h4>
 <p>Предоставляя настоящее Согласие, я подтверждаю, что:</p>
 <p>предоставляю его добровольно;</p>
 <p>понимаю его содержание;</p>
@@ -1679,50 +1314,50 @@ const GEEKNOOK_DATA = {
 <p>понимаю, что могу отказаться от них в любое время;</p>
 <p>понимаю, что отказ от рекламных сообщений не влияет на возможность приобретать товары GEEK NOOK;</p>
 <p>ознакомлен(а) с Политикой в отношении обработки персональных данных.</p>
-<h4 class="legal-h4"><strong>4. Контактная информация</strong></h4>
+<h3 class="legal-heading-2"><strong>4. Контактная информация</strong></h3>
 <p>По вопросам, связанным с настоящими документами, обработкой персональных данных, отзывом согласий и реализацией прав субъекта персональных данных, можно обратиться к Оператору:</p>
-<h3 class="legal-h3"><strong>ООО «ГИК НУК»</strong></h3>
-<h3 class="legal-h3">ИНН: 9723239478</h3>
-<h3 class="legal-h3">ОГРН: 1247700620265</h3>
+<h2 class="legal-heading-1"><strong>ООО «ГИК НУК»</strong></h2>
+<h2 class="legal-heading-1">ИНН: 9723239478</h2>
+<h2 class="legal-heading-1">ОГРН: 1247700620265</h2>
 <p><strong>Адрес:</strong>
 115193, г. Москва, ул. Петра Романова, д. 7, стр. 1, помещение 20/5</p>
 <p><strong>Электронная почта:</strong></p>
 <p><strong>Сайт:</strong></p>
-<h4 class="legal-h4"><strong>5. Заключительные положения</strong></h4>
+<h3 class="legal-heading-2"><strong>5. Заключительные положения</strong></h3>
 <p>Актуальная редакция настоящих документов размещается на сайте geeknook.ru.</p>
 <p>Оператор вправе актуализировать документы в связи с изменением законодательства, развитием сайта, интернет-магазина, товаров, сервисов и процессов обработки персональных данных.</p>
 <p>Если изменение характера обработки требует получения нового согласия субъекта персональных данных, публикация новой редакции документа сама по себе не заменяет получение такого согласия.</p>
-<p><strong>Дата текущей редакции: 25 сентября 2026 года.</strong></p>`
-    },
-    terms: {
-      title: "Условия использования сайта",
-      content: `<h3 class="legal-h3"><strong>Условия использования сайта</strong></h3>
+<p><strong>Дата текущей редакции: 25 сентября 2026 года.</strong></p>
+    </section>
+
+    <section id="panel-terms" class="tab-panel" aria-labelledby="tab-terms">
+      <h2 class="legal-heading-1"><strong>Условия использования сайта</strong></h2>
 <p><strong>Редакция от «25» сентября 2026 г.</strong></p>
 <p>Настоящие Условия использования сайта (далее — «Условия») регулируют порядок использования сайта <strong>geeknook.ru</strong> (далее — «Сайт»), владельцем которого является ООО «ГИК НУК» (далее — «Владелец сайта»).</p>
 <p>Используя Сайт, Пользователь подтверждает, что ознакомился с настоящими Условиями, понимает их содержание и соглашается соблюдать их.</p>
 <p>Настоящие Условия регулируют использование Сайта. Условия приобретения товаров через Сайт регулируются отдельно Публичной офертой, размещённой на Сайте.</p>
-<h4 class="legal-h4"><strong>1. Общие положения</strong></h4>
+<h3 class="legal-heading-2"><strong>1. Общие положения</strong></h3>
 <p><strong>1.1.</strong> Сайт является интернет-ресурсом Geek Nook и предназначен для предоставления информации о товарах, представленных на Сайте, включая мебель, предметы интерьера, аксессуары и сопутствующие товары, а также для приобретения представленных на Сайте товаров.</p>
-<h5 class="legal-h5"><strong>1.2.</strong> Владельцем Сайта является:</h5>
+<h4 class="legal-heading-3"><strong>1.2.</strong> Владельцем Сайта является:</h4>
 <p>Общество с ограниченной ответственностью «ГИК НУК»
 (ООО «ГИК НУК»)
 ИНН 9723239478
 ОГРН 1247700620265.</p>
 <p><strong>1.3.</strong> Использование Сайта означает полное и безоговорочное принятие Пользователем настоящих Условий в той части, в которой они применимы к соответствующему способу использования Сайта.</p>
 <p>Если Пользователь не согласен с настоящими Условиями, он должен прекратить использование Сайта.</p>
-<h5 class="legal-h5"><strong>1.4.</strong> Настоящие Условия регулируют исключительно порядок использования Сайта.</h5>
+<h4 class="legal-heading-3"><strong>1.4.</strong> Настоящие Условия регулируют исключительно порядок использования Сайта.</h4>
 <p>Отношения, связанные с приобретением товаров через Сайт, включая порядок оформления заказа, оплаты, доставки, сборки (если применимо), возврата товаров и денежных средств, регулируются Публичной офертой, размещённой на Сайте, а также законодательством Российской Федерации.</p>
 <p><strong>1.5.</strong> Владелец сайта вправе изменять настоящие Условия. Новая редакция вступает в силу с момента её размещения на Сайте, если иной срок не указан непосредственно в новой редакции.</p>
 <p>Пользователю рекомендуется периодически знакомиться с актуальной редакцией Условий.</p>
 <p><strong>1.6.</strong> Продолжение использования Сайта после публикации новой редакции Условий означает согласие Пользователя с соответствующими изменениями.</p>
-<h4 class="legal-h4"><strong>2. Использование сайта</strong></h4>
+<h3 class="legal-heading-2"><strong>2. Использование сайта</strong></h3>
 <p><strong>2.1.</strong> Пользователь вправе использовать Сайт и размещённую на нём информацию исключительно законными способами и с соблюдением настоящих Условий и законодательства Российской Федерации.</p>
 <p><strong>2.2.</strong> Пользователь самостоятельно обеспечивает наличие оборудования, программного обеспечения и доступа к сети Интернет, необходимых для использования Сайта.</p>
 <p><strong>2.3.</strong> Пользователь обязуется не совершать действий, которые могут нарушить нормальную работу Сайта, его отдельных функций, программного обеспечения, серверов или иной инфраструктуры.</p>
 <p><strong>2.4.</strong> В случае использования функций Сайта, предусматривающих предоставление информации Пользователем, Пользователь обязан предоставлять достоверную и актуальную информацию.</p>
 <p><strong>2.5.</strong> Пользователь несёт ответственность за действия, совершаемые им при использовании Сайта, в соответствии с законодательством Российской Федерации.</p>
 <p><strong>2.6.</strong> Владелец сайта вправе изменять структуру, дизайн, содержание и функциональные возможности Сайта, добавлять, изменять или прекращать работу отдельных разделов и функций.</p>
-<h4 class="legal-h4"><strong>3. Запрещённые действия</strong></h4>
+<h3 class="legal-heading-2"><strong>3. Запрещённые действия</strong></h3>
 <p>При использовании Сайта запрещается:</p>
 <p><strong>3.1.</strong> предпринимать попытки получения несанкционированного доступа к Сайту, его программному обеспечению, серверам, информационным системам, базам данных и иным техническим ресурсам;</p>
 <p><strong>3.2.</strong> вмешиваться или пытаться вмешиваться в нормальное функционирование Сайта;</p>
@@ -1733,14 +1368,14 @@ const GEEKNOOK_DATA = {
 <p><strong>3.7.</strong> использовать Сайт для совершения действий, нарушающих законодательство Российской Федерации, права и законные интересы Владельца сайта или третьих лиц;</p>
 <p><strong>3.8.</strong> выдавать себя за Владельца сайта, Geek Nook, его представителей, сотрудников, партнёров или иных уполномоченных лиц без соответствующих полномочий;</p>
 <p><strong>3.9.</strong> использовать наименование, логотипы и иные средства индивидуализации Geek Nook способом, способным создать ложное представление о наличии коммерческой, договорной или иной связи с ООО «ГИК НУК».</p>
-<h4 class="legal-h4"><strong>4. Интеллектуальная собственность</strong></h4>
+<h3 class="legal-heading-2"><strong>4. Интеллектуальная собственность</strong></h3>
 <p><strong>4.1.</strong> Наименование Geek Nook, логотипы, фирменные обозначения, элементы фирменного стиля, дизайн Сайта, тексты, фотографии, изображения товаров, иллюстрации, графические и видеоматериалы, а также иные результаты интеллектуальной деятельности и средства индивидуализации, размещённые на Сайте, охраняются законодательством Российской Федерации и применимыми международными нормами.</p>
 <p>Исключительные права на соответствующие объекты принадлежат ООО «ГИК НУК» либо иным правообладателям, предоставившим законные основания для их использования.</p>
 <p><strong>4.2.</strong> Размещение объектов интеллектуальной собственности на Сайте не означает передачу Пользователю каких-либо исключительных прав или предоставление лицензии на их использование, если иное прямо не предусмотрено настоящими Условиями, отдельным соглашением или законодательством Российской Федерации.</p>
 <p><strong>4.3.</strong> Пользователь вправе просматривать материалы Сайта и использовать их исключительно в личных некоммерческих целях при условии сохранения обозначений авторства и иных уведомлений о правах, если иное не предусмотрено законодательством Российской Федерации.</p>
 <p><strong>4.4.</strong> Без предварительного письменного разрешения соответствующего правообладателя запрещается полностью или частично копировать, воспроизводить, изменять, перерабатывать, распространять, публиковать, размещать на других ресурсах или иным способом использовать охраняемые материалы Сайта в коммерческих целях, за исключением случаев, прямо предусмотренных законодательством Российской Федерации.</p>
 <p><strong>4.5.</strong> Незаконное использование материалов Сайта и иных объектов интеллектуальной собственности может повлечь ответственность, предусмотренную законодательством Российской Федерации.</p>
-<h4 class="legal-h4"><strong>5. Информация о товарах</strong></h4>
+<h3 class="legal-heading-2"><strong>5. Информация о товарах</strong></h3>
 <p><strong>5.1.</strong> Владелец сайта принимает разумные меры для обеспечения актуальности и достоверности информации, размещённой на Сайте.</p>
 <p><strong>5.2.</strong> Представленные на Сайте фотографии, изображения и иные визуальные материалы предназначены для ознакомления с товарами. Фактический внешний вид товара может незначительно отличаться от его изображения на Сайте.</p>
 <p>В частности, восприятие цвета, оттенка, текстуры и фактуры материалов может зависеть от освещения при фотосъёмке, настроек и характеристик экрана Пользователя, а также особенностей используемых материалов.</p>
@@ -1751,284 +1386,254 @@ const GEEKNOOK_DATA = {
 <p><strong>5.6.</strong> Информация о ценах, наличии товаров, вариантах исполнения, специальных предложениях, сроках и условиях продажи может изменяться.</p>
 <p>Условия приобретения товаров определяются Публичной офертой и информацией, предоставленной Пользователю при оформлении заказа.</p>
 <p><strong>5.7.</strong> Материалы информационного, обзорного или рекламного характера сами по себе не являются публичной офертой, если из содержания соответствующего материала или законодательства Российской Федерации не следует иное.</p>
-<h4 class="legal-h4"><strong>6. Сторонние сайты и сервисы</strong></h4>
-<h5 class="legal-h5"><strong>6.1.</strong> Сайт может содержать ссылки на сайты и иные интернет-ресурсы третьих лиц.</h5>
+<h3 class="legal-heading-2"><strong>6. Сторонние сайты и сервисы</strong></h3>
+<h4 class="legal-heading-3"><strong>6.1.</strong> Сайт может содержать ссылки на сайты и иные интернет-ресурсы третьих лиц.</h4>
 <p>Такие ссылки предоставляются для удобства Пользователей и сами по себе не означают одобрения Владельцем сайта соответствующих ресурсов, их содержания, товаров или услуг.</p>
 <p><strong>6.2.</strong> Владелец сайта не контролирует содержание и работу сторонних ресурсов и не несёт ответственности за их содержание и функционирование в пределах, допускаемых законодательством Российской Федерации.</p>
 <p><strong>6.3.</strong> Использование сторонних сайтов и сервисов регулируется правилами, политиками и соглашениями соответствующих третьих лиц.</p>
-<h4 class="legal-h4"><strong>7. Ограничение ответственности</strong></h4>
+<h3 class="legal-heading-2"><strong>7. Ограничение ответственности</strong></h3>
 <p><strong>7.1.</strong> Владелец сайта стремится обеспечивать стабильную и безопасную работу Сайта, однако не гарантирует его непрерывную и безошибочную работу во всех случаях.</p>
 <p><strong>7.2.</strong> Работа Сайта может временно ограничиваться или приостанавливаться для проведения технического обслуживания, обновления, устранения неисправностей либо по причинам, не зависящим от Владельца сайта.</p>
 <p><strong>7.3.</strong> Владелец сайта не несёт ответственности за невозможность использования Сайта, вызванную неисправностью оборудования или программного обеспечения Пользователя, работой операторов связи, интернет-провайдеров, сторонних сервисов либо иными обстоятельствами, находящимися вне разумного контроля Владельца сайта.</p>
 <p><strong>7.4.</strong> Пользователь самостоятельно оценивает применимость размещённой на Сайте информации для своих целей, если иное прямо не предусмотрено законодательством Российской Федерации.</p>
 <p><strong>7.5.</strong> Никакое положение настоящих Условий не ограничивает и не исключает ответственность Владельца сайта в случаях, когда такое ограничение или исключение ответственности не допускается законодательством Российской Федерации.</p>
 <p><strong>7.6.</strong> Положения настоящего раздела не ограничивают права потребителей, установленные законодательством Российской Федерации.</p>
-<h4 class="legal-h4"><strong>8. Персональные данные и файлы </strong><strong>cookie</strong></h4>
+<h3 class="legal-heading-2"><strong>8. Персональные данные и файлы </strong><strong>cookie</strong></h3>
 <p><strong>8.1.</strong> Обработка персональных данных Пользователей осуществляется в соответствии с законодательством Российской Федерации и Политикой в отношении обработки персональных данных, размещённой на Сайте.</p>
 <p><strong>8.2.</strong> Сайт может использовать файлы cookie и аналогичные технологии для обеспечения своей работы, сохранения пользовательских настроек, анализа использования Сайта и иных целей, указанных в соответствующих документах и уведомлениях Сайта.</p>
 <p><strong>8.3.</strong> Информация о порядке использования файлов cookie, целях их применения и доступных Пользователю настройках приводится в соответствующей политике или уведомлении на Сайте.</p>
 <p><strong>8.4.</strong> Настоящие Условия сами по себе не являются согласием Пользователя на обработку персональных данных в случаях, когда в соответствии с законодательством Российской Федерации требуется получение отдельного согласия.</p>
-<h4 class="legal-h4"><strong>9. Изменение и прекращение работы сайта</strong></h4>
-<h5 class="legal-h5"><strong>9.1.</strong> Владелец сайта вправе развивать и изменять Сайт, его структуру, дизайн, содержание и функциональные возможности.</h5>
-<h5 class="legal-h5"><strong>9.2.</strong> Отдельные функции, разделы или материалы Сайта могут быть изменены, временно приостановлены или удалены.</h5>
+<h3 class="legal-heading-2"><strong>9. Изменение и прекращение работы сайта</strong></h3>
+<h4 class="legal-heading-3"><strong>9.1.</strong> Владелец сайта вправе развивать и изменять Сайт, его структуру, дизайн, содержание и функциональные возможности.</h4>
+<h4 class="legal-heading-3"><strong>9.2.</strong> Отдельные функции, разделы или материалы Сайта могут быть изменены, временно приостановлены или удалены.</h4>
 <p><strong>9.3.</strong> Владелец сайта вправе ограничить доступ Пользователя к Сайту или его отдельным функциям в случае нарушения настоящих Условий, законодательства Российской Федерации, прав Владельца сайта или третьих лиц, если такое ограничение технически возможно и соответствует законодательству Российской Федерации.</p>
-<h4 class="legal-h4"><strong>10. Заключительные положения</strong></h4>
-<h5 class="legal-h5"><strong>10.1.</strong> Настоящие Условия регулируются и толкуются в соответствии с законодательством Российской Федерации.</h5>
+<h3 class="legal-heading-2"><strong>10. Заключительные положения</strong></h3>
+<h4 class="legal-heading-3"><strong>10.1.</strong> Настоящие Условия регулируются и толкуются в соответствии с законодательством Российской Федерации.</h4>
 <p><strong>10.2.</strong> К отношениям между Владельцем сайта и Пользователем применяется законодательство Российской Федерации с учётом обязательных норм законодательства о защите прав потребителей и иных норм, применение которых не может быть исключено соглашением сторон.</p>
 <p><strong>10.3.</strong> Возникающие в связи с использованием Сайта споры разрешаются в порядке, установленном законодательством Российской Федерации.</p>
 <p><strong>10.4.</strong> Если какое-либо положение настоящих Условий будет признано недействительным или неприменимым, это не влечёт недействительности остальных положений Условий.</p>
 <p><strong>10.5.</strong> Неприменение Владельцем сайта какого-либо положения настоящих Условий в конкретном случае не означает отказа от права применять соответствующее положение в дальнейшем.</p>
-<h5 class="legal-h5"><strong>10.6.</strong> Актуальная редакция настоящих Условий постоянно доступна на Сайте.</h5>
-<h4 class="legal-h4"><strong>11. Контактная информация</strong></h4>
+<h4 class="legal-heading-3"><strong>10.6.</strong> Актуальная редакция настоящих Условий постоянно доступна на Сайте.</h4>
+<h3 class="legal-heading-2"><strong>11. Контактная информация</strong></h3>
 <p>По вопросам, связанным с использованием Сайта, Пользователь может обратиться к Владельцу сайта:</p>
 <p><strong>ООО «ГИК НУК»</strong>
 ИНН: 9723239478
 ОГРН: 1247700620265
 Юридический адрес: 115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5
 Сайт: geeknook.ru
-E-mail:</p>`
-    },
-    requisites: {
-      title: "Реквизиты продавца",
-      content: `
+E-mail:</p>
+    </section>
+
+    <section id="panel-requisites" class="tab-panel" aria-labelledby="tab-requisites">
+      
 <div class="requisites-card">
-  <h3 class="legal-h3">Сведения о Продавце и официальные реквизиты</h3>
-  <div class="requisites-grid" style="display:grid;gap:10px;margin-top:16px;">
-    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Полное наименование:</strong> Общество с ограниченной ответственностью «ГИК НУК»</div>
-    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Сокращенное наименование:</strong> ООО «ГИК НУК»</div>
-    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>ОГРН:</strong> 1247700620265</div>
-    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>ИНН:</strong> 9723239478 | <strong>КПП:</strong> 772301001</div>
-    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Юридический адрес:</strong> 115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5</div>
-    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Официальный сайт:</strong> <a href="https://geeknook.ru" target="_blank" style="color:#d4af37;">https://geeknook.ru</a></div>
-    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Электронная почта:</strong> <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a></div>
-    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Telegram-поддержка:</strong> <a href="https://t.me/geeknook" target="_blank" style="color:#d4af37;">@geeknook</a></div>
+  <h2 class="legal-heading-1">Сведения о Продавце и официальные реквизиты</h2>
+  <div class="requisites-grid">
+    <div class="req-item">
+      <span class="req-label">Полное наименование:</span>
+      <span class="req-val">Общество с ограниченной ответственностью «ГИК НУК»</span>
+    </div>
+    <div class="req-item">
+      <span class="req-label">Сокращенное наименование:</span>
+      <span class="req-val">ООО «ГИК НУК»</span>
+    </div>
+    <div class="req-item">
+      <span class="req-label">ОГРН:</span>
+      <span class="req-val">1247700620265</span>
+    </div>
+    <div class="req-item">
+      <span class="req-label">ИНН:</span>
+      <span class="req-val">9723239478</span>
+    </div>
+    <div class="req-item">
+      <span class="req-label">КПП:</span>
+      <span class="req-val">772301001</span>
+    </div>
+    <div class="req-item">
+      <span class="req-label">Юридический адрес:</span>
+      <span class="req-val">115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5</span>
+    </div>
+    <div class="req-item">
+      <span class="req-label">Официальный сайт:</span>
+      <span class="req-val"><a href="https://geeknook.ru" target="_blank" style="color:#d4af37;">https://geeknook.ru</a></span>
+    </div>
+    <div class="req-item">
+      <span class="req-label">Электронная почта:</span>
+      <span class="req-val"><a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a></span>
+    </div>
+    <div class="req-item">
+      <span class="req-label">Служба заботы о клиентах:</span>
+      <span class="req-val"><a href="https://t.me/geeknook" target="_blank" style="color:#d4af37;">@geeknook в Telegram</a></span>
+    </div>
+    <div class="req-item">
+      <span class="req-label">Режим работы:</span>
+      <span class="req-val">Пн–Вс с 10:00 до 20:00 (МСК)</span>
+    </div>
   </div>
 </div>
-`
-    },
-    certification: {
-      title: "Сертификация и отказное письмо",
-      content: `
+
+    </section>
+
+    <section id="panel-delivery" class="tab-panel" aria-labelledby="tab-delivery">
+      
+<div class="delivery-card">
+  <h2 class="legal-heading-1">Условия доставки и оплаты заказов GEEK NOOK</h2>
+  <h3 class="legal-heading-2">1. Доставка логистической службой СДЭК</h3>
+  <p>Мы доставляем заказы по всей территории Российской Федерации и в страны ЕАЭС с помощью надежного логистического партнера — компании СДЭК.</p>
+  <ul>
+    <li><strong>Пункты выдачи (ПВЗ):</strong> Вы можете выбрать любой удобный ПВЗ СДЭК в вашем городе. При оформлении заказа на сайте работает интерактивный выбор и поиск пунктов.</li>
+    <li><strong>Срок комплектации:</strong> 1–2 рабочих дня с момента оформления заказа.</li>
+    <li><strong>Сроки доставки:</strong> Москва и Московская область — 1–2 рабочих дня; Центральная Россия и Санкт-Петербург — 2–3 дня; Регионы РФ — от 3 до 6 дней в зависимости от удаленности.</li>
+    <li><strong>Хранение в ПВЗ:</strong> Заказ бесплатно хранится в пункте выдачи СДЭК в течение 7 календарных дней.</li>
+    <li><strong>Трекинг:</strong> Сразу после передачи заказа на склад СДЭК покупатель получает трек-номер для отслеживания на сайте cdek.ru и в мобильном приложении.</li>
+  </ul>
+
+  <h3 class="legal-heading-2">2. Способы оплаты</h3>
+  <p>В магазине GEEK NOOK расчеты организованы с максимальной безопасностью для покупателя:</p>
+  <ul>
+    <li><strong>Оплата при получении в СДЭК (Наложенный платеж):</strong> Вы оплачиваете заказ непосредственно при получении в пункте выдачи СДЭК после осмотра целостности посылки. Доступны оплата банковской картой любого банка РФ, наличными или по QR-коду СБП через терминал СДЭК. Кассовый чек формируется и выдается оператором СДЭК в соответствии с 54-ФЗ.</li>
+    <li><strong>Онлайн-оплата через CDEK Pay:</strong> Безопасная моментальная оплата через платежную систему СДЭК с моментальной фискализацией чека.</li>
+    <li><strong>Безналичный расчет для юридических лиц (B2B):</strong> Выставление счета с предоставлением полного комплекта закрывающих документов (УПД). Запросы принимаются на <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a>.</li>
+  </ul>
+</div>
+
+    </section>
+
+    <section id="panel-warranty" class="tab-panel" aria-labelledby="tab-warranty">
+      
+<div class="warranty-card">
+  <h2 class="legal-heading-1">Гарантийные обязательства и правила возврата</h2>
+  <h3 class="legal-heading-2">1. Сроки гарантии производителя</h3>
+  <ul>
+    <li><strong>На подставки Focus Station и аксессуары из дерева/металла:</strong> 12 месяцев со дня получения заказа.</li>
+    <li><strong>На настольные коврики и изделия из текстиля/кожи:</strong> 3 месяца со дня получения.</li>
+  </ul>
+
+  <h3 class="legal-heading-2">2. Возврат товара надлежащего качества (ст. 26.1 ЗоЗПП)</h3>
+  <p>Покупатель вправе отказаться от товара в любое время до его передачи, а после передачи — в течение <strong>7 дней</strong> (а при обращении в поддержку GEEK NOOK — в течение <strong>14 календарных дней</strong> по программе клиентского сервиса).</p>
+  <ul>
+    <li>Товар не был в употреблении, сохранены его товарный вид, потребительские свойства, оригинальная упаковка и защитные элементы.</li>
+    <li>Возврат осуществляется через службу доставки СДЭК. По закону расходы по обратной пересылке качественного товара возлагаются на покупателя.</li>
+    <li>Возврат денежных средств осуществляется в течение 10 рабочих дней с момента поступления и проверки товара на складе продавца.</li>
+  </ul>
+
+  <h3 class="legal-heading-2">3. Возврат при обнаружении производственного брака</h3>
+  <p>В случае обнаружения производственного дефекта свяжитесь со службой заботы по почте <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a> или в Telegram <a href="https://t.me/geeknook" target="_blank" style="color:#d4af37;">@geeknook</a> с фотографиями изделия. При подтверждении брака замена изделия или полный возврат средств (включая все транспортные расходы) производится за счет продавца.</p>
+</div>
+
+    </section>
+
+    <section id="panel-certification" class="tab-panel" aria-labelledby="tab-certification">
+      
 <div class="certification-card">
-  <h3 class="legal-h3">Сертификация продукции и Отказное письмо</h3>
-  <div style="background:rgba(203,168,112,0.1);border:1px solid rgba(203,168,112,0.3);padding:14px 18px;border-radius:8px;margin-bottom:18px;color:#e0be86;">
+  <h2 class="legal-heading-1">Сертификация и Отказное письмо</h2>
+  <div class="cert-alert">
     <strong>Официальное правовое заключение:</strong> Продукция торговой марки GEEK NOOK не подлежит обязательной сертификации и декларированию на территории РФ и стран ЕАЭС.
   </div>
-  <p>1. <strong>ТР ТС 025/2012 «О безопасности мебельной продукции»:</strong> Регламент регулирует бытовую мебель (столы, стулья, шкафы, кровати). Настольные подставки-органайзеры под монитор Focus Station 85 / 116, подставки для наушников и органайзеры относятся к настольным аксессуарам для оргтехники и не являются мебелью по смыслу ТР ТС 025/2012.</p>
-  <p>2. <strong>Постановление Правительства РФ № 2425 от 23.12.2021 г.:</strong> Настольные деревянные подставки под монитор, органайзеры из массива дерева и аксессуары отсутствуют в Единых перечнях продукции, подлежащей обязательной сертификации и декларированию соответствия.</p>
-  <p>3. <strong>Коды ТН ВЭД ЕАЭС:</strong> <code>4421 99 990 0</code> (подставки Focus Station, органайзеры), <code>7616 99 900 8</code> (подставки под наушники), <code>6307 90 980 0</code> / <code>4205 00 900 0</code> (настольные коврики).</p>
-  <p>4. <strong>Коды ОКПД 2:</strong> <code>16.29.14.190</code>, <code>25.99.29.190</code>, <code>13.99.19.190</code>.</p>
-  <div style="margin-top:16px;">
-    <a href="Информационное_письмо_о_сертификации_ООО_ГИК_НУК.docx" download class="btn-hero-primary" style="display:inline-flex;align-items:center;padding:10px 18px;font-size:0.9rem;text-decoration:none;border-radius:6px;background:#cba870;color:#000;font-weight:600;">
-      Скачать официальное информационное письмо (.docx)
+  
+  <h3 class="legal-heading-2">Нормативно-правовое обоснование</h3>
+  <p>1. <strong>ТР ТС 025/2012 «О безопасности мебельной продукции»:</strong> Регламент распространяется на корпусную и мягкую мебель для сидения и лежания. Настольные подставки под мониторы и ноутбуки серии Focus Station, органайзеры и держатели наушников относятся к настольным аксессуарам для оргтехники и не являются мебелью по смыслу ТР ТС 025/2012.</p>
+  <p>2. <strong>Постановление Правительства РФ № 2425 от 23.12.2021 г.:</strong> Настольные подставки под монитор, органайзеры из массива дерева и аксессуары отсутствуют в Единых перечнях продукции, подлежащей обязательной сертификации и декларированию соответствия.</p>
+  <p>3. <strong>ТР ТС 004/2011 и ТР ТС 020/2011:</strong> Продукция является пассивной, не содержит встроенных электросетей свыше 50 В и активных радиоэлектронных компонентов.</p>
+
+  <h3 class="legal-heading-2">Классификационные коды ТН ВЭД и ОКПД 2</h3>
+  <div style="overflow-x:auto;">
+    <table class="legal-table">
+      <thead>
+        <tr>
+          <th>Продукция</th>
+          <th>ТН ВЭД ЕАЭС</th>
+          <th>ОКПД 2</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Настольные подставки Focus Station 85 / 116 (массив дуба/ореха)</td>
+          <td><code>4421 99 990 0</code></td>
+          <td><code>16.29.14.190</code></td>
+        </tr>
+        <tr>
+          <td>Подставки и держатели для наушников (металл / дерево)</td>
+          <td><code>7616 99 900 8</code></td>
+          <td><code>25.99.29.190</code></td>
+        </tr>
+        <tr>
+          <td>Настольные органайзеры и лотки для канцелярии</td>
+          <td><code>4421 99 990 0</code></td>
+          <td><code>16.29.14.190</code></td>
+        </tr>
+        <tr>
+          <td>Настольные защитные коврики (войлок / фетр / кожа)</td>
+          <td><code>6307 90 980 0</code></td>
+          <td><code>13.99.19.190</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
+    <a href="Информационное_письмо_о_сертификации_ООО_ГИК_НУК.docx" download class="legal-btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      Скачать официальное письмо (.docx)
     </a>
   </div>
 </div>
-`
-    },
-    delivery: {
-      title: "Доставка и оплата",
-      content: `
-<h3>Условия доставки по всей России</h3>
-<p>Мы доставляем заказы логистической службой СДЭК до двери или в пункты выдачи заказов (ПВЗ) по всей России и странам ЕАЭС.</p>
-<ul>
-  <li><strong>Пункты выдачи (ПВЗ СДЭК):</strong> Доступен интерактивный выбор любого удобного ПВЗ при заказе.</li>
-  <li><strong>Сроки отправки:</strong> 1–2 рабочих дня с момента подтверждения заказа.</li>
-  <li><strong>Сроки в пути:</strong> Москва и МО — 1–2 дня; Центральная Россия — 2–4 дня; Сибирь, Урал, Дальний Восток — 3–7 дней.</li>
-  <li><strong>Хранение в ПВЗ:</strong> 7 календарных дней бесплатно.</li>
-  <li><strong>Отслеживание:</strong> Трек-номер высылается сразу после формирования накладной.</li>
-</ul>
-<h3>Способы оплаты</h3>
-<ul>
-  <li><strong>Оплата при получении в СДЭК (наложенный платёж):</strong> Оплата картой любого банка РФ, наличными или по QR-коду СБП в терминале ПВЗ СДЭК после осмотра посылки. Кассовый чек выдается оператором СДЭК в соответствии с 54-ФЗ.</li>
-  <li><strong>Онлайн-оплата через CDEK Pay:</strong> Моментальная безопасная оплата через платёжную систему СДЭК.</li>
-  <li><strong>Безналичный расчет для юрлиц (B2B):</strong> Выставление счёта с закрывающими документами УПД.</li>
-</ul>
-`
-    },
-    warranty: {
-      title: "Гарантия и условия возврата",
-      content: `
-<h3>Официальная гарантия производителя</h3>
-<ul>
-  <li><strong>12 месяцев:</strong> На подставки серии Focus Station 85 / 116, деревянные аксессуары и металлические кронштейны со дня получения.</li>
-  <li><strong>3 месяца:</strong> На коврики для стола из войлока, натуральной кожи и экокожи.</li>
-</ul>
-<p>В случае обнаружения производственного дефекта мы бесплатно заменим поврежденный модуль или полностью изделие за наш счёт, включая доставку.</p>
-<h3>Возврат товара надлежащего качества (ст. 26.1 ЗоЗПП)</h3>
-<p>Покупатель вправе отказаться от товара в любое время до его передачи, а после передачи — в течение <strong>7 дней</strong> (а по программе лояльности GeekNook — до <strong>14 дней</strong>) при сохранении товарного вида, упаковки и потребительских свойств. Возврат средств производится в течение 10 рабочих дней.</p>
-`
-    }
-  },
 
-  // --- 13.
-  // --- 13. ГОТОВЫЕ ИНЖЕНЕРНЫЕ КОМПЛЕКТЫ (BUNDLES) ---
-  bundles: [
-    {
-      id: "bundle-developer-pro",
-      title: "Developer Pro Setup",
-      subtitle: "Флагманский комплект для инженеров, архитекторов кода и создателей IT-продуктов.",
-      badge: "Выбор разработчиков • -15%",
-      oldPrice: 35460,
-      price: 29990,
-      sku: "GN-BDL-001",
-      part: "G4N-BDL-DEV01",
-      savings: "Экономия 5 470 ₽",
-      image: "images/tild3763-3337-4662-b233-616531316364__3.jpg",
-      items: [
-        "Focus Station 85 (Массив дуба, 85 × 9 × 23 см)",
-        "Держатель ноутбука Laptop Stand Closed",
-        "Кронштейн для наушников Headphone Stand",
-        "Шерстяной коврик Desk Mat Dark (80×35 см)"
-      ],
-      productIds: ["focus-station-oak", "laptop-closed", "headphone-stand", "desk-mat-dark"]
-    },
-    {
-      id: "bundle-creator-studio",
-      title: "Creator Studio Suite",
-      subtitle: "Увеличенное рабочее поле для 3D-моделирования, видеомонтажа и дизайна.",
-      badge: "Для творчества • -12%",
-      oldPrice: 42470,
-      price: 36990,
-      sku: "GN-BDL-002",
-      part: "G4N-BDL-CSS02",
-      savings: "Экономия 5 480 ₽",
-      image: "images/tild6138-3463-4138-b133-323262633039__2.jpg",
-      items: [
-        "Focus Station 116 (Американский орех, 116 × 9 × 23 см)",
-        "Держатель ноутбука Laptop Stand Open",
-        "Подвесная полка Mac Studio / Mini Shelf",
-        "Увеличенный коврик Desk Mat XL (90×43 см)"
-      ],
-      productIds: ["focus-station-walnut", "laptop-open", "mac-shelf", "desk-mat-xl"]
-    },
-    {
-      id: "bundle-minimalist-focus",
-      title: "Minimalist Focus",
-      subtitle: "Чистая эстетика и тактильный комфорт для компактных рабочих мест.",
-      badge: "Минимализм • -10%",
-      oldPrice: 22470,
-      price: 19990,
-      sku: "GN-BDL-003",
-      part: "G4N-BDL-MIN03",
-      savings: "Экономия 2 480 ₽",
-      image: "images/tild3136-6262-4465-a663-376665626135__photo.jpg",
-      items: [
-        "Focus Station 85 (Светлый дуб, 85 × 9 × 23 см)",
-        "Док-станция для телефона Phone Dock",
-        "Скрытый органайзер проводов Cable Organizer",
-        "Светлый коврик Desk Mat Light (80×30 см)"
-      ],
-      productIds: ["focus-station-oak", "phone-dock", "cable-organizer", "desk-mat-light"]
-    }
-  ]
-};
+    </section>
 
-// Flatten all products for fast ID lookup across cart, quick view, etc.
-// Include legacy aliases (focus-station-900, focus-board-600, focus-station-1200) for seamless backwards compatibility
-const legacyAliases = [
-  { ...GEEKNOOK_DATA.boards[0], id: "focus-station-1200" },
-  { ...GEEKNOOK_DATA.boards[1], id: "focus-board-600" },
-  { ...GEEKNOOK_DATA.boards[2], id: "focus-station-900" }
-];
+    <footer class="legal-footer">
+      <p>© 2026 ООО «ГИК НУК» (ИНН 9723239478, ОГРН 1247700620265). Все права защищены.</p>
+      <p style="margin-top:6px;">Сайт: <a href="https://geeknook.ru">https://geeknook.ru</a> | Вопросы и обращения: <a href="mailto:info@geeknook.ru">info@geeknook.ru</a></p>
+    </footer>
+  </main>
 
-GEEKNOOK_DATA.allProducts = [
-  ...GEEKNOOK_DATA.boards,
-  ...legacyAliases,
-  ...GEEKNOOK_DATA.accessories,
-  ...GEEKNOOK_DATA.mats
-];
+  <script>
+    function switchTab(tabId) {
+      const validTabs = ['offer', 'privacy', 'terms', 'requisites', 'delivery', 'warranty', 'certification'];
+      if (!validTabs.includes(tabId)) tabId = 'offer';
 
-if (typeof window !== 'undefined') {
-  window.GEEKNOOK_DATA = GEEKNOOK_DATA;
-}
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = GEEKNOOK_DATA;
-}
-
-// --- CDN & HEADLESS TILDA ASSET NORMALIZER ---
-(function normalizeGeekNookAssetUrls() {
-  const isExternalHost = typeof window !== 'undefined' && 
-    window.location.hostname !== 'localhost' && 
-    window.location.hostname !== '127.0.0.1' && 
-    window.location.protocol !== 'file:';
-  
-  const cdn = (typeof window !== 'undefined' && window.GEEKNOOK_CDN_URL) 
-    ? window.GEEKNOOK_CDN_URL 
-    : (isExternalHost ? 'https://ggrk52.github.io/geeknook-web/' : '');
-
-  if (typeof window !== 'undefined') {
-    window.GEEKNOOK_CDN_URL = cdn;
-  }
-
-  const prefix = (url) => {
-    if (!url || typeof url !== 'string') return url;
-    if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) return url;
-    if (!cdn) return url;
-    const cleanUrl = url.replace(/^\.?\//, '');
-    return cdn.endsWith('/') ? cdn + cleanUrl : cdn + '/' + cleanUrl;
-  };
-
-  if (typeof window !== 'undefined') {
-    window.getGeekNookAssetUrl = prefix;
-  }
-
-  if (!cdn) return;
-
-  // 1. Catalog Products
-  ['boards', 'accessories', 'mats'].forEach(cat => {
-    if (Array.isArray(GEEKNOOK_DATA[cat])) {
-      GEEKNOOK_DATA[cat].forEach(p => {
-        if (p.images && Array.isArray(p.images)) {
-          p.images = p.images.map(prefix);
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        if (btn.getAttribute('data-tab') === tabId) {
+          btn.classList.add('active');
+          btn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        } else {
+          btn.classList.remove('active');
         }
-        if (p.image) p.image = prefix(p.image);
+      });
+
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        if (panel.id === 'panel-' + tabId) {
+          panel.classList.add('active');
+        } else {
+          panel.classList.remove('active');
+        }
+      });
+
+      history.replaceState(null, '', '#' + tabId);
+    }
+
+    function copyCurrentLink() {
+      navigator.clipboard.writeText(window.location.href).then(() => {
+        const el = document.getElementById('copyLinkText');
+        const old = el.innerText;
+        el.innerText = 'Ссылка скопирована!';
+        setTimeout(() => { el.innerText = old; }, 2000);
       });
     }
-  });
 
-  if (Array.isArray(GEEKNOOK_DATA.allProducts)) {
-    GEEKNOOK_DATA.allProducts.forEach(p => {
-      if (p.images && Array.isArray(p.images)) {
-        p.images = p.images.map(prefix);
+    window.addEventListener('DOMContentLoaded', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        switchTab(hash);
       }
-      if (p.image) p.image = prefix(p.image);
     });
-  }
 
-  // 2. 3D Configurator Finishes & Addons
-  if (GEEKNOOK_DATA.configurator) {
-    if (Array.isArray(GEEKNOOK_DATA.configurator.finishes)) {
-      GEEKNOOK_DATA.configurator.finishes.forEach(f => { if (f.img) f.img = prefix(f.img); });
-    }
-    if (Array.isArray(GEEKNOOK_DATA.configurator.addons)) {
-      GEEKNOOK_DATA.configurator.addons.forEach(a => { if (a.img) a.img = prefix(a.img); });
-    }
-  }
-
-  // 3. Bundles
-  if (Array.isArray(GEEKNOOK_DATA.bundles)) {
-    GEEKNOOK_DATA.bundles.forEach(b => { if (b.image) b.image = prefix(b.image); });
-  }
-
-  // 4. Articles
-  if (Array.isArray(GEEKNOOK_DATA.articles)) {
-    GEEKNOOK_DATA.articles.forEach(a => { if (a.image) a.image = prefix(a.image); });
-  }
-
-  // 5. Gallery
-  if (Array.isArray(GEEKNOOK_DATA.gallery)) {
-    GEEKNOOK_DATA.gallery.forEach(g => { if (g.src) g.src = prefix(g.src); });
-  }
-
-  // 6. Client Setups
-  if (Array.isArray(GEEKNOOK_DATA.clientSetups)) {
-    GEEKNOOK_DATA.clientSetups.forEach(s => { if (s.src) s.src = prefix(s.src); });
-  }
-
-  // 7. Production Photos
-  if (GEEKNOOK_DATA.production && Array.isArray(GEEKNOOK_DATA.production.photos)) {
-    GEEKNOOK_DATA.production.photos.forEach(p => { if (p.src) p.src = prefix(p.src); });
-  }
-})();
-
+    window.addEventListener('hashchange', () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        switchTab(hash);
+      }
+    });
+  </script>
+</body>
+</html>
