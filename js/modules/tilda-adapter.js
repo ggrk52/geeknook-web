@@ -393,6 +393,46 @@
     setInterval(ensureRussianButtonText, 300);
     ensureRussianButtonText();
 
+    // --- 10. SETUP CDEK PAYMENT OPTIONS LABELS ---
+    function setupCdekPaymentLabels() {
+      const pmGroup = document.querySelector('.t706__orderform .t-input-group_pm, .t-input-group_pm');
+      if (!pmGroup) return;
+
+      const labels = pmGroup.querySelectorAll('.t-radio__control');
+      if (labels.length >= 2) {
+        const r1 = labels[0];
+        const r2 = labels[1];
+
+        if (!r1.dataset.cdekRenamed) {
+          r1.dataset.cdekRenamed = 'true';
+          const indicator = r1.querySelector('.t-radio__indicator');
+          const input = r1.querySelector('input');
+          r1.innerHTML = '';
+          if (input) r1.appendChild(input);
+          if (indicator) r1.appendChild(indicator);
+          const span = document.createElement('span');
+          span.style.cssText = 'color: #ffffff; font-weight: 500; font-size: 13px; line-height: 1.4; display: block;';
+          span.innerHTML = '<strong>Оплата в СДЭК при получении</strong><br><span style="color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 400;">Картой или наличными в пункте выдачи после проверки товара</span>';
+          r1.appendChild(span);
+        }
+
+        if (!r2.dataset.cdekRenamed) {
+          r2.dataset.cdekRenamed = 'true';
+          const indicator = r2.querySelector('.t-radio__indicator');
+          const input = r2.querySelector('input');
+          r2.innerHTML = '';
+          if (input) r2.appendChild(input);
+          if (indicator) r2.appendChild(indicator);
+          const span = document.createElement('span');
+          span.style.cssText = 'color: #ffffff; font-weight: 500; font-size: 13px; line-height: 1.4; display: block;';
+          span.innerHTML = '<strong>Онлайн-оплата через СДЭК</strong><br><span style="color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 400;">По безопасной ссылке СДЭК Pay перед отправкой заказа</span>';
+          r2.appendChild(span);
+        }
+      }
+    }
+    setInterval(setupCdekPaymentLabels, 400);
+    setupCdekPaymentLabels();
+
     // Export global helper
     window.geekNookTilda = {
       isTildaActive,

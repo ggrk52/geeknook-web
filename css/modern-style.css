@@ -7400,7 +7400,17 @@ textarea:focus-visible {
 
 .t706__orderform .t-radio__control,
 .t706 .t-radio__control {
+  color: #ffffff !important;
   border-color: rgba(255, 255, 255, 0.4) !important;
+  display: flex !important;
+  align-items: flex-start !important;
+  gap: 10px !important;
+  margin-bottom: 12px !important;
+  cursor: pointer !important;
+}
+
+.t706 .t-radio__control:last-child {
+  margin-bottom: 0 !important;
 }
 
 /* Submit button */
