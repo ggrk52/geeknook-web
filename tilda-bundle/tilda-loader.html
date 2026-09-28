@@ -153,6 +153,22 @@
         });
       });
 
+      // Ensure journal and legal links resolve to live CDN on Tilda
+      doc.querySelectorAll('a').forEach(a => {
+        const href = a.getAttribute('href');
+        if (href && (href === 'journal.html' || href.startsWith('journal/'))) {
+          a.setAttribute('href', BASE_URL + href.replace(/^\.?\//, ''));
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener');
+        } else if (href && (href === 'legal.html' || href.startsWith('legal.html#'))) {
+          if (!a.getAttribute('onclick')) {
+            a.setAttribute('href', BASE_URL + href.replace(/^\.?\//, ''));
+            a.setAttribute('target', '_blank');
+            a.setAttribute('rel', 'noopener');
+          }
+        }
+      });
+
       // Extract body contents (excluding existing scripts)
       const mountPoint = document.getElementById('geeknook-mount-point');
       const bodyChildren = Array.from(doc.body.children).filter(el => el.tagName !== 'SCRIPT');

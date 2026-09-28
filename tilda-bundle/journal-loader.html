@@ -1,0 +1,49 @@
+<!-- ==========================================================================
+     GEEK NOOK — Dedicated Journal Loader for Tilda (Block T123)
+     Allows hosting https://geeknook.ru/journal directly on Tilda
+     Fetches and mounts all 218 articles seamlessly from GitHub Pages CDN
+     ========================================================================== -->
+
+<div id="geeknook-journal-root">
+  <div id="gn-journal-loading" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0c0c0e;color:#cba870;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;font-family:sans-serif;">
+    <div style="width:40px;height:40px;border:3px solid #1e2430;border-top-color:#cba870;border-radius:50%;animation:gnSpin 0.8s linear infinite;"></div>
+    <div style="margin-top:16px;font-size:13px;letter-spacing:0.1em;color:#9595a2;">GEEK NOOK // ЗАГРУЗКА ЖУРНАЛА...</div>
+  </div>
+</div>
+
+<style>
+  @keyframes gnSpin { to { transform: rotate(360deg); } }
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #0c0c0e !important;
+    overflow-x: hidden !important;
+  }
+  .r:has(#geeknook-journal-root),
+  .t123:has(#geeknook-journal-root),
+  .t-container_100:has(#geeknook-journal-root),
+  .t-col_100:has(#geeknook-journal-root) {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+</style>
+
+<script>
+(async function() {
+  'use strict';
+  const CDN_BASE = 'https://ggrk52.github.io/geeknook-web/';
+  try {
+    const res = await fetch(CDN_BASE + 'journal.html?v=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const html = await res.text();
+    document.open();
+    document.write(html);
+    document.close();
+  } catch(err) {
+    console.warn('[GeekNook Journal] Direct rewrite failed, redirecting to CDN:', err);
+    window.location.replace(CDN_BASE + 'journal.html');
+  }
+})();
+</script>

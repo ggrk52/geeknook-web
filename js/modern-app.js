@@ -2939,7 +2939,8 @@
     }
     const extLink = document.getElementById('legalModalExtLink');
     if (extLink) {
-      extLink.href = 'legal.html#' + tabId;
+      const baseCdn = (typeof window !== 'undefined' && window.GEEKNOOK_CDN_URL) || 'https://ggrk52.github.io/geeknook-web/';
+      extLink.href = baseCdn + 'legal.html#' + tabId;
     }
     document.querySelectorAll('.legal-tab-btn').forEach(btn => {
       if (btn.getAttribute('data-tab') === tabId) {
@@ -5847,6 +5848,33 @@
     window.addEventListener('unhandledrejection', (event) => {
       console.warn('[Defensive] Handled unhandled Promise rejection:', event.reason);
     });
+
+    // 2.1. Global Navigation Guard for Headless Tilda deployment:
+    // Intercepts any relative links to journal.html, legal.html or journal/ articles so they never 404 on Tilda
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a');
+      if (!link) return;
+      const href = link.getAttribute('href');
+      if (!href) return;
+      
+      const isTilda = window.location.hostname.includes('geeknook.ru') || window.location.hostname.includes('tilda');
+      if (!isTilda) return;
+
+      const baseCdn = (typeof window !== 'undefined' && window.GEEKNOOK_CDN_URL) || 'https://ggrk52.github.io/geeknook-web/';
+      
+      if (href === 'journal.html' || href.startsWith('journal.html#') || href.startsWith('journal/')) {
+        e.preventDefault();
+        const targetUrl = baseCdn + href.replace(/^\.?\//, '');
+        window.open(targetUrl, '_blank', 'noopener');
+      } else if (href === 'legal.html' || href.startsWith('legal.html#')) {
+        // If it doesn't already have an in-page modal handler
+        if (!link.getAttribute('onclick')) {
+          e.preventDefault();
+          const targetUrl = baseCdn + href.replace(/^\.?\//, '');
+          window.open(targetUrl, '_blank', 'noopener');
+        }
+      }
+    }, true);
 
     // 3. Developer Console Easter Egg
     console.log(

@@ -592,7 +592,8 @@
       const notice = document.createElement('div');
       notice.className = 't-cart-legal-notice';
       notice.style.cssText = 'font-size: 11.5px; line-height: 1.45; color: rgba(255, 255, 255, 0.55); margin: 12px 0 10px; text-align: center;';
-      notice.innerHTML = 'Нажимая «Оформить заказ», вы соглашаетесь с <a href="legal.html#offer" target="_blank" style="color: #cba870; text-decoration: underline;">Публичной офертой</a> и <a href="legal.html#privacy" target="_blank" style="color: #cba870; text-decoration: underline;">Политикой конфиденциальности</a> ООО «ГИК НУК»';
+      const baseCdn = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
+      notice.innerHTML = `Нажимая «Оформить заказ», вы соглашаетесь с <a href="${baseCdn}legal.html#offer" target="_blank" rel="noopener" style="color: #cba870; text-decoration: underline;">Публичной офертой</a> и <a href="${baseCdn}legal.html#privacy" target="_blank" rel="noopener" style="color: #cba870; text-decoration: underline;">Политикой конфиденциальности</a> ООО «ГИК НУК»`;
       submitWrap.parentNode.insertBefore(notice, submitWrap);
     }
 
