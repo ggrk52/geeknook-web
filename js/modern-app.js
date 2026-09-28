@@ -5862,10 +5862,13 @@
 
       const baseCdn = (typeof window !== 'undefined' && window.GEEKNOOK_CDN_URL) || 'https://ggrk52.github.io/geeknook-web/';
       
-      if (href === 'journal.html' || href.startsWith('journal.html#') || href.startsWith('journal/')) {
+      if (href === 'journal.html' || href === '/journal.html' || href === 'journal' || href === '/journal') {
         e.preventDefault();
-        const targetUrl = baseCdn + href.replace(/^\.?\//, '');
-        window.open(targetUrl, '_blank', 'noopener');
+        window.location.href = '/journal';
+      } else if (href.startsWith('journal/')) {
+        e.preventDefault();
+        const slug = href.replace(/^journal\//, '').replace(/\.html$/, '');
+        window.location.href = '/journal?article=' + encodeURIComponent(slug);
       } else if (href === 'legal.html' || href.startsWith('legal.html#')) {
         // If it doesn't already have an in-page modal handler
         if (!link.getAttribute('onclick')) {

@@ -40,18 +40,25 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg: #0c0c0e;
-      --card-bg: #141418;
+      --bg: #0b0d11;
+      --card-bg: #12161d;
       --card-border: rgba(255, 255, 255, 0.08);
       --text: #f0f0f3;
       --text-muted: #9595a2;
-      --gold: #cba870;
-      --gold-hover: #e0be86;
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --primary: #2b70f0;
+      --primary-hover: #1b5ed6;
+      --primary-glow: rgba(43, 112, 240, 0.28);
+      --primary-surface: rgba(43, 112, 240, 0.1);
+      --primary-border: rgba(43, 112, 240, 0.25);
+      --stat-blue: #38bdf8;
+      
+      --font-body: 'Onest', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
     * {
       box-sizing: border-box;
@@ -70,12 +77,12 @@
       -webkit-font-smoothing: antialiased;
     }
     a {
-      color: var(--gold);
+      color: var(--primary);
       text-decoration: none;
       transition: color 0.2s;
     }
     a:hover {
-      color: var(--gold-hover);
+      color: var(--primary-hover);
       text-decoration: underline;
     }
     .article-header {
@@ -127,7 +134,7 @@
     }
     .back-btn:hover {
       background: rgba(255, 255, 255, 0.1);
-      border-color: var(--gold);
+      border-color: var(--primary);
       text-decoration: none;
       color: #fff;
     }
@@ -150,7 +157,7 @@
       text-decoration: none;
     }
     .breadcrumbs a:hover {
-      color: var(--gold);
+      color: var(--primary);
     }
     .breadcrumbs-sep {
       opacity: 0.4;
@@ -163,24 +170,27 @@
       margin-bottom: 16px;
     }
     .category-badge {
+      font-family: var(--font-mono);
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 4px 12px;
       border-radius: 6px;
       background: rgba(203, 168, 112, 0.12);
-      border: 1px solid rgba(203, 168, 112, 0.3);
-      color: #e0be86;
+      border: 1px solid var(--primary-border);
+      color: #3b82f6;
       font-size: 0.82rem;
       font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
     .meta-stat {
+      font-family: var(--font-mono);
       color: var(--text-muted);
       font-size: 0.82rem;
     }
     h1.article-title {
+      font-family: var(--font-display);
       font-size: 2.1rem;
       line-height: 1.25;
       font-weight: 800;
@@ -190,12 +200,14 @@
     }
     @media (max-width: 600px) {
       h1.article-title {
+      font-family: var(--font-display);
         font-size: 1.6rem;
       }
     }
     .query-meta-box {
+      font-family: var(--font-mono);
       background: rgba(255, 255, 255, 0.02);
-      border-left: 3px solid var(--gold);
+      border-left: 3px solid var(--primary);
       padding: 12px 16px;
       margin-bottom: 28px;
       font-size: 0.88rem;
@@ -253,11 +265,12 @@
       font-size: 0.75rem;
       font-weight: 700;
       letter-spacing: 0.1em;
-      color: var(--gold);
+      color: var(--primary);
       text-transform: uppercase;
       margin-bottom: 8px;
     }
     .cta-title {
+      font-family: var(--font-display);
       font-size: 1.45rem;
       font-weight: 800;
       color: #fff;
@@ -295,7 +308,7 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: var(--gold);
+      background: var(--primary);
       color: #0c0c0e;
       font-weight: 700;
       font-size: 0.95rem;
@@ -306,7 +319,7 @@
       text-decoration: none;
     }
     .btn-buy-primary:hover {
-      background: var(--gold-hover);
+      background: var(--primary-hover);
       color: #000;
       text-decoration: none;
       transform: translateY(-1px);
@@ -327,7 +340,7 @@
     }
     .btn-tg-help:hover {
       background: rgba(255, 255, 255, 0.1);
-      border-color: var(--gold);
+      border-color: var(--primary);
       color: #fff;
       text-decoration: none;
     }
@@ -357,7 +370,7 @@
       transition: border-color 0.2s;
     }
     .nav-card:hover {
-      border-color: var(--gold);
+      border-color: var(--primary);
       text-decoration: none;
     }
     .nav-label {
@@ -388,17 +401,17 @@
     <div class="header-container">
       <a href="https://geeknook.ru/" class="brand-link">
         <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="6" fill="#cba870"/>
+          <rect width="32" height="32" rx="6" fill="#2b70f0"/>
           <path d="M8 10h16M8 16h16M8 22h10" stroke="#0c0c0e" stroke-width="2.5" stroke-linecap="round"/>
         </svg>
         GEEK NOOK
       </a>
       <div class="nav-actions">
-        <a href="../journal.html" class="back-btn">
+        <a href="https://geeknook.ru/journal" class="back-btn">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
           Все статьи
         </a>
-        <a href="https://geeknook.ru/" class="back-btn" style="color:var(--gold);border-color:rgba(203,168,112,0.3);">
+        <a href="https://geeknook.ru/" class="back-btn" style="color:var(--primary);border-color:rgba(203,168,112,0.3);">
           В магазин
         </a>
       </div>
@@ -409,7 +422,7 @@
     <nav class="breadcrumbs" aria-label="Навигация по сайту">
       <a href="https://geeknook.ru/">Главная</a>
       <span class="breadcrumbs-sep">/</span>
-      <a href="../journal.html">Журнал</a>
+      <a href="https://geeknook.ru/journal">Журнал</a>
       <span class="breadcrumbs-sep">/</span>
       <span>Организация стола</span>
     </nav>
@@ -478,7 +491,7 @@
 
     <footer class="site-footer">
       <p>© 2026 ООО «ГИК НУК» (ИНН 9723239478). Все права защищены.</p>
-      <p style="margin-top:6px;"><a href="https://geeknook.ru/">На главную</a> • <a href="../journal.html">Все статьи Журнала</a> • <a href="../legal.html">Правовой центр</a></p>
+      <p style="margin-top:6px;"><a href="https://geeknook.ru/">На главную</a> • <a href="https://geeknook.ru/journal">Все статьи Журнала</a> • <a href="../legal.html">Правовой центр</a></p>
     </footer>
   </main>
 
