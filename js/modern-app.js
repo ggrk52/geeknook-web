@@ -564,6 +564,19 @@
     triggerBadgeBounce();
     soundEngine.play('cart');
     showToast(`«${product.title} (${cleanOption})» добавлен в корзину!`);
+
+    // Track Analytics & Ecommerce
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackAddToCart === 'function') {
+      window.geekNookAnalytics.trackAddToCart({
+        id: product.id,
+        sku: product.sku || product.id,
+        name: product.title,
+        price: finalPrice,
+        option: cleanOption,
+        quantity: 1
+      });
+    }
+
     if (openDrawer) {
       openCartDrawer();
     }
@@ -779,6 +792,9 @@
     if (drawer) {
       drawer.classList.add('active');
       modalManager.syncOverflow();
+    }
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackCartOpen === 'function') {
+      window.geekNookAnalytics.trackCartOpen();
     }
   };
 
@@ -2431,6 +2447,11 @@
       `;
     }
 
+    // Track Analytics & Ecommerce
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackOrderSubmit === 'function') {
+      window.geekNookAnalytics.trackOrderSubmit(orderNumber, grandTotal, state.cart, safeDelivery, safePayment);
+    }
+
     // Reset Cart
     state.cart = [];
     state.promoDiscountPercent = 0;
@@ -2577,6 +2598,17 @@
           Сумма: ${formatPrice(prod.price)}
         </div>
       `;
+    }
+
+    // Track Analytics & Ecommerce
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackOrderSubmit === 'function') {
+      window.geekNookAnalytics.trackOrderSubmit(orderNumber, prod.price, [{
+        id: prod.id,
+        name: prod.title,
+        price: prod.price,
+        quantity: 1,
+        option: safeOpt
+      }], 'СДЭК Быстрый', 'Уточнить при звонке');
     }
 
     modalManager.open('successModal');
@@ -5232,6 +5264,14 @@
     e.preventDefault();
     soundEngine.play('cart');
     const company = document.getElementById('b2bCompany')?.value || 'Компания';
+    const email = document.getElementById('b2bEmail')?.value || '';
+    const workplaces = document.getElementById('b2bWorkplaces')?.value || '5-10';
+
+    // Track Analytics Goal
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackB2bLead === 'function') {
+      window.geekNookAnalytics.trackB2bLead(company, email, workplaces);
+    }
+
     closeModal('cadLibraryModal');
     showToast(`Запрос для «${escapeHTML(company)}» принят! КП отправлено на email.`, 'success');
   };

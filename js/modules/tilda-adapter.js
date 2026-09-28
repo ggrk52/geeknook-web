@@ -144,6 +144,17 @@
         originalApp.addToCart(productId, optionName, openDrawer);
       }
 
+      // Track Analytics & Ecommerce
+      if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackAddToCart === 'function') {
+        window.geekNookAnalytics.trackAddToCart({
+          sku: item.sku || item.uid,
+          name: item.name,
+          price: item.price,
+          option: optionName,
+          quantity: 1
+        });
+      }
+
       syncTildaCartBadge();
       if (typeof originalApp.showToast === 'function') {
         originalApp.showToast(`«${item.name}» добавлен в корзину!`);
@@ -187,6 +198,9 @@
         window.tcart__openCart();
       } else {
         originalApp.openCartDrawer();
+      }
+      if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackCartOpen === 'function') {
+        window.geekNookAnalytics.trackCartOpen();
       }
       syncTildaCartBadge();
     };
@@ -256,6 +270,17 @@
         originalApp.addConfiguredBundleToCart();
       }
 
+      // Track Analytics & Ecommerce
+      if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackAddToCart === 'function') {
+        window.geekNookAnalytics.trackAddToCart({
+          sku: skuInfo ? skuInfo.sku : 'G4N-FOCUS',
+          name: title,
+          price: grandTotal,
+          option: `${length.id} см (${finish.name})`,
+          quantity: 1
+        });
+      }
+
       syncTildaCartBadge();
     };
 
@@ -283,6 +308,11 @@
         if (submitBtn) {
           submitBtn.click();
         }
+      }
+
+      // Track B2B Lead Goal
+      if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackB2bLead === 'function') {
+        window.geekNookAnalytics.trackB2bLead(company, email, count);
       }
 
       if (typeof window.geekNookApp.closeModal === 'function') {

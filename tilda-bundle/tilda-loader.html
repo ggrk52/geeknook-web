@@ -197,6 +197,7 @@
       // 3. Sequential Scripts Loading with Cache-Busting
       await loadAsset('js', BASE_URL + 'js/three.min.js');
       await loadAsset('js', BASE_URL + 'js/products-data.js?v=' + BUILD_TS);
+      await loadAsset('js', BASE_URL + 'js/modules/analytics.js?v=' + BUILD_TS);
       await loadAsset('js', BASE_URL + 'js/modern-app.js?v=' + BUILD_TS);
       await loadAsset('js', BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_TS);
 
