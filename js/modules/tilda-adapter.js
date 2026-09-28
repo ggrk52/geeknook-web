@@ -117,11 +117,19 @@
         }
       }
 
+      // Construct clean descriptive name: For boards with variants, format as e.g. "Focus Station 85 см (Дуб)"
+      let finalName = p.title;
+      if (p.category === 'boards' || hasRealVariants) {
+        let woodRu = 'Орех';
+        if (p.title.includes('Oak') || p.id.includes('oak')) woodRu = 'Дуб';
+        else if (p.title.includes('Black') || p.id.includes('black')) woodRu = 'Черный ясень';
+        finalName = `Focus Station ${opt} (${woodRu})`;
+      }
+
       return {
-        name: p.title,
+        name: finalName,
         price: resolvedPrice,
         sku: resolvedSku,
-        uid: resolvedSku || p.id,
         img: toFullCdnUrl(imgPath),
         options: itemOptions
       };
@@ -255,10 +263,9 @@
 
       if (typeof window.tcart__addProduct === 'function') {
         window.tcart__addProduct({
-          name: baseCatalogName,
+          name: customTitle,
           price: grandTotal,
           sku: skuInfo ? skuInfo.sku : 'G4N-FOCUS',
-          uid: skuInfo ? skuInfo.sku : '1000830012',
           img: imgUrl,
           options: options
         });
@@ -276,7 +283,7 @@
       if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackAddToCart === 'function') {
         window.geekNookAnalytics.trackAddToCart({
           sku: skuInfo ? skuInfo.sku : 'G4N-FOCUS',
-          name: title,
+          name: customTitle,
           price: grandTotal,
           option: `${length.id} см (${finish.name})`,
           quantity: 1
@@ -589,16 +596,65 @@
       submitWrap.parentNode.insertBefore(notice, submitWrap);
     }
 
+    // 5. AUTO-SANITIZE EXISTING CART ITEMS (Clears any stale 0-stock catalog collisions from user localStorage)
+    function sanitizeExistingCartItems() {
+      if (typeof window.tcart !== 'undefined' && window.tcart && Array.isArray(window.tcart.products)) {
+        let changed = false;
+        window.tcart.products.forEach(item => {
+          if (!item || !item.name) return;
+          if (item.name === 'Focus Station Oak' || item.name === 'Focus Station Walnut' || item.name === 'Focus Station Black') {
+            let opt = '85 см';
+            if (Array.isArray(item.options)) {
+              const optObj = item.options.find(o => o && (o.option === 'Вариант' || o.name === 'Вариант'));
+              if (optObj && optObj.variant) opt = optObj.variant;
+            }
+            const wood = item.name.replace('Focus Station', '').trim();
+            const woodRu = wood === 'Oak' ? 'Дуб' : (wood === 'Black' ? 'Черный ясень' : 'Орех');
+            item.name = `Focus Station ${opt} (${woodRu})`;
+            if (item.uid) delete item.uid;
+            changed = true;
+          } else if (item.uid && (item.name.startsWith('Focus Station') || item.sku)) {
+            delete item.uid;
+            changed = true;
+          }
+        });
+
+        if (changed) {
+          if (typeof window.tcart__saveLocalObj === 'function') window.tcart__saveLocalObj();
+          if (typeof window.tcart__reDrawProducts === 'function') window.tcart__reDrawProducts();
+          if (typeof window.tcart__reDrawTotal === 'function') window.tcart__reDrawTotal();
+          if (typeof window.tcart__reDrawCartIcon === 'function') window.tcart__reDrawCartIcon();
+        }
+      }
+    }
+
+    // 6. AUTO-CLEAR OBSOLETE OUT-OF-STOCK ERROR BANNERS
+    function clearOutOfStockErrors() {
+      const errBoxes = document.querySelectorAll('.t706 .js-errorbox-all, .t706 .t-form__errorbox-wrapper, .t-form__errorbox-middle .t-form__errorbox-text');
+      errBoxes.forEach(b => {
+        if (b.textContent && b.textContent.includes('нет в наличии')) {
+          b.style.display = 'none';
+          if (b.classList.contains('t-form__errorbox-text')) b.innerHTML = '';
+          const parentWrap = b.closest('.js-errorbox-all, .t-form__errorbox-wrapper');
+          if (parentWrap) parentWrap.style.display = 'none';
+        }
+      });
+    }
+
     document.addEventListener('focusin', attachListenerToCdekInput);
     setInterval(attachListenerToCdekInput, 800);
     setInterval(ensureRussianButtonText, 300);
     setInterval(setupCdekPaymentLabels, 400);
     setInterval(setupLegalCartNotice, 500);
+    setInterval(sanitizeExistingCartItems, 1000);
+    setInterval(clearOutOfStockErrors, 600);
 
     attachListenerToCdekInput();
     ensureRussianButtonText();
     setupCdekPaymentLabels();
     setupLegalCartNotice();
+    sanitizeExistingCartItems();
+    clearOutOfStockErrors();
   }
 
   initTildaDomEnhancements();
