@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Подставка для монитора своими руками | Журнал GeekNook</title>
+  <meta name="description" content="Сделать подставку для монитора своими руками реально за выходные. Понадобится доска или лист фанеры толщиной от 18 мм, две опоры и шлифовальная бумага.">
+  <link rel="canonical" href="https://geeknook.ru/journal/podstavka-dlya-monitora-svoimi-rukami.html">
+  <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  
+  <!-- Open Graph -->
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Подставка для монитора своими руками | Журнал GeekNook">
+  <meta property="og:description" content="Сделать подставку для монитора своими руками реально за выходные. Понадобится доска или лист фанеры толщиной от 18 мм, две опоры и шлифовальная бумага.">
+  <meta property="og:url" content="https://geeknook.ru/journal/podstavka-dlya-monitora-svoimi-rukami.html">
+  <meta property="og:site_name" content="GeekNook">
+
+  <!-- Schema.org Microdata -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Подставка для монитора своими руками",
+    "description": "Сделать подставку для монитора своими руками реально за выходные. Понадобится доска или лист фанеры толщиной от 18 мм, две опоры и шлифовальная бумага.",
+    "author": {
+      "@type": "Organization",
+      "name": "ООО «ГИК НУК»"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "GeekNook",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://geeknook.ru/favicon.ico"
+      }
+    },
+    "mainEntityOfPage": "https://geeknook.ru/journal/podstavka-dlya-monitora-svoimi-rukami.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0c0c0e;
+      --card-bg: #141418;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --text: #f0f0f3;
+      --text-muted: #9595a2;
+      --gold: #cba870;
+      --gold-hover: #e0be86;
+      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.75;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+    a {
+      color: var(--gold);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    a:hover {
+      color: var(--gold-hover);
+      text-decoration: underline;
+    }
+    .article-header {
+      background: rgba(14, 14, 18, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      font-size: 1.15rem;
+      text-decoration: none;
+    }
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      font-size: 0.88rem;
+      font-weight: 500;
+      min-height: 44px;
+      transition: all 0.2s;
+    }
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--gold);
+      text-decoration: none;
+      color: #fff;
+    }
+    .article-main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+    .breadcrumbs {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+    .breadcrumbs a {
+      color: var(--text-muted);
+      text-decoration: none;
+    }
+    .breadcrumbs a:hover {
+      color: var(--gold);
+    }
+    .breadcrumbs-sep {
+      opacity: 0.4;
+    }
+    .article-kicker-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .category-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 6px;
+      background: rgba(203, 168, 112, 0.12);
+      border: 1px solid rgba(203, 168, 112, 0.3);
+      color: #e0be86;
+      font-size: 0.82rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .meta-stat {
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+    h1.article-title {
+      font-size: 2.1rem;
+      line-height: 1.25;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 600px) {
+      h1.article-title {
+        font-size: 1.6rem;
+      }
+    }
+    .query-meta-box {
+      background: rgba(255, 255, 255, 0.02);
+      border-left: 3px solid var(--gold);
+      padding: 12px 16px;
+      margin-bottom: 28px;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      border-radius: 0 6px 6px 0;
+    }
+    .article-body {
+      font-size: 1.05rem;
+      line-height: 1.8;
+      color: #e5e5ec;
+      margin-bottom: 40px;
+    }
+    .article-p {
+      margin-bottom: 18px;
+    }
+    .article-callout {
+      background: rgba(203, 168, 112, 0.08);
+      border: 1px solid rgba(203, 168, 112, 0.25);
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 24px 0;
+      color: #f5eedf;
+      font-weight: 500;
+    }
+    .article-also-box {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--card-border);
+    }
+    /* CTA BUY GEEKNOOK BOX */
+    .cta-box {
+      background: linear-gradient(145deg, #17171d 0%, #1c1c24 100%);
+      border: 1px solid rgba(203, 168, 112, 0.4);
+      border-radius: 16px;
+      padding: 32px 28px;
+      margin: 48px 0;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+    }
+    .cta-box::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: radial-gradient(circle, rgba(203, 168, 112, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-badge {
+      display: inline-block;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+    .cta-title {
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .cta-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+    .cta-features {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+    .cta-feat {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      color: #f0f0f3;
+    }
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .btn-buy-primary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--gold);
+      color: #0c0c0e;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 12px 24px;
+      border-radius: 8px;
+      min-height: 48px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .btn-buy-primary:hover {
+      background: var(--gold-hover);
+      color: #000;
+      text-decoration: none;
+      transform: translateY(-1px);
+    }
+    .btn-tg-help {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 12px 18px;
+      border-radius: 8px;
+      min-height: 48px;
+      transition: all 0.2s;
+    }
+    .btn-tg-help:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--gold);
+      color: #fff;
+      text-decoration: none;
+    }
+    /* Article Navigation footer */
+    .article-nav-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--card-border);
+    }
+    @media (max-width: 600px) {
+      .article-nav-row {
+        grid-template-columns: 1fr;
+      }
+    }
+    .nav-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      padding: 16px;
+      border-radius: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      text-decoration: none;
+      transition: border-color 0.2s;
+    }
+    .nav-card:hover {
+      border-color: var(--gold);
+      text-decoration: none;
+    }
+    .nav-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+    .nav-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.4;
+    }
+    .site-footer {
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid var(--card-border);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="article-header">
+    <div class="header-container">
+      <a href="../index.html" class="brand-link">
+        <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
+          <rect width="32" height="32" rx="6" fill="#cba870"/>
+          <path d="M8 10h16M8 16h16M8 22h10" stroke="#0c0c0e" stroke-width="2.5" stroke-linecap="round"/>
+        </svg>
+        GEEK NOOK
+      </a>
+      <div class="nav-actions">
+        <a href="../journal.html" class="back-btn">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+          Все статьи
+        </a>
+        <a href="../index.html" class="back-btn" style="color:var(--gold);border-color:rgba(203,168,112,0.3);">
+          В магазин
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="article-main">
+    <nav class="breadcrumbs" aria-label="Навигация по сайту">
+      <a href="../index.html">Главная</a>
+      <span class="breadcrumbs-sep">/</span>
+      <a href="../journal.html">Журнал</a>
+      <span class="breadcrumbs-sep">/</span>
+      <span>Подставки под монитор</span>
+    </nav>
+
+    <div class="article-kicker-row">
+      <span class="category-badge">🖥 Подставки под монитор</span>
+      <span class="meta-stat">Время чтения ~2 мин</span>
+      <span class="meta-stat">• 29 запросов/мес</span>
+    </div>
+
+    <h1 class="article-title">Подставка для монитора своими руками</h1>
+
+    <div class="query-meta-box">
+      <strong>Ключевой запрос статьи:</strong> «подставка для монитора своими руками»
+      <div class="article-also-box"><strong>Также охватывает запросы:</strong> как сделать подставку для монитора</div>
+    </div>
+
+    <article class="article-body">
+      <p class="article-p">Сделать подставку для монитора своими руками реально за выходные. Понадобится доска или лист фанеры толщиной от 18 мм, две опоры и шлифовальная бумага.</p>
+<p class="article-p">Сначала определите размеры: ширина — чуть больше основания монитора или ширины клавиатуры, глубина — 20–25 см, высота — такая, чтобы верх экрана оказался на уровне глаз. Опоры можно сделать из того же материала или купить готовые металлические ножки.</p>
+<p class="article-p">Отшлифуйте поверхности и торцы, скруглите углы, покройте масло-воском. Соединение делайте на шурупы с клеем или конфирматы, чтобы конструкция не шаталась.</p>
+<p class="article-p">Самодельная подставка обходится дёшево, но есть нюансы: сложно добиться ровных торцов без станка, а доска из строительного магазина может повести. Если нужна аккуратная вещь с функцией крепления аксессуаров, проще выбрать готовое решение и потратить выходные на что-то другое.</p>
+<div class="article-callout"><strong>GeekNook Focus:</strong> Модульная подставка Focus Station с полками, держателями и кабель-менеджментом — в GEEK NOOK: geeknook.ru</div>
+    </article>
+
+    <!-- PROMOTIONAL LEADGEN CTA: BUY GEEKNOOK -->
+    <section class="cta-box">
+      <span class="cta-badge">ФЛАГМАН GEEK NOOK</span>
+      <h3 class="cta-title">Настольная станция Focus Station 85 / 116</h3>
+      <p class="cta-desc">Массив натурального дуба и американского ореха с алюминиевыми опорами. Поднимает монитор на анатомические 9 см, освобождает 60% площади стола и прячет клавиатуру.</p>
+      <div class="cta-features">
+        <span class="cta-feat">✓ Натуральный массив дуба / ореха</span>
+        <span class="cta-feat">✓ Доставка в ПВЗ СДЭК</span>
+        <span class="cta-feat">✓ Оплата при получении</span>
+        <span class="cta-feat">✓ Гарантия 12 месяцев</span>
+      </div>
+      <div class="cta-actions">
+        <a href="../index.html#boards" class="btn-buy-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+          Заказать Focus Station с доставкой СДЭК (от 14 990 ₽)
+        </a>
+        <a href="https://t.me/geeknook" target="_blank" rel="noopener" class="btn-tg-help">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+          Задать вопрос в Telegram
+        </a>
+      </div>
+    </section>
+
+    <!-- Navigation to adjacent articles -->
+    <div class="article-nav-row">
+      <a href="kompyuternyy-kovrik-1200h600.html" class="nav-card">
+        <span class="nav-label">← Предыдущая статья</span>
+        <span class="nav-title">Компьютерный коврик 1200х600</span>
+      </a>
+      <a href="podstavka-dlya-monitora-ldsp.html" class="nav-card" style="text-align:right;">
+        <span class="nav-label">Следующая статья →</span>
+        <span class="nav-title">Подставка для монитора лдсп</span>
+      </a>
+    </div>
+
+    <footer class="site-footer">
+      <p>© 2026 ООО «ГИК НУК» (ИНН 9723239478). Все права защищены.</p>
+      <p style="margin-top:6px;"><a href="../index.html">На главную</a> • <a href="../journal.html">Все статьи Журнала</a> • <a href="../legal.html">Правовой центр</a></p>
+    </footer>
+  </main>
+
+</body>
+</html>

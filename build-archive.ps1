@@ -22,11 +22,11 @@ $tarExe = Join-Path $env:SystemRoot "System32\tar.exe"
 Push-Location $root
 try {
   $docxFiles = Get-ChildItem -Path $root -Filter "*.docx" | Select-Object -ExpandProperty Name
-  $argsList = @("-a", "-c", "-f", $zipPath, "index.html", "legal.html", "404.html", ".htaccess", "LICENSE", "README.md", "robots.txt", "sitemap.xml", "favicon.ico", "yandex_72c8b34ebfb18c1b.html")
+  $argsList = @("-a", "-c", "-f", $zipPath, "index.html", "journal.html", "legal.html", "404.html", ".htaccess", "LICENSE", "README.md", "robots.txt", "sitemap.xml", "favicon.ico", "yandex_72c8b34ebfb18c1b.html")
   if ($docxFiles) {
     $argsList += $docxFiles
   }
-  $argsList += @("css", "js", "images")
+  $argsList += @("css", "js", "images", "journal")
 
   & $tarExe $argsList
   
