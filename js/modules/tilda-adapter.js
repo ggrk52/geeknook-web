@@ -238,8 +238,10 @@
       const skuKey = `${finishKey}_${length.id}`;
       const skuInfo = FOCUS_STATION_SKUS[skuKey];
 
-      const title = `Focus Station ${length.id} см (${finish.name})`;
+      const baseCatalogName = finish.id === 'oak' ? 'Focus Station Oak' : (finish.id === 'black' ? 'Focus Station Black' : 'Focus Station Walnut');
+      const customTitle = `Focus Station ${length.id} см (${finish.name})`;
       const options = [
+        { option: 'Сборка', name: 'Сборка', variant: customTitle },
         { option: 'Длина основания', name: 'Длина основания', variant: length.id + ' см' },
         { option: 'Габариты', name: 'Габариты', variant: skuInfo ? skuInfo.dimensions : `${length.id} × 9 × 23 см` },
         { option: 'Порода дерева', name: 'Порода дерева', variant: finish.name },
@@ -253,7 +255,7 @@
 
       if (typeof window.tcart__addProduct === 'function') {
         window.tcart__addProduct({
-          name: title,
+          name: baseCatalogName,
           price: grandTotal,
           sku: skuInfo ? skuInfo.sku : 'G4N-FOCUS',
           uid: skuInfo ? skuInfo.sku : '1000830012',
