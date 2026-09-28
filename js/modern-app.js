@@ -2939,8 +2939,7 @@
     }
     const extLink = document.getElementById('legalModalExtLink');
     if (extLink) {
-      const baseCdn = (typeof window !== 'undefined' && window.GEEKNOOK_CDN_URL) || 'https://ggrk52.github.io/geeknook-web/';
-      extLink.href = baseCdn + 'legal.html#' + tabId;
+      extLink.href = '/legal#' + tabId;
     }
     document.querySelectorAll('.legal-tab-btn').forEach(btn => {
       if (btn.getAttribute('data-tab') === tabId) {
@@ -5869,12 +5868,12 @@
         e.preventDefault();
         const slug = href.replace(/^journal\//, '').replace(/\.html$/, '');
         window.location.href = '/journal?article=' + encodeURIComponent(slug);
-      } else if (href === 'legal.html' || href.startsWith('legal.html#')) {
+      } else if (href === 'legal.html' || href.startsWith('legal.html#') || href === '/legal' || href.startsWith('/legal#') || href === 'legal' || href.startsWith('legal#')) {
         // If it doesn't already have an in-page modal handler
         if (!link.getAttribute('onclick')) {
           e.preventDefault();
-          const targetUrl = baseCdn + href.replace(/^\.?\//, '');
-          window.open(targetUrl, '_blank', 'noopener');
+          const hash = href.includes('#') ? href.substring(href.indexOf('#')) : '';
+          window.open('/legal' + hash, '_blank', 'noopener');
         }
       }
     }, true);

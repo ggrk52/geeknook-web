@@ -8,49 +8,60 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #0c0c0e;
-      --bg-card: #141418;
-      --bg-card-hover: #1a1a20;
-      --text-main: #f0f0f3;
-      --text-muted: #9595a2;
-      --accent-gold: #cba870;
-      --accent-gold-hover: #e0be86;
+      --bg-main: #0b0d11;
+      --bg-card: #12151c;
+      --bg-card-hover: #171b24;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-primary: #2b70f0;
+      --accent-primary-hover: #1b5ed6;
+      --accent-primary-glow: rgba(43, 112, 240, 0.28);
+      --accent-primary-surface: rgba(43, 112, 240, 0.1);
+      --accent-primary-border: rgba(43, 112, 240, 0.25);
       --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-active: rgba(203, 168, 112, 0.4);
-      --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --border-active: rgba(43, 112, 240, 0.5);
+      --font-body: 'Onest', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-display: 'Manrope', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
     }
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    html, body {
+    html {
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+    body {
       width: 100%;
       min-height: 100vh;
       background-color: var(--bg-main);
       color: var(--text-main);
       font-family: var(--font-body);
       font-size: 15px;
-      line-height: 1.65;
+      line-height: 1.68;
       overflow-x: hidden;
+      max-width: 100vw;
       -webkit-font-smoothing: antialiased;
     }
     a {
-      color: var(--accent-gold);
+      color: var(--accent-primary);
       text-decoration: none;
       transition: color 0.2s ease;
     }
     a:hover {
-      color: var(--accent-gold-hover);
+      color: var(--accent-primary-hover);
       text-decoration: underline;
     }
     .legal-header {
-      background: rgba(14, 14, 18, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(11, 13, 17, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border-subtle);
       position: sticky;
       top: 0;
@@ -70,14 +81,16 @@
       align-items: center;
       gap: 12px;
       color: #fff;
+      font-family: var(--font-display);
       font-weight: 800;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.08em;
       font-size: 1.15rem;
       text-decoration: none;
+      transition: color 0.2s ease;
     }
     .brand-link:hover {
       text-decoration: none;
-      color: var(--accent-gold);
+      color: var(--accent-primary);
     }
     .back-btn {
       display: inline-flex;
@@ -85,44 +98,88 @@
       gap: 8px;
       padding: 8px 16px;
       border-radius: 8px;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-subtle);
       color: var(--text-main);
       font-size: 0.9rem;
-      font-weight: 500;
+      font-weight: 600;
       text-decoration: none;
       transition: all 0.2s;
       min-height: 44px;
     }
     .back-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--accent-gold);
+      background: var(--accent-primary-surface);
+      border-color: var(--accent-primary-border);
       text-decoration: none;
       color: #fff;
     }
     .legal-main {
       max-width: 1100px;
       margin: 0 auto;
-      padding: 32px 20px 80px;
+      padding: 36px 20px 80px;
     }
     .legal-hero {
       margin-bottom: 32px;
       text-align: center;
     }
     .legal-hero h1 {
-      font-size: 2.1rem;
+      font-family: var(--font-display);
+      font-size: 2.2rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      margin-bottom: 10px;
-      background: linear-gradient(135deg, #ffffff 40%, #cba870 100%);
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #ffffff 35%, #60a5fa 75%, #2b70f0 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
     .legal-hero p {
       color: var(--text-muted);
-      font-size: 1rem;
+      font-size: 1.05rem;
       max-width: 680px;
       margin: 0 auto;
+      line-height: 1.6;
+    }
+    .legal-actions-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+    .legal-btn-primary, .legal-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.92rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      min-height: 44px;
+      transition: all 0.2s ease;
+    }
+    .legal-btn-primary {
+      background: var(--accent-primary);
+      color: #ffffff;
+      border: none;
+      box-shadow: 0 4px 14px var(--accent-primary-glow);
+    }
+    .legal-btn-primary:hover {
+      background: var(--accent-primary-hover);
+      box-shadow: 0 6px 20px rgba(43, 112, 240, 0.45);
+      text-decoration: none;
+      color: #ffffff;
+    }
+    .legal-btn-secondary {
+      background: rgba(255, 255, 255, 0.04);
+      color: #f8fafc;
+      border: 1px solid var(--border-subtle);
+    }
+    .legal-btn-secondary:hover {
+      background: var(--accent-primary-surface);
+      border-color: var(--accent-primary-border);
+      text-decoration: none;
+      color: #ffffff;
     }
     .legal-nav-tabs {
       display: flex;
@@ -161,9 +218,10 @@
       background: rgba(255, 255, 255, 0.05);
     }
     .tab-btn.active {
-      color: #0c0c0e;
-      background: var(--accent-gold);
-      box-shadow: 0 2px 10px rgba(203, 168, 112, 0.3);
+      color: #ffffff;
+      background: var(--accent-primary);
+      box-shadow: 0 4px 14px var(--accent-primary-glow);
+      font-weight: 700;
     }
     .tab-panel {
       display: none;
@@ -181,19 +239,23 @@
       to { opacity: 1; transform: translateY(0); }
     }
     .legal-heading-1 {
-      font-size: 1.5rem;
-      font-weight: 700;
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      font-weight: 800;
       color: #fff;
       margin-bottom: 20px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--border-subtle);
+      line-height: 1.35;
     }
     .legal-heading-2 {
+      font-family: var(--font-display);
       font-size: 1.25rem;
       font-weight: 700;
-      color: var(--accent-gold);
+      color: var(--accent-primary);
       margin-top: 28px;
       margin-bottom: 14px;
+      line-height: 1.4;
     }
     .legal-heading-3 {
       font-size: 1.05rem;
@@ -201,6 +263,7 @@
       color: #fff;
       margin-top: 20px;
       margin-bottom: 10px;
+      line-height: 1.4;
     }
     p {
       margin-bottom: 14px;
@@ -215,11 +278,12 @@
       color: var(--text-main);
     }
     code {
-      background: rgba(255, 255, 255, 0.08);
+      background: var(--accent-primary-surface);
+      border: 1px solid var(--accent-primary-border);
       padding: 2px 6px;
       border-radius: 4px;
-      color: #e0be86;
-      font-family: monospace;
+      color: #60a5fa;
+      font-family: var(--font-mono);
       font-size: 0.9em;
     }
     .requisites-grid {
@@ -275,7 +339,7 @@
       text-align: left;
     }
     .legal-table th {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.04);
       color: #fff;
       font-weight: 600;
     }
@@ -283,50 +347,13 @@
       background: rgba(255, 255, 255, 0.02);
     }
     .cert-alert {
-      background: rgba(203, 168, 112, 0.1);
-      border: 1px solid var(--border-active);
-      border-radius: 8px;
-      padding: 16px 20px;
+      background: var(--accent-primary-surface);
+      border: 1px solid var(--accent-primary-border);
+      border-radius: 10px;
+      padding: 18px 22px;
       margin-bottom: 24px;
-      color: #e0be86;
-    }
-    .legal-actions-bar {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 24px;
-      flex-wrap: wrap;
-    }
-    .legal-btn-primary, .legal-btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-size: 0.92rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-decoration: none;
-      min-height: 44px;
-      transition: all 0.2s;
-    }
-    .legal-btn-primary {
-      background: var(--accent-gold);
-      color: #0c0c0e;
-      border: none;
-    }
-    .legal-btn-primary:hover {
-      background: var(--accent-gold-hover);
-      text-decoration: none;
-      color: #000;
-    }
-    .legal-btn-secondary {
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
-      border: 1px solid var(--border-subtle);
-    }
-    .legal-btn-secondary:hover {
-      background: rgba(255, 255, 255, 0.12);
-      text-decoration: none;
-      color: #fff;
+      color: #bfdbfe;
+      line-height: 1.6;
     }
     .legal-footer {
       margin-top: 60px;
@@ -337,11 +364,14 @@
       font-size: 0.88rem;
     }
     @media (max-width: 768px) {
+      .legal-main {
+        padding: 24px 16px 60px;
+      }
       .tab-panel {
         padding: 24px 16px;
       }
       .legal-hero h1 {
-        font-size: 1.6rem;
+        font-size: 1.65rem;
       }
       .legal-actions-bar {
         flex-direction: column;
@@ -349,6 +379,18 @@
       .legal-btn-primary, .legal-btn-secondary {
         width: 100%;
         justify-content: center;
+      }
+    }
+    @media (max-width: 420px) {
+      .header-container {
+        padding: 12px 14px;
+      }
+      .brand-link {
+        font-size: 1.05rem;
+      }
+      .back-btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
       }
     }
     @media print {
@@ -388,8 +430,8 @@
     <div class="header-container">
       <a href="https://geeknook.ru/" class="brand-link">
         <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="6" fill="#cba870"/>
-          <path d="M8 10h16M8 16h16M8 22h10" stroke="#0c0c0e" stroke-width="2.5" stroke-linecap="round"/>
+          <rect width="32" height="32" rx="6" fill="#2b70f0"/>
+          <path d="M8 10h16M8 16h16M8 22h10" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
         </svg>
         GEEK NOOK
       </a>
@@ -415,7 +457,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
         <span id="copyLinkText">Скопировать ссылку</span>
       </button>
-      <a href="Информационное_письмо_о_сертификации_ООО_ГИК_НУК.docx" download class="legal-btn-secondary">
+      <a href="https://ggrk52.github.io/geeknook-web/Информационное_письмо_о_сертификации_ООО_ГИК_НУК.docx" download class="legal-btn-secondary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
         Письмо о сертификации (.docx)
       </a>
@@ -1455,15 +1497,15 @@ E-mail:</p>
     </div>
     <div class="req-item">
       <span class="req-label">Официальный сайт:</span>
-      <span class="req-val"><a href="https://geeknook.ru" target="_blank" style="color:#d4af37;">https://geeknook.ru</a></span>
+      <span class="req-val"><a href="https://geeknook.ru" target="_blank">https://geeknook.ru</a></span>
     </div>
     <div class="req-item">
       <span class="req-label">Электронная почта:</span>
-      <span class="req-val"><a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a></span>
+      <span class="req-val"><a href="mailto:info@geeknook.ru">info@geeknook.ru</a></span>
     </div>
     <div class="req-item">
       <span class="req-label">Служба заботы о клиентах:</span>
-      <span class="req-val"><a href="https://t.me/geeknook" target="_blank" style="color:#d4af37;">@geeknook в Telegram</a></span>
+      <span class="req-val"><a href="https://t.me/geeknook" target="_blank">@geeknook в Telegram</a></span>
     </div>
     <div class="req-item">
       <span class="req-label">Режим работы:</span>
@@ -1493,7 +1535,7 @@ E-mail:</p>
   <ul>
     <li><strong>Оплата при получении в СДЭК (Наложенный платеж):</strong> Вы оплачиваете заказ непосредственно при получении в пункте выдачи СДЭК после осмотра целостности посылки. Доступны оплата банковской картой любого банка РФ, наличными или по QR-коду СБП через терминал СДЭК. Кассовый чек формируется и выдается оператором СДЭК в соответствии с 54-ФЗ.</li>
     <li><strong>Онлайн-оплата через CDEK Pay:</strong> Безопасная моментальная оплата через платежную систему СДЭК с моментальной фискализацией чека.</li>
-    <li><strong>Безналичный расчет для юридических лиц (B2B):</strong> Выставление счета с предоставлением полного комплекта закрывающих документов (УПД). Запросы принимаются на <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a>.</li>
+    <li><strong>Безналичный расчет для юридических лиц (B2B):</strong> Выставление счета с предоставлением полного комплекта закрывающих документов (УПД). Запросы принимаются на <a href="mailto:info@geeknook.ru">info@geeknook.ru</a>.</li>
   </ul>
 </div>
 
@@ -1518,7 +1560,7 @@ E-mail:</p>
   </ul>
 
   <h3 class="legal-heading-2">3. Возврат при обнаружении производственного брака</h3>
-  <p>В случае обнаружения производственного дефекта свяжитесь со службой заботы по почте <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a> или в Telegram <a href="https://t.me/geeknook" target="_blank" style="color:#d4af37;">@geeknook</a> с фотографиями изделия. При подтверждении брака замена изделия или полный возврат средств (включая все транспортные расходы) производится за счет продавца.</p>
+  <p>В случае обнаружения производственного дефекта свяжитесь со службой заботы по почте <a href="mailto:info@geeknook.ru">info@geeknook.ru</a> или в Telegram <a href="https://t.me/geeknook" target="_blank">@geeknook</a> с фотографиями изделия. При подтверждении брака замена изделия или полный возврат средств (включая все транспортные расходы) производится за счет продавца.</p>
 </div>
 
     </section>
@@ -1572,7 +1614,7 @@ E-mail:</p>
   </div>
 
   <div style="margin-top:24px;display:flex;gap:12px;flex-wrap:wrap;">
-    <a href="Информационное_письмо_о_сертификации_ООО_ГИК_НУК.docx" download class="legal-btn-primary">
+    <a href="https://ggrk52.github.io/geeknook-web/Информационное_письмо_о_сертификации_ООО_ГИК_НУК.docx" download class="legal-btn-primary">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
       Скачать официальное письмо (.docx)
     </a>
@@ -1613,7 +1655,12 @@ E-mail:</p>
     }
 
     function copyCurrentLink() {
-      navigator.clipboard.writeText(window.location.href).then(() => {
+      const hash = window.location.hash || '#offer';
+      let canonicalUrl = window.location.href;
+      if (!canonicalUrl.includes('geeknook.ru')) {
+        canonicalUrl = 'https://geeknook.ru/legal' + hash;
+      }
+      navigator.clipboard.writeText(canonicalUrl).then(() => {
         const el = document.getElementById('copyLinkText');
         const old = el.innerText;
         el.innerText = 'Ссылка скопирована!';

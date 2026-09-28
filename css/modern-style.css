@@ -3871,10 +3871,10 @@ textarea:focus-visible {
 }
 
 .legal-tab-btn.active {
-  color: #0c0c0e;
-  background: var(--primary, #cba870);
+  color: #ffffff;
+  background: var(--primary, #2b70f0);
   font-weight: 700;
-  box-shadow: 0 2px 8px rgba(203, 168, 112, 0.3);
+  box-shadow: 0 4px 14px rgba(43, 112, 240, 0.35);
 }
 
 .legal-modal-body {
@@ -3903,7 +3903,7 @@ textarea:focus-visible {
   font-size: 1.12rem;
   font-weight: 700;
   margin: 20px 0 10px;
-  color: var(--primary, #cba870);
+  color: var(--primary, #2b70f0);
 }
 
 .legal-modal-body h5,

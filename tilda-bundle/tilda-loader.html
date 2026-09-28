@@ -160,9 +160,10 @@
           a.setAttribute('href', BASE_URL + href.replace(/^\.?\//, ''));
           a.setAttribute('target', '_blank');
           a.setAttribute('rel', 'noopener');
-        } else if (href && (href === 'legal.html' || href.startsWith('legal.html#'))) {
+        } else if (href && (href === 'legal.html' || href.startsWith('legal.html#') || href === '/legal' || href.startsWith('/legal#'))) {
           if (!a.getAttribute('onclick')) {
-            a.setAttribute('href', BASE_URL + href.replace(/^\.?\//, ''));
+            const hash = href.includes('#') ? href.substring(href.indexOf('#')) : '';
+            a.setAttribute('href', '/legal' + hash);
             a.setAttribute('target', '_blank');
             a.setAttribute('rel', 'noopener');
           }
