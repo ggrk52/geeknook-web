@@ -619,12 +619,11 @@
       const isApplied = savedCode && PROMOS[savedCode];
 
       promoWrap.innerHTML = `
-        <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
-          <span>Промокод на скидку:</span>
-          <span style="font-size: 11px; color: #60a5fa;">DEVTOOLS10 / GEEK10</span>
+        <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 8px;">
+          Промокод на скидку:
         </div>
         <div class="t706-promo-input-row" style="display: ${isApplied ? 'none' : 'flex'}; gap: 8px;">
-          <input type="text" class="t706-promo-input" placeholder="DEVTOOLS10" autocomplete="off" autocorrect="off" autocapitalize="characters" style="flex: 1; min-height: 40px; padding: 8px 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; font-size: 13px; text-transform: uppercase;" />
+          <input type="text" class="t706-promo-input" placeholder="Промокод" autocomplete="off" autocorrect="off" autocapitalize="characters" style="flex: 1; min-height: 40px; padding: 8px 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; font-size: 13px; text-transform: uppercase;" />
           <button type="button" class="t706-promo-btn" style="min-height: 40px; padding: 0 16px; background: #2b70f0; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: background 0.2s;">Применить</button>
         </div>
         <div class="t706-promo-applied" style="display: ${isApplied ? 'flex' : 'none'}; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); border-radius: 6px;">

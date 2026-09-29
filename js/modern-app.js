@@ -1819,7 +1819,7 @@
       currentFinish: options.initialFinish || 'finish-oak',
       currentLength: options.initialLength || 85,
       lightingMode: 'studio',
-      clock: new THREE.Clock(),
+      clock: (typeof THREE !== 'undefined' && typeof THREE.Clock === 'function') ? new THREE.Clock() : { getDelta() { return 0.016; } },
 
       start() {
         this.isRunning = true;
@@ -5477,34 +5477,24 @@
         action: () => { closeCommandPalette(); toggleSound(); }
       },
       {
-        id: 'action-promo-devtools',
-        category: 'Промокоды',
-        title: 'Применить DEVTOOLS10 (-10%)',
-        sub: 'Секретный промокод разработчика из консоли браузера',
-        badge: 'Скидка 10%',
-        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>',
-        action: () => {
-          closeCommandPalette();
-          applyPromoCode('DEVTOOLS10');
-          openCartDrawer();
-        }
-      },
-      {
-        id: 'action-promo-geek10',
-        category: 'Промокоды',
-        title: 'Применить GEEK10 (-10%)',
-        sub: 'Приветственный промокод GeekNook на заказ',
-        badge: 'Скидка 10%',
+        id: 'action-open-promo',
+        category: 'Корзина',
+        title: 'Ввести промокод',
+        sub: 'Применить скидку к заказу',
+        badge: 'Скидка',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>',
         action: () => {
           closeCommandPalette();
-          applyPromoCode('GEEK10');
           openCartDrawer();
+          setTimeout(() => {
+            const inp = document.getElementById('promoInput');
+            if (inp) inp.focus();
+          }, 300);
         }
       },
       ...(state.activePromoCode ? [{
         id: 'action-promo-remove',
-        category: 'Промокоды',
+        category: 'Корзина',
         title: `Сбросить промокод: ${state.activePromoCode}`,
         sub: `Текущая скидка: ${state.promoDiscountPercent}%`,
         badge: 'Сбросить',
