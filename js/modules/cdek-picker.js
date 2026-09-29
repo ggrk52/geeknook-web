@@ -2,7 +2,7 @@
  * GeekNook Interactive CDEK PVZ Picker & Map Module
  * Zero-order-submission safety: Read-only PVZ selection and validation.
  * Supports Leaflet interactive map, fast client-side search, top cities preloading,
- * and seamless fallback down to 320px mobile viewports.
+ * self-injecting modal and styles for seamless operation across standalone & Tilda environments.
  */
 (function(window) {
   'use strict';
@@ -48,6 +48,546 @@
   function normalize(str) {
     if (!str) return '';
     return str.toLowerCase().replace(/ё/g, 'е').replace(/[^\w\dа-яa-z]/gi, ' ').replace(/\s+/g, ' ').trim();
+  }
+
+  // Self-inject CSS styles if not already provided by page styles
+  function ensureStylesInDOM() {
+    if (document.getElementById('cdekPickerCustomStyles')) return;
+    const style = document.createElement('style');
+    style.id = 'cdekPickerCustomStyles';
+    style.textContent = `
+      #cdekMapModal.modal-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.75);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 9999999;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+      }
+      #cdekMapModal.active {
+        display: flex !important;
+      }
+      .cdek-modal-card {
+        max-width: 1040px;
+        width: 95vw;
+        height: 88vh;
+        max-height: 850px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        background: #12151c;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+        border-radius: 16px;
+        position: relative;
+        box-sizing: border-box;
+        overflow: hidden;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        color: #ffffff;
+      }
+      .cdek-modal-card .btn-close-modal {
+        position: absolute;
+        top: 18px;
+        right: 18px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #fff;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 16px;
+        z-index: 10;
+        transition: all 0.2s;
+      }
+      .cdek-modal-card .btn-close-modal:hover {
+        background: rgba(255, 255, 255, 0.18);
+        transform: rotate(90deg);
+      }
+      .cdek-modal-header {
+        flex-shrink: 0;
+        margin-bottom: 12px;
+      }
+      .cdek-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        background: rgba(43, 112, 240, 0.12);
+        border: 1px solid rgba(43, 112, 240, 0.28);
+        border-radius: 20px;
+        color: #60a5fa;
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .cdek-toolbar {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .cdek-search-wrap {
+        position: relative;
+        width: 100%;
+      }
+      .cdek-search-icon {
+        position: absolute;
+        left: 14px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: rgba(255, 255, 255, 0.4);
+        pointer-events: none;
+      }
+      .cdek-search-input {
+        width: 100%;
+        box-sizing: border-box;
+        height: 44px;
+        padding: 0 40px 0 42px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.14);
+        border-radius: 10px;
+        color: #fff;
+        font-size: 0.9375rem;
+        font-family: inherit;
+        outline: none;
+      }
+      .cdek-search-input:focus {
+        border-color: #2b70f0;
+        background: rgba(255, 255, 255, 0.08);
+      }
+      .cdek-clear-search-btn {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        padding: 6px;
+        font-size: 14px;
+        border-radius: 50%;
+      }
+      .cdek-city-pills {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding: 2px 0 6px;
+        max-width: 100%;
+        box-sizing: border-box;
+      }
+      .cdek-city-pills::-webkit-scrollbar { display: none; }
+      .cdek-city-pill {
+        flex-shrink: 0;
+        white-space: nowrap;
+        padding: 6px 14px;
+        min-height: 36px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.8125rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .cdek-city-pill:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+      .cdek-city-pill.active {
+        background: #2b70f0;
+        border-color: #2b70f0;
+        color: #ffffff;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(43, 112, 240, 0.35);
+      }
+      .cdek-mobile-tabs {
+        display: none;
+        margin-bottom: 10px;
+        background: rgba(255, 255, 255, 0.06);
+        border-radius: 10px;
+        padding: 4px;
+        gap: 4px;
+      }
+      .cdek-tab-btn {
+        flex: 1;
+        min-height: 40px;
+        background: none;
+        border: none;
+        border-radius: 8px;
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.875rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .cdek-tab-btn.active {
+        background: #2b70f0;
+        color: #fff;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+      }
+      .cdek-modal-body {
+        flex: 1;
+        min-height: 0;
+        display: grid;
+        grid-template-columns: 440px 1fr;
+        gap: 16px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #090b10;
+      }
+      .cdek-list-panel {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        min-height: 0;
+        background: rgba(255, 255, 255, 0.02);
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .cdek-list-header {
+        padding: 12px 16px;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.6);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        background: rgba(0, 0, 0, 0.2);
+      }
+      .cdek-points-scroll {
+        flex: 1;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .cdek-point-card {
+        padding: 14px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .cdek-point-card:hover {
+        background: rgba(255, 255, 255, 0.08);
+        border-color: rgba(43, 112, 240, 0.4);
+        transform: translateY(-1px);
+      }
+      .cdek-point-card.selected {
+        background: rgba(43, 112, 240, 0.12);
+        border-color: #2b70f0;
+        box-shadow: 0 0 0 1px #2b70f0;
+      }
+      .cdek-card-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+      }
+      .cdek-card-code {
+        font-family: monospace;
+        font-size: 0.8125rem;
+        font-weight: 700;
+        padding: 2px 6px;
+        background: rgba(43, 112, 240, 0.18);
+        border-radius: 4px;
+        color: #60a5fa;
+      }
+      .cdek-card-metro {
+        font-size: 0.75rem;
+        color: #10b981;
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .cdek-card-city {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.5);
+      }
+      .cdek-card-address {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #ffffff;
+        line-height: 1.35;
+      }
+      .cdek-card-meta {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 6px;
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.55);
+      }
+      .cdek-card-action { margin-top: 4px; }
+      .cdek-card-btn {
+        width: 100%;
+        min-height: 34px;
+        padding: 6px 12px;
+        background: rgba(43, 112, 240, 0.15);
+        border: 1px solid rgba(43, 112, 240, 0.35);
+        border-radius: 6px;
+        color: #60a5fa;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .cdek-card-btn:hover {
+        background: #2b70f0;
+        border-color: #2b70f0;
+        color: #fff;
+      }
+      .cdek-map-panel {
+        position: relative;
+        height: 100%;
+        width: 100%;
+        min-height: 300px;
+      }
+      .cdek-leaflet-container {
+        height: 100%;
+        width: 100%;
+        background: #11141c;
+      }
+      .cdek-map-loading {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 0.875rem;
+        pointer-events: none;
+        background: rgba(11, 13, 17, 0.85);
+        padding: 16px 24px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 500;
+      }
+      .cdek-spinner {
+        width: 24px;
+        height: 24px;
+        border: 3px solid rgba(43, 112, 240, 0.25);
+        border-top-color: #2b70f0;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      .cdek-modal-footer {
+        flex-shrink: 0;
+        margin-top: 12px;
+        padding: 12px 16px;
+        background: rgba(43, 112, 240, 0.08);
+        border: 1px solid rgba(43, 112, 240, 0.25);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+      }
+      .cdek-selected-summary {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        min-width: 0;
+      }
+      .cdek-selected-code {
+        font-family: monospace;
+        font-weight: 700;
+        color: #60a5fa;
+        font-size: 0.8125rem;
+      }
+      .cdek-selected-address {
+        font-weight: 600;
+        color: #fff;
+        font-size: 0.875rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .cdek-selected-sub {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+      .cdek-btn-confirm {
+        flex-shrink: 0;
+        min-height: 44px;
+        padding: 0 20px;
+        background: #2b70f0;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 0.875rem;
+        white-space: nowrap;
+      }
+      .cdek-leaflet-popup .leaflet-popup-content-wrapper {
+        background: #14171f;
+        color: #ffffff;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+        padding: 0;
+      }
+      .cdek-leaflet-popup .leaflet-popup-content { margin: 12px 14px; line-height: 1.4; }
+      .cdek-leaflet-popup .leaflet-popup-tip { background: #14171f; }
+      .cdek-popup-card { display: flex; flex-direction: column; gap: 6px; font-family: sans-serif; }
+      .cdek-popup-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+      .cdek-popup-code { font-family: monospace; font-weight: 700; color: #60a5fa; font-size: 0.8125rem; }
+      .cdek-popup-city { font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); }
+      .cdek-popup-address { font-size: 0.875rem; font-weight: 600; color: #ffffff; }
+      .cdek-popup-metro { font-size: 0.75rem; color: #10b981; }
+      .cdek-popup-hours { font-size: 0.75rem; color: rgba(255, 255, 255, 0.6); }
+      .cdek-popup-select-btn {
+        margin-top: 4px;
+        width: 100%;
+        min-height: 36px;
+        background: #2b70f0;
+        border: none;
+        border-radius: 6px;
+        color: #fff;
+        font-size: 0.8125rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      @media (max-width: 768px) {
+        .cdek-modal-card {
+          padding: 16px 12px;
+          height: 94vh;
+          max-height: none;
+          width: 96vw;
+        }
+        .cdek-mobile-tabs { display: flex; }
+        .cdek-modal-body { grid-template-columns: 1fr; min-height: 0; flex: 1; }
+        .cdek-list-panel, .cdek-map-panel { display: none; height: 100%; min-height: 0; }
+        .cdek-map-panel.mobile-visible { display: block; }
+        .cdek-list-panel.mobile-visible { display: flex; flex-direction: column; border-right: none; }
+        .cdek-modal-footer { flex-direction: column; align-items: stretch; gap: 10px; }
+        .cdek-btn-confirm { width: 100%; }
+      }
+      @media (max-width: 380px) {
+        .cdek-modal-card { padding: 12px 8px; width: 98vw; }
+      }
+      @keyframes spin { 100% { transform: rotate(360deg); } }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Ensure modal HTML markup exists in document.body
+  function ensureModalInDOM() {
+    let modal = document.getElementById('cdekMapModal');
+    if (modal) return modal;
+
+    ensureStylesInDOM();
+
+    modal = document.createElement('div');
+    modal.className = 'modal-backdrop';
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.id = 'cdekMapModal';
+    modal.onclick = function(event) {
+      if (event.target === this) closeModal();
+    };
+
+    modal.innerHTML = `
+      <div class="modal-card cdek-modal-card">
+        <button class="btn-close-modal" onclick="window.geekNookCdekPicker.close()" aria-label="Закрыть окно">✕</button>
+        
+        <div class="cdek-modal-header">
+          <div class="cdek-badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+            СДЭК Доставка
+          </div>
+          <h2 class="modal-title" style="font-size:1.6rem;margin-top:6px;margin-bottom:4px;">Пункты выдачи СДЭК (ПВЗ)</h2>
+          <p class="modal-subtitle" style="margin-bottom:12px;font-size:0.875rem;">Выберите пункт на интерактивной карте или найдите по адресу, метро или коду ПВЗ</p>
+        </div>
+
+        <div class="cdek-toolbar">
+          <div class="cdek-search-wrap">
+            <svg class="cdek-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            <input type="text" id="cdekSearchInput" class="cdek-search-input" placeholder="Поиск по адресу, метро, городу или коду (напр. Тверская или MSK...)" autocomplete="off" />
+            <button type="button" id="cdekClearSearch" class="cdek-clear-search-btn" style="display:none;" aria-label="Очистить поиск">✕</button>
+          </div>
+
+          <div class="cdek-city-pills" id="cdekCityPills">
+            <button type="button" class="cdek-city-pill active" data-city="Москва">Москва</button>
+            <button type="button" class="cdek-city-pill" data-city="Санкт-Петербург">Санкт-Петербург</button>
+            <button type="button" class="cdek-city-pill" data-city="Новосибирск">Новосибирск</button>
+            <button type="button" class="cdek-city-pill" data-city="Екатеринбург">Екатеринбург</button>
+            <button type="button" class="cdek-city-pill" data-city="Казань">Казань</button>
+            <button type="button" class="cdek-city-pill" data-city="Нижний Новгород">Нижний Новгород</button>
+            <button type="button" class="cdek-city-pill" data-city="Краснодар">Краснодар</button>
+            <button type="button" class="cdek-city-pill" data-city="Самара">Самара</button>
+            <button type="button" class="cdek-city-pill" data-city="all">Все города</button>
+          </div>
+        </div>
+
+        <div class="cdek-mobile-tabs" id="cdekMobileTabs">
+          <button type="button" class="cdek-tab-btn active" data-tab="map">🗺️ Карта ПВЗ</button>
+          <button type="button" class="cdek-tab-btn" data-tab="list">📋 Список (<span id="cdekPointsCount">0</span>)</button>
+        </div>
+
+        <div class="cdek-modal-body">
+          <div class="cdek-list-panel" id="cdekListPanel">
+            <div class="cdek-list-header">
+              <span id="cdekResultsHeading">Пункты выдачи в г. Москва</span>
+            </div>
+            <div class="cdek-points-scroll" id="cdekPointsScroll"></div>
+          </div>
+
+          <div class="cdek-map-panel mobile-visible" id="cdekMapPanel">
+            <div id="cdekLeafletMap" class="cdek-leaflet-container"></div>
+            <div class="cdek-map-loading" id="cdekMapLoading">
+              <div class="cdek-spinner"></div>
+              <span>Загрузка интерактивной карты...</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="cdek-modal-footer" id="cdekModalFooter" style="display:none;">
+          <div class="cdek-selected-summary">
+            <div class="cdek-selected-code" id="cdekSelectedCode">MSK142</div>
+            <div class="cdek-selected-address" id="cdekSelectedAddress">ул. Тверская, д. 9</div>
+            <div class="cdek-selected-sub" id="cdekSelectedSub">Пн-Вс 10:00-21:00</div>
+          </div>
+          <button type="button" class="btn-checkout cdek-btn-confirm" id="cdekBtnConfirm" onclick="window.geekNookCdekPicker.confirmSelection()">
+            Выбрать этот пункт
+          </button>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+    setupEvents();
+    return modal;
   }
 
   // Load Leaflet dynamically on demand
@@ -149,7 +689,6 @@
       if (city !== 'all' && !q) {
         if (p.ct !== city) return false;
       } else if (city !== 'all' && q) {
-        // If user typed city name in query, don't restrict by city pill
         const queryHasCity = q.length > 3 && (q.includes('моск') || q.includes('питер') || q.includes('казан') || q.includes('екат') || q.includes('новосиб'));
         if (!queryHasCity && p.ct !== city && !q.includes(normalize(p.ct))) {
           // Keep search focused unless empty
@@ -204,7 +743,7 @@
   function createCustomIcon(isSelected) {
     if (!window.L) return null;
     const bg = isSelected ? '#10b981' : '#2b70f0';
-    const border = isSelected ? '#ffffff' : '#ffffff';
+    const border = '#ffffff';
     const svg = `
       <svg width="28" height="34" viewBox="0 0 28 34" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M14 0C6.268 0 0 6.268 0 14c0 10.5 14 20 14 20s14-9.5 14-20c0-7.732-6.268-14-14-14z" fill="${bg}"/>
@@ -221,7 +760,7 @@
     });
   }
 
-  // Update markers on the map for visible points (up to 150 nearest for 60fps)
+  // Update markers on the map for visible points
   function updateMapMarkers() {
     if (!state.leafletMap || !state.markersLayer || !window.L) return;
 
@@ -251,8 +790,8 @@
           <div class="cdek-popup-address">${escapeHTML(p.a)}</div>
           ${p.m ? `<div class="cdek-popup-metro">Ⓜ ${escapeHTML(p.m)}</div>` : ''}
           <div class="cdek-popup-hours">🕒 ${escapeHTML(p.w)}</div>
-          <button type="button" class="cdek-popup-select-btn" onclick="window.geekNookCdekPicker.selectPoint('${p.c}')">
-            Выбрать этот ПВЗ
+          <button type="button" class="cdek-popup-select-btn" onclick="window.geekNookCdekPicker.selectAndConfirm('${p.c}')">
+            Выбрать этот пункт
           </button>
         </div>
       `;
@@ -320,7 +859,6 @@
       return;
     }
 
-    // Render up to 100 in list for fast scrolling
     const visibleList = points.slice(0, 100);
     scrollEl.innerHTML = visibleList.map(p => {
       const isSelected = state.selectedPoint && state.selectedPoint.c === p.c;
@@ -336,8 +874,8 @@
             <span class="cdek-card-phone">${escapeHTML(p.p || '+7 800 250-04-05')}</span>
           </div>
           <div class="cdek-card-action">
-            <button type="button" class="cdek-card-btn ${isSelected ? 'active' : ''}">
-              ${isSelected ? '✓ Выбран' : 'Выбрать этот ПВЗ'}
+            <button type="button" class="cdek-card-btn ${isSelected ? 'active' : ''}" onclick="event.stopPropagation(); window.geekNookCdekPicker.selectAndConfirm('${p.c}')">
+              ${isSelected ? '✓ Выбран' : 'Выбрать этот пункт'}
             </button>
           </div>
         </div>
@@ -415,6 +953,12 @@
     closeModal();
   }
 
+  // 1-Click Select and Confirm
+  function selectAndConfirm(code) {
+    selectPoint(code, false);
+    confirmSelection();
+  }
+
   // Open the modal
   function openModal(callback) {
     state.onSelectCallback = callback || null;
@@ -422,9 +966,9 @@
 
     initData();
 
-    const modal = document.getElementById('cdekMapModal');
+    const modal = ensureModalInDOM();
     if (!modal) {
-      console.error('[GeekNook CDEK] cdekMapModal element not found in DOM.');
+      console.error('[GeekNook CDEK] Failed to initialize modal in DOM.');
       return;
     }
 
@@ -574,6 +1118,8 @@
     setCity: setCity,
     selectPoint: selectPoint,
     confirmSelection: confirmSelection,
+    selectAndConfirm: selectAndConfirm,
+    ensureModalInDOM: ensureModalInDOM,
     getState: () => ({ ...state })
   };
 

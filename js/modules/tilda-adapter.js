@@ -357,121 +357,6 @@
 
     setInterval(syncTildaCartBadge, 800);
     syncTildaCartBadge();
-
-    // --- 8. SMART CDEK PVZ SANITIZER & MAP HELPER ---
-    function setupCdekFieldSanitizer() {
-      const translitMap = {
-        'А': 'A', 'Б': 'B', 'В': 'B', 'Г': 'G', 'Д': 'D', 'Е': 'E', 'Ё': 'E', 'Ж': 'ZH', 'З': 'Z',
-        'И': 'I', 'Й': 'Y', 'К': 'K', 'Л': 'L', 'М': 'M', 'Н': 'H', 'О': 'O', 'П': 'P', 'Р': 'P',
-        'С': 'C', 'Т': 'T', 'У': 'Y', 'Ф': 'F', 'Х': 'X', 'Ц': 'TS', 'Ч': 'CH', 'Ш': 'SH', 'Щ': 'SHCH',
-        'Ы': 'Y', 'Э': 'E', 'Ю': 'YU', 'Я': 'YA'
-      };
-
-      function sanitizeCdekVal(raw) {
-        if (!raw) return '';
-        let s = raw.toString().toUpperCase().trim();
-        let res = '';
-        for (let i = 0; i < s.length; i++) {
-          const ch = s[i];
-          res += translitMap[ch] || ch;
-        }
-        return res.replace(/[^A-Z0-9]/g, '').slice(0, 8);
-      }
-
-      function attachListenerToCdekInput() {
-        const inp = document.querySelector('input[name="Доставка СДЕК"], #input_1790269790207, input[name*="СДЕК"], input[name*="сдек"], input[name*="cdek"], input[name*="CDEK"]');
-        if (!inp || inp.dataset.cdekSanitizerAttached) return;
-
-        inp.dataset.cdekSanitizerAttached = 'true';
-        inp.setAttribute('autocomplete', 'off');
-        inp.setAttribute('autocapitalize', 'characters');
-
-        inp.addEventListener('input', function() {
-          const clean = sanitizeCdekVal(this.value);
-          if (this.value !== clean) {
-            this.value = clean;
-          }
-        });
-
-        // Add helper link below input if not already present
-        const parent = inp.closest('.t-input-group');
-        if (parent && !parent.querySelector('.cdek-map-helper-link')) {
-          const helper = document.createElement('div');
-          helper.className = 'cdek-map-helper-link';
-          helper.style.cssText = 'margin-top: 6px; font-size: 12px; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 6px;';
-          helper.innerHTML = `
-            <span>Не знаете код?</span>
-            <a href="https://www.cdek.ru/ru/offices" target="_blank" rel="noopener noreferrer" style="color: #60a5fa; text-decoration: underline; font-weight: 500;">
-              Найти свой ПВЗ на карте cdek.ru ↗
-            </a>
-          `;
-          parent.appendChild(helper);
-        }
-      }
-
-      document.addEventListener('focusin', attachListenerToCdekInput);
-      setInterval(attachListenerToCdekInput, 1000);
-      attachListenerToCdekInput();
-    }
-
-    setupCdekFieldSanitizer();
-
-    // --- 9. ENSURE RUSSIAN BUTTON TEXT ("Оформить заказ") ---
-    function ensureRussianButtonText() {
-      const texts = document.querySelectorAll('.t706 .t-btnflex__text, .t706 .t-submit, .t-form__submit .t-btnflex__text, .t-form__submit .t-submit');
-      texts.forEach(el => {
-        if (el.tagName === 'INPUT' && (el.value.toLowerCase().includes('check') || el.value.toLowerCase().includes('order'))) {
-          el.value = 'Оформить заказ';
-        } else if (el.classList.contains('t-btnflex__text') && (el.textContent.trim().toLowerCase() === 'checkout' || el.textContent.trim().toLowerCase() === 'order')) {
-          el.textContent = 'Оформить заказ';
-        } else if (el.tagName === 'BUTTON' && !el.querySelector('.t-btnflex__text') && el.textContent.trim().toLowerCase().includes('check')) {
-          el.textContent = 'Оформить заказ';
-        }
-      });
-    }
-    setInterval(ensureRussianButtonText, 300);
-    ensureRussianButtonText();
-
-    // --- 10. SETUP CDEK PAYMENT OPTIONS LABELS ---
-    function setupCdekPaymentLabels() {
-      const pmGroup = document.querySelector('.t706__orderform .t-input-group_pm, .t-input-group_pm');
-      if (!pmGroup) return;
-
-      const labels = pmGroup.querySelectorAll('.t-radio__control');
-      if (labels.length >= 2) {
-        const r1 = labels[0];
-        const r2 = labels[1];
-
-        if (!r1.dataset.cdekRenamed) {
-          r1.dataset.cdekRenamed = 'true';
-          const indicator = r1.querySelector('.t-radio__indicator');
-          const input = r1.querySelector('input');
-          r1.innerHTML = '';
-          if (input) r1.appendChild(input);
-          if (indicator) r1.appendChild(indicator);
-          const span = document.createElement('span');
-          span.style.cssText = 'color: #ffffff; font-weight: 500; font-size: 13px; line-height: 1.4; display: block;';
-          span.innerHTML = '<strong>Оплата в СДЭК при получении</strong><br><span style="color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 400;">Картой или наличными в пункте выдачи после проверки товара</span>';
-          r1.appendChild(span);
-        }
-
-        if (!r2.dataset.cdekRenamed) {
-          r2.dataset.cdekRenamed = 'true';
-          const indicator = r2.querySelector('.t-radio__indicator');
-          const input = r2.querySelector('input');
-          r2.innerHTML = '';
-          if (input) r2.appendChild(input);
-          if (indicator) r2.appendChild(indicator);
-          const span = document.createElement('span');
-          span.style.cssText = 'color: #ffffff; font-weight: 500; font-size: 13px; line-height: 1.4; display: block;';
-          span.innerHTML = '<strong>Онлайн-оплата через СДЭК</strong><br><span style="color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 400;">По безопасной ссылке СДЭК Pay перед отправкой заказа</span>';
-          r2.appendChild(span);
-        }
-      }
-    }
-    setInterval(setupCdekPaymentLabels, 400);
-    setupCdekPaymentLabels();
-
     // Export global helper
     window.geekNookTilda = {
       isTildaActive,
@@ -500,6 +385,44 @@
       return res.replace(/[^A-Z0-9]/g, '').slice(0, 8);
     }
 
+    function syncTildaOrderPvz(code, fullText) {
+      const commentInputs = document.querySelectorAll(
+        '.t706__orderform input[name="comments"], .t706__orderform textarea[name="comments"], ' +
+        '.t706__orderform input[name="comment"], .t706__orderform textarea[name="comment"]'
+      );
+      commentInputs.forEach(inp => {
+        let curr = inp.value || '';
+        curr = curr.replace(/\s*\[ПВЗ СДЭК:.*?\]/g, '').trim();
+        if (code) {
+          curr = (curr ? curr + ' ' : '') + `[ПВЗ СДЭК: ${code} (${fullText})]`;
+        }
+        inp.value = curr;
+      });
+    }
+
+    function openCdekPickerForTilda(onSelected) {
+      if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.open === 'function') {
+        window.geekNookCdekPicker.open(onSelected);
+        return;
+      }
+
+      const base = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
+      const cleanBase = base.endsWith('/') ? base : base + '/';
+
+      const s1 = document.createElement('script');
+      s1.src = cleanBase + 'js/data/cdek-popular.js?v=' + Date.now();
+      document.head.appendChild(s1);
+
+      const s2 = document.createElement('script');
+      s2.src = cleanBase + 'js/modules/cdek-picker.js?v=' + Date.now();
+      s2.onload = function() {
+        if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.open === 'function') {
+          window.geekNookCdekPicker.open(onSelected);
+        }
+      };
+      document.head.appendChild(s2);
+    }
+
     function attachListenerToCdekInput() {
       const inp = document.querySelector('input[name="Доставка СДЕК"], #input_1790269790207, input[name*="СДЕК"], input[name*="сдек"], input[name*="cdek"], input[name*="CDEK"]');
       if (!inp || inp.dataset.cdekSanitizerAttached) return;
@@ -516,40 +439,67 @@
       });
 
       const parent = inp.closest('.t-input-group');
-      if (parent && !parent.querySelector('.cdek-map-helper-link')) {
+      if (parent) {
+        const oldLink = parent.querySelector('.cdek-map-helper-link');
+        if (oldLink) oldLink.remove();
+
+        if (!parent.querySelector('.cdek-map-helper-wrap')) {
         const helper = document.createElement('div');
-        helper.className = 'cdek-map-helper-link';
-        helper.style.cssText = 'margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;';
+        helper.className = 'cdek-map-helper-wrap';
+        helper.style.cssText = 'margin-top: 8px; width: 100%; box-sizing: border-box;';
         helper.innerHTML = `
-          <button type="button" class="btn-tilda-cdek-picker" style="background: rgba(43,112,240,0.18); border: 1px solid rgba(43,112,240,0.4); border-radius: 6px; color: #60a5fa; font-size: 12px; font-weight: 600; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; transition: all 0.2s;">
-            <span>🗺️ Выбрать ПВЗ на карте</span>
+          <button type="button" class="btn-tilda-cdek-picker" style="width: 100%; min-height: 42px; background: #2b70f0; border: none; border-radius: 6px; color: #ffffff; font-size: 13px; font-weight: 600; padding: 8px 14px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; font-family: inherit; transition: background 0.2s; box-shadow: 0 2px 8px rgba(43,112,240,0.35);">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+            <span>Выбрать пункт выдачи СДЭК на карте</span>
           </button>
-          <a href="https://www.cdek.ru/ru/offices" target="_blank" rel="noopener noreferrer" style="color: rgba(255,255,255,0.55); text-decoration: underline; font-size: 11px;">
-            cdek.ru/offices ↗
-          </a>
+          <div class="tilda-cdek-selected-box" style="display: none; margin-top: 8px; padding: 10px 12px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.35); border-radius: 6px; align-items: center; justify-content: space-between;">
+            <div style="min-width: 0; padding-right: 8px;">
+              <div class="tilda-cdek-selected-code" style="color: #10b981; font-weight: 700; font-family: monospace; font-size: 13px;"></div>
+              <div class="tilda-cdek-selected-address" style="color: rgba(255,255,255,0.85); font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></div>
+            </div>
+            <button type="button" class="btn-tilda-cdek-change" style="background: none; border: none; color: #60a5fa; text-decoration: underline; font-size: 12px; font-weight: 600; cursor: pointer; padding: 2px 6px; flex-shrink: 0;">Изменить</button>
+          </div>
         `;
 
         const pickBtn = helper.querySelector('.btn-tilda-cdek-picker');
+        const selectedBox = helper.querySelector('.tilda-cdek-selected-box');
+        const codeEl = helper.querySelector('.tilda-cdek-selected-code');
+        const addrEl = helper.querySelector('.tilda-cdek-selected-address');
+        const changeBtn = helper.querySelector('.btn-tilda-cdek-change');
+
+        function handleSelect(point) {
+          inp.value = point.code;
+          inp.dispatchEvent(new Event('input', { bubbles: true }));
+          inp.dispatchEvent(new Event('change', { bubbles: true }));
+
+          if (codeEl) codeEl.textContent = `✓ ПВЗ: ${point.code}`;
+          if (addrEl) addrEl.textContent = `${point.city}, ${point.address}`;
+          if (selectedBox) selectedBox.style.display = 'flex';
+          if (pickBtn) pickBtn.style.display = 'none';
+
+          syncTildaOrderPvz(point.code, `${point.city}, ${point.address}`);
+        }
+
         if (pickBtn) {
           pickBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.open === 'function') {
-              window.geekNookCdekPicker.open(function(point) {
-                inp.value = point.code;
-                inp.dispatchEvent(new Event('input', { bubbles: true }));
-                inp.dispatchEvent(new Event('change', { bubbles: true }));
-              });
-            } else {
-              window.open('https://www.cdek.ru/ru/offices', '_blank');
-            }
+            openCdekPickerForTilda(handleSelect);
+          });
+        }
+
+        if (changeBtn) {
+          changeBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openCdekPickerForTilda(handleSelect);
           });
         }
 
         parent.appendChild(helper);
       }
     }
+  }
 
-    // 2. ENSURE RUSSIAN BUTTON TEXT ("Оформить заказ")
+  // 2. ENSURE RUSSIAN BUTTON TEXT ("Оформить заказ")
     function ensureRussianButtonText() {
       const texts = document.querySelectorAll('.t706 .t-btnflex__text, .t706 .t-submit, .t-form__submit .t-btnflex__text, .t-form__submit .t-submit');
       texts.forEach(el => {

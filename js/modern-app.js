@@ -2535,15 +2535,30 @@
     modalManager.open('checkoutModal');
   };
 
-  // --- CDEK INTERACTIVE MAP & PVZ SELECTION ---
   const openCdekMap = () => {
     if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.open === 'function') {
       window.geekNookCdekPicker.open((point) => {
         applySelectedPvz(point);
       });
-    } else {
-      window.open('https://www.cdek.ru/ru/offices', '_blank');
+      return;
     }
+
+    const base = window.GEEKNOOK_CDN_URL || '';
+    const cleanBase = base ? (base.endsWith('/') ? base : base + '/') : '';
+    const s1 = document.createElement('script');
+    s1.src = cleanBase + 'js/data/cdek-popular.js?v=' + Date.now();
+    document.head.appendChild(s1);
+
+    const s2 = document.createElement('script');
+    s2.src = cleanBase + 'js/modules/cdek-picker.js?v=' + Date.now();
+    s2.onload = () => {
+      if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.open === 'function') {
+        window.geekNookCdekPicker.open((point) => {
+          applySelectedPvz(point);
+        });
+      }
+    };
+    document.head.appendChild(s2);
   };
 
   const closeCdekMap = () => {
