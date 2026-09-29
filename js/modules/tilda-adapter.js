@@ -519,13 +519,32 @@
       if (parent && !parent.querySelector('.cdek-map-helper-link')) {
         const helper = document.createElement('div');
         helper.className = 'cdek-map-helper-link';
-        helper.style.cssText = 'margin-top: 6px; font-size: 12px; color: rgba(255,255,255,0.65); display: flex; align-items: center; gap: 6px;';
+        helper.style.cssText = 'margin-top: 8px; font-size: 12px; color: rgba(255,255,255,0.7); display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap;';
         helper.innerHTML = `
-          <span>Не знаете код?</span>
-          <a href="https://www.cdek.ru/ru/offices" target="_blank" rel="noopener noreferrer" style="color: #60a5fa; text-decoration: underline; font-weight: 500;">
-            Найти свой ПВЗ на карте cdek.ru ↗
+          <button type="button" class="btn-tilda-cdek-picker" style="background: rgba(43,112,240,0.18); border: 1px solid rgba(43,112,240,0.4); border-radius: 6px; color: #60a5fa; font-size: 12px; font-weight: 600; padding: 5px 12px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; transition: all 0.2s;">
+            <span>🗺️ Выбрать ПВЗ на карте</span>
+          </button>
+          <a href="https://www.cdek.ru/ru/offices" target="_blank" rel="noopener noreferrer" style="color: rgba(255,255,255,0.55); text-decoration: underline; font-size: 11px;">
+            cdek.ru/offices ↗
           </a>
         `;
+
+        const pickBtn = helper.querySelector('.btn-tilda-cdek-picker');
+        if (pickBtn) {
+          pickBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.open === 'function') {
+              window.geekNookCdekPicker.open(function(point) {
+                inp.value = point.code;
+                inp.dispatchEvent(new Event('input', { bubbles: true }));
+                inp.dispatchEvent(new Event('change', { bubbles: true }));
+              });
+            } else {
+              window.open('https://www.cdek.ru/ru/offices', '_blank');
+            }
+          });
+        }
+
         parent.appendChild(helper);
       }
     }

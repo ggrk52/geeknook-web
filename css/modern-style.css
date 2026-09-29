@@ -7988,4 +7988,724 @@ textarea:focus-visible {
   }
 }
 
+/* ==========================================================================
+   CDEK INTERACTIVE PVZ MAP & PICKER STYLES
+   ========================================================================== */
+.cdek-modal-card {
+  max-width: 1040px;
+  width: 95vw;
+  height: 88vh;
+  max-height: 850px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card, #12151c);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+  border-radius: 16px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.cdek-modal-header {
+  flex-shrink: 0;
+  margin-bottom: 12px;
+}
+
+.cdek-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(43, 112, 240, 0.12);
+  border: 1px solid rgba(43, 112, 240, 0.28);
+  border-radius: 20px;
+  color: #60a5fa;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cdek-toolbar {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.cdek-search-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.cdek-search-icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+.cdek-search-input {
+  width: 100%;
+  box-sizing: border-box;
+  height: 44px;
+  padding: 0 40px 0 42px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.cdek-search-input:focus {
+  outline: none;
+  border-color: #2b70f0;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.cdek-clear-search-btn {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  padding: 6px;
+  font-size: 14px;
+  border-radius: 50%;
+}
+
+.cdek-clear-search-btn:hover {
+  color: #fff;
+}
+
+/* Fluid city pills conforming to GEMINI.md */
+.cdek-city-pills {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding: 2px 0 6px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.cdek-city-pills::-webkit-scrollbar {
+  display: none;
+}
+
+.cdek-city-pill {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 6px 14px;
+  min-height: 36px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cdek-city-pill:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.cdek-city-pill.active {
+  background: #2b70f0;
+  border-color: #2b70f0;
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(43, 112, 240, 0.35);
+}
+
+/* Mobile Tabs (Map vs List) */
+.cdek-mobile-tabs {
+  display: none;
+  margin-bottom: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 4px;
+  gap: 4px;
+}
+
+.cdek-tab-btn {
+  flex: 1;
+  min-height: 40px;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cdek-tab-btn.active {
+  background: #2b70f0;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Main Split Body */
+.cdek-modal-body {
+  flex: 1;
+  min-height: 0;
+  display: grid;
+  grid-template-columns: 440px 1fr;
+  gap: 16px;
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #090b10;
+}
+
+/* List Panel */
+.cdek-list-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: rgba(255, 255, 255, 0.02);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cdek-list-header {
+  padding: 12px 16px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.cdek-points-scroll {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cdek-point-card {
+  padding: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cdek-point-card:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(43, 112, 240, 0.4);
+  transform: translateY(-1px);
+}
+
+.cdek-point-card.selected {
+  background: rgba(43, 112, 240, 0.12);
+  border-color: #2b70f0;
+  box-shadow: 0 0 0 1px #2b70f0;
+}
+
+.cdek-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cdek-card-code {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  background: rgba(43, 112, 240, 0.18);
+  border-radius: 4px;
+  color: #60a5fa;
+}
+
+.cdek-card-metro {
+  font-size: 0.75rem;
+  color: #10b981;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cdek-card-city {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.cdek-card-address {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.35;
+}
+
+.cdek-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.cdek-card-action {
+  margin-top: 4px;
+}
+
+.cdek-card-btn {
+  width: 100%;
+  min-height: 34px;
+  padding: 6px 12px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 6px;
+  color: #ffffff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.cdek-card-btn:hover,
+.cdek-card-btn.active {
+  background: #2b70f0;
+  border-color: #2b70f0;
+  color: #fff;
+}
+
+/* Map Panel */
+.cdek-map-panel {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  min-height: 300px;
+}
+
+.cdek-leaflet-container {
+  height: 100%;
+  width: 100%;
+  background: #11141c;
+}
+
+.cdek-map-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.875rem;
+  pointer-events: none;
+  background: rgba(11, 13, 17, 0.85);
+  padding: 16px 24px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 500;
+}
+
+.cdek-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid rgba(43, 112, 240, 0.25);
+  border-top-color: #2b70f0;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+.cdek-map-actions {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  z-index: 400;
+}
+
+.cdek-link-external {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(11, 13, 17, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.cdek-link-external:hover {
+  background: #2b70f0;
+  border-color: #2b70f0;
+}
+
+/* Modal Bottom Selected Bar */
+.cdek-modal-footer {
+  flex-shrink: 0;
+  margin-top: 12px;
+  padding: 12px 16px;
+  background: rgba(43, 112, 240, 0.08);
+  border: 1px solid rgba(43, 112, 240, 0.25);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.cdek-selected-summary {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.cdek-selected-code {
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  color: #60a5fa;
+  font-size: 0.8125rem;
+}
+
+.cdek-selected-address {
+  font-weight: 600;
+  color: #fff;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cdek-selected-sub {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cdek-btn-confirm {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0 20px;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+/* Leaflet Custom Popup Styling */
+.cdek-leaflet-popup .leaflet-popup-content-wrapper {
+  background: #14171f;
+  color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  padding: 0;
+}
+
+.cdek-leaflet-popup .leaflet-popup-content {
+  margin: 12px 14px;
+  line-height: 1.4;
+}
+
+.cdek-leaflet-popup .leaflet-popup-tip {
+  background: #14171f;
+}
+
+.cdek-popup-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-family: var(--font-main, sans-serif);
+}
+
+.cdek-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.cdek-popup-code {
+  font-family: monospace;
+  font-weight: 700;
+  color: #60a5fa;
+  font-size: 0.8125rem;
+}
+
+.cdek-popup-city {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cdek-popup-address {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.cdek-popup-metro {
+  font-size: 0.75rem;
+  color: #10b981;
+}
+
+.cdek-popup-hours {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cdek-popup-select-btn {
+  margin-top: 4px;
+  width: 100%;
+  min-height: 36px;
+  background: #2b70f0;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.cdek-popup-select-btn:hover {
+  background: #1d4ed8;
+}
+
+/* Empty & Notice states */
+.cdek-empty-state {
+  padding: 32px 16px;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.cdek-empty-icon {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+.cdek-empty-title {
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.cdek-empty-desc {
+  font-size: 0.8125rem;
+}
+
+.cdek-more-notice {
+  text-align: center;
+  padding: 10px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* ==========================================================================
+   CHECKOUT MODAL CDEK INTEGRATION STYLES
+   ========================================================================== */
+.checkout-field-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.btn-cdek-pick-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(43, 112, 240, 0.12);
+  border: 1px solid rgba(43, 112, 240, 0.3);
+  border-radius: 6px;
+  color: #60a5fa;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-height: 28px;
+}
+
+.btn-cdek-pick-action:hover {
+  background: rgba(43, 112, 240, 0.25);
+  border-color: #2b70f0;
+  color: #fff;
+}
+
+.checkout-pvz-selected-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 8px;
+  padding: 10px 14px;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.28);
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+.checkout-pvz-badge-content {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.checkout-pvz-badge-icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.checkout-pvz-badge-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.checkout-pvz-badge-text strong {
+  font-size: 0.75rem;
+  font-family: monospace;
+  color: #10b981;
+}
+
+.checkout-pvz-badge-text span {
+  font-size: 0.8125rem;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.checkout-pvz-badge-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.checkout-pvz-btn-change {
+  background: none;
+  border: none;
+  color: #60a5fa;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+  padding: 2px 4px;
+}
+
+.checkout-pvz-btn-clear {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  line-height: 1;
+}
+
+.checkout-pvz-btn-clear:hover {
+  color: #ef4444;
+}
+
+/* Responsive Overrides (<= 768px & <= 380px) */
+@media (max-width: 768px) {
+  .cdek-modal-card {
+    padding: 16px 12px;
+    height: 94vh;
+    max-height: none;
+    width: 96vw;
+  }
+
+  .cdek-mobile-tabs {
+    display: flex;
+  }
+
+  .cdek-modal-body {
+    grid-template-columns: 1fr;
+    min-height: 0;
+    flex: 1;
+  }
+
+  .cdek-list-panel,
+  .cdek-map-panel {
+    display: none;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .cdek-map-panel.mobile-visible {
+    display: block;
+  }
+
+  .cdek-list-panel.mobile-visible {
+    display: flex;
+    flex-direction: column;
+    border-right: none;
+  }
+
+  .cdek-modal-footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .cdek-btn-confirm {
+    width: 100%;
+  }
+}
+
+@media (max-width: 380px) {
+  .cdek-modal-card {
+    padding: 12px 8px;
+    width: 98vw;
+  }
+
+  .checkout-field-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .btn-cdek-pick-action {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 

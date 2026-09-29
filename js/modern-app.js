@@ -253,6 +253,7 @@
     quickBuyProduct: null,
     quickBuyProductOption: 'Стандарт',
     activeLegalTab: 'delivery',
+    selectedPvz: null,
     quiz: {
       step: 1,
       answers: {
@@ -2534,6 +2535,63 @@
     modalManager.open('checkoutModal');
   };
 
+  // --- CDEK INTERACTIVE MAP & PVZ SELECTION ---
+  const openCdekMap = () => {
+    if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.open === 'function') {
+      window.geekNookCdekPicker.open((point) => {
+        applySelectedPvz(point);
+      });
+    } else {
+      window.open('https://www.cdek.ru/ru/offices', '_blank');
+    }
+  };
+
+  const closeCdekMap = () => {
+    if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.close === 'function') {
+      window.geekNookCdekPicker.close();
+    }
+  };
+
+  const applySelectedPvz = (point) => {
+    if (!point) return;
+    state.selectedPvz = point;
+
+    const addrInput = document.getElementById('checkoutAddressInput') || document.querySelector('#checkoutModal input[name="address"]');
+    if (addrInput) {
+      addrInput.value = point.fullText || `${point.city}, ${point.address} (ПВЗ СДЭК: ${point.code})`;
+    }
+
+    const badge = document.getElementById('checkoutPvzBadge');
+    const badgeCode = document.getElementById('checkoutPvzBadgeCode');
+    const badgeAddr = document.getElementById('checkoutPvzBadgeAddress');
+    if (badge && badgeCode && badgeAddr) {
+      badgeCode.textContent = `ПВЗ СДЭК: ${point.code}`;
+      badgeAddr.textContent = `${point.city}, ${point.address}`;
+      badge.style.display = 'flex';
+    }
+
+    const deliverySelect = document.getElementById('checkoutDeliverySelect') || document.querySelector('#checkoutModal select[name="delivery"]');
+    if (deliverySelect) {
+      deliverySelect.value = 'СДЭК — пункт самовывоза';
+    }
+
+    showToast(`✓ Выбран ПВЗ СДЭК: ${point.code} (${point.city})`, 'success');
+  };
+
+  const clearSelectedPvz = () => {
+    state.selectedPvz = null;
+    const addrInput = document.getElementById('checkoutAddressInput') || document.querySelector('#checkoutModal input[name="address"]');
+    if (addrInput) addrInput.value = '';
+    const badge = document.getElementById('checkoutPvzBadge');
+    if (badge) badge.style.display = 'none';
+  };
+
+  const handleDeliveryChange = (val) => {
+    if (val === 'СДЭК — пункт самовывоза' && !state.selectedPvz) {
+      showToast('Нажмите «Выбрать ПВЗ на карте» для удобного выбора', 'info');
+    }
+  };
+
   const handleCheckoutSubmit = withActionLock((e) => {
     e.preventDefault();
     const form = e.target;
@@ -2558,10 +2616,15 @@
         ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Промокод (${escapeHTML(state.activePromoCode)}):</strong> -${formatPrice(discountAmount)} (-${state.promoDiscountPercent}%)</div>`
         : '';
 
+      const pvzInfoHtml = state.selectedPvz
+        ? `<div style="margin-bottom:8px;color:#60a5fa;"><strong>Пункт выдачи СДЭК:</strong> [${escapeHTML(state.selectedPvz.code)}] ${escapeHTML(state.selectedPvz.address)} (${escapeHTML(state.selectedPvz.city)})</div>`
+        : '';
+
       detailsEl.innerHTML = `
         <div style="margin-bottom:8px;"><strong>Номер заказа:</strong> #${orderNumber}</div>
         <div style="margin-bottom:8px;"><strong>Получатель:</strong> ${safeName} (${safePhone})</div>
         <div style="margin-bottom:8px;"><strong>Адрес доставки:</strong> ${safeAddress}</div>
+        ${pvzInfoHtml}
         <div style="margin-bottom:8px;"><strong>Способ доставки:</strong> ${safeDelivery}</div>
         <div style="margin-bottom:8px;"><strong>Способ оплаты:</strong> ${safePayment}</div>
         ${promoInfoHtml}
@@ -2576,10 +2639,12 @@
       window.geekNookAnalytics.trackOrderSubmit(orderNumber, grandTotal, state.cart, safeDelivery, safePayment);
     }
 
-    // Reset Cart
+    // Reset Cart & PVZ
     state.cart = [];
     state.promoDiscountPercent = 0;
     state.activePromoCode = '';
+    state.selectedPvz = null;
+    clearSelectedPvz();
     try { safeStorage.removeItem('geeknook_promo'); } catch (e) {}
     saveCart();
     updateCheckoutPromoUI();
@@ -6226,6 +6291,11 @@
     quickBuyViaTelegram,
     orderViaTelegram,
     orderConfigViaTelegram,
+    openCdekMap,
+    closeCdekMap,
+    applySelectedPvz,
+    clearSelectedPvz,
+    handleDeliveryChange,
     shareConfiguredSetup,
     openQuiz,
     renderQuizStep,

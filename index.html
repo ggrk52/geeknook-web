@@ -1638,17 +1638,36 @@
               <input type="email" name="email" class="checkout-input" placeholder="konstantin@example.com" required />
             </div>
             <div class="checkout-field-group">
-              <label class="checkout-field-label">Город и адрес доставки / СДЭК *</label>
-              <input type="text" name="address" class="checkout-input" placeholder="г. Москва, ул. Ленина 10, кв. 4" required />
+              <div class="checkout-field-header-row">
+                <label class="checkout-field-label" style="margin-bottom:0;">Адрес доставки / Пункт СДЭК *</label>
+                <button type="button" class="btn-cdek-pick-action" onclick="window.geekNookApp.openCdekMap()" title="Открыть карту пунктов выдачи СДЭК">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+                  <span>Выбрать ПВЗ на карте</span>
+                </button>
+              </div>
+              <input type="text" id="checkoutAddressInput" name="address" class="checkout-input" placeholder="г. Москва, ул. Ленина 10 (или выберите ПВЗ на карте)" required />
+              <div id="checkoutPvzBadge" class="checkout-pvz-selected-badge" style="display:none;">
+                <div class="checkout-pvz-badge-content">
+                  <span class="checkout-pvz-badge-icon">📍</span>
+                  <div class="checkout-pvz-badge-text">
+                    <strong id="checkoutPvzBadgeCode">ПВЗ СДЭК</strong>
+                    <span id="checkoutPvzBadgeAddress">Адрес</span>
+                  </div>
+                </div>
+                <div class="checkout-pvz-badge-actions">
+                  <button type="button" class="checkout-pvz-btn-change" onclick="window.geekNookApp.openCdekMap()">Изменить</button>
+                  <button type="button" class="checkout-pvz-btn-clear" onclick="window.geekNookApp.clearSelectedPvz()" title="Очистить">✕</button>
+                </div>
+              </div>
             </div>
           </div>
 
           <div class="checkout-summary-col">
             <div class="checkout-field-group">
               <label class="checkout-field-label">Способ доставки</label>
-              <select name="delivery" class="checkout-select">
-                <option value="СДЭК — курьером до двери">СДЭК — курьером до двери</option>
+              <select id="checkoutDeliverySelect" name="delivery" class="checkout-select" onchange="window.geekNookApp.handleDeliveryChange(this.value)">
                 <option value="СДЭК — пункт самовывоза">СДЭК — пункт выдачи (ПВЗ)</option>
+                <option value="СДЭК — курьером до двери">СДЭК — курьером до двери</option>
                 <option value="Почта России">Почта России</option>
               </select>
             </div>
@@ -1693,6 +1712,89 @@
           </div>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- CDEK PVZ Interactive Map & Picker Modal -->
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="cdekMapModal" onclick="if(event.target===this) window.geekNookApp.closeCdekMap()">
+    <div class="modal-card cdek-modal-card">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeCdekMap()" aria-label="Закрыть окно">✕</button>
+      
+      <div class="cdek-modal-header">
+        <div class="cdek-badge">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
+          СДЭК Доставка
+        </div>
+        <h2 class="modal-title" style="font-size:1.6rem;margin-top:6px;margin-bottom:4px;">Пункты выдачи СДЭК (ПВЗ)</h2>
+        <p class="modal-subtitle" style="margin-bottom:12px;font-size:0.875rem;">Выберите пункт на интерактивной карте или найдите по адресу, метро или коду ПВЗ</p>
+      </div>
+
+      <!-- Search & City Filters Bar -->
+      <div class="cdek-toolbar">
+        <div class="cdek-search-wrap">
+          <svg class="cdek-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" id="cdekSearchInput" class="cdek-search-input" placeholder="Поиск по адресу, метро, городу или коду (напр. Тверская или MSK...)" autocomplete="off" />
+          <button type="button" id="cdekClearSearch" class="cdek-clear-search-btn" style="display:none;" aria-label="Очистить поиск">✕</button>
+        </div>
+
+        <div class="cdek-city-pills" id="cdekCityPills">
+          <button type="button" class="cdek-city-pill active" data-city="Москва">Москва</button>
+          <button type="button" class="cdek-city-pill" data-city="Санкт-Петербург">Санкт-Петербург</button>
+          <button type="button" class="cdek-city-pill" data-city="Новосибирск">Новосибирск</button>
+          <button type="button" class="cdek-city-pill" data-city="Екатеринбург">Екатеринбург</button>
+          <button type="button" class="cdek-city-pill" data-city="Казань">Казань</button>
+          <button type="button" class="cdek-city-pill" data-city="Нижний Новгород">Нижний Новгород</button>
+          <button type="button" class="cdek-city-pill" data-city="Краснодар">Краснодар</button>
+          <button type="button" class="cdek-city-pill" data-city="Самара">Самара</button>
+          <button type="button" class="cdek-city-pill" data-city="all">Все города</button>
+        </div>
+      </div>
+
+      <!-- Mobile View Switcher (Map vs List) -->
+      <div class="cdek-mobile-tabs" id="cdekMobileTabs">
+        <button type="button" class="cdek-tab-btn active" data-tab="map">🗺️ Карта ПВЗ</button>
+        <button type="button" class="cdek-tab-btn" data-tab="list">📋 Список (<span id="cdekPointsCount">0</span>)</button>
+      </div>
+
+      <!-- Main Layout: Map + List Split -->
+      <div class="cdek-modal-body">
+        <!-- PVZ Points Scrollable List -->
+        <div class="cdek-list-panel" id="cdekListPanel">
+          <div class="cdek-list-header">
+            <span id="cdekResultsHeading">Пункты выдачи в г. Москва</span>
+          </div>
+          <div class="cdek-points-scroll" id="cdekPointsScroll">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Interactive Map Container -->
+        <div class="cdek-map-panel mobile-visible" id="cdekMapPanel">
+          <div id="cdekLeafletMap" class="cdek-leaflet-container"></div>
+          <div class="cdek-map-loading" id="cdekMapLoading">
+            <div class="cdek-spinner"></div>
+            <span>Загрузка интерактивной карты...</span>
+          </div>
+          <div class="cdek-map-actions">
+            <a href="https://www.cdek.ru/ru/offices" target="_blank" rel="noopener noreferrer" class="cdek-link-external" title="Открыть карту на официальном сайте СДЭК">
+              <span>Карта на cdek.ru</span>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Selected PVZ Bottom Action Bar -->
+      <div class="cdek-modal-footer" id="cdekModalFooter" style="display:none;">
+        <div class="cdek-selected-summary">
+          <div class="cdek-selected-code" id="cdekSelectedCode">MSK142</div>
+          <div class="cdek-selected-address" id="cdekSelectedAddress">ул. Тверская, д. 9</div>
+          <div class="cdek-selected-sub" id="cdekSelectedSub">Пн-Вс 10:00-21:00</div>
+        </div>
+        <button type="button" class="btn-checkout cdek-btn-confirm" id="cdekBtnConfirm" onclick="window.geekNookCdekPicker.confirmSelection()">
+          Выбрать этот пункт
+        </button>
+      </div>
     </div>
   </div>
 
@@ -2119,6 +2221,8 @@
   <script src="js/three.min.js"></script>
   <script src="js/products-data.js"></script>
   <script src="js/modules/analytics.js"></script>
+  <script src="js/data/cdek-popular.js"></script>
+  <script src="js/modules/cdek-picker.js"></script>
   <script src="js/modern-app.js"></script>
   <script src="js/modules/tilda-adapter.js"></script>
 </body>
