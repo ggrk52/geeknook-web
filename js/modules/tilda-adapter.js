@@ -483,6 +483,7 @@
         if (pickBtn) {
           pickBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             openCdekPickerForTilda(handleSelect);
           });
         }
@@ -490,6 +491,7 @@
         if (changeBtn) {
           changeBtn.addEventListener('click', function(e) {
             e.preventDefault();
+            e.stopPropagation();
             openCdekPickerForTilda(handleSelect);
           });
         }

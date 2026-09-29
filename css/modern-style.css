@@ -7991,6 +7991,31 @@ textarea:focus-visible {
 /* ==========================================================================
    CDEK INTERACTIVE PVZ MAP & PICKER STYLES
    ========================================================================== */
+#cdekMapModal.modal-backdrop,
+#cdekMapModal {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(0, 0, 0, 0.8) !important;
+  backdrop-filter: blur(10px) !important;
+  -webkit-backdrop-filter: blur(10px) !important;
+  z-index: 2147483647 !important; /* Strictly above all cart drawers and Tilda .t706 overlays */
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box !important;
+}
+
+#cdekMapModal.active {
+  display: flex !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+}
+
 .cdek-modal-card {
   max-width: 1040px;
   width: 95vw;

@@ -52,27 +52,35 @@
 
   // Self-inject CSS styles if not already provided by page styles
   function ensureStylesInDOM() {
-    if (document.getElementById('cdekPickerCustomStyles')) return;
-    const style = document.createElement('style');
-    style.id = 'cdekPickerCustomStyles';
+    let style = document.getElementById('cdekPickerCustomStyles');
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'cdekPickerCustomStyles';
+      document.head.appendChild(style);
+    }
     style.textContent = `
-      #cdekMapModal.modal-backdrop {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: rgba(0, 0, 0, 0.75);
-        backdrop-filter: blur(8px);
-        -webkit-backdrop-filter: blur(8px);
-        z-index: 9999999;
+      #cdekMapModal.modal-backdrop,
+      #cdekMapModal {
+        position: fixed !important;
+        inset: 0 !important;
+        top: 0 !important;
+        left: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        background: rgba(0, 0, 0, 0.8) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        z-index: 2147483647 !important;
         display: none;
         align-items: center;
         justify-content: center;
-        box-sizing: border-box;
+        box-sizing: border-box !important;
       }
       #cdekMapModal.active {
         display: flex !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
       }
       .cdek-modal-card {
         max-width: 1040px;
@@ -503,18 +511,30 @@
 
   // Ensure modal HTML markup exists in document.body
   function ensureModalInDOM() {
-    let modal = document.getElementById('cdekMapModal');
-    if (modal) return modal;
-
     ensureStylesInDOM();
+
+    let modal = document.getElementById('cdekMapModal');
+    if (modal) {
+      if (modal.parentElement !== document.body) {
+        document.body.appendChild(modal);
+      }
+      modal.style.setProperty('z-index', '2147483647', 'important');
+      modal.style.setProperty('position', 'fixed', 'important');
+      return modal;
+    }
 
     modal = document.createElement('div');
     modal.className = 'modal-backdrop';
     modal.setAttribute('role', 'dialog');
     modal.setAttribute('aria-modal', 'true');
     modal.id = 'cdekMapModal';
+    modal.style.setProperty('z-index', '2147483647', 'important');
+    modal.style.setProperty('position', 'fixed', 'important');
     modal.onclick = function(event) {
-      if (event.target === this) closeModal();
+      if (event.target === this) {
+        event.stopPropagation();
+        closeModal();
+      }
     };
 
     modal.innerHTML = `
@@ -972,6 +992,10 @@
       return;
     }
 
+    // Always re-append to end of document.body on open to ensure it is topmost in DOM order
+    document.body.appendChild(modal);
+    modal.style.setProperty('z-index', '2147483647', 'important');
+    modal.style.setProperty('position', 'fixed', 'important');
     modal.classList.add('active');
     document.body.classList.add('modal-open');
 
@@ -1000,7 +1024,10 @@
     state.isOpen = false;
     const modal = document.getElementById('cdekMapModal');
     if (modal) modal.classList.remove('active');
-    document.body.classList.remove('modal-open');
+    const otherModals = document.querySelectorAll('.modal-backdrop.active:not(#cdekMapModal)');
+    if (otherModals.length === 0 && !document.querySelector('.t706__cartwin_showed')) {
+      document.body.classList.remove('modal-open');
+    }
   }
 
   // Switch City
@@ -1101,12 +1128,15 @@
   }
 
   // Initialize on DOM ready
+  ensureStylesInDOM();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
+      ensureStylesInDOM();
       initData();
       setupEvents();
     });
   } else {
+    ensureStylesInDOM();
     initData();
     setupEvents();
   }
