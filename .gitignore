@@ -23,4 +23,5 @@ yarn-error.log*
 
 # Agent skills cache / local plugins
 .agents/skills/
+scratch/
 

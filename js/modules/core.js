@@ -123,11 +123,35 @@ window.GeekNook = window.GeekNook || {};
     };
   };
 
+  // --- PROMO CODES SYSTEM ---
+  const PROMO_CODES = {
+    'DEVTOOLS10': { discount: 10, label: 'DEVTOOLS10 (-10%)', description: 'Инженерная скидка разработчика' },
+    'GEEK10': { discount: 10, label: 'GEEK10 (-10%)', description: 'Приветственная скидка GeekNook' },
+    'ДАША': { discount: 10, label: 'ДАША (-10%)', description: 'Специальный промокод команды' },
+    'DASHA': { discount: 10, label: 'DASHA (-10%)', description: 'Специальный промокод команды' },
+    'FOCUS15': { discount: 15, label: 'FOCUS15 (-15%)', description: 'Скидка на рабочее место Focus' },
+    'WELCOME5': { discount: 5, label: 'WELCOME5 (-5%)', description: 'Приветственный бонус 5%' }
+  };
+
+  const loadPromo = () => {
+    try {
+      const saved = safeStorage.getItem('geeknook_promo');
+      if (saved && PROMO_CODES[saved.toUpperCase()]) {
+        return saved.toUpperCase();
+      }
+    } catch (e) {
+      console.warn('[Defensive] Failed to load promo from storage:', e);
+    }
+    return '';
+  };
+
+  const initialPromo = loadPromo();
+
   // --- APPLICATION STATE ---
   const state = {
     cart: loadCart(),
-    promoDiscountPercent: 0,
-    activePromoCode: '',
+    promoDiscountPercent: initialPromo ? PROMO_CODES[initialPromo].discount : 0,
+    activePromoCode: initialPromo || '',
     config: {
       finishId: 'black',
       lengthId: '85',

@@ -593,8 +593,104 @@
       notice.className = 't-cart-legal-notice';
       notice.style.cssText = 'font-size: 11.5px; line-height: 1.45; color: rgba(255, 255, 255, 0.55); margin: 12px 0 10px; text-align: center;';
       const baseCdn = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
-      notice.innerHTML = `Нажимая «Оформить заказ», вы соглашаетесь с <a href="${baseCdn}legal.html#offer" target="_blank" rel="noopener" style="color: #cba870; text-decoration: underline;">Публичной офертой</a> и <a href="${baseCdn}legal.html#privacy" target="_blank" rel="noopener" style="color: #cba870; text-decoration: underline;">Политикой конфиденциальности</a> ООО «ГИК НУК»`;
+      notice.innerHTML = `Нажимая «Оформить заказ», вы соглашаетесь с <a href="/legal#offer" target="_blank" rel="noopener" style="color: #2b70f0; text-decoration: underline;">Публичной офертой</a> и <a href="/legal#privacy" target="_blank" rel="noopener" style="color: #2b70f0; text-decoration: underline;">Политикой конфиденциальности</a> ООО «ГИК НУК»`;
       submitWrap.parentNode.insertBefore(notice, submitWrap);
+    }
+
+    // 4.1 SETUP PROMO CODE BOX IN TILDA CART
+    function setupTildaPromoCodeBox() {
+      const cartBottom = document.querySelector('.t706__cartwin-bottom');
+      if (!cartBottom || cartBottom.querySelector('.t706-promo-box')) return;
+
+      const promoWrap = document.createElement('div');
+      promoWrap.className = 't706-promo-box';
+      promoWrap.style.cssText = 'margin: 14px 0; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; font-family: "Onest", sans-serif;';
+
+      const PROMOS = {
+        'DEVTOOLS10': 10,
+        'GEEK10': 10,
+        'ДАША': 10,
+        'DASHA': 10,
+        'FOCUS15': 15,
+        'WELCOME5': 5
+      };
+
+      const savedCode = (localStorage.getItem('geeknook_promo') || '').trim().toUpperCase();
+      const isApplied = savedCode && PROMOS[savedCode];
+
+      promoWrap.innerHTML = `
+        <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+          <span>Промокод на скидку:</span>
+          <span style="font-size: 11px; color: #60a5fa;">DEVTOOLS10 / GEEK10</span>
+        </div>
+        <div class="t706-promo-input-row" style="display: ${isApplied ? 'none' : 'flex'}; gap: 8px;">
+          <input type="text" class="t706-promo-input" placeholder="DEVTOOLS10" autocomplete="off" autocorrect="off" autocapitalize="characters" style="flex: 1; min-height: 40px; padding: 8px 12px; background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; color: #fff; font-size: 13px; text-transform: uppercase;" />
+          <button type="button" class="t706-promo-btn" style="min-height: 40px; padding: 0 16px; background: #2b70f0; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: background 0.2s;">Применить</button>
+        </div>
+        <div class="t706-promo-applied" style="display: ${isApplied ? 'flex' : 'none'}; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); border-radius: 6px;">
+          <span class="t706-promo-applied-text" style="color: #10b981; font-size: 13px; font-weight: 700; font-family: monospace;">✓ ${isApplied ? `${savedCode} (-${PROMOS[savedCode]}%)` : ''}</span>
+          <button type="button" class="t706-promo-remove" style="background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 16px; padding: 2px 8px; line-height: 1;">✕</button>
+        </div>
+      `;
+
+      const prodAmount = cartBottom.querySelector('.t706__cartwin-prodamount-wrap, .t706__cartwin-prodamount');
+      if (prodAmount) {
+        cartBottom.insertBefore(promoWrap, prodAmount);
+      } else {
+        cartBottom.prepend(promoWrap);
+      }
+
+      const input = promoWrap.querySelector('.t706-promo-input');
+      const btn = promoWrap.querySelector('.t706-promo-btn');
+      const row = promoWrap.querySelector('.t706-promo-input-row');
+      const appliedBox = promoWrap.querySelector('.t706-promo-applied');
+      const appliedText = promoWrap.querySelector('.t706-promo-applied-text');
+      const removeBtn = promoWrap.querySelector('.t706-promo-remove');
+
+      function syncTildaOrderComment(code, pct) {
+        const commentInputs = document.querySelectorAll('.t706__orderform input[name="comments"], .t706__orderform textarea[name="comments"], .t706__orderform input[name="comment"], .t706__orderform textarea[name="comment"]');
+        commentInputs.forEach(inp => {
+          let curr = inp.value || '';
+          curr = curr.replace(/\s*\[ПРОМОКОД:.*?\]/g, '').trim();
+          if (code && pct) {
+            curr = (curr ? curr + ' ' : '') + `[ПРОМОКОД: ${code} (-${pct}%)]`;
+          }
+          inp.value = curr;
+        });
+      }
+
+      function applyCode() {
+        const val = (input.value || '').trim().toUpperCase();
+        if (PROMOS[val]) {
+          localStorage.setItem('geeknook_promo', val);
+          row.style.display = 'none';
+          appliedBox.style.display = 'flex';
+          appliedText.textContent = `✓ ${val} (-${PROMOS[val]}%)`;
+          syncTildaOrderComment(val, PROMOS[val]);
+        } else {
+          alert('Неверный промокод');
+        }
+      }
+
+      btn.addEventListener('click', applyCode);
+      input.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applyCode();
+        }
+      });
+
+      removeBtn.addEventListener('click', function() {
+        localStorage.removeItem('geeknook_promo');
+        row.style.display = 'flex';
+        appliedBox.style.display = 'none';
+        input.value = '';
+        syncTildaOrderComment('', 0);
+      });
+
+      if (isApplied) {
+        syncTildaOrderComment(savedCode, PROMOS[savedCode]);
+      }
     }
 
     // 5. AUTO-SANITIZE EXISTING CART ITEMS (Clears any stale 0-stock catalog collisions from user localStorage)
@@ -647,6 +743,7 @@
     setInterval(ensureRussianButtonText, 300);
     setInterval(setupCdekPaymentLabels, 400);
     setInterval(setupLegalCartNotice, 500);
+    setInterval(setupTildaPromoCodeBox, 500);
     setInterval(sanitizeExistingCartItems, 1000);
     setInterval(clearOutOfStockErrors, 600);
 
@@ -654,6 +751,7 @@
     ensureRussianButtonText();
     setupCdekPaymentLabels();
     setupLegalCartNotice();
+    setupTildaPromoCodeBox();
     sanitizeExistingCartItems();
     clearOutOfStockErrors();
   }

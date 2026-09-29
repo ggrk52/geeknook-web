@@ -214,11 +214,35 @@
     }
   };
 
+  // --- PROMO CODES SYSTEM ---
+  const PROMO_CODES = {
+    'DEVTOOLS10': { discount: 10, label: 'DEVTOOLS10 (-10%)', description: 'Инженерная скидка разработчика' },
+    'GEEK10': { discount: 10, label: 'GEEK10 (-10%)', description: 'Приветственная скидка GeekNook' },
+    'ДАША': { discount: 10, label: 'ДАША (-10%)', description: 'Специальный промокод команды' },
+    'DASHA': { discount: 10, label: 'DASHA (-10%)', description: 'Специальный промокод команды' },
+    'FOCUS15': { discount: 15, label: 'FOCUS15 (-15%)', description: 'Скидка на рабочее место Focus' },
+    'WELCOME5': { discount: 5, label: 'WELCOME5 (-5%)', description: 'Приветственный бонус 5%' }
+  };
+
+  const loadPromo = () => {
+    try {
+      const saved = safeStorage.getItem('geeknook_promo');
+      if (saved && PROMO_CODES[saved.toUpperCase()]) {
+        return saved.toUpperCase();
+      }
+    } catch (e) {
+      console.warn('[Defensive] Failed to load promo from storage:', e);
+    }
+    return '';
+  };
+
+  const initialPromo = loadPromo();
+
   // --- APPLICATION STATE ---
   const state = {
     cart: loadCart(),
-    promoDiscountPercent: 0,
-    activePromoCode: '',
+    promoDiscountPercent: initialPromo ? PROMO_CODES[initialPromo].discount : 0,
+    activePromoCode: initialPromo || '',
     config: {
       finishId: 'black',
       lengthId: '85',
@@ -689,7 +713,9 @@
     state.cart = [];
     state.promoDiscountPercent = 0;
     state.activePromoCode = '';
+    try { safeStorage.removeItem('geeknook_promo'); } catch (e) {}
     saveCart();
+    if (typeof updateCheckoutPromoUI === 'function') updateCheckoutPromoUI();
     showToast('Корзина полностью очищена', 'success');
   };
 
@@ -723,6 +749,23 @@
     if (discountEl) discountEl.textContent = discountAmount > 0 ? `-${formatPrice(discountAmount)}` : '0 ₽';
     if (shippingEl) shippingEl.textContent = isFreeShipping ? 'Бесплатно' : (subtotal > 0 ? '490 ₽' : '0 ₽');
     if (grandTotalEl) grandTotalEl.textContent = formatPrice(grandTotal);
+
+    // Sync Cart Drawer Promo Box UI
+    const cartPromoRow = document.getElementById('cartPromoRow');
+    const cartPromoApplied = document.getElementById('cartPromoApplied');
+    const cartPromoTag = document.getElementById('cartPromoTag');
+    const promoInput = document.getElementById('promoInput');
+
+    if (state.activePromoCode && PROMO_CODES[state.activePromoCode]) {
+      const pData = PROMO_CODES[state.activePromoCode];
+      if (cartPromoRow) cartPromoRow.style.display = 'none';
+      if (cartPromoApplied) cartPromoApplied.style.display = 'flex';
+      if (cartPromoTag) cartPromoTag.textContent = `✓ ${pData.label}`;
+      if (promoInput) promoInput.value = '';
+    } else {
+      if (cartPromoRow) cartPromoRow.style.display = 'flex';
+      if (cartPromoApplied) cartPromoApplied.style.display = 'none';
+    }
 
     // Free shipping progress bar
     if (progressFill && progressText) {
@@ -826,19 +869,94 @@
     }
   };
 
-  const applyPromoCode = () => {
-    const input = document.getElementById('promoInput');
-    if (!input) return;
-    const code = input.value.trim().toUpperCase();
+  const updateCheckoutPromoUI = () => {
+    const row = document.getElementById('checkoutPromoRow');
+    const applied = document.getElementById('checkoutPromoApplied');
+    const tag = document.getElementById('checkoutPromoTag');
+    const input = document.getElementById('checkoutPromoInput');
+    const discountRow = document.getElementById('checkoutDiscountRow');
+    const discountLabel = document.getElementById('checkoutDiscountLabel');
+    const discountVal = document.getElementById('checkoutDiscountVal');
+    const grandTotalEl = document.getElementById('checkoutGrandTotalSummary');
 
-    if (code === 'GEEK10' || code === 'ДАША' || code === 'DASHA' || code === 'DEVTOOLS10') {
-      state.promoDiscountPercent = 10;
+    const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
+    const discountAmount = Math.round(subtotal * (Math.max(0, Math.min(100, state.promoDiscountPercent)) / 100));
+    const isFreeShipping = (subtotal - discountAmount) >= 7000;
+    const shippingCost = isFreeShipping ? 0 : (subtotal > 0 ? 490 : 0);
+    const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
+
+    if (state.activePromoCode && PROMO_CODES[state.activePromoCode]) {
+      const pData = PROMO_CODES[state.activePromoCode];
+      if (row) row.style.display = 'none';
+      if (applied) applied.style.display = 'flex';
+      if (tag) tag.textContent = `✓ ${pData.label}`;
+      if (input) input.value = '';
+      if (discountRow) {
+        discountRow.style.display = 'flex';
+        if (discountLabel) discountLabel.textContent = `Скидка (${state.activePromoCode}):`;
+        if (discountVal) discountVal.textContent = `-${formatPrice(discountAmount)}`;
+      }
+    } else {
+      if (row) row.style.display = 'flex';
+      if (applied) applied.style.display = 'none';
+      if (discountRow) discountRow.style.display = 'none';
+    }
+
+    if (grandTotalEl) grandTotalEl.textContent = formatPrice(grandTotal);
+  };
+
+  const applyPromoCode = (customCode) => {
+    const input = document.getElementById('promoInput');
+    const code = (typeof customCode === 'string' && customCode.trim())
+      ? customCode.trim().toUpperCase()
+      : (input ? input.value.trim().toUpperCase() : '');
+
+    if (!code) {
+      showToast('Введите промокод', 'error');
+      return false;
+    }
+
+    if (PROMO_CODES[code]) {
+      const promo = PROMO_CODES[code];
+      state.promoDiscountPercent = promo.discount;
       state.activePromoCode = code;
+      try {
+        safeStorage.setItem('geeknook_promo', code);
+      } catch (e) {}
       saveCart();
-      showToast('Промокод применён: скидка 10%!', 'success');
+      updateCheckoutPromoUI();
+      showToast(`Промокод ${code} применён: скидка ${promo.discount}%!`, 'success');
+      return true;
     } else {
       showToast('Неверный промокод', 'error');
+      return false;
     }
+  };
+
+  const applyCheckoutPromo = () => {
+    const input = document.getElementById('checkoutPromoInput');
+    if (!input) return;
+    const code = input.value.trim().toUpperCase();
+    if (!code) {
+      showToast('Введите промокод', 'error');
+      return;
+    }
+    applyPromoCode(code);
+  };
+
+  const removePromoCode = () => {
+    state.promoDiscountPercent = 0;
+    state.activePromoCode = '';
+    try {
+      safeStorage.removeItem('geeknook_promo');
+    } catch (e) {}
+    saveCart();
+    updateCheckoutPromoUI();
+    const pInp = document.getElementById('promoInput');
+    if (pInp) pInp.value = '';
+    const chkInp = document.getElementById('checkoutPromoInput');
+    if (chkInp) chkInp.value = '';
+    showToast('Промокод удалён');
   };
 
   // --- PRODUCT CARD COMPONENT ---
@@ -2411,6 +2529,7 @@
     const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
 
     if (summaryTotal) summaryTotal.textContent = formatPrice(grandTotal);
+    updateCheckoutPromoUI();
 
     modalManager.open('checkoutModal');
   };
@@ -2435,12 +2554,17 @@
 
     const detailsEl = document.getElementById('successOrderDetails');
     if (detailsEl) {
+      const promoInfoHtml = (discountAmount > 0 && state.activePromoCode)
+        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Промокод (${escapeHTML(state.activePromoCode)}):</strong> -${formatPrice(discountAmount)} (-${state.promoDiscountPercent}%)</div>`
+        : '';
+
       detailsEl.innerHTML = `
         <div style="margin-bottom:8px;"><strong>Номер заказа:</strong> #${orderNumber}</div>
         <div style="margin-bottom:8px;"><strong>Получатель:</strong> ${safeName} (${safePhone})</div>
         <div style="margin-bottom:8px;"><strong>Адрес доставки:</strong> ${safeAddress}</div>
         <div style="margin-bottom:8px;"><strong>Способ доставки:</strong> ${safeDelivery}</div>
         <div style="margin-bottom:8px;"><strong>Способ оплаты:</strong> ${safePayment}</div>
+        ${promoInfoHtml}
         <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-weight:800;font-size:1.1rem;color:var(--primary);">
           Сумма к оплате: ${formatPrice(grandTotal)}
         </div>
@@ -2456,7 +2580,9 @@
     state.cart = [];
     state.promoDiscountPercent = 0;
     state.activePromoCode = '';
+    try { safeStorage.removeItem('geeknook_promo'); } catch (e) {}
     saveCart();
+    updateCheckoutPromoUI();
 
     modalManager.close('checkoutModal');
     modalManager.open('successModal');
@@ -2570,6 +2696,11 @@
       `;
     }
 
+    const qPromoInput = document.getElementById('quickBuyPromo');
+    if (qPromoInput) {
+      qPromoInput.value = state.activePromoCode || '';
+    }
+
     modalManager.open('quickBuyModal');
   };
 
@@ -2582,6 +2713,22 @@
     const prod = state.quickBuyProduct;
     if (!prod) return;
 
+    const promoInput = document.getElementById('quickBuyPromo');
+    let promoCodeVal = promoInput ? promoInput.value.trim().toUpperCase() : '';
+    let discountPct = 0;
+    let appliedPromo = '';
+
+    if (promoCodeVal && PROMO_CODES[promoCodeVal]) {
+      discountPct = PROMO_CODES[promoCodeVal].discount;
+      appliedPromo = promoCodeVal;
+    } else if (!promoCodeVal && state.activePromoCode && PROMO_CODES[state.activePromoCode]) {
+      discountPct = PROMO_CODES[state.activePromoCode].discount;
+      appliedPromo = state.activePromoCode;
+    }
+
+    const discountAmount = discountPct > 0 ? Math.round(prod.price * (discountPct / 100)) : 0;
+    const finalPrice = Math.max(0, prod.price - discountAmount);
+
     const safeTitle = escapeHTML(prod.title);
     const safeOpt = escapeHTML(state.quickBuyProductOption !== 'Стандарт' ? `(${state.quickBuyProductOption})` : '');
     const orderNumber = 'GN-1C-' + Math.floor(100000 + Math.random() * 900000);
@@ -2589,23 +2736,28 @@
 
     const detailsEl = document.getElementById('successOrderDetails');
     if (detailsEl) {
+      const promoHtml = discountAmount > 0
+        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Промокод (${escapeHTML(appliedPromo)}):</strong> -${formatPrice(discountAmount)} (-${discountPct}%)</div>`
+        : '';
+
       detailsEl.innerHTML = `
         <div style="margin-bottom:8px;"><strong>Тип заказа:</strong> Быстрый заказ в 1 клик</div>
         <div style="margin-bottom:8px;"><strong>Номер заказа:</strong> #${orderNumber}</div>
         <div style="margin-bottom:8px;"><strong>Контактное лицо:</strong> ${safeName} (${safePhone})</div>
         <div style="margin-bottom:8px;"><strong>Товар:</strong> ${safeTitle} ${safeOpt}</div>
+        ${promoHtml}
         <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-weight:800;font-size:1.1rem;color:var(--primary);">
-          Сумма: ${formatPrice(prod.price)}
+          Сумма: ${formatPrice(finalPrice)}
         </div>
       `;
     }
 
     // Track Analytics & Ecommerce
     if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackOrderSubmit === 'function') {
-      window.geekNookAnalytics.trackOrderSubmit(orderNumber, prod.price, [{
+      window.geekNookAnalytics.trackOrderSubmit(orderNumber, finalPrice, [{
         id: prod.id,
         name: prod.title,
-        price: prod.price,
+        price: finalPrice,
         quantity: 1,
         option: safeOpt
       }], 'СДЭК Быстрый', 'Уточнить при звонке');
@@ -2619,7 +2771,31 @@
     const prod = state.quickBuyProduct;
     if (!prod) return;
     const optText = state.quickBuyProductOption && state.quickBuyProductOption !== 'Стандарт' ? ` (${state.quickBuyProductOption})` : '';
-    const text = `Здравствуйте! Хочу оформить быстрый заказ в 1 клик на GeekNook:\n\nТовар: ${prod.title}${optText}\nСтоимость: ${formatPrice(prod.price)}\n\nСвяжитесь со мной для подтверждения адреса доставки!`;
+
+    const promoInput = document.getElementById('quickBuyPromo');
+    let promoCodeVal = promoInput ? promoInput.value.trim().toUpperCase() : '';
+    let discountPct = 0;
+    let appliedPromo = '';
+
+    if (promoCodeVal && PROMO_CODES[promoCodeVal]) {
+      discountPct = PROMO_CODES[promoCodeVal].discount;
+      appliedPromo = promoCodeVal;
+    } else if (!promoCodeVal && state.activePromoCode && PROMO_CODES[state.activePromoCode]) {
+      discountPct = PROMO_CODES[state.activePromoCode].discount;
+      appliedPromo = state.activePromoCode;
+    }
+
+    const discountAmount = discountPct > 0 ? Math.round(prod.price * (discountPct / 100)) : 0;
+    const finalPrice = Math.max(0, prod.price - discountAmount);
+
+    let text = `Здравствуйте! Хочу оформить быстрый заказ в 1 клик на GeekNook:\n\nТовар: ${prod.title}${optText}\n`;
+    if (discountAmount > 0) {
+      text += `Промокод: ${appliedPromo} (-${discountPct}%: -${formatPrice(discountAmount)})\n`;
+      text += `Итоговая стоимость: ${formatPrice(finalPrice)}\n\n`;
+    } else {
+      text += `Стоимость: ${formatPrice(prod.price)}\n\n`;
+    }
+    text += `Свяжитесь со мной для подтверждения адреса доставки!`;
     window.open(`https://t.me/geeknook?text=${encodeURIComponent(text)}`, '_blank');
     modalManager.close('quickBuyModal');
   };
@@ -5301,6 +5477,44 @@
         action: () => { closeCommandPalette(); toggleSound(); }
       },
       {
+        id: 'action-promo-devtools',
+        category: 'Промокоды',
+        title: 'Применить DEVTOOLS10 (-10%)',
+        sub: 'Секретный промокод разработчика из консоли браузера',
+        badge: 'Скидка 10%',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>',
+        action: () => {
+          closeCommandPalette();
+          applyPromoCode('DEVTOOLS10');
+          openCartDrawer();
+        }
+      },
+      {
+        id: 'action-promo-geek10',
+        category: 'Промокоды',
+        title: 'Применить GEEK10 (-10%)',
+        sub: 'Приветственный промокод GeekNook на заказ',
+        badge: 'Скидка 10%',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>',
+        action: () => {
+          closeCommandPalette();
+          applyPromoCode('GEEK10');
+          openCartDrawer();
+        }
+      },
+      ...(state.activePromoCode ? [{
+        id: 'action-promo-remove',
+        category: 'Промокоды',
+        title: `Сбросить промокод: ${state.activePromoCode}`,
+        sub: `Текущая скидка: ${state.promoDiscountPercent}%`,
+        badge: 'Сбросить',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>',
+        action: () => {
+          closeCommandPalette();
+          removePromoCode();
+        }
+      }] : []),
+      {
         id: 'action-bundles',
         category: 'Инструменты',
         title: 'Готовые инженерные комплекты (-15%)',
@@ -5830,6 +6044,30 @@
     attachMask(document.getElementById('quickBuyPhone'));
   };
 
+  const initPromoListeners = () => {
+    const pInp = document.getElementById('promoInput');
+    if (pInp && !pInp.dataset.listenerAttached) {
+      pInp.dataset.listenerAttached = 'true';
+      pInp.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applyPromoCode();
+        }
+      });
+    }
+
+    const cInp = document.getElementById('checkoutPromoInput');
+    if (cInp && !cInp.dataset.listenerAttached) {
+      cInp.dataset.listenerAttached = 'true';
+      cInp.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          applyCheckoutPromo();
+        }
+      });
+    }
+  };
+
   // --- INITIALIZE APPLICATION ---
   const init = () => {
     // 1. Global image fallback (Capture phase handles non-bubbling img error events)
@@ -5893,6 +6131,7 @@
     initCommandPalette();
     initSetupMatcher();
     initPhoneMasks();
+    initPromoListeners();
 
     initHeaderScroll();
     renderBoards();
@@ -5972,6 +6211,9 @@
     openMobileNav,
     closeMobileNav,
     applyPromoCode,
+    applyCheckoutPromo,
+    removePromoCode,
+    updateCheckoutPromoUI,
     openQuickView,
     switchQvImage,
     addFromQuickView,

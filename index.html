@@ -1424,9 +1424,15 @@
       <div class="cart-items-list" id="cartItemsList"></div>
 
       <div class="cart-footer">
-        <div class="promo-row">
-          <input type="text" class="promo-input" id="promoInput" placeholder="Промокод (GEEK10)" />
-          <button class="btn-apply-promo" onclick="window.geekNookApp.applyPromoCode()">Применить</button>
+        <div class="promo-box" id="cartPromoBox">
+          <div class="promo-row" id="cartPromoRow">
+            <input type="text" class="promo-input" id="promoInput" placeholder="Промокод (DEVTOOLS10)" autocomplete="off" autocorrect="off" autocapitalize="characters" />
+            <button type="button" class="btn-apply-promo" onclick="window.geekNookApp.applyPromoCode()">Применить</button>
+          </div>
+          <div class="promo-applied-badge" id="cartPromoApplied" style="display:none;">
+            <span class="promo-applied-tag" id="cartPromoTag">✓ DEVTOOLS10 (-10%)</span>
+            <button type="button" class="promo-remove-btn" onclick="window.geekNookApp.removePromoCode()" title="Удалить промокод">✕</button>
+          </div>
         </div>
 
         <div class="cart-totals-row">
@@ -1656,9 +1662,25 @@
               </select>
             </div>
 
+            <div class="checkout-promo-box" id="checkoutPromoBox">
+              <label class="checkout-field-label" style="margin-bottom:6px;display:block;">Промокод на скидку</label>
+              <div class="checkout-promo-row" id="checkoutPromoRow">
+                <input type="text" id="checkoutPromoInput" class="checkout-input promo-input" placeholder="DEVTOOLS10 или GEEK10" autocomplete="off" autocorrect="off" autocapitalize="characters" style="margin-bottom:0;" />
+                <button type="button" class="btn-apply-promo" onclick="window.geekNookApp.applyCheckoutPromo()">Применить</button>
+              </div>
+              <div class="promo-applied-badge" id="checkoutPromoApplied" style="display:none;margin-top:8px;margin-bottom:0;">
+                <span class="promo-applied-tag" id="checkoutPromoTag">✓ DEVTOOLS10 (-10%)</span>
+                <button type="button" class="promo-remove-btn" onclick="window.geekNookApp.removePromoCode()" title="Удалить промокод">✕</button>
+              </div>
+            </div>
+
             <div class="checkout-items-summary-card">
               <div class="checkout-summary-heading">Состав заказа:</div>
               <div id="checkoutItemsSummary"></div>
+              <div class="checkout-discount-row" id="checkoutDiscountRow" style="display:none;justify-content:space-between;margin:8px 0;font-size:0.875rem;color:#10b981;">
+                <span id="checkoutDiscountLabel">Скидка:</span>
+                <span id="checkoutDiscountVal">-0 ₽</span>
+              </div>
               <div class="checkout-grand-total-row">
                 <span>К оплате:</span>
                 <span id="checkoutGrandTotalSummary">0 ₽</span>
@@ -1726,6 +1748,10 @@
         <div class="checkout-field-group">
           <label class="checkout-field-label">Телефон *</label>
           <input type="tel" id="quickBuyPhone" class="checkout-input" placeholder="+7 (999) 000-00-00" required />
+        </div>
+        <div class="checkout-field-group">
+          <label class="checkout-field-label">Промокод (если есть)</label>
+          <input type="text" id="quickBuyPromo" class="checkout-input promo-input" placeholder="DEVTOOLS10 или GEEK10" autocomplete="off" autocorrect="off" autocapitalize="characters" />
         </div>
         <button type="submit" class="btn-checkout" style="margin-top:14px;width:100%;">
           Подтвердить заказ в 1 клик

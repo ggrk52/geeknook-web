@@ -26,7 +26,7 @@ try {
   if ($docxFiles) {
     $argsList += $docxFiles
   }
-  $argsList += @("css", "js", "images", "journal")
+  $argsList += @("css", "js", "images", "journal", "tilda-bundle")
 
   & $tarExe $argsList
   

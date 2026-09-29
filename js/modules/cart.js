@@ -278,6 +278,23 @@ window.GeekNook = window.GeekNook || {};
     if (shippingEl) shippingEl.textContent = isFreeShipping ? 'Бесплатно' : (subtotal > 0 ? '490 ₽' : '0 ₽');
     if (grandTotalEl) grandTotalEl.textContent = formatPrice(grandTotal);
 
+    // Sync Cart Drawer Promo Box UI
+    const cartPromoRow = document.getElementById('cartPromoRow');
+    const cartPromoApplied = document.getElementById('cartPromoApplied');
+    const cartPromoTag = document.getElementById('cartPromoTag');
+    const promoInput = document.getElementById('promoInput');
+
+    if (state.activePromoCode && window.GeekNook && window.GeekNook.PROMO_CODES && window.GeekNook.PROMO_CODES[state.activePromoCode]) {
+      const pData = window.GeekNook.PROMO_CODES[state.activePromoCode];
+      if (cartPromoRow) cartPromoRow.style.display = 'none';
+      if (cartPromoApplied) cartPromoApplied.style.display = 'flex';
+      if (cartPromoTag) cartPromoTag.textContent = `✓ ${pData.label}`;
+      if (promoInput) promoInput.value = '';
+    } else {
+      if (cartPromoRow) cartPromoRow.style.display = 'flex';
+      if (cartPromoApplied) cartPromoApplied.style.display = 'none';
+    }
+
     // Free shipping progress bar
     if (progressFill && progressText) {
       const freeThreshold = 7000;
@@ -377,19 +394,104 @@ window.GeekNook = window.GeekNook || {};
     }
   };
 
-  const applyPromoCode = () => {
-    const input = document.getElementById('promoInput');
-    if (!input) return;
-    const code = input.value.trim().toUpperCase();
+  const updateCheckoutPromoUI = () => {
+    const row = document.getElementById('checkoutPromoRow');
+    const applied = document.getElementById('checkoutPromoApplied');
+    const tag = document.getElementById('checkoutPromoTag');
+    const input = document.getElementById('checkoutPromoInput');
+    const discountRow = document.getElementById('checkoutDiscountRow');
+    const discountLabel = document.getElementById('checkoutDiscountLabel');
+    const discountVal = document.getElementById('checkoutDiscountVal');
+    const grandTotalEl = document.getElementById('checkoutGrandTotalSummary');
 
-    if (code === 'GEEK10' || code === 'ДАША' || code === 'DASHA' || code === 'DEVTOOLS10') {
-      state.promoDiscountPercent = 10;
+    const promos = (window.GeekNook && window.GeekNook.PROMO_CODES) || {};
+    const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
+    const discountAmount = Math.round(subtotal * (Math.max(0, Math.min(100, state.promoDiscountPercent)) / 100));
+    const isFreeShipping = (subtotal - discountAmount) >= 7000;
+    const shippingCost = isFreeShipping ? 0 : (subtotal > 0 ? 490 : 0);
+    const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
+
+    if (state.activePromoCode && promos[state.activePromoCode]) {
+      const pData = promos[state.activePromoCode];
+      if (row) row.style.display = 'none';
+      if (applied) applied.style.display = 'flex';
+      if (tag) tag.textContent = `✓ ${pData.label}`;
+      if (input) input.value = '';
+      if (discountRow) {
+        discountRow.style.display = 'flex';
+        if (discountLabel) discountLabel.textContent = `Скидка (${state.activePromoCode}):`;
+        if (discountVal) discountVal.textContent = `-${formatPrice(discountAmount)}`;
+      }
+    } else {
+      if (row) row.style.display = 'flex';
+      if (applied) applied.style.display = 'none';
+      if (discountRow) discountRow.style.display = 'none';
+    }
+
+    if (grandTotalEl) grandTotalEl.textContent = formatPrice(grandTotal);
+  };
+
+  const applyPromoCode = (customCode) => {
+    const input = document.getElementById('promoInput');
+    const code = (typeof customCode === 'string' && customCode.trim())
+      ? customCode.trim().toUpperCase()
+      : (input ? input.value.trim().toUpperCase() : '');
+
+    if (!code) {
+      showToast('Введите промокод', 'error');
+      return false;
+    }
+
+    const promos = (window.GeekNook && window.GeekNook.PROMO_CODES) || {
+      'DEVTOOLS10': { discount: 10, label: 'DEVTOOLS10 (-10%)' },
+      'GEEK10': { discount: 10, label: 'GEEK10 (-10%)' },
+      'ДАША': { discount: 10, label: 'ДАША (-10%)' },
+      'DASHA': { discount: 10, label: 'DASHA (-10%)' },
+      'FOCUS15': { discount: 15, label: 'FOCUS15 (-15%)' },
+      'WELCOME5': { discount: 5, label: 'WELCOME5 (-5%)' }
+    };
+
+    if (promos[code]) {
+      const promo = promos[code];
+      state.promoDiscountPercent = promo.discount;
       state.activePromoCode = code;
+      try {
+        safeStorage.setItem('geeknook_promo', code);
+      } catch (e) {}
       saveCart();
-      showToast('Промокод применён: скидка 10%!', 'success');
+      updateCheckoutPromoUI();
+      showToast(`Промокод ${code} применён: скидка ${promo.discount}%!`, 'success');
+      return true;
     } else {
       showToast('Неверный промокод', 'error');
+      return false;
     }
+  };
+
+  const applyCheckoutPromo = () => {
+    const input = document.getElementById('checkoutPromoInput');
+    if (!input) return;
+    const code = input.value.trim().toUpperCase();
+    if (!code) {
+      showToast('Введите промокод', 'error');
+      return;
+    }
+    applyPromoCode(code);
+  };
+
+  const removePromoCode = () => {
+    state.promoDiscountPercent = 0;
+    state.activePromoCode = '';
+    try {
+      safeStorage.removeItem('geeknook_promo');
+    } catch (e) {}
+    saveCart();
+    updateCheckoutPromoUI();
+    const pInp = document.getElementById('promoInput');
+    if (pInp) pInp.value = '';
+    const chkInp = document.getElementById('checkoutPromoInput');
+    if (chkInp) chkInp.value = '';
+    showToast('Промокод удалён');
   };
 
   // --- CHECKOUT PROCESS ---
@@ -603,6 +705,9 @@ window.GeekNook.cart = {
   clearCart,
   updateCartUI,
   applyPromoCode,
+  applyCheckoutPromo,
+  removePromoCode,
+  updateCheckoutPromoUI,
   openCheckout,
   handleCheckoutSubmit,
   openQuickBuy,
