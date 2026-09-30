@@ -25,3 +25,6 @@ yarn-error.log*
 .agents/skills/
 scratch/
 
+# Chat export tools & artifacts
+generate_chat_export.js
+GEEKNOOK_*
