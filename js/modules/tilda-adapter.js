@@ -169,19 +169,27 @@
       }
     };
 
-    // --- 2. OVERRIDE: quickAddWithFeedback ---
+    // --- 2. OVERRIDE: quickAddWithFeedback (Smooth multi-item picking: NEVER opens cart drawer) ---
     window.geekNookApp.quickAddWithFeedback = function(btnEl, productId, optionName = 'Стандарт') {
-      window.geekNookApp.addToCart(productId, optionName, true);
+      window.geekNookApp.addToCart(productId, optionName, false);
       if (btnEl) {
         btnEl.classList.add('added');
+        btnEl.classList.add('added-pop');
         const isGlassBtn = btnEl.classList.contains('quick-add-btn');
-        const origHtml = btnEl.innerHTML;
+        if (!btnEl.getAttribute('data-orig-html')) {
+          btnEl.setAttribute('data-orig-html', btnEl.innerHTML);
+        }
         btnEl.innerHTML = isGlassBtn
           ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Добавлено!</span>`
           : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-        setTimeout(() => {
+        clearTimeout(btnEl._resetTimer);
+        btnEl._resetTimer = setTimeout(() => {
           btnEl.classList.remove('added');
-          btnEl.innerHTML = origHtml;
+          btnEl.classList.remove('added-pop');
+          if (btnEl.getAttribute('data-orig-html')) {
+            btnEl.innerHTML = btnEl.getAttribute('data-orig-html');
+            btnEl.removeAttribute('data-orig-html');
+          }
         }, 1200);
       }
     };
@@ -338,7 +346,8 @@
     // --- 7. CART BADGE SYNC ---
     function syncTildaCartBadge() {
       const badge = document.getElementById('cartBadge');
-      if (!badge) return;
+      const mobileBadge = document.getElementById('mobileNavCartCount');
+      if (!badge && !mobileBadge) return;
 
       let count = 0;
       if (window.tcart && Array.isArray(window.tcart.products)) {
@@ -348,10 +357,17 @@
       }
 
       if (count > 0) {
-        badge.textContent = count;
-        badge.style.display = 'inline-flex';
+        if (badge) {
+          badge.textContent = count;
+          badge.style.display = 'inline-flex';
+        }
+        if (mobileBadge) {
+          mobileBadge.textContent = count;
+          mobileBadge.style.display = 'inline-flex';
+        }
       } else {
-        badge.style.display = 'none';
+        if (badge) badge.style.display = 'none';
+        if (mobileBadge) mobileBadge.textContent = '0';
       }
     }
 
