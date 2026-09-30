@@ -20,7 +20,7 @@
   }
 
   function initTildaAdapter() {
-    if (!window.geekNookApp) {
+    if (!window.geekNookApp || typeof window.geekNookApp.openCartDrawer !== 'function') {
       setTimeout(initTildaAdapter, 50);
       return;
     }
@@ -32,7 +32,15 @@
 
     console.log('[GeekNook] ⚡ Tilda Headless Adapter activated! Connecting cart & CRM...');
 
-    const originalApp = window.geekNookApp;
+    // SAFELY CAPTURE NATIVE FUNCTIONS BY VALUE TO PREVENT ANY RECURSION
+    const nativeAddToCart = window.geekNookApp.addToCart;
+    const nativeQuickAddWithFeedback = window.geekNookApp.quickAddWithFeedback;
+    const nativeAddFromQuickView = window.geekNookApp.addFromQuickView;
+    const nativeOpenCartDrawer = window.geekNookApp.openCartDrawer;
+    const nativeOpenQuickBuy = window.geekNookApp.openQuickBuy;
+    const nativeAddConfiguredBundleToCart = window.geekNookApp.addConfiguredBundleToCart;
+    const nativeHandleCheckoutSubmit = window.geekNookApp.handleCheckoutSubmit;
+
     const cdnBase = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
 
     function toFullCdnUrl(path) {
@@ -95,13 +103,11 @@
       let resolvedSku = p.sku || '';
       const itemOptions = [];
 
-      // For products that actually have variants (e.g. Focus Station boards with 85/116 cm, or custom variants)
       const hasRealVariants = (p.options && p.options.lengths && p.options.lengths.length) || (opt !== 'Стандарт');
       if (hasRealVariants) {
         itemOptions.push({ option: 'Вариант', name: 'Вариант', variant: opt });
       }
 
-      // If product has warehouse SKU definitions for this option, attach them for CRM & 1C
       if (p.skus && p.skus[opt]) {
         const skuInfo = p.skus[opt];
         resolvedSku = skuInfo.sku || resolvedSku;
@@ -117,7 +123,6 @@
         }
       }
 
-      // Construct clean descriptive name: For boards with variants, format as e.g. "Focus Station 85 см (Дуб)"
       let finalName = p.title;
       if (p.category === 'boards' || hasRealVariants) {
         let woodRu = 'Орех';
@@ -135,29 +140,40 @@
       };
     }
 
-    // --- 1. OVERRIDE: addToCart (Unified: Updates GeekNook Cart Drawer & syncs to Tilda headlessly) ---
-    window.geekNookApp.addToCart = function(productId, optionName = 'Стандарт', openDrawer = false) {
-      // 1. Always update our beautiful native cart (Photo 1)
-      originalApp.addToCart(productId, optionName, openDrawer);
+    // Helper: Synchronize Tilda's in-memory cart with GeekNook's cart state
+    function syncTildaInMemory() {
+      if (!window.tcart) return;
+      const cartItems = (window.geekNookApp.state && Array.isArray(window.geekNookApp.state.cart))
+        ? window.geekNookApp.state.cart
+        : [];
 
-      // 2. Also keep Tilda's background tcart synchronized
-      const item = mapProductToTilda(productId, optionName);
-      if (item && window.tcart) {
-        if (!Array.isArray(window.tcart.products)) window.tcart.products = [];
-        const existing = window.tcart.products.find(p => p.name === item.name && p.price === item.price);
-        if (existing) {
-          existing.quantity = (parseInt(existing.quantity, 10) || 1) + 1;
-        } else {
-          window.tcart.products.push({ ...item, quantity: 1 });
-        }
-        if (typeof window.tcart__saveLocalObj === 'function') {
-          try { window.tcart__saveLocalObj(); } catch(e) {}
-        }
+      window.tcart.products = cartItems.map(i => {
+        const mapped = mapProductToTilda(i.id, i.option);
+        return {
+          ...(mapped || { name: i.title, price: i.price }),
+          quantity: i.quantity || 1,
+          amount: (i.price || 0) * (i.quantity || 1)
+        };
+      });
+      window.tcart.total = cartItems.reduce((sum, i) => sum + ((i.price || 0) * (i.quantity || 1)), 0);
+      window.tcart.prodamount = window.tcart.total;
+      if (typeof window.tcart__saveLocalObj === 'function') {
+        try { window.tcart__saveLocalObj(); } catch(e) {}
       }
+    }
 
-      // 3. Track Analytics & Ecommerce
+    // --- 1. OVERRIDE: addToCart ---
+    window.geekNookApp.addToCart = function(productId, optionName = 'Стандарт', openDrawer = false) {
+      if (typeof nativeAddToCart === 'function') {
+        nativeAddToCart(productId, optionName, openDrawer);
+      }
+      syncTildaInMemory();
+      syncTildaCartBadge();
+
+      // Track Analytics & Ecommerce
       if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackAddToCart === 'function') {
         const prod = (window.GEEKNOOK_DATA?.allProducts || []).find(p => p.id === productId);
+        const item = mapProductToTilda(productId, optionName);
         window.geekNookAnalytics.trackAddToCart({
           sku: item ? (item.sku || item.uid) : productId,
           name: prod ? prod.title : (item ? item.name : productId),
@@ -166,76 +182,58 @@
           quantity: 1
         });
       }
-
-      syncTildaCartBadge();
     };
 
-    // --- 2. OVERRIDE: quickAddWithFeedback (Smooth multi-item picking: NEVER opens cart drawer) ---
+    // --- 2. OVERRIDE: quickAddWithFeedback ---
     window.geekNookApp.quickAddWithFeedback = function(btnEl, productId, optionName = 'Стандарт') {
-      window.geekNookApp.addToCart(productId, optionName, false);
-      if (btnEl) {
-        btnEl.classList.add('added');
-        btnEl.classList.add('added-pop');
-        const isGlassBtn = btnEl.classList.contains('quick-add-btn');
-        if (!btnEl.getAttribute('data-orig-html')) {
-          btnEl.setAttribute('data-orig-html', btnEl.innerHTML);
-        }
-        btnEl.innerHTML = isGlassBtn
-          ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Добавлено!</span>`
-          : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
-        clearTimeout(btnEl._resetTimer);
-        btnEl._resetTimer = setTimeout(() => {
-          btnEl.classList.remove('added');
-          btnEl.classList.remove('added-pop');
-          if (btnEl.getAttribute('data-orig-html')) {
-            btnEl.innerHTML = btnEl.getAttribute('data-orig-html');
-            btnEl.removeAttribute('data-orig-html');
-          }
-        }, 1200);
+      if (typeof nativeQuickAddWithFeedback === 'function') {
+        nativeQuickAddWithFeedback(btnEl, productId, optionName);
+      } else {
+        window.geekNookApp.addToCart(productId, optionName, false);
       }
+      syncTildaInMemory();
+      syncTildaCartBadge();
     };
 
     // --- 3. OVERRIDE: addFromQuickView ---
     window.geekNookApp.addFromQuickView = function(productId) {
-      const modal = document.getElementById('quickViewModal');
-      let opt = 'Стандарт';
-      const activeChip = modal ? modal.querySelector('.option-chip.active') : null;
-      if (activeChip) {
-        opt = activeChip.getAttribute('data-val') || 'Стандарт';
+      if (typeof nativeAddFromQuickView === 'function') {
+        nativeAddFromQuickView(productId);
       }
-      window.geekNookApp.addToCart(productId, opt, false);
-      if (typeof window.geekNookApp.closeModal === 'function') {
-        window.geekNookApp.closeModal('quickViewModal');
-      }
-      originalApp.openCartDrawer();
+      syncTildaInMemory();
+      syncTildaCartBadge();
     };
 
-    // --- 4. OVERRIDE: openCartDrawer (Exclusively opens sleek GeekNook Cart Drawer) ---
+    // --- 4. OVERRIDE: openCartDrawer ---
     window.geekNookApp.openCartDrawer = function() {
-      originalApp.openCartDrawer();
+      if (typeof nativeOpenCartDrawer === 'function') {
+        nativeOpenCartDrawer();
+      }
       if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackCartOpen === 'function') {
         window.geekNookAnalytics.trackCartOpen();
       }
       syncTildaCartBadge();
     };
 
-    // --- 5. OVERRIDE: openCheckout / QuickBuy ---
+    // --- 5. OVERRIDE: openQuickBuy ---
     window.geekNookApp.openQuickBuy = function(productId) {
-      window.geekNookApp.addToCart(productId, 'Стандарт', false);
-      if (typeof originalApp.openCheckout === 'function') {
-        originalApp.openCheckout();
+      if (typeof nativeOpenQuickBuy === 'function') {
+        nativeOpenQuickBuy(productId);
       }
+      syncTildaInMemory();
+      syncTildaCartBadge();
     };
 
-    // --- 6. OVERRIDE: addConfiguredBundleToCart (Focus Station 3D Configurator) ---
+    // --- 6. OVERRIDE: addConfiguredBundleToCart ---
     window.geekNookApp.addConfiguredBundleToCart = function() {
-      originalApp.addConfiguredBundleToCart();
+      if (typeof nativeAddConfiguredBundleToCart === 'function') {
+        nativeAddConfiguredBundleToCart();
+      }
+      syncTildaInMemory();
       syncTildaCartBadge();
-      originalApp.openCartDrawer();
     };
 
     // --- 7. OVERRIDE: handleCheckoutSubmit (Sync with Tilda CRM, TG & Email in background) ---
-    const originalCheckoutSubmit = originalApp.handleCheckoutSubmit || window.geekNookApp.handleCheckoutSubmit;
     window.geekNookApp.handleCheckoutSubmit = function(e) {
       if (e && e.preventDefault) e.preventDefault();
       const form = e.target;
@@ -247,26 +245,11 @@
       const address = formData.get('address') || '';
       const delivery = formData.get('delivery') || 'СДЭК — пункт выдачи (ПВЗ)';
       const payment = formData.get('payment') || 'Оплата при получении в ПВЗ СДЭК';
-      const currentCart = [...(originalApp.state.cart || [])];
-      const promo = originalApp.state.activePromoCode || '';
-      const pvz = originalApp.state.selectedPvz;
+      const promo = window.geekNookApp.state?.activePromoCode || '';
+      const pvz = window.geekNookApp.state?.selectedPvz;
 
       // 1. Sync Tilda's background tcart products object
-      if (window.tcart) {
-        window.tcart.products = currentCart.map(i => {
-          const mapped = mapProductToTilda(i.id, i.option);
-          return {
-            ...(mapped || { name: i.title, price: i.price }),
-            quantity: i.quantity || 1,
-            amount: (i.price || 0) * (i.quantity || 1)
-          };
-        });
-        window.tcart.total = currentCart.reduce((sum, i) => sum + ((i.price || 0) * (i.quantity || 1)), 0);
-        window.tcart.prodamount = window.tcart.total;
-        if (typeof window.tcart__saveLocalObj === 'function') {
-          try { window.tcart__saveLocalObj(); } catch(err) {}
-        }
-      }
+      syncTildaInMemory();
 
       // 2. Populate Tilda's hidden background order form to trigger Tilda CRM, TG & Email
       const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form');
@@ -297,10 +280,12 @@
       }
 
       // 3. Complete checkout in our beautiful UI (shows confirmation modal GN-XXXXXX)
-      originalCheckoutSubmit(e);
+      if (typeof nativeHandleCheckoutSubmit === 'function') {
+        nativeHandleCheckoutSubmit(e);
+      }
     };
 
-    // --- 6. OVERRIDE: handleB2bSubmit (Tilda CRM & Lead Generation) ---
+    // --- 8. OVERRIDE: handleB2bSubmit (Tilda CRM & Lead Generation) ---
     window.geekNookApp.handleB2bSubmit = function(e) {
       if (e && e.preventDefault) e.preventDefault();
       
@@ -342,36 +327,60 @@
       }
     };
 
-    // --- 7. CART BADGE SYNC ---
+    // --- 9. INTERCEPT CLICKS ON FLOATING CART ICON ---
+    document.addEventListener('click', function(e) {
+      const icon = e.target.closest('.t706__carticon, .t706__carticon-wrapper, .t706__carticon-text');
+      if (icon) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+        window.geekNookApp.openCartDrawer();
+      }
+    }, true);
+
+    // --- 10. CART BADGE SYNC ---
     function syncTildaCartBadge() {
       const badge = document.getElementById('cartBadge');
       const mobileBadge = document.getElementById('mobileNavCartCount');
-      if (!badge && !mobileBadge) return;
+      const t706Counter = document.querySelector('.t706__carticon-counter');
+      const t706Icon = document.querySelector('.t706__carticon');
 
-      let count = 0;
-      if (window.tcart && Array.isArray(window.tcart.products)) {
-        count = window.tcart.products.reduce((acc, p) => acc + (parseInt(p.quantity, 10) || 1), 0);
-      } else if (document.querySelector('.t706__carticon-counter')) {
-        count = parseInt(document.querySelector('.t706__carticon-counter').textContent, 10) || 0;
+      const cartItems = (window.geekNookApp && window.geekNookApp.state && Array.isArray(window.geekNookApp.state.cart))
+        ? window.geekNookApp.state.cart
+        : [];
+      const count = cartItems.reduce((acc, p) => acc + (parseInt(p.quantity, 10) || 1), 0);
+
+      if (badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline-flex' : 'none';
       }
-
-      if (count > 0) {
-        if (badge) {
-          badge.textContent = count;
-          badge.style.display = 'inline-flex';
+      if (mobileBadge) {
+        mobileBadge.textContent = count;
+        mobileBadge.style.display = count > 0 ? 'inline-flex' : 'none';
+      }
+      if (t706Counter) {
+        t706Counter.textContent = count;
+      }
+      if (t706Icon) {
+        if (count > 0) {
+          t706Icon.classList.add('t706__carticon_showed');
+          t706Icon.style.display = 'block';
+          t706Icon.style.opacity = '1';
+          t706Icon.style.visibility = 'visible';
+          t706Icon.style.pointerEvents = 'auto';
+        } else {
+          t706Icon.classList.remove('t706__carticon_showed');
+          t706Icon.style.display = 'none';
+          t706Icon.style.opacity = '0';
+          t706Icon.style.visibility = 'hidden';
+          t706Icon.style.pointerEvents = 'none';
         }
-        if (mobileBadge) {
-          mobileBadge.textContent = count;
-          mobileBadge.style.display = 'inline-flex';
-        }
-      } else {
-        if (badge) badge.style.display = 'none';
-        if (mobileBadge) mobileBadge.textContent = '0';
       }
     }
 
     setInterval(syncTildaCartBadge, 800);
     syncTildaCartBadge();
+
     // Export global helper
     window.geekNookTilda = {
       isTildaActive,
