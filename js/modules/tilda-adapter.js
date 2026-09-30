@@ -135,65 +135,39 @@
       };
     }
 
-    // --- 1. OVERRIDE: addToCart ---
-    window.geekNookApp.addToCart = function(productId, optionName = 'Стандарт', openDrawer = true) {
+    // --- 1. OVERRIDE: addToCart (Unified: Updates GeekNook Cart Drawer & syncs to Tilda headlessly) ---
+    window.geekNookApp.addToCart = function(productId, optionName = 'Стандарт', openDrawer = false) {
+      // 1. Always update our beautiful native cart (Photo 1)
+      originalApp.addToCart(productId, optionName, openDrawer);
+
+      // 2. Also keep Tilda's background tcart synchronized
       const item = mapProductToTilda(productId, optionName);
-      if (!item) {
-        originalApp.addToCart(productId, optionName, openDrawer);
-        return;
-      }
-
-      const t706 = document.querySelector('.t706');
-      if (t706) {
-        t706.setAttribute('data-opencart-onorder', openDrawer ? 'yes' : 'no');
-      }
-
-      if (typeof window.tcart__addProduct === 'function') {
-        if (!openDrawer) {
-          // Temporarily suppress auto-open during background quick-add
-          const realOpenCart = window.tcart__openCart;
-          window.tcart__openCart = function() { /* suppressed on quick add */ };
-          try {
-            window.tcart__addProduct(item);
-          } finally {
-            setTimeout(() => {
-              window.tcart__openCart = realOpenCart;
-              // Safety: if Tilda opened the modal anyway, close it
-              if (document.body && document.body.classList.contains('t706__body_cartwinshowed')) {
-                if (typeof window.tcart__closeCart === 'function') {
-                  window.tcart__closeCart();
-                } else {
-                  document.body.classList.remove('t706__body_cartwinshowed');
-                  if (t706) t706.classList.remove('t706__cartwin_showed');
-                }
-              }
-            }, 60);
-          }
+      if (item && window.tcart) {
+        if (!Array.isArray(window.tcart.products)) window.tcart.products = [];
+        const existing = window.tcart.products.find(p => p.name === item.name && p.price === item.price);
+        if (existing) {
+          existing.quantity = (parseInt(existing.quantity, 10) || 1) + 1;
         } else {
-          window.tcart__addProduct(item);
-          if (typeof window.tcart__openCart === 'function') {
-            window.tcart__openCart();
-          }
+          window.tcart.products.push({ ...item, quantity: 1 });
         }
-      } else {
-        originalApp.addToCart(productId, optionName, openDrawer);
+        if (typeof window.tcart__saveLocalObj === 'function') {
+          try { window.tcart__saveLocalObj(); } catch(e) {}
+        }
       }
 
-      // Track Analytics & Ecommerce
+      // 3. Track Analytics & Ecommerce
       if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackAddToCart === 'function') {
+        const prod = (window.GEEKNOOK_DATA?.allProducts || []).find(p => p.id === productId);
         window.geekNookAnalytics.trackAddToCart({
-          sku: item.sku || item.uid,
-          name: item.name,
-          price: item.price,
+          sku: item ? (item.sku || item.uid) : productId,
+          name: prod ? prod.title : (item ? item.name : productId),
+          price: item ? item.price : 0,
           option: optionName,
           quantity: 1
         });
       }
 
       syncTildaCartBadge();
-      if (typeof originalApp.showToast === 'function') {
-        originalApp.showToast(`«${item.name}» добавлен в корзину!`);
-      }
     };
 
     // --- 2. OVERRIDE: quickAddWithFeedback (Smooth multi-item picking: NEVER opens cart drawer) ---
@@ -229,19 +203,16 @@
       if (activeChip) {
         opt = activeChip.getAttribute('data-val') || 'Стандарт';
       }
-      window.geekNookApp.addToCart(productId, opt, true);
+      window.geekNookApp.addToCart(productId, opt, false);
       if (typeof window.geekNookApp.closeModal === 'function') {
         window.geekNookApp.closeModal('quickViewModal');
       }
+      originalApp.openCartDrawer();
     };
 
-    // --- 4. OVERRIDE: openCartDrawer ---
+    // --- 4. OVERRIDE: openCartDrawer (Exclusively opens sleek GeekNook Cart Drawer) ---
     window.geekNookApp.openCartDrawer = function() {
-      if (typeof window.tcart__openCart === 'function') {
-        window.tcart__openCart();
-      } else {
-        originalApp.openCartDrawer();
-      }
+      originalApp.openCartDrawer();
       if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackCartOpen === 'function') {
         window.geekNookAnalytics.trackCartOpen();
       }
@@ -250,82 +221,83 @@
 
     // --- 5. OVERRIDE: openCheckout / QuickBuy ---
     window.geekNookApp.openQuickBuy = function(productId) {
-      window.geekNookApp.addToCart(productId, 'Стандарт', true);
+      window.geekNookApp.addToCart(productId, 'Стандарт', false);
+      if (typeof originalApp.openCheckout === 'function') {
+        originalApp.openCheckout();
+      }
     };
 
     // --- 6. OVERRIDE: addConfiguredBundleToCart (Focus Station 3D Configurator) ---
     window.geekNookApp.addConfiguredBundleToCart = function() {
-      const data = window.GEEKNOOK_DATA;
-      if (!data || !data.configurator) {
-        originalApp.addConfiguredBundleToCart();
-        return;
-      }
-
-      const state = window.geekNookApp.state || {};
-      const config = state.config || {};
-      const finish = data.configurator.finishes.find(f => f.id === config.finishId) || data.configurator.finishes[0];
-      const length = data.configurator.lengths.find(l => l.id === config.lengthId) || data.configurator.lengths[0];
-
-      let grandTotal = length.priceBase + finish.priceDelta;
-      const addonNames = [];
-      (config.selectedAddonIds || []).forEach(id => {
-        const a = data.configurator.addons.find(x => x.id === id);
-        if (a) {
-          grandTotal += a.price;
-          addonNames.push(a.name);
-        }
-      });
-      if (config.engravingEnabled) grandTotal += 1200;
-
-      const finishKey = finish.id === 'oak' ? 'oak' : (finish.id === 'black' ? 'black' : 'walnut');
-      const skuKey = `${finishKey}_${length.id}`;
-      const skuInfo = FOCUS_STATION_SKUS[skuKey];
-
-      const baseCatalogName = finish.id === 'oak' ? 'Focus Station Oak' : (finish.id === 'black' ? 'Focus Station Black' : 'Focus Station Walnut');
-      const customTitle = `Focus Station ${length.id} см (${finish.name})`;
-      const options = [
-        { option: 'Сборка', name: 'Сборка', variant: customTitle },
-        { option: 'Длина основания', name: 'Длина основания', variant: length.id + ' см' },
-        { option: 'Габариты', name: 'Габариты', variant: skuInfo ? skuInfo.dimensions : `${length.id} × 9 × 23 см` },
-        { option: 'Порода дерева', name: 'Порода дерева', variant: finish.name },
-        { option: 'Артикул', name: 'Артикул', variant: skuInfo ? skuInfo.part : 'G4N-FOCUS' },
-        { option: 'SKU', name: 'SKU', variant: skuInfo ? skuInfo.sku : '' },
-        { option: 'Лазерная гравировка', name: 'Лазерная гравировка', variant: config.engravingEnabled ? (config.engravingText || 'GEEKNOOK // LAB') : 'Без гравировки' },
-        { option: 'T-Track аксессуары', name: 'T-Track аксессуары', variant: addonNames.length ? addonNames.join('; ') : 'Базовая комплектация' }
-      ];
-
-      const imgUrl = toFullCdnUrl(finish.img);
-
-      if (typeof window.tcart__addProduct === 'function') {
-        window.tcart__addProduct({
-          name: customTitle,
-          price: grandTotal,
-          sku: skuInfo ? skuInfo.sku : 'G4N-FOCUS',
-          img: imgUrl,
-          options: options
-        });
-        if (typeof window.tcart__openCart === 'function') {
-          window.tcart__openCart();
-        }
-        if (typeof window.geekNookApp.closeModal === 'function') {
-          window.geekNookApp.closeModal('configuratorModal');
-        }
-      } else {
-        originalApp.addConfiguredBundleToCart();
-      }
-
-      // Track Analytics & Ecommerce
-      if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackAddToCart === 'function') {
-        window.geekNookAnalytics.trackAddToCart({
-          sku: skuInfo ? skuInfo.sku : 'G4N-FOCUS',
-          name: customTitle,
-          price: grandTotal,
-          option: `${length.id} см (${finish.name})`,
-          quantity: 1
-        });
-      }
-
+      originalApp.addConfiguredBundleToCart();
       syncTildaCartBadge();
+      originalApp.openCartDrawer();
+    };
+
+    // --- 7. OVERRIDE: handleCheckoutSubmit (Sync with Tilda CRM, TG & Email in background) ---
+    const originalCheckoutSubmit = originalApp.handleCheckoutSubmit || window.geekNookApp.handleCheckoutSubmit;
+    window.geekNookApp.handleCheckoutSubmit = function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+
+      const name = formData.get('name') || '';
+      const phone = formData.get('phone') || '';
+      const email = formData.get('email') || '';
+      const address = formData.get('address') || '';
+      const delivery = formData.get('delivery') || 'СДЭК — пункт выдачи (ПВЗ)';
+      const payment = formData.get('payment') || 'Оплата при получении в ПВЗ СДЭК';
+      const currentCart = [...(originalApp.state.cart || [])];
+      const promo = originalApp.state.activePromoCode || '';
+      const pvz = originalApp.state.selectedPvz;
+
+      // 1. Sync Tilda's background tcart products object
+      if (window.tcart) {
+        window.tcart.products = currentCart.map(i => {
+          const mapped = mapProductToTilda(i.id, i.option);
+          return {
+            ...(mapped || { name: i.title, price: i.price }),
+            quantity: i.quantity || 1,
+            amount: (i.price || 0) * (i.quantity || 1)
+          };
+        });
+        window.tcart.total = currentCart.reduce((sum, i) => sum + ((i.price || 0) * (i.quantity || 1)), 0);
+        window.tcart.prodamount = window.tcart.total;
+        if (typeof window.tcart__saveLocalObj === 'function') {
+          try { window.tcart__saveLocalObj(); } catch(err) {}
+        }
+      }
+
+      // 2. Populate Tilda's hidden background order form to trigger Tilda CRM, TG & Email
+      const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form');
+      if (tildaCartForm) {
+        const inpName = tildaCartForm.querySelector('input[name="Name"], input[name="name"]');
+        const inpEmail = tildaCartForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
+        const inpPhone = tildaCartForm.querySelector('input[name="Phone"], input[name="phone"]');
+        const inpPvz = tildaCartForm.querySelector('input[name*="ПВЗ"], input[name*="CDEK"], input[name*="cdek"], input[name="Address"], input[name="address"], textarea');
+        const inpComment = tildaCartForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
+
+        if (inpName) inpName.value = name;
+        if (inpEmail) inpEmail.value = email;
+        if (inpPhone) inpPhone.value = phone;
+
+        const pvzString = pvz ? `ПВЗ СДЭК: [${pvz.code}] ${pvz.address} (${pvz.city})` : address;
+        if (inpPvz) inpPvz.value = pvzString;
+        if (inpComment) inpComment.value = `${pvzString}. ${delivery}. ${payment}. ${promo ? 'Промокод: ' + promo : ''}`;
+
+        // Trigger hidden Tilda submit
+        const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
+        if (submitBtn) {
+          try { submitBtn.click(); } catch(err) {}
+        }
+        try {
+          const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
+          tildaCartForm.dispatchEvent(submitEvt);
+        } catch(err) {}
+      }
+
+      // 3. Complete checkout in our beautiful UI (shows confirmation modal GN-XXXXXX)
+      originalCheckoutSubmit(e);
     };
 
     // --- 6. OVERRIDE: handleB2bSubmit (Tilda CRM & Lead Generation) ---

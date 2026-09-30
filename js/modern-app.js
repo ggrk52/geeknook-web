@@ -6374,7 +6374,8 @@
     themeManager,
     modalManager,
     safeStorage,
-    escapeHTML
+    escapeHTML,
+    state
   };
 
   let isAppInitialized = false;

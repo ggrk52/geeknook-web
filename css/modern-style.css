@@ -7368,8 +7368,24 @@ textarea:focus-visible {
 }
 
 /* ==========================================================================
-   GEEK NOOK TILDA CART (ST100 / .t706) LUXURY DARK THEME & RESPONSIVE POLISH
+   GEEK NOOK TILDA CART HIDING & UNIFIED HEADLESS CART
+   Tilda ST100 operates 100% headlessly in the background for CRM & notifications.
+   The user interface is exclusively the custom GeekNook Cart Drawer & Checkout.
    ========================================================================== */
+.t706__carticon,
+.t706__cartwin,
+.t706__cartwin-close,
+.t706__cartwin-content {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+  opacity: 0 !important;
+}
+
+body.t706__body_cartwinshowed {
+  overflow: auto !important;
+}
+
 .t706__cartwin,
 .t706__cartwin-content,
 .t706__cartwin-top,
