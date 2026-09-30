@@ -52,12 +52,12 @@
 
     // Official warehouse SKU map for Focus Station variants (85 cm and 116 cm)
     const FOCUS_STATION_SKUS = {
-      'walnut_85': { sku: '1000830012', part: 'G4N-202404201', name: 'Monitor Stand GEEK NOOK Focus Station 85x9x23 cm, Walnut', price: 19990, dimensions: '85 × 9 × 23 см' },
-      'walnut_116': { sku: '1000830013', part: 'G4N-202404202', name: 'Monitor Stand GEEK NOOK Focus Station 116x9x23 cm, Walnut', price: 24990, dimensions: '116 × 9 × 23 см' },
-      'oak_85': { sku: '1000830014', part: 'G4N-2024042003', name: 'Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Oak', price: 19990, dimensions: '85 × 9 × 23 см' },
-      'oak_116': { sku: '1000830015', part: 'G4N-2024042004', name: 'Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Oak', price: 24990, dimensions: '116 × 9 × 23 см' },
-      'black_85': { sku: '1000830016', part: 'G4N-202404205', name: 'Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Black', price: 19990, dimensions: '85 × 9 × 23 см' },
-      'black_116': { sku: '1000830017', part: 'G4N-2024042006', name: 'Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Black', price: 24990, dimensions: '116 × 9 × 23 см' }
+      'walnut_85': { sku: '1000830012', part: '202404201', barcode: '460042888801', name: 'Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Орех', price: 19990, dimensions: '85 × 9 × 23 см' },
+      'walnut_116': { sku: '1000830013', part: '202404202', barcode: '460042888804', name: 'Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Орех', price: 24990, dimensions: '116 × 9 × 23 см' },
+      'oak_85': { sku: '1000830014', part: '2024042003', barcode: '460042888802', name: 'Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Дуб', price: 19990, dimensions: '85 × 9 × 23 см' },
+      'oak_116': { sku: '1000830015', part: '2024042004', barcode: '460042888805', name: 'Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Дуб', price: 24990, dimensions: '116 × 9 × 23 см' },
+      'black_85': { sku: '1000830016', part: '202404205', barcode: '460042888803', name: 'Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Чёрный', price: 19990, dimensions: '85 × 9 × 23 см' },
+      'black_116': { sku: '1000830017', part: '2024042006', barcode: '460042888806', name: 'Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Чёрный', price: 24990, dimensions: '116 × 9 × 23 см' }
     };
 
     // Helper: Map GeekNook product to Tilda Cart format
@@ -90,6 +90,8 @@
       if (!opt || opt === 'Стандарт') {
         if (p.options && p.options.lengths && p.options.lengths.length) {
           opt = p.options.lengths[0];
+        } else if (p.options && p.options.sizes && p.options.sizes.length) {
+          opt = p.options.sizes[0];
         } else {
           opt = 'Стандарт';
         }
@@ -103,7 +105,7 @@
       let resolvedSku = p.sku || '';
       const itemOptions = [];
 
-      const hasRealVariants = (p.options && p.options.lengths && p.options.lengths.length) || (opt !== 'Стандарт');
+      const hasRealVariants = (p.options && p.options.lengths && p.options.lengths.length) || (p.options && p.options.sizes && p.options.sizes.length) || (opt !== 'Стандарт');
       if (hasRealVariants) {
         itemOptions.push({ option: 'Вариант', name: 'Вариант', variant: opt });
       }
@@ -111,12 +113,20 @@
       if (p.skus && p.skus[opt]) {
         const skuInfo = p.skus[opt];
         resolvedSku = skuInfo.sku || resolvedSku;
-        itemOptions.push({ option: 'Габариты', name: 'Габариты', variant: skuInfo.dimensions });
+        if (skuInfo.dimensions) {
+          itemOptions.push({ option: 'Габариты', name: 'Габариты', variant: skuInfo.dimensions });
+        }
         itemOptions.push({ option: 'Артикул', name: 'Артикул', variant: skuInfo.part });
         itemOptions.push({ option: 'SKU', name: 'SKU', variant: skuInfo.sku });
+        if (skuInfo.barcode) {
+          itemOptions.push({ option: 'Штрихкод', name: 'Штрихкод', variant: skuInfo.barcode });
+        }
       } else {
         if (p.part) {
           itemOptions.push({ option: 'Артикул', name: 'Артикул', variant: p.part });
+        }
+        if (p.barcode) {
+          itemOptions.push({ option: 'Штрихкод', name: 'Штрихкод', variant: p.barcode });
         }
         if (resolvedSku) {
           itemOptions.push({ option: 'SKU', name: 'SKU', variant: resolvedSku });
@@ -149,14 +159,39 @@
 
       window.tcart.products = cartItems.map(i => {
         const mapped = mapProductToTilda(i.id, i.option);
+        const itemPrice = (mapped && mapped.price) ? mapped.price : (i.price || 0);
+        const itemQty = i.quantity || 1;
         return {
-          ...(mapped || { name: i.title, price: i.price }),
-          quantity: i.quantity || 1,
-          amount: (i.price || 0) * (i.quantity || 1)
+          ...(mapped || { name: i.title, price: itemPrice }),
+          price: itemPrice,
+          quantity: itemQty,
+          amount: itemPrice * itemQty
         };
       });
-      window.tcart.total = cartItems.reduce((sum, i) => sum + ((i.price || 0) * (i.quantity || 1)), 0);
-      window.tcart.prodamount = window.tcart.total;
+
+      const subTotal = window.tcart.products.reduce((sum, item) => sum + (item.amount || 0), 0);
+      const savedPromo = (typeof localStorage !== 'undefined' ? localStorage.getItem('geeknook_promo') : '') || '';
+      const promoCode = (window.geekNookApp?.state?.activePromoCode || savedPromo).trim().toUpperCase();
+      const PROMOS = {
+        'DEVTOOLS10': 10,
+        'GEEK10': 10,
+        'ДАША': 10,
+        'DASHA': 10,
+        'FOCUS15': 15,
+        'WELCOME5': 5
+      };
+      const discountPercent = PROMOS[promoCode] || 0;
+      const discountSum = discountPercent > 0 ? Math.round(subTotal * (discountPercent / 100)) : 0;
+      const grandTotal = Math.max(0, subTotal - discountSum);
+
+      window.tcart.amount = grandTotal;
+      window.tcart.total = grandTotal;
+      window.tcart.prodamount = subTotal;
+      window.tcart.prodamount_discountsum = discountSum;
+      window.tcart.prodamount_withdiscount = grandTotal;
+      window.tcart.currency = 'RUB';
+      window.tcart.system = 'cash';
+
       if (typeof window.tcart__saveLocalObj === 'function') {
         try { window.tcart__saveLocalObj(); } catch(e) {}
       }
@@ -245,15 +280,60 @@
       const address = formData.get('address') || '';
       const delivery = formData.get('delivery') || 'СДЭК — пункт выдачи (ПВЗ)';
       const payment = formData.get('payment') || 'Оплата при получении в ПВЗ СДЭК';
-      const promo = window.geekNookApp.state?.activePromoCode || '';
+      const checkoutPromo = (window.geekNookApp.state?.activePromoCode || (typeof localStorage !== 'undefined' ? localStorage.getItem('geeknook_promo') : '') || '').trim().toUpperCase();
       const pvz = window.geekNookApp.state?.selectedPvz;
 
-      // 1. Sync Tilda's background tcart products object
+      // 1. Sync Tilda's background tcart products object & grand total
       syncTildaInMemory();
 
       // 2. Populate Tilda's hidden background order form to trigger Tilda CRM, TG & Email
       const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form');
       if (tildaCartForm) {
+        // Force payment system to 'cash' (Оплата при получении в СДЭК)
+        const pmRadios = tildaCartForm.querySelectorAll('input[name="paymentsystem"]');
+        const cashRadio = tildaCartForm.querySelector('input[name="paymentsystem"][value="cash"]');
+        if (cashRadio) {
+          pmRadios.forEach(r => { r.checked = false; });
+          cashRadio.checked = true;
+          try {
+            cashRadio.dispatchEvent(new Event('change', { bubbles: true }));
+          } catch(e) {}
+        }
+
+        if (window.tcart) {
+          window.tcart.system = 'cash';
+        }
+
+        // Invoke Tilda's payment info builder to serialize exact amount & system into form
+        if (window.tildaForm && typeof window.tildaForm.addPaymentInfoToForm === 'function') {
+          try {
+            window.tildaForm.addPaymentInfoToForm(tildaCartForm);
+          } catch(err) {}
+        }
+
+        // Direct guarantee on tildaForm payment metadata
+        const finalAmount = window.tcart ? window.tcart.amount : 0;
+        if (window.tildaForm) {
+          window.tildaForm.amountForStat = finalAmount;
+          if (window.tildaForm.tildapayment) {
+            window.tildaForm.tildapayment.amount = finalAmount;
+            window.tildaForm.tildapayment.system = 'cash';
+            window.tildaForm.tildapayment.currency = 'RUB';
+          }
+        }
+
+        // Guarantee hidden payment payload input value
+        const paymentInput = tildaCartForm.querySelector('input.js-tilda-payment, input[name="tildapayment"]');
+        if (paymentInput) {
+          try {
+            const pData = JSON.parse(paymentInput.value || '{}');
+            pData.amount = finalAmount;
+            pData.system = 'cash';
+            pData.currency = 'RUB';
+            paymentInput.value = JSON.stringify(pData);
+          } catch(e) {}
+        }
+
         const inpName = tildaCartForm.querySelector('input[name="Name"], input[name="name"]');
         const inpEmail = tildaCartForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
         const inpPhone = tildaCartForm.querySelector('input[name="Phone"], input[name="phone"]');
@@ -267,7 +347,7 @@
         const pvzCode = pvz ? pvz.code : (address.match(/\[([A-Z0-9_-]+)\]/i)?.[1] || address);
         const pvzString = pvz ? `ПВЗ СДЭК: [${pvz.code}] ${pvz.address} (${pvz.city})` : address;
         if (inpPvz) inpPvz.value = pvzCode;
-        if (inpComment) inpComment.value = `${pvzString}. Доставка: СДЭК (ПВЗ). Оплата: при получении в ПВЗ. ${promo ? 'Промокод: ' + promo : ''}`;
+        if (inpComment) inpComment.value = `${pvzString}. Доставка: СДЭК (ПВЗ). Оплата: при получении в ПВЗ. ${checkoutPromo ? 'Промокод: ' + checkoutPromo : ''}`;
 
         // Trigger hidden Tilda submit
         const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
@@ -556,36 +636,32 @@
       if (!pmGroup) return;
 
       const labels = pmGroup.querySelectorAll('.t-radio__control');
-      if (labels.length >= 2) {
-        const r1 = labels[0];
-        const r2 = labels[1];
+      labels.forEach(label => {
+        const input = label.querySelector('input[type="radio"]');
+        if (!input) return;
 
-        if (!r1.dataset.cdekRenamed) {
-          r1.dataset.cdekRenamed = 'true';
-          const indicator = r1.querySelector('.t-radio__indicator');
-          const input = r1.querySelector('input');
-          r1.innerHTML = '';
-          if (input) r1.appendChild(input);
-          if (indicator) r1.appendChild(indicator);
+        if (!label.dataset.cdekRenamed) {
+          label.dataset.cdekRenamed = 'true';
+          const indicator = label.querySelector('.t-radio__indicator');
+          label.innerHTML = '';
+          label.appendChild(input);
+          if (indicator) label.appendChild(indicator);
+
           const span = document.createElement('span');
           span.style.cssText = 'color: #ffffff; font-weight: 500; font-size: 13px; line-height: 1.4; display: block;';
-          span.innerHTML = '<strong>Оплата в СДЭК при получении</strong><br><span style="color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 400;">Картой или наличными в пункте выдачи после проверки товара</span>';
-          r1.appendChild(span);
-        }
 
-        if (!r2.dataset.cdekRenamed) {
-          r2.dataset.cdekRenamed = 'true';
-          const indicator = r2.querySelector('.t-radio__indicator');
-          const input = r2.querySelector('input');
-          r2.innerHTML = '';
-          if (input) r2.appendChild(input);
-          if (indicator) r2.appendChild(indicator);
-          const span = document.createElement('span');
-          span.style.cssText = 'color: #ffffff; font-weight: 500; font-size: 13px; line-height: 1.4; display: block;';
-          span.innerHTML = '<strong>Онлайн-оплата через СДЭК</strong><br><span style="color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 400;">По безопасной ссылке СДЭК Pay перед отправкой заказа</span>';
-          r2.appendChild(span);
+          if (input.value === 'cash') {
+            span.innerHTML = '<strong>Оплата в СДЭК при получении</strong><br><span style="color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 400;">Картой или наличными в пункте выдачи после проверки товара</span>';
+            input.checked = true;
+          } else if (input.value === 'banktransfer') {
+            span.innerHTML = '<strong>Онлайн-оплата через СДЭК</strong><br><span style="color: rgba(255,255,255,0.55); font-size: 11px; font-weight: 400;">По безопасной ссылке СДЭК Pay перед отправкой заказа</span>';
+            input.checked = false;
+          } else {
+            span.textContent = input.value;
+          }
+          label.appendChild(span);
         }
-      }
+      });
     }
 
     // 4. SETUP LEGAL CONSENT NOTICE ABOVE SUBMIT BUTTON
