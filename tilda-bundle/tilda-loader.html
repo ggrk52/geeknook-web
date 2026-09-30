@@ -55,6 +55,12 @@
 (function() {
   'use strict';
 
+  // Suppress Tilda's automatic cart pop-up on product add
+  try {
+    const t706 = document.querySelector('.t706');
+    if (t706) t706.setAttribute('data-opencart-onorder', 'no');
+  } catch(e) {}
+
   // =========================================================================
   // ВАШ АКТУАЛЬНЫЙ АДРЕС САЙТА НА GITHUB PAGES:
   // =========================================================================

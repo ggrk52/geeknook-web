@@ -143,10 +143,37 @@
         return;
       }
 
+      const t706 = document.querySelector('.t706');
+      if (t706) {
+        t706.setAttribute('data-opencart-onorder', openDrawer ? 'yes' : 'no');
+      }
+
       if (typeof window.tcart__addProduct === 'function') {
-        window.tcart__addProduct(item);
-        if (openDrawer && typeof window.tcart__openCart === 'function') {
-          window.tcart__openCart();
+        if (!openDrawer) {
+          // Temporarily suppress auto-open during background quick-add
+          const realOpenCart = window.tcart__openCart;
+          window.tcart__openCart = function() { /* suppressed on quick add */ };
+          try {
+            window.tcart__addProduct(item);
+          } finally {
+            setTimeout(() => {
+              window.tcart__openCart = realOpenCart;
+              // Safety: if Tilda opened the modal anyway, close it
+              if (document.body && document.body.classList.contains('t706__body_cartwinshowed')) {
+                if (typeof window.tcart__closeCart === 'function') {
+                  window.tcart__closeCart();
+                } else {
+                  document.body.classList.remove('t706__body_cartwinshowed');
+                  if (t706) t706.classList.remove('t706__cartwin_showed');
+                }
+              }
+            }, 60);
+          }
+        } else {
+          window.tcart__addProduct(item);
+          if (typeof window.tcart__openCart === 'function') {
+            window.tcart__openCart();
+          }
         }
       } else {
         originalApp.addToCart(productId, optionName, openDrawer);
@@ -382,6 +409,16 @@
 
   // --- IMMEDIATE TILDA DOM ENHANCEMENTS (Runs independently of geekNookApp) ---
   function initTildaDomEnhancements() {
+    // 0. SUPPRESS TILDA AUTO OPEN ON PRODUCT ADD (Keeps catalog browsing uninterrupted)
+    function suppressTildaAutoOpen() {
+      const t706 = document.querySelector('.t706');
+      if (t706 && t706.getAttribute('data-opencart-onorder') === 'yes') {
+        t706.setAttribute('data-opencart-onorder', 'no');
+      }
+    }
+    suppressTildaAutoOpen();
+    setInterval(suppressTildaAutoOpen, 800);
+
     // 1. SMART CDEK PVZ SANITIZER & MAP HELPER
     const translitMap = {
       'А': 'A', 'Б': 'B', 'В': 'B', 'Г': 'G', 'Д': 'D', 'Е': 'E', 'Ё': 'E', 'Ж': 'ZH', 'З': 'Z',
