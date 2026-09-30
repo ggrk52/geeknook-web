@@ -257,16 +257,17 @@
         const inpName = tildaCartForm.querySelector('input[name="Name"], input[name="name"]');
         const inpEmail = tildaCartForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
         const inpPhone = tildaCartForm.querySelector('input[name="Phone"], input[name="phone"]');
-        const inpPvz = tildaCartForm.querySelector('input[name*="ПВЗ"], input[name*="CDEK"], input[name*="cdek"], input[name="Address"], input[name="address"], textarea');
+        const inpPvz = tildaCartForm.querySelector('input[name="Код ПВЗ СДЭК"], input[name*="ПВЗ"], input[name*="CDEK"], input[name*="cdek"], input[name="Address"], input[name="address"], textarea');
         const inpComment = tildaCartForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
 
         if (inpName) inpName.value = name;
         if (inpEmail) inpEmail.value = email;
         if (inpPhone) inpPhone.value = phone;
 
+        const pvzCode = pvz ? pvz.code : (address.match(/\[([A-Z0-9_-]+)\]/i)?.[1] || address);
         const pvzString = pvz ? `ПВЗ СДЭК: [${pvz.code}] ${pvz.address} (${pvz.city})` : address;
-        if (inpPvz) inpPvz.value = pvzString;
-        if (inpComment) inpComment.value = `${pvzString}. ${delivery}. ${payment}. ${promo ? 'Промокод: ' + promo : ''}`;
+        if (inpPvz) inpPvz.value = pvzCode;
+        if (inpComment) inpComment.value = `${pvzString}. Доставка: СДЭК (ПВЗ). Оплата: при получении в ПВЗ. ${promo ? 'Промокод: ' + promo : ''}`;
 
         // Trigger hidden Tilda submit
         const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');

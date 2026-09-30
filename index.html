@@ -1640,13 +1640,13 @@
             </div>
             <div class="checkout-field-group">
               <div class="checkout-field-header-row">
-                <label class="checkout-field-label" style="margin-bottom:0;">Адрес доставки / Пункт СДЭК *</label>
+                <label class="checkout-field-label" style="margin-bottom:0;">Код ПВЗ СДЭК / Пункт выдачи *</label>
                 <button type="button" class="btn-cdek-pick-action" onclick="window.geekNookApp.openCdekMap()" title="Открыть карту пунктов выдачи СДЭК">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
                   <span>Выбрать ПВЗ на карте</span>
                 </button>
               </div>
-              <input type="text" id="checkoutAddressInput" name="address" class="checkout-input" placeholder="г. Москва, ул. Ленина 10 (или выберите ПВЗ на карте)" required />
+              <input type="text" id="checkoutAddressInput" name="address" class="checkout-input" placeholder="Код ПВЗ СДЭК (или выберите пункт на карте)" required />
               <div id="checkoutPvzBadge" class="checkout-pvz-selected-badge" style="display:none;">
                 <div class="checkout-pvz-badge-content">
                   <span class="checkout-pvz-badge-icon">📍</span>
@@ -1668,15 +1668,14 @@
               <label class="checkout-field-label">Способ доставки</label>
               <select id="checkoutDeliverySelect" name="delivery" class="checkout-select" onchange="window.geekNookApp.handleDeliveryChange(this.value)">
                 <option value="СДЭК — пункт выдачи (ПВЗ)">СДЭК — пункт выдачи (ПВЗ)</option>
-                <option value="СДЭК — курьером до двери">СДЭК — курьером до двери</option>
               </select>
+              <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:5px;line-height:1.35;">Пока наша система доставки работает только со СДЭК (ПВЗ), скоро появятся и другие варианты!</div>
             </div>
 
             <div class="checkout-field-group">
               <label class="checkout-field-label">Способ оплаты</label>
               <select name="payment" class="checkout-select">
-                <option value="Оплата при получении в ПВЗ СДЭК">Оплата при получении в ПВЗ СДЭК</option>
-                <option value="Оплата при получении курьеру СДЭК">Оплата при получении курьеру СДЭК</option>
+                <option value="Оплата при получении в ПВЗ СДЭК">Оплата при получении в ПВЗ СДЭК (картой или наличными)</option>
               </select>
             </div>
 
