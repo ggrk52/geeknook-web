@@ -509,7 +509,7 @@
           el.value = 'Оформить заказ';
         } else if (el.classList.contains('t-btnflex__text') && (el.textContent.trim().toLowerCase() === 'checkout' || el.textContent.trim().toLowerCase() === 'order')) {
           el.textContent = 'Оформить заказ';
-        } else if (el.tagName === 'BUTTON' && !el.querySelector('.t-btnflex__text') && el.textContent.trim().toLowerCase().includes('check')) {
+        } else if (el.tagName === 'BUTTON' && !el.querySelector('.t-btnflex__text') && (el.textContent.trim().toLowerCase().includes('check') || el.textContent.trim().toLowerCase().includes('order'))) {
           el.textContent = 'Оформить заказ';
         }
       });
@@ -563,8 +563,7 @@
       const notice = document.createElement('div');
       notice.className = 't-cart-legal-notice';
       notice.style.cssText = 'font-size: 11.5px; line-height: 1.45; color: rgba(255, 255, 255, 0.55); margin: 12px 0 10px; text-align: center;';
-      const baseCdn = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
-      notice.innerHTML = `Нажимая «Оформить заказ», вы соглашаетесь с <a href="/legal#offer" target="_blank" rel="noopener" style="color: #2b70f0; text-decoration: underline;">Публичной офертой</a> и <a href="/legal#privacy" target="_blank" rel="noopener" style="color: #2b70f0; text-decoration: underline;">Политикой конфиденциальности</a> ООО «ГИК НУК»`;
+      notice.innerHTML = `Нажимая «Оформить заказ», вы соглашаетесь с <a href="https://geeknook.ru/legal.html#offer" target="_blank" rel="noopener" style="color: #2b70f0; text-decoration: underline;">Публичной офертой</a> и <a href="https://geeknook.ru/legal.html#privacy" target="_blank" rel="noopener" style="color: #2b70f0; text-decoration: underline;">Политикой конфиденциальности</a> ООО «ГИК НУК»`;
       submitWrap.parentNode.insertBefore(notice, submitWrap);
     }
 

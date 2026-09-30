@@ -20,6 +20,11 @@ AddDefaultCharset UTF-8
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+  # Rewrite extensionless URLs to .html (e.g. /legal -> /legal.html, /journal -> /journal.html)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_FILENAME}\.html -f
+  RewriteRule ^(.*)$ $1.html [L]
+
   # Block hidden files (except .well-known for SSL certificates)
   RewriteCond %{REQUEST_URI} "(^|/)\.(?!well-known)"
   RewriteRule .* - [F,L]
