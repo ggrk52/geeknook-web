@@ -12,7 +12,7 @@ const GEEKNOOK_DATA = {
       title: "Focus Station Walnut",
       subtitle: "Благородный американский орех • 85 см и 116 см",
       category: "boards",
-      price: 19990,
+      price: 19999,
       oldPrice: 25000,
       rating: 5.0,
       reviewsCount: 38,
@@ -43,16 +43,16 @@ const GEEKNOOK_DATA = {
         lengths: ["85 см", "116 см"]
       },
       optionPrices: {
-        "85 см": 19990,
-        "116 см": 24990
+        "85 см": 19999,
+        "116 см": 24999
       },
       optionOldPrices: {
         "85 см": 25000,
         "116 см": 29000
       },
       skus: {
-        "85 см": { sku: "1000830012", part: "202404201", barcode: "460042888801", officialName: "Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Орех", dimensions: "85 × 9 × 23 см", price: 19990, oldPrice: 25000, weight: "3,85 кг" },
-        "116 см": { sku: "1000830013", part: "202404202", barcode: "460042888804", officialName: "Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Орех", dimensions: "116 × 9 × 23 см", price: 24990, oldPrice: 29000, weight: "5,75 кг" }
+        "85 см": { sku: "1000830012", part: "202404201", barcode: "460042888801", officialName: "Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Орех", dimensions: "85 × 9 × 23 см", price: 19999, oldPrice: 25000, weight: "3,85 кг" },
+        "116 см": { sku: "1000830013", part: "202404202", barcode: "460042888804", officialName: "Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Орех", dimensions: "116 × 9 × 23 см", price: 24999, oldPrice: 29000, weight: "5,75 кг" }
       }
     },
     {
@@ -61,7 +61,7 @@ const GEEKNOOK_DATA = {
       title: "Focus Station Oak",
       subtitle: "Натуральный дуб • 85 см и 116 см",
       category: "boards",
-      price: 19990,
+      price: 19999,
       oldPrice: 25000,
       rating: 4.9,
       reviewsCount: 34,
@@ -92,16 +92,16 @@ const GEEKNOOK_DATA = {
         lengths: ["85 см", "116 см"]
       },
       optionPrices: {
-        "85 см": 19990,
-        "116 см": 24990
+        "85 см": 19999,
+        "116 см": 24999
       },
       optionOldPrices: {
         "85 см": 25000,
         "116 см": 29000
       },
       skus: {
-        "85 см": { sku: "1000830014", part: "2024042003", barcode: "460042888802", officialName: "Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Дуб", dimensions: "85 × 9 × 23 см", price: 19990, oldPrice: 25000, weight: "3,85 кг" },
-        "116 см": { sku: "1000830015", part: "2024042004", barcode: "460042888805", officialName: "Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Дуб", dimensions: "116 × 9 × 23 см", price: 24990, oldPrice: 29000, weight: "5,75 кг" }
+        "85 см": { sku: "1000830014", part: "2024042003", barcode: "460042888802", officialName: "Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Дуб", dimensions: "85 × 9 × 23 см", price: 19999, oldPrice: 25000, weight: "3,85 кг" },
+        "116 см": { sku: "1000830015", part: "2024042004", barcode: "460042888805", officialName: "Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Дуб", dimensions: "116 × 9 × 23 см", price: 24999, oldPrice: 29000, weight: "5,75 кг" }
       }
     },
     {
@@ -110,7 +110,7 @@ const GEEKNOOK_DATA = {
       title: "Focus Station Black",
       subtitle: "Чёрное дерево • 85 см и 116 см",
       category: "boards",
-      price: 19990,
+      price: 19999,
       oldPrice: 25000,
       rating: 5.0,
       reviewsCount: 42,
@@ -142,16 +142,16 @@ const GEEKNOOK_DATA = {
         lengths: ["85 см", "116 см"]
       },
       optionPrices: {
-        "85 см": 19990,
-        "116 см": 24990
+        "85 см": 19999,
+        "116 см": 24999
       },
       optionOldPrices: {
         "85 см": 25000,
         "116 см": 29000
       },
       skus: {
-        "85 см": { sku: "1000830016", part: "202404205", barcode: "460042888803", officialName: "Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Чёрный", dimensions: "85 × 9 × 23 см", price: 19990, oldPrice: 25000, weight: "3,85 кг" },
-        "116 см": { sku: "1000830017", part: "2024042006", barcode: "460042888806", officialName: "Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Чёрный", dimensions: "116 × 9 × 23 см", price: 24990, oldPrice: 29000, weight: "5,75 кг" }
+        "85 см": { sku: "1000830016", part: "202404205", barcode: "460042888803", officialName: "Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Чёрный", dimensions: "85 × 9 × 23 см", price: 19999, oldPrice: 25000, weight: "3,85 кг" },
+        "116 см": { sku: "1000830017", part: "2024042006", barcode: "460042888806", officialName: "Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Чёрный", dimensions: "116 × 9 × 23 см", price: 24999, oldPrice: 29000, weight: "5,75 кг" }
       }
     }
   ],
@@ -192,16 +192,16 @@ const GEEKNOOK_DATA = {
       title: "Gamepad Stand",
       subtitle: "Подставка для геймпада",
       category: "accessories",
-      price: 2990,
+      price: 2999,
       oldPrice: 3600,
       sku: "GN-ACC-002",
-      part: "202404212",
+      part: "202404210",
       barcode: "460042888815",
       rating: 4.9,
       reviewsCount: 22,
       materials: "Анодированная сталь, фетровые вставки",
       specs: {
-        "Артикул": "202404212 (SKU GN-ACC-002)",
+        "Артикул": "202404210 (SKU GN-ACC-002)",
         "Штрихкод (EAN13)": "460042888815",
         "Габариты": "19,1 × 6 × 8 см",
         "Вес": "230 г (в коробке 0,26 кг)",
@@ -221,8 +221,8 @@ const GEEKNOOK_DATA = {
       title: "Phone Dock",
       subtitle: "Док-станция для телефона",
       category: "accessories",
-      price: 2490,
-      oldPrice: 3200,
+      price: 2999,
+      oldPrice: 3800,
       sku: "GN-ACC-003",
       part: "202404208",
       barcode: "460042888811",
@@ -247,11 +247,11 @@ const GEEKNOOK_DATA = {
     },
     {
       id: "cable-organizer",
-      title: "Cable Organizer",
-      subtitle: "Органайзер для кабелей",
+      title: "Cable Organizer Power Strip",
+      subtitle: "Органайзер для сетевого фильтра",
       category: "accessories",
-      price: 1990,
-      oldPrice: 2500,
+      price: 4999,
+      oldPrice: 6200,
       sku: "GN-ACC-004",
       part: "202404206",
       barcode: "460042888809",
@@ -308,8 +308,8 @@ const GEEKNOOK_DATA = {
       title: "Laptop Stand Closed",
       subtitle: "Вертикальный держатель ноутбука",
       category: "accessories",
-      price: 4490,
-      oldPrice: 5500,
+      price: 4999,
+      oldPrice: 6200,
       sku: "GN-ACC-006",
       part: "202404203",
       barcode: "460042888807",
@@ -388,6 +388,84 @@ const GEEKNOOK_DATA = {
       images: [
         "images/tild3163-3638-4266-a466-333336306565__3_3.jpg"
       ]
+    },
+    {
+      id: "shelf-45",
+      title: "Bracket Shelf 45",
+      subtitle: "Подвесная полка 45 см",
+      category: "accessories",
+      price: 6999,
+      oldPrice: 8500,
+      sku: "GN-ACC-009",
+      part: "202404214",
+      barcode: "460042888820",
+      rating: 5.0,
+      reviewsCount: 12,
+      materials: "Конструкционная сталь, матовое порошковое покрытие",
+      specs: {
+        "Артикул": "202404214 (SKU GN-ACC-009)",
+        "Штрихкод (EAN13)": "460042888820",
+        "Габариты": "45 × 3,7 × 23,6 см",
+        "Вес": "1150 г",
+        "Крепление": "Система T-Track"
+      },
+      shortDescr: "Широкая металлическая полка 45 см для размещения аудиоинтерфейсов, планшетов и документов.",
+      fullDescr: "Прочная стальная полка подвешивается под столешницу подставки Focus Station, организуя второй ярус хранения.",
+      images: [
+        "images/tild3163-3638-4266-a466-333336306565__3_3.jpg"
+      ]
+    },
+    {
+      id: "switch-stand",
+      title: "Switch Console Stand",
+      subtitle: "Кронштейн для Nintendo Switch",
+      category: "accessories",
+      price: 4999,
+      oldPrice: 5900,
+      sku: "GN-ACC-010",
+      part: "202404218",
+      barcode: "460042888821",
+      rating: 4.9,
+      reviewsCount: 9,
+      materials: "Анодированная сталь, защитный фетр",
+      specs: {
+        "Артикул": "202404218 (SKU GN-ACC-010)",
+        "Штрихкод (EAN13)": "460042888821",
+        "Габариты": "20 × 7,6 × 17,4 см",
+        "Вес": "620 г",
+        "Крепление": "Система T-Track"
+      },
+      shortDescr: "Специальный кронштейн для консоли Nintendo Switch OLED / V2 с фетровой защитой.",
+      fullDescr: "Надежно фиксирует игровую консоль под рукой, сохраняя свободное пространство стола.",
+      images: [
+        "images/tild3039-3737-4533-b936-653936613663__2_2.jpg"
+      ]
+    },
+    {
+      id: "cable-organizer-mini",
+      title: "Cable Manager Mini",
+      subtitle: "Компактный держатель кабелей",
+      category: "accessories",
+      price: 1999,
+      oldPrice: 2500,
+      sku: "GN-ACC-011",
+      part: "202404213",
+      barcode: "460042888822",
+      rating: 4.9,
+      reviewsCount: 31,
+      materials: "Анодированная сталь",
+      specs: {
+        "Артикул": "202404213 (SKU GN-ACC-011)",
+        "Штрихкод (EAN13)": "460042888822",
+        "Габариты": "4 × 2,7 × 5 см",
+        "Вес": "85 г",
+        "Крепление": "Паз T-Track"
+      },
+      shortDescr: "Миниатюрный клипс-органайзер для точечной фиксации проводов зарядки и периферии.",
+      fullDescr: "Удерживает кабели в направляющем пазе, предотвращая их соскальзывание со стола.",
+      images: [
+        "images/tild3931-6666-4933-a466-373836393933__1.jpg"
+      ]
     }
   ],
 
@@ -398,18 +476,18 @@ const GEEKNOOK_DATA = {
       title: "Desk Mat Light",
       subtitle: "Коврик для рабочего стола светлый",
       category: "mats",
-      price: 1990,
-      oldPrice: 2600,
+      price: 1499,
+      oldPrice: 1999,
       sku: "GN-MAT-001",
-      part: "20240409",
-      barcode: "460040420209",
+      part: "20240408",
+      barcode: "460040420208",
       rating: 4.8,
       reviewsCount: 31,
       materials: "Натуральный войлок 4 мм, противоскользящая силиконовая основа",
       specs: {
-        "Артикул": "20240409 (SKU GN-MAT-001)",
-        "Штрихкод (EAN13)": "460040420209",
-        "Размер": "90 × 43 см (или 80 × 40 см)",
+        "Артикул": "20240408 (SKU GN-MAT-001)",
+        "Штрихкод (EAN13)": "460040420208",
+        "Размер": "80 × 40 см (или 100 × 50 см, 120 × 60 см)",
         "Толщина": "4 мм",
         "Цвет": "Светло-серый меланж",
         "Основание": "Силиконовые микроточки против скольжения"
@@ -421,12 +499,17 @@ const GEEKNOOK_DATA = {
         "images/tild3136-6262-4465-a663-376665626135__photo.jpg"
       ],
       options: {
-        sizes: ["90 × 43 см", "80 × 40 см"]
+        sizes: ["80 × 40 см", "100 × 50 см", "120 × 60 см"]
+      },
+      optionPrices: {
+        "80 × 40 см": 1499,
+        "100 × 50 см": 2499,
+        "120 × 60 см": 2999
       },
       skus: {
-        "90 × 43 см": { sku: "GN-MAT-001", part: "20240409", barcode: "460040420209", dimensions: "90 × 43 см" },
-        "80 × 40 см": { sku: "GN-MAT-001-S", part: "20240408", barcode: "460040420208", dimensions: "80 × 40 см" },
-        "80 × 30 см": { sku: "GN-MAT-001-S", part: "20240408", barcode: "460040420208", dimensions: "80 × 40 см" }
+        "80 × 40 см": { sku: "GN-MAT-001-S", part: "20240408", barcode: "460040420208", price: 1499, dimensions: "80 × 40 см" },
+        "100 × 50 см": { sku: "GN-MAT-001-M", part: "20240410", barcode: "460040420210", price: 2499, dimensions: "100 × 50 см" },
+        "120 × 60 см": { sku: "GN-MAT-001-L", part: "20240411", barcode: "460040420211", price: 2999, dimensions: "120 × 60 см" }
       }
     },
     {
@@ -434,18 +517,18 @@ const GEEKNOOK_DATA = {
       title: "Desk Mat Dark",
       subtitle: "Коврик для рабочего стола тёмный",
       category: "mats",
-      price: 2490,
-      oldPrice: 3100,
+      price: 1499,
+      oldPrice: 1999,
       sku: "GN-MAT-002",
-      part: "20240405",
-      barcode: "460040420205",
+      part: "20240404",
+      barcode: "460040420204",
       rating: 5.0,
       reviewsCount: 45,
       materials: "Акустический шерстяной фетр, силикон",
       specs: {
-        "Артикул": "20240405 (SKU GN-MAT-002)",
-        "Штрихкод (EAN13)": "460040420205",
-        "Размер": "90 × 43 см (или 80 × 40 см)",
+        "Артикул": "20240404 (SKU GN-MAT-002)",
+        "Штрихкод (EAN13)": "460040420204",
+        "Размер": "80 × 40 см (или 100 × 50 см, 120 × 60 см)",
         "Толщина": "4 мм",
         "Цвет": "Глубокий графит / тёмно-серый",
         "Кромка": "Лазерная запайка торцов без распушивания"
@@ -457,21 +540,26 @@ const GEEKNOOK_DATA = {
         "images/tild3139-3036-4738-b765-383337383336__dsc_3319.jpg"
       ],
       options: {
-        sizes: ["90 × 43 см", "80 × 40 см"]
+        sizes: ["80 × 40 см", "100 × 50 см", "120 × 60 см"]
+      },
+      optionPrices: {
+        "80 × 40 см": 1499,
+        "100 × 50 см": 2499,
+        "120 × 60 см": 2999
       },
       skus: {
-        "90 × 43 см": { sku: "GN-MAT-002", part: "20240405", barcode: "460040420205", dimensions: "90 × 43 см" },
-        "80 × 40 см": { sku: "GN-MAT-002-S", part: "20240404", barcode: "460040420204", dimensions: "80 × 40 см" },
-        "80 × 35 см": { sku: "GN-MAT-002-S", part: "20240404", barcode: "460040420204", dimensions: "80 × 40 см" }
+        "80 × 40 см": { sku: "GN-MAT-002-S", part: "20240404", barcode: "460040420204", price: 1499, dimensions: "80 × 40 см" },
+        "100 × 50 см": { sku: "GN-MAT-002-M", part: "20240406", barcode: "460040420206", price: 2499, dimensions: "100 × 50 см" },
+        "120 × 60 см": { sku: "GN-MAT-002-L", part: "20240407", barcode: "460040420207", price: 2999, dimensions: "120 × 60 см" }
       }
     },
     {
       id: "desk-mat-xl",
       title: "Desk Mat XL",
-      subtitle: "Увеличенный коврик 90×43 см",
+      subtitle: "Увеличенный коврик 120×60 см",
       category: "mats",
-      price: 3490,
-      oldPrice: 4200,
+      price: 2999,
+      oldPrice: 3800,
       sku: "GN-MAT-003",
       part: "20240403",
       barcode: "460040420203",
@@ -493,12 +581,17 @@ const GEEKNOOK_DATA = {
         "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg"
       ],
       options: {
-        sizes: ["120 × 60 см", "100 × 50 см", "90 × 43 см"]
+        sizes: ["120 × 60 см", "100 × 50 см", "80 × 40 см"]
+      },
+      optionPrices: {
+        "120 × 60 см": 2999,
+        "100 × 50 см": 2499,
+        "80 × 40 см": 1499
       },
       skus: {
-        "120 × 60 см": { sku: "GN-MAT-003", part: "20240403", barcode: "460040420203", dimensions: "120 × 60 см" },
-        "100 × 50 см": { sku: "GN-MAT-003-M", part: "20240402", barcode: "460040420202", dimensions: "100 × 50 см" },
-        "90 × 43 см": { sku: "GN-MAT-003-S", part: "20240401", barcode: "460040420201", dimensions: "90 × 43 см" }
+        "120 × 60 см": { sku: "GN-MAT-003", part: "20240403", barcode: "460040420203", price: 2999, dimensions: "120 × 60 см" },
+        "100 × 50 см": { sku: "GN-MAT-003-M", part: "20240402", barcode: "460040420202", price: 2499, dimensions: "100 × 50 см" },
+        "80 × 40 см": { sku: "GN-MAT-003-S", part: "20240400", barcode: "460040420200", price: 1499, dimensions: "80 × 40 см" }
       }
     },
     {
@@ -711,17 +804,17 @@ const GEEKNOOK_DATA = {
       { id: "walnut", name: "Американский орех", subtitle: "Благородный шоколад", hex: "#684832", img: "images/tild3763-3337-4662-b233-616531316364__3.jpg", priceDelta: 0 }
     ],
     lengths: [
-      { id: "85", title: "85 см (Компакт)", descr: "Габариты 85 × 9 × 23 см • Для 1 монитора до 34\"", priceBase: 19990, dimensions: "85 × 9 × 23 см" },
-      { id: "116", title: "116 см (Простор)", descr: "Габариты 116 × 9 × 23 см • Для 2 мониторов или экрана + ноутбук", priceBase: 24990, dimensions: "116 × 9 × 23 см" }
+      { id: "85", title: "85 см (Компакт)", descr: "Габариты 85 × 9 × 23 см • Для 1 монитора до 34\"", priceBase: 19999, dimensions: "85 × 9 × 23 см" },
+      { id: "116", title: "116 см (Простор)", descr: "Габариты 116 × 9 × 23 см • Для 2 мониторов или экрана + ноутбук", priceBase: 24999, dimensions: "116 × 9 × 23 см" }
     ],
     addons: [
       { id: "addon-laptop", name: "Кронштейн для ноутбука (открытый)", price: 4999, img: "images/tild6164-3836-4261-b133-303933386431__1_3.jpg" },
       { id: "addon-headphones", name: "Стойка для наушников с фетром", price: 2999, img: "images/tild3031-6663-4663-a262-613532636338__photo.jpg" },
-      { id: "addon-gamepad", name: "Подставка для геймпада PS5 / Xbox", price: 2990, img: "images/tild3039-3737-4533-b936-653936613663__2_2.jpg" },
-      { id: "addon-phone", name: "Док-станция для смартфона", price: 2490, img: "images/tild6566-3439-4264-a237-633566656531__6.jpg" },
+      { id: "addon-gamepad", name: "Подставка для геймпада PS5 / Xbox", price: 2999, img: "images/tild3039-3737-4533-b936-653936613663__2_2.jpg" },
+      { id: "addon-phone", name: "Док-станция для смартфона", price: 2999, img: "images/tild6566-3439-4264-a237-633566656531__6.jpg" },
       { id: "addon-mac", name: "Подвесная полка Mac Studio / Mini", price: 4999, img: "images/tild3132-6562-4533-a638-646132613661__1_1.jpg" },
-      { id: "addon-cable", name: "Кабель-органайзер Power Strip", price: 1990, img: "images/tild3931-6666-4933-a466-373836393933__1.jpg" },
-      { id: "addon-mat", name: "Войлочный коврик Desk Mat XL", price: 3490, img: "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg" }
+      { id: "addon-cable", name: "Кабель-органайзер Power Strip", price: 4999, img: "images/tild3931-6666-4933-a466-373836393933__1.jpg" },
+      { id: "addon-mat", name: "Войлочный коврик Desk Mat XL", price: 2999, img: "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg" }
     ]
   },
 
@@ -1937,17 +2030,17 @@ E-mail:</p>`
       title: "Developer Pro Setup",
       subtitle: "Флагманский комплект для инженеров, архитекторов кода и создателей IT-продуктов.",
       badge: "Выбор разработчиков • -15%",
-      oldPrice: 35460,
-      price: 29990,
+      oldPrice: 29496,
+      price: 24990,
       sku: "GN-BDL-001",
       part: "GN-BDL-001",
-      savings: "Экономия 5 470 ₽",
+      savings: "Экономия 4 506 ₽",
       image: "images/tild3763-3337-4662-b233-616531316364__3.jpg",
       items: [
         "Focus Station 85 (Массив дуба, 85 × 9 × 23 см)",
         "Держатель ноутбука Laptop Stand Closed",
         "Кронштейн для наушников Headphone Stand",
-        "Шерстяной коврик Desk Mat Dark (80×35 см)"
+        "Шерстяной коврик Desk Mat Dark (80×40 см)"
       ],
       productIds: ["focus-station-oak", "laptop-closed", "headphone-stand", "desk-mat-dark"]
     },
@@ -1955,18 +2048,18 @@ E-mail:</p>`
       id: "bundle-creator-studio",
       title: "Creator Studio Suite",
       subtitle: "Увеличенное рабочее поле для 3D-моделирования, видеомонтажа и дизайна.",
-      badge: "Для творчества • -12%",
-      oldPrice: 42470,
-      price: 36990,
+      badge: "Для творчества • -13%",
+      oldPrice: 37996,
+      price: 32990,
       sku: "GN-BDL-002",
       part: "GN-BDL-002",
-      savings: "Экономия 5 480 ₽",
+      savings: "Экономия 5 006 ₽",
       image: "images/tild6138-3463-4138-b133-323262633039__2.jpg",
       items: [
         "Focus Station 116 (Американский орех, 116 × 9 × 23 см)",
         "Держатель ноутбука Laptop Stand Open",
         "Подвесная полка Mac Studio / Mini Shelf",
-        "Увеличенный коврик Desk Mat XL (90×43 см)"
+        "Увеличенный коврик Desk Mat XL (120×60 см)"
       ],
       productIds: ["focus-station-walnut", "laptop-open", "mac-shelf", "desk-mat-xl"]
     },
@@ -1974,18 +2067,18 @@ E-mail:</p>`
       id: "bundle-minimalist-focus",
       title: "Minimalist Focus",
       subtitle: "Чистая эстетика и тактильный комфорт для компактных рабочих мест.",
-      badge: "Минимализм • -10%",
-      oldPrice: 22470,
-      price: 19990,
+      badge: "Минимализм • -15%",
+      oldPrice: 29496,
+      price: 24990,
       sku: "GN-BDL-003",
       part: "GN-BDL-003",
-      savings: "Экономия 2 480 ₽",
+      savings: "Экономия 4 506 ₽",
       image: "images/tild3136-6262-4465-a663-376665626135__photo.jpg",
       items: [
         "Focus Station 85 (Светлый дуб, 85 × 9 × 23 см)",
         "Док-станция для телефона Phone Dock",
         "Скрытый органайзер проводов Cable Organizer",
-        "Светлый коврик Desk Mat Light (80×30 см)"
+        "Светлый коврик Desk Mat Light (80×40 см)"
       ],
       productIds: ["focus-station-oak", "phone-dock", "cable-organizer", "desk-mat-light"]
     }

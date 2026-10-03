@@ -1425,6 +1425,11 @@
         </div>
       </div>
 
+      <div class="cart-promo-banner" id="cartPromoBanner">
+        <span class="promo-banner-badge">🔥 СКИДКА 20%</span>
+        <span class="promo-banner-text">Автоматическая скидка на весь заказ применена!</span>
+      </div>
+
       <div class="cart-items-list" id="cartItemsList"></div>
 
       <div class="cart-footer">
@@ -1444,8 +1449,8 @@
           <span id="cartSubtotal">0 ₽</span>
         </div>
         <div class="cart-totals-row" id="cartDiscountRow">
-          <span>Скидка:</span>
-          <span id="cartDiscount" style="color:#10b981;">0 ₽</span>
+          <span id="cartDiscountLabel">Скидка (-20%):</span>
+          <span id="cartDiscount" style="color:#10b981;font-weight:700;">0 ₽</span>
         </div>
         <div class="cart-totals-row">
           <span>Доставка:</span>
@@ -1674,7 +1679,7 @@
               <select id="checkoutDeliverySelect" name="delivery" class="checkout-select" onchange="window.geekNookApp.handleDeliveryChange(this.value)">
                 <option value="СДЭК — пункт выдачи (ПВЗ)">СДЭК — пункт выдачи (ПВЗ)</option>
               </select>
-              <div style="font-size:0.75rem;color:rgba(255,255,255,0.5);margin-top:5px;line-height:1.35;">Пока наша система доставки работает только со СДЭК (ПВЗ), скоро появятся и другие варианты!</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);margin-top:4px;line-height:1.35;">Пока наша система доставки работает только со СДЭК (ПВЗ), скоро появятся и другие варианты!</div>
             </div>
 
             <div class="checkout-field-group">
@@ -1697,8 +1702,15 @@
             </div>
 
             <div class="checkout-items-summary-card">
+              <div class="checkout-discount-notice">
+                <span>⚡ Скидка 20% применена при оформлении</span>
+              </div>
               <div class="checkout-summary-heading">Состав заказа:</div>
               <div id="checkoutItemsSummary"></div>
+              <div class="checkout-subtotal-row" id="checkoutSubtotalRow">
+                <span>Сумма по каталогу:</span>
+                <span id="checkoutSubtotalVal">0 ₽</span>
+              </div>
               <div class="checkout-discount-row" id="checkoutDiscountRow" style="display:none;justify-content:space-between;margin:8px 0;font-size:0.875rem;color:#10b981;">
                 <span id="checkoutDiscountLabel">Скидка:</span>
                 <span id="checkoutDiscountVal">-0 ₽</span>
@@ -1709,7 +1721,7 @@
               </div>
             </div>
 
-            <button type="submit" class="btn-checkout" style="margin-top:20px;">
+            <button type="submit" class="btn-checkout" style="margin-top:14px;">
               Подтвердить заказ
             </button>
           </div>

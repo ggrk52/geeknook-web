@@ -52,12 +52,12 @@
 
     // Official warehouse SKU map for Focus Station variants (85 cm and 116 cm)
     const FOCUS_STATION_SKUS = {
-      'walnut_85': { sku: '1000830012', part: '202404201', barcode: '460042888801', name: 'Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Орех', price: 19990, dimensions: '85 × 9 × 23 см' },
-      'walnut_116': { sku: '1000830013', part: '202404202', barcode: '460042888804', name: 'Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Орех', price: 24990, dimensions: '116 × 9 × 23 см' },
-      'oak_85': { sku: '1000830014', part: '2024042003', barcode: '460042888802', name: 'Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Дуб', price: 19990, dimensions: '85 × 9 × 23 см' },
-      'oak_116': { sku: '1000830015', part: '2024042004', barcode: '460042888805', name: 'Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Дуб', price: 24990, dimensions: '116 × 9 × 23 см' },
-      'black_85': { sku: '1000830016', part: '202404205', barcode: '460042888803', name: 'Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Чёрный', price: 19990, dimensions: '85 × 9 × 23 см' },
-      'black_116': { sku: '1000830017', part: '2024042006', barcode: '460042888806', name: 'Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Чёрный', price: 24990, dimensions: '116 × 9 × 23 см' }
+      'walnut_85': { sku: '1000830012', part: '202404201', barcode: '460042888801', name: 'Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Орех', price: 19999, dimensions: '85 × 9 × 23 см' },
+      'walnut_116': { sku: '1000830013', part: '202404202', barcode: '460042888804', name: 'Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Орех', price: 24999, dimensions: '116 × 9 × 23 см' },
+      'oak_85': { sku: '1000830014', part: '2024042003', barcode: '460042888802', name: 'Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Дуб', price: 19999, dimensions: '85 × 9 × 23 см' },
+      'oak_116': { sku: '1000830015', part: '2024042004', barcode: '460042888805', name: 'Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Дуб', price: 24999, dimensions: '116 × 9 × 23 см' },
+      'black_85': { sku: '1000830016', part: '202404205', barcode: '460042888803', name: 'Подставка под монитор GEEK NOOK Focus Station 85x9x23 см, Чёрный', price: 19999, dimensions: '85 × 9 × 23 см' },
+      'black_116': { sku: '1000830017', part: '2024042006', barcode: '460042888806', name: 'Подставка под монитор GEEK NOOK Focus Station 116x9x23 см, Чёрный', price: 24999, dimensions: '116 × 9 × 23 см' }
     };
 
     // Helper: Map GeekNook product to Tilda Cart format
@@ -157,19 +157,6 @@
         ? window.geekNookApp.state.cart
         : [];
 
-      window.tcart.products = cartItems.map(i => {
-        const mapped = mapProductToTilda(i.id, i.option);
-        const itemPrice = (mapped && mapped.price) ? mapped.price : (i.price || 0);
-        const itemQty = i.quantity || 1;
-        return {
-          ...(mapped || { name: i.title, price: itemPrice }),
-          price: itemPrice,
-          quantity: itemQty,
-          amount: itemPrice * itemQty
-        };
-      });
-
-      const subTotal = window.tcart.products.reduce((sum, item) => sum + (item.amount || 0), 0);
       const savedPromo = (typeof localStorage !== 'undefined' ? localStorage.getItem('geeknook_promo') : '') || '';
       const promoCode = (window.geekNookApp?.state?.activePromoCode || savedPromo).trim().toUpperCase();
       const PROMOS = {
@@ -180,8 +167,39 @@
         'FOCUS15': 15,
         'WELCOME5': 5
       };
-      const discountPercent = PROMOS[promoCode] || 0;
-      const discountSum = discountPercent > 0 ? Math.round(subTotal * (discountPercent / 100)) : 0;
+      const promoDiscount = PROMOS[promoCode] || 0;
+      // Automatic 20% site discount on all orders
+      const siteDiscount = (typeof window.geekNookApp?.state?.siteDiscountPercent === 'number')
+        ? window.geekNookApp.state.siteDiscountPercent
+        : 20;
+      const effectiveDiscountPercent = Math.max(siteDiscount, promoDiscount);
+
+      let subTotal = 0;
+
+      window.tcart.products = cartItems.map(i => {
+        const mapped = mapProductToTilda(i.id, i.option);
+        const itemCatalogPrice = (mapped && mapped.price) ? mapped.price : (i.price || 0);
+        const itemQty = i.quantity || 1;
+        subTotal += itemCatalogPrice * itemQty;
+
+        // Discounted unit price (so CDEK cash-on-delivery & Tilda notifications charge the discounted amount)
+        const discountedUnitPrice = Math.round(itemCatalogPrice * ((100 - effectiveDiscountPercent) / 100));
+
+        const itemOpts = mapped ? [...(mapped.options || [])] : [];
+        itemOpts.push({ option: 'РРЦ', name: 'РРЦ', variant: `${itemCatalogPrice} ₽` });
+        itemOpts.push({ option: 'Скидка на сайте', name: 'Скидка', variant: `-${effectiveDiscountPercent}%` });
+
+        return {
+          ...(mapped || { name: i.title }),
+          price: discountedUnitPrice,
+          catalogPrice: itemCatalogPrice,
+          quantity: itemQty,
+          amount: discountedUnitPrice * itemQty,
+          options: itemOpts
+        };
+      });
+
+      const discountSum = Math.round(subTotal * (effectiveDiscountPercent / 100));
       const grandTotal = Math.max(0, subTotal - discountSum);
 
       window.tcart.amount = grandTotal;
@@ -370,16 +388,30 @@
         }
 
         // Guarantee hidden payment payload input value
-        const paymentInput = tildaCartForm.querySelector('input.js-tilda-payment, input[name="tildapayment"]');
-        if (paymentInput) {
-          try {
-            const pData = JSON.parse(paymentInput.value || '{}');
-            pData.amount = finalAmount;
-            pData.system = 'cash';
-            pData.currency = 'RUB';
-            paymentInput.value = JSON.stringify(pData);
-          } catch(e) {}
+        let paymentInput = tildaCartForm.querySelector('input.js-tilda-payment, input[name="tildapayment"]');
+        if (!paymentInput) {
+          paymentInput = document.createElement('input');
+          paymentInput.type = 'hidden';
+          paymentInput.name = 'tildapayment';
+          paymentInput.className = 'js-tilda-payment';
+          tildaCartForm.appendChild(paymentInput);
         }
+        try {
+          let pData = {};
+          if (paymentInput.value) {
+            try { pData = JSON.parse(paymentInput.value); } catch(e) { pData = {}; }
+          }
+          pData.amount = finalAmount;
+          pData.system = 'cash';
+          pData.currency = 'RUB';
+          if (window.tcart && Array.isArray(window.tcart.products)) {
+            pData.products = window.tcart.products;
+          }
+          paymentInput.value = JSON.stringify(pData);
+        } catch(e) {}
+
+        const hiddenAmountInps = tildaCartForm.querySelectorAll('input[name="amount"], input[name="tcart_amount"], input[name="tcart_total"], input[name="payment[amount]"]');
+        hiddenAmountInps.forEach(inp => { inp.value = finalAmount; });
 
         const inpName = tildaCartForm.querySelector('input[name="Name"], input[name="name"]');
         const inpEmail = tildaCartForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
