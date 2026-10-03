@@ -807,7 +807,10 @@
               </svg>
             </div>
             <div style="font-weight:700;font-size:1.1rem;margin-bottom:6px;color:var(--text-main);">Ваша корзина пуста</div>
-            <p style="font-size:0.875rem;">Добавьте понравившийся товар или соберите комплект в конструкторе!</p>
+            <p style="font-size:0.875rem;margin-bottom:18px;">Добавьте понравившийся товар или соберите комплект в конструкторе!</p>
+            <button type="button" class="btn-checkout" style="padding:10px 24px;display:inline-flex;width:auto;min-width:180px;font-size:0.9rem;" onclick="window.geekNookApp.closeCartDrawer(); const el = document.getElementById('boards'); if(el) el.scrollIntoView({behavior:'smooth'});">
+              Перейти в каталог
+            </button>
           </div>
         `;
       } else {
@@ -845,6 +848,20 @@
           `;
         }).join('');
       }
+    }
+
+    const drawerCheckoutBtn = document.querySelector('#cartDrawerOverlay .btn-checkout');
+    const drawerTgBtn = document.querySelector('#cartDrawerOverlay .btn-checkout-telegram');
+    const isCartEmpty = state.cart.length === 0;
+    if (drawerCheckoutBtn) {
+      drawerCheckoutBtn.disabled = isCartEmpty;
+      drawerCheckoutBtn.style.opacity = isCartEmpty ? '0.5' : '1';
+      drawerCheckoutBtn.style.pointerEvents = isCartEmpty ? 'none' : 'auto';
+    }
+    if (drawerTgBtn) {
+      drawerTgBtn.disabled = isCartEmpty;
+      drawerTgBtn.style.opacity = isCartEmpty ? '0.5' : '1';
+      drawerTgBtn.style.pointerEvents = isCartEmpty ? 'none' : 'auto';
     }
   };
 
@@ -1371,9 +1388,10 @@
           <h2 style="font-family:var(--font-display);font-size:1.85rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">${product.title}</h2>
           <div style="font-size:0.9375rem;color:var(--text-muted);margin-bottom:18px;">${product.subtitle || ''}</div>
 
-          <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:20px;">
+          <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
             <span id="qvPriceCurrent" style="font-family:var(--font-mono);font-size:1.85rem;font-weight:800;letter-spacing:-0.02em;color:var(--text-main);">${formatPrice(product.price)}</span>
             <span id="qvPriceOld" style="font-family:var(--font-mono);font-size:1.1rem;color:var(--text-subtle);text-decoration:line-through;">${product.oldPrice ? formatPrice(product.oldPrice) : ''}</span>
+            <span id="qvDiscountBadge" style="background:rgba(16,185,129,0.12);color:#10b981;font-size:0.75rem;font-weight:700;padding:3px 8px;border-radius:4px;border:1px solid rgba(16,185,129,0.3);">-20% в корзине: ${formatPrice(Math.round(product.price * 0.8))}</span>
           </div>
 
           <p style="font-size:0.9375rem;line-height:1.65;color:var(--text-main);margin-bottom:20px;">${product.fullDescr || product.shortDescr || ''}</p>
@@ -1411,11 +1429,16 @@
         if (product.optionPrices && product.optionPrices[val]) {
           const curEl = document.getElementById('qvPriceCurrent');
           const oldEl = document.getElementById('qvPriceOld');
+          const discEl = document.getElementById('qvDiscountBadge');
+          const optPrice = product.optionPrices[val];
           if (curEl) {
-            curEl.textContent = formatPrice(product.optionPrices[val]);
+            curEl.textContent = formatPrice(optPrice);
             curEl.classList.remove('price-pulse');
             void curEl.offsetWidth;
             curEl.classList.add('price-pulse');
+          }
+          if (discEl) {
+            discEl.textContent = `-20% в корзине: ${formatPrice(Math.round(optPrice * 0.8))}`;
           }
           if (oldEl) {
             oldEl.textContent = (product.optionOldPrices && product.optionOldPrices[val]) ? formatPrice(product.optionOldPrices[val]) : '';
@@ -2571,6 +2594,12 @@
     if (summaryTotal) summaryTotal.textContent = formatPrice(grandTotal);
     updateCheckoutPromoUI();
 
+    const submitBtn = document.querySelector('#checkoutForm button[type="submit"]');
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.innerHTML = 'Подтвердить заказ';
+    }
+
     modalManager.open('checkoutModal');
   };
 
@@ -2657,16 +2686,20 @@
 
     const nameInput = form.querySelector('input[name="name"]');
     const phoneInput = form.querySelector('input[name="phone"]');
+    const emailInput = form.querySelector('input[name="email"]');
     const addressInput = form.querySelector('input[name="address"]');
     const nameErrEl = document.getElementById('checkoutNameError');
     const phoneErrEl = document.getElementById('checkoutPhoneError');
+    const emailErrEl = document.getElementById('checkoutEmailError');
     const addressErrEl = document.getElementById('checkoutAddressError');
 
     if (nameInput) nameInput.classList.remove('input-error');
     if (phoneInput) phoneInput.classList.remove('input-error');
+    if (emailInput) emailInput.classList.remove('input-error');
     if (addressInput) addressInput.classList.remove('input-error');
     if (nameErrEl) nameErrEl.style.display = 'none';
     if (phoneErrEl) phoneErrEl.style.display = 'none';
+    if (emailErrEl) emailErrEl.style.display = 'none';
     if (addressErrEl) addressErrEl.style.display = 'none';
 
     // 1. Full Name Validation (First Name & Last Name, at least 2 words)
@@ -2702,7 +2735,23 @@
       return;
     }
 
-    // 3. CDEK PVZ Validation
+    // 3. Email Validation
+    const rawEmail = (formData.get('email') || '').trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!rawEmail || !emailRegex.test(rawEmail)) {
+      if (emailInput) {
+        emailInput.classList.add('input-error');
+        emailInput.focus();
+      }
+      if (emailErrEl) {
+        emailErrEl.textContent = 'Пожалуйста, укажите корректный email (например, name@example.com)';
+        emailErrEl.style.display = 'block';
+      }
+      showToast('Укажите корректный email для отправки чека', 'error');
+      return;
+    }
+
+    // 4. CDEK PVZ Validation
     const rawAddress = (formData.get('address') || '').trim();
     if (!rawAddress && !state.selectedPvz) {
       if (addressInput) {
@@ -2715,6 +2764,13 @@
       }
       showToast('Выберите пункт выдачи СДЭК для доставки', 'error');
       return;
+    }
+
+    const submitBtn = form.querySelector('button[type="submit"]');
+    const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span style="display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:8px;vertical-align:middle;"></span><span>Оформляем заказ...</span>';
     }
 
     const safeName = escapeHTML(rawName || 'Покупатель');
@@ -6288,6 +6344,26 @@
       phoneInp.addEventListener('input', () => {
         phoneInp.classList.remove('input-error');
         const err = document.getElementById('checkoutPhoneError');
+        if (err) err.style.display = 'none';
+      });
+    }
+
+    const emailInp = document.getElementById('checkoutEmail');
+    if (emailInp && !emailInp.dataset.errListenerAttached) {
+      emailInp.dataset.errListenerAttached = 'true';
+      emailInp.addEventListener('input', () => {
+        emailInp.classList.remove('input-error');
+        const err = document.getElementById('checkoutEmailError');
+        if (err) err.style.display = 'none';
+      });
+    }
+
+    const addrInp = document.getElementById('checkoutAddressInput');
+    if (addrInp && !addrInp.dataset.errListenerAttached) {
+      addrInp.dataset.errListenerAttached = 'true';
+      addrInp.addEventListener('input', () => {
+        addrInp.classList.remove('input-error');
+        const err = document.getElementById('checkoutAddressError');
         if (err) err.style.display = 'none';
       });
     }

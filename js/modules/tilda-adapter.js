@@ -294,16 +294,20 @@
 
       const nameInput = form.querySelector('input[name="name"]');
       const phoneInput = form.querySelector('input[name="phone"]');
+      const emailInput = form.querySelector('input[name="email"]');
       const addressInput = form.querySelector('input[name="address"]');
       const nameErrEl = document.getElementById('checkoutNameError');
       const phoneErrEl = document.getElementById('checkoutPhoneError');
+      const emailErrEl = document.getElementById('checkoutEmailError');
       const addressErrEl = document.getElementById('checkoutAddressError');
 
       if (nameInput) nameInput.classList.remove('input-error');
       if (phoneInput) phoneInput.classList.remove('input-error');
+      if (emailInput) emailInput.classList.remove('input-error');
       if (addressInput) addressInput.classList.remove('input-error');
       if (nameErrEl) nameErrEl.style.display = 'none';
       if (phoneErrEl) phoneErrEl.style.display = 'none';
+      if (emailErrEl) emailErrEl.style.display = 'none';
       if (addressErrEl) addressErrEl.style.display = 'none';
 
       // 1. Full Name Validation (First Name & Last Name, at least 2 words)
@@ -343,7 +347,25 @@
         return false;
       }
 
-      // 3. CDEK PVZ Validation
+      // 3. Email Validation
+      const rawEmail = (formData.get('email') || '').trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!rawEmail || !emailRegex.test(rawEmail)) {
+        if (emailInput) {
+          emailInput.classList.add('input-error');
+          emailInput.focus();
+        }
+        if (emailErrEl) {
+          emailErrEl.textContent = 'Пожалуйста, укажите корректный email (например, name@example.com)';
+          emailErrEl.style.display = 'block';
+        }
+        if (typeof window.geekNookApp.showToast === 'function') {
+          window.geekNookApp.showToast('Укажите корректный email для отправки чека', 'error');
+        }
+        return false;
+      }
+
+      // 4. CDEK PVZ Validation
       const rawAddress = (formData.get('address') || '').trim();
       const currentPvz = window.geekNookApp.state?.selectedPvz;
       if (!rawAddress && !currentPvz) {
