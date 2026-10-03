@@ -3881,37 +3881,45 @@ textarea:focus-visible {
 
 /* 152-ФЗ Legal Compliance Notices */
 .checkout-legal-notice,
-.quickbuy-legal-notice {
+.quickbuy-legal-notice,
+.b2b-legal-notice {
   font-size: 0.75rem;
   line-height: 1.45;
   color: var(--text-muted, rgba(255, 255, 255, 0.6));
   text-align: center;
   max-width: 100%;
   box-sizing: border-box;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .checkout-legal-notice {
   margin-top: 10px;
 }
 
-.quickbuy-legal-notice {
+.quickbuy-legal-notice,
+.b2b-legal-notice {
   margin-top: 8px;
 }
 
 .checkout-legal-notice a,
-.quickbuy-legal-notice a {
+.quickbuy-legal-notice a,
+.b2b-legal-notice a {
   color: var(--primary, #2b70f0);
   text-decoration: underline;
   text-underline-offset: 2px;
   cursor: pointer;
-  display: inline;
-  padding: 1px 2px;
-  transition: color 0.15s ease;
+  display: inline-block;
+  padding: 1px 3px;
+  border-radius: 3px;
+  transition: color 0.15s ease, background-color 0.15s ease;
 }
 
 .checkout-legal-notice a:hover,
-.quickbuy-legal-notice a:hover {
+.quickbuy-legal-notice a:hover,
+.b2b-legal-notice a:hover {
   color: var(--accent-hover, #60a5fa);
+  background-color: rgba(43, 112, 240, 0.08);
 }
 
 

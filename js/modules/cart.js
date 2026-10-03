@@ -689,9 +689,33 @@ window.GeekNook = window.GeekNook || {};
     return {};
   };
 
+  const copyToClipboard = (text) => {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).catch(() => {
+        fallbackCopyText(text);
+      });
+    }
+    fallbackCopyText(text);
+  };
+
+  const fallbackCopyText = (text) => {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '0';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    } catch(e) {}
+  };
+
   const formatUtmForMessage = () => {
     const params = getCapturedUtm();
-    const pairs = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid']
+    const pairs = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', '_openstat', 'gclid']
       .filter(k => params[k])
       .map(k => `${k}: ${params[k]}`);
     return pairs.length > 0 ? pairs.join(', ') : '';
@@ -716,9 +740,7 @@ window.GeekNook = window.GeekNook || {};
       try { window.ym(113130622, 'reachGoal', 'TG_ORDER', { type: 'quick_buy', product: prod.title, amount: prod.price }); } catch(e) {}
     }
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).catch(() => {});
-    }
+    copyToClipboard(text);
     showToast('Детали заказа скопированы! Отправьте их боту в чате', 'success');
     window.open('https://t.me/GEEKNOOK_bot', '_blank');
     modalManager.close('quickBuyModal');
@@ -759,17 +781,15 @@ window.GeekNook = window.GeekNook || {};
       try { window.ym(113130622, 'reachGoal', 'TG_ORDER', { type: 'cart', amount: grandTotal }); } catch(e) {}
     }
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(msg).catch(() => {});
-    }
+    copyToClipboard(msg);
     showToast('Детали заказа скопированы! Отправьте их боту в чате', 'success');
     window.open('https://t.me/GEEKNOOK_bot', '_blank');
   };
 
   const orderConfigViaTelegram = () => {
-    const finish = GEEKNOOK_DATA.configurator.finishes.find(f => f.id === state.config.finishId);
-    const length = GEEKNOOK_DATA.configurator.lengths.find(l => l.id === state.config.lengthId);
-    const addons = state.config.selectedAddonIds.map(id => GEEKNOOK_DATA.configurator.addons.find(a => a.id === id)).filter(Boolean);
+    const finish = (GEEKNOOK_DATA?.configurator?.finishes || []).find(f => f.id === state.config.finishId) || GEEKNOOK_DATA?.configurator?.finishes?.[0] || { name: 'Орех', priceDelta: 0 };
+    const length = (GEEKNOOK_DATA?.configurator?.lengths || []).find(l => l.id === state.config.lengthId) || GEEKNOOK_DATA?.configurator?.lengths?.[0] || { id: '85', name: '85 см', priceBase: 19999 };
+    const addons = state.config.selectedAddonIds.map(id => (GEEKNOOK_DATA?.configurator?.addons || []).find(a => a.id === id)).filter(Boolean);
 
     const addonsTotal = addons.reduce((sum, a) => sum + a.price, 0);
     const grandTotal = length.priceBase + finish.priceDelta + addonsTotal;
@@ -800,9 +820,7 @@ window.GeekNook = window.GeekNook || {};
       try { window.ym(113130622, 'reachGoal', 'TG_ORDER', { type: 'configurator', finish: finish.name, length: length.id, amount: grandTotal }); } catch(e) {}
     }
 
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(msg).catch(() => {});
-    }
+    copyToClipboard(msg);
     showToast('Спецификация сборки скопирована! Отправьте боту в чате', 'success');
     window.open('https://t.me/GEEKNOOK_bot', '_blank');
   };

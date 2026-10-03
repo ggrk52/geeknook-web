@@ -223,12 +223,19 @@
 
   // --- UTM PARAMETERS ENGINE (152-ФЗ / Yandex Direct / Ads attribution) ---
   const UTM_STORAGE_KEY = 'geeknook_utm_params';
-  const UTM_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid'];
+  const UTM_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', '_openstat', 'gclid'];
+  let memoryUtm = {};
 
   function captureUtmParams() {
     try {
-      if (typeof window === 'undefined' || !window.location || !window.location.search) return;
-      const urlParams = new URLSearchParams(window.location.search);
+      if (typeof window === 'undefined' || !window.location) return;
+      let queryString = window.location.search || '';
+      if (!queryString && window.location.hash && window.location.hash.includes('?')) {
+        queryString = '?' + window.location.hash.split('?')[1];
+      }
+      if (!queryString) return;
+
+      const urlParams = new URLSearchParams(queryString);
       const captured = {};
       let hasUtm = false;
 
@@ -242,12 +249,18 @@
 
       if (hasUtm) {
         let existing = {};
-        try {
-          const stored = localStorage.getItem(UTM_STORAGE_KEY) || sessionStorage.getItem(UTM_STORAGE_KEY);
-          if (stored) existing = JSON.parse(stored);
-        } catch (e) {}
+        // If it's a completely new ad visit (new source or click id), avoid mixing stale old keyword/term
+        const isNewAdVisit = Boolean(captured.utm_source || captured.yclid || captured._openstat || captured.gclid);
+        if (!isNewAdVisit) {
+          try {
+            const stored = localStorage.getItem(UTM_STORAGE_KEY) || sessionStorage.getItem(UTM_STORAGE_KEY);
+            if (stored) existing = JSON.parse(stored);
+          } catch (e) {}
+        }
 
         const merged = { ...existing, ...captured, captured_at: new Date().toISOString() };
+        memoryUtm = { ...merged };
+
         const json = JSON.stringify(merged);
         try { localStorage.setItem(UTM_STORAGE_KEY, json); } catch(e) {}
         try { sessionStorage.setItem(UTM_STORAGE_KEY, json); } catch(e) {}
@@ -261,16 +274,22 @@
   function getUtmParams() {
     try {
       const stored = localStorage.getItem(UTM_STORAGE_KEY) || sessionStorage.getItem(UTM_STORAGE_KEY);
-      if (stored) return JSON.parse(stored);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (parsed && typeof parsed === 'object') {
+          memoryUtm = { ...memoryUtm, ...parsed };
+          return memoryUtm;
+        }
+      }
     } catch (e) {}
-    return {};
+    return memoryUtm || {};
   }
 
   function getUtmString() {
     const params = getUtmParams();
     const parts = [];
     UTM_FIELDS.forEach(field => {
-      if (params[field]) parts.push(`${field}=${params[field]}`);
+      if (params[field]) parts.push(`${field}=${encodeURIComponent(params[field])}`);
     });
     return parts.join('&');
   }
