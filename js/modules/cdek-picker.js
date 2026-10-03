@@ -411,43 +411,55 @@
       .cdek-modal-footer {
         flex-shrink: 0;
         margin-top: 12px;
-        padding: 12px 16px;
-        background: rgba(43, 112, 240, 0.08);
-        border: 1px solid rgba(43, 112, 240, 0.25);
+        padding: 12px 18px;
+        background: #141824;
+        border: 1px solid rgba(43, 112, 240, 0.35);
         border-radius: 10px;
         display: flex;
+        flex-direction: row;
         align-items: center;
         justify-content: space-between;
         gap: 16px;
+        box-sizing: border-box;
       }
       .cdek-selected-summary {
         display: flex;
         flex-direction: column;
-        gap: 2px;
+        gap: 3px;
+        flex: 1 1 auto;
         min-width: 0;
+        overflow: hidden;
       }
       .cdek-selected-code {
         font-family: monospace;
         font-weight: 700;
         color: #60a5fa;
         font-size: 0.8125rem;
+        letter-spacing: 0.5px;
       }
       .cdek-selected-address {
         font-weight: 600;
         color: #fff;
-        font-size: 0.875rem;
+        font-size: 0.9375rem;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        line-height: 1.3;
       }
       .cdek-selected-sub {
         font-size: 0.75rem;
-        color: rgba(255, 255, 255, 0.6);
+        color: rgba(255, 255, 255, 0.7);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        line-height: 1.3;
       }
       .cdek-btn-confirm {
-        flex-shrink: 0;
+        width: auto !important;
+        max-width: 240px;
+        flex: 0 0 auto !important;
         min-height: 44px;
-        padding: 0 20px;
+        padding: 0 24px;
         background: #2b70f0;
         color: #fff;
         border: none;
@@ -456,6 +468,14 @@
         cursor: pointer;
         font-size: 0.875rem;
         white-space: nowrap;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s, transform 0.1s;
+      }
+      .cdek-btn-confirm:hover {
+        background: #1d5bd8;
+        transform: translateY(-1px);
       }
       .cdek-leaflet-popup .leaflet-popup-content-wrapper {
         background: #14171f;
@@ -498,8 +518,9 @@
         .cdek-list-panel, .cdek-map-panel { display: none; height: 100%; min-height: 0; }
         .cdek-map-panel.mobile-visible { display: block; }
         .cdek-list-panel.mobile-visible { display: flex; flex-direction: column; border-right: none; }
-        .cdek-modal-footer { flex-direction: column; align-items: stretch; gap: 10px; }
-        .cdek-btn-confirm { width: 100%; }
+        .cdek-modal-footer { flex-direction: column; align-items: stretch; gap: 12px; padding: 12px; }
+        .cdek-selected-address, .cdek-selected-sub { white-space: normal; }
+        .cdek-btn-confirm { width: 100% !important; max-width: 100%; }
       }
       @media (max-width: 380px) {
         .cdek-modal-card { padding: 12px 8px; width: 98vw; }

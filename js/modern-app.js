@@ -2612,8 +2612,51 @@
     const form = e.target;
     const formData = new FormData(form);
 
-    const safeName = escapeHTML(formData.get('name') || 'Покупатель');
-    const safePhone = escapeHTML(formData.get('phone') || '');
+    const nameInput = form.querySelector('input[name="name"]');
+    const phoneInput = form.querySelector('input[name="phone"]');
+    const nameErrEl = document.getElementById('checkoutNameError');
+    const phoneErrEl = document.getElementById('checkoutPhoneError');
+
+    if (nameInput) nameInput.classList.remove('input-error');
+    if (phoneInput) phoneInput.classList.remove('input-error');
+    if (nameErrEl) nameErrEl.style.display = 'none';
+    if (phoneErrEl) phoneErrEl.style.display = 'none';
+
+    // 1. Full Name Validation (First Name & Last Name, at least 2 words)
+    const rawName = (formData.get('name') || '').trim();
+    const nameWords = rawName.split(/\s+/).filter(w => w.length >= 2);
+    if (nameWords.length < 2) {
+      if (nameInput) {
+        nameInput.classList.add('input-error');
+        nameInput.focus();
+      }
+      if (nameErrEl) {
+        nameErrEl.textContent = 'Пожалуйста, укажите Имя и Фамилию для получения в СДЭК';
+        nameErrEl.style.display = 'block';
+      }
+      showToast('Укажите Имя и Фамилию для получения в СДЭК', 'error');
+      return;
+    }
+
+    // 2. Full Phone Validation (10 digits after +7 / 8)
+    const rawPhone = (formData.get('phone') || '').trim();
+    const digitsOnly = rawPhone.replace(/\D/g, '');
+    const phoneDigits = (digitsOnly.startsWith('7') || digitsOnly.startsWith('8')) ? digitsOnly.slice(1) : digitsOnly;
+    if (phoneDigits.length !== 10) {
+      if (phoneInput) {
+        phoneInput.classList.add('input-error');
+        phoneInput.focus();
+      }
+      if (phoneErrEl) {
+        phoneErrEl.textContent = 'Введите полный номер телефона: +7 (XXX) XXX-XX-XX';
+        phoneErrEl.style.display = 'block';
+      }
+      showToast('Введите полный номер телефона (10 цифр)', 'error');
+      return;
+    }
+
+    const safeName = escapeHTML(rawName || 'Покупатель');
+    const safePhone = escapeHTML(rawPhone || '');
     const safeAddress = escapeHTML(formData.get('address') || 'Самовывоз');
     const safeDelivery = escapeHTML(formData.get('delivery') || 'СДЭК');
     const safePayment = escapeHTML(formData.get('payment') || 'При получении');
@@ -2788,8 +2831,21 @@
     e.preventDefault();
     const nameInput = document.getElementById('quickBuyName');
     const phoneInput = document.getElementById('quickBuyPhone');
+
+    const rawPhone = phoneInput ? phoneInput.value.trim() : '';
+    const digitsOnly = rawPhone.replace(/\D/g, '');
+    const phoneDigits = (digitsOnly.startsWith('7') || digitsOnly.startsWith('8')) ? digitsOnly.slice(1) : digitsOnly;
+    if (phoneDigits.length !== 10) {
+      if (phoneInput) {
+        phoneInput.classList.add('input-error');
+        phoneInput.focus();
+      }
+      showToast('Введите полный номер телефона (10 цифр)', 'error');
+      return;
+    }
+
     const safeName = escapeHTML(nameInput ? nameInput.value.trim() : 'Покупатель');
-    const safePhone = escapeHTML(phoneInput ? phoneInput.value.trim() : '');
+    const safePhone = escapeHTML(rawPhone || '');
     const prod = state.quickBuyProduct;
     if (!prod) return;
 
@@ -6112,6 +6168,27 @@
 
     attachMask(document.getElementById('checkoutPhone'));
     attachMask(document.getElementById('quickBuyPhone'));
+
+    // Attach error clear listeners
+    const nameInp = document.getElementById('checkoutName');
+    if (nameInp && !nameInp.dataset.errListenerAttached) {
+      nameInp.dataset.errListenerAttached = 'true';
+      nameInp.addEventListener('input', () => {
+        nameInp.classList.remove('input-error');
+        const err = document.getElementById('checkoutNameError');
+        if (err) err.style.display = 'none';
+      });
+    }
+
+    const phoneInp = document.getElementById('checkoutPhone');
+    if (phoneInp && !phoneInp.dataset.errListenerAttached) {
+      phoneInp.dataset.errListenerAttached = 'true';
+      phoneInp.addEventListener('input', () => {
+        phoneInp.classList.remove('input-error');
+        const err = document.getElementById('checkoutPhoneError');
+        if (err) err.style.display = 'none';
+      });
+    }
   };
 
   const initPromoListeners = () => {

@@ -1626,24 +1626,26 @@
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('checkoutModal')" aria-label="Закрыть">✕</button>
       <h2 class="modal-title">Оформление заказа</h2>
       
-      <form onsubmit="window.geekNookApp.handleCheckoutSubmit(event)">
+      <form id="checkoutForm" novalidate onsubmit="window.geekNookApp.handleCheckoutSubmit(event)">
         <div class="checkout-modal-layout">
           <div class="checkout-form-col">
             <div class="checkout-field-group">
-              <label class="checkout-field-label">Ваше имя *</label>
-              <input type="text" name="name" class="checkout-input" placeholder="Константин" required />
+              <label class="checkout-field-label">Имя и Фамилия получателя *</label>
+              <input type="text" id="checkoutName" name="name" class="checkout-input" placeholder="Константин Иванов" autocomplete="name" required />
+              <div class="field-error-msg" id="checkoutNameError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
             </div>
             <div class="checkout-field-group">
               <label class="checkout-field-label">Номер телефона *</label>
               <input type="tel" id="checkoutPhone" name="phone" class="checkout-input" placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel" required />
+              <div class="field-error-msg" id="checkoutPhoneError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
             </div>
             <div class="checkout-field-group">
               <label class="checkout-field-label">Электронная почта *</label>
-              <input type="email" name="email" class="checkout-input" placeholder="konstantin@example.com" required />
+              <input type="email" id="checkoutEmail" name="email" class="checkout-input" placeholder="konstantin@example.com" autocomplete="email" required />
             </div>
             <div class="checkout-field-group">
               <div class="checkout-field-header-row">
-                <label class="checkout-field-label" style="margin-bottom:0;">Код ПВЗ СДЭК / Пункт выдачи *</label>
+                <label class="checkout-field-label" style="margin-bottom:0;">Пункт выдачи СДЭК *</label>
                 <button type="button" class="btn-cdek-pick-action" onclick="window.geekNookApp.openCdekMap()" title="Открыть карту пунктов выдачи СДЭК">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
                   <span>Выбрать ПВЗ на карте</span>
@@ -1792,7 +1794,7 @@
           <div class="cdek-selected-address" id="cdekSelectedAddress">ул. Тверская, д. 9</div>
           <div class="cdek-selected-sub" id="cdekSelectedSub">Пн-Вс 10:00-21:00</div>
         </div>
-        <button type="button" class="btn-checkout cdek-btn-confirm" id="cdekBtnConfirm" onclick="window.geekNookCdekPicker.confirmSelection()">
+        <button type="button" class="cdek-btn-confirm" id="cdekBtnConfirm" onclick="window.geekNookCdekPicker.confirmSelection()">
           Выбрать этот пункт
         </button>
       </div>

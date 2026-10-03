@@ -535,8 +535,51 @@ window.GeekNook = window.GeekNook || {};
     const form = e.target;
     const formData = new FormData(form);
 
-    const safeName = escapeHTML(formData.get('name') || 'Покупатель');
-    const safePhone = escapeHTML(formData.get('phone') || '');
+    const nameInput = form.querySelector('input[name="name"]');
+    const phoneInput = form.querySelector('input[name="phone"]');
+    const nameErrEl = document.getElementById('checkoutNameError');
+    const phoneErrEl = document.getElementById('checkoutPhoneError');
+
+    if (nameInput) nameInput.classList.remove('input-error');
+    if (phoneInput) phoneInput.classList.remove('input-error');
+    if (nameErrEl) nameErrEl.style.display = 'none';
+    if (phoneErrEl) phoneErrEl.style.display = 'none';
+
+    // 1. Full Name Validation (First Name & Last Name, at least 2 words)
+    const rawName = (formData.get('name') || '').trim();
+    const nameWords = rawName.split(/\s+/).filter(w => w.length >= 2);
+    if (nameWords.length < 2) {
+      if (nameInput) {
+        nameInput.classList.add('input-error');
+        nameInput.focus();
+      }
+      if (nameErrEl) {
+        nameErrEl.textContent = 'Пожалуйста, укажите Имя и Фамилию для получения в СДЭК';
+        nameErrEl.style.display = 'block';
+      }
+      if (typeof showToast === 'function') showToast('Укажите Имя и Фамилию для получения в СДЭК', 'error');
+      return;
+    }
+
+    // 2. Full Phone Validation (10 digits after +7 / 8)
+    const rawPhone = (formData.get('phone') || '').trim();
+    const digitsOnly = rawPhone.replace(/\D/g, '');
+    const phoneDigits = (digitsOnly.startsWith('7') || digitsOnly.startsWith('8')) ? digitsOnly.slice(1) : digitsOnly;
+    if (phoneDigits.length !== 10) {
+      if (phoneInput) {
+        phoneInput.classList.add('input-error');
+        phoneInput.focus();
+      }
+      if (phoneErrEl) {
+        phoneErrEl.textContent = 'Введите полный номер телефона: +7 (XXX) XXX-XX-XX';
+        phoneErrEl.style.display = 'block';
+      }
+      if (typeof showToast === 'function') showToast('Введите полный номер телефона (10 цифр)', 'error');
+      return;
+    }
+
+    const safeName = escapeHTML(rawName || 'Покупатель');
+    const safePhone = escapeHTML(rawPhone || '');
     const safeAddress = escapeHTML(formData.get('address') || 'Самовывоз');
     const safeDelivery = escapeHTML(formData.get('delivery') || 'СДЭК');
     const safePayment = escapeHTML(formData.get('payment') || 'При получении');
