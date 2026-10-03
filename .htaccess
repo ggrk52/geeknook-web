@@ -20,6 +20,20 @@ AddDefaultCharset UTF-8
   RewriteCond %{HTTP:X-Forwarded-Proto} !https
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
 
+  # 301 Permanent Redirect for legacy query-param article URLs (/journal?article=slug -> /journal/slug.html)
+  RewriteCond %{QUERY_STRING} (?:^|&)article=([a-zA-Z0-9_\-]+)(?:&|$)
+  RewriteRule ^(journal|journal\.html|journal/)?$ /journal/%1.html? [R=301,L]
+
+  # Normalize /journal/ to /journal
+  RewriteRule ^journal/$ /journal [R=301,L]
+
+  # Map /journal to journal.html
+  RewriteRule ^journal$ journal.html [L]
+
+  # Map extensionless article URLs (/journal/slug -> /journal/slug.html)
+  RewriteCond %{DOCUMENT_ROOT}/journal/$1.html -f
+  RewriteRule ^journal/([a-zA-Z0-9_\-]+)$ journal/$1.html [L]
+
   # Rewrite extensionless URLs to .html (e.g. /legal -> /legal.html, /journal -> /journal.html)
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteCond %{REQUEST_FILENAME}\.html -f
