@@ -315,6 +315,11 @@
     }, 2800);
   };
 
+  const dismissToasts = () => {
+    const container = document.getElementById('toastContainer');
+    if (container) container.innerHTML = '';
+  };
+
   // --- SOUND ENGINE (Micro-Haptics Web Audio API) ---
   const SOUND_STORAGE_KEY = 'geeknook_sound_enabled';
 
@@ -2533,6 +2538,7 @@
       return;
     }
 
+    dismissToasts();
     closeCartDrawer();
     const summaryList = document.getElementById('checkoutItemsSummary');
     const summaryTotal = document.getElementById('checkoutGrandTotalSummary');
@@ -2623,6 +2629,10 @@
       deliverySelect.value = 'СДЭК — пункт самовывоза';
     }
 
+    const addrErr = document.getElementById('checkoutAddressError');
+    if (addrInput) addrInput.classList.remove('input-error');
+    if (addrErr) addrErr.style.display = 'none';
+
     showToast(`✓ Выбран ПВЗ СДЭК: ${point.code} (${point.city})`, 'success');
   };
 
@@ -2647,13 +2657,17 @@
 
     const nameInput = form.querySelector('input[name="name"]');
     const phoneInput = form.querySelector('input[name="phone"]');
+    const addressInput = form.querySelector('input[name="address"]');
     const nameErrEl = document.getElementById('checkoutNameError');
     const phoneErrEl = document.getElementById('checkoutPhoneError');
+    const addressErrEl = document.getElementById('checkoutAddressError');
 
     if (nameInput) nameInput.classList.remove('input-error');
     if (phoneInput) phoneInput.classList.remove('input-error');
+    if (addressInput) addressInput.classList.remove('input-error');
     if (nameErrEl) nameErrEl.style.display = 'none';
     if (phoneErrEl) phoneErrEl.style.display = 'none';
+    if (addressErrEl) addressErrEl.style.display = 'none';
 
     // 1. Full Name Validation (First Name & Last Name, at least 2 words)
     const rawName = (formData.get('name') || '').trim();
@@ -2685,6 +2699,21 @@
         phoneErrEl.style.display = 'block';
       }
       showToast('Введите полный номер телефона (10 цифр)', 'error');
+      return;
+    }
+
+    // 3. CDEK PVZ Validation
+    const rawAddress = (formData.get('address') || '').trim();
+    if (!rawAddress && !state.selectedPvz) {
+      if (addressInput) {
+        addressInput.classList.add('input-error');
+        addressInput.focus();
+      }
+      if (addressErrEl) {
+        addressErrEl.textContent = 'Пожалуйста, выберите пункт выдачи СДЭК на карте или укажите код ПВЗ';
+        addressErrEl.style.display = 'block';
+      }
+      showToast('Выберите пункт выдачи СДЭК для доставки', 'error');
       return;
     }
 

@@ -2364,8 +2364,8 @@ textarea:focus-visible {
   color: var(--text-muted);
   font-size: 1.15rem;
   line-height: 1;
-  width: 24px;
-  height: 24px;
+  width: 28px;
+  height: 28px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2374,6 +2374,13 @@ textarea:focus-visible {
   transition: all var(--transition-fast);
   padding: 0;
   flex-shrink: 0;
+  position: relative;
+}
+
+.cart-item-remove-btn::before {
+  content: '';
+  position: absolute;
+  inset: -10px;
 }
 
 .cart-item-remove-btn:hover {
@@ -2402,13 +2409,14 @@ textarea:focus-visible {
 }
 
 .qty-btn {
-  width: 28px;
-  height: 28px;
+  width: 34px;
+  height: 34px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.9375rem;
+  font-size: 1rem;
   font-weight: 700;
+  cursor: pointer;
 }
 
 .qty-btn:hover {
@@ -2541,6 +2549,13 @@ textarea:focus-visible {
   min-width: 32px;
   min-height: 32px;
   border-radius: 4px;
+  position: relative;
+}
+
+.promo-remove-btn::before {
+  content: '';
+  position: absolute;
+  inset: -6px;
 }
 
 .promo-remove-btn:hover {
@@ -3028,12 +3043,14 @@ textarea:focus-visible {
     padding: 16px 18px calc(18px + env(safe-area-inset-bottom, 0px));
   }
   .qty-btn {
-    width: 36px;
-    height: 36px;
-    font-size: 1.1rem;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    font-size: 1.15rem;
   }
   .qty-val {
-    width: 34px;
+    width: 36px;
     font-size: 0.95rem;
   }
   .promo-input {
@@ -3068,8 +3085,9 @@ textarea:focus-visible {
   .toast-container {
     left: 12px;
     right: 12px;
-    bottom: 16px;
+    bottom: calc(85px + env(safe-area-inset-bottom, 0px));
     align-items: center;
+    pointer-events: none;
   }
   .toast {
     width: 100%;
@@ -3077,6 +3095,7 @@ textarea:focus-visible {
     justify-content: center;
     font-size: 0.875rem;
     padding: 12px 14px;
+    pointer-events: auto;
   }
 }
 
