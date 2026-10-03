@@ -3039,6 +3039,25 @@
     showToast('Быстрый заказ оформлен! Менеджер перезвонит вам.', 'success');
   }, 400);
 
+  const getCapturedUtm = () => {
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.getUtmParams === 'function') {
+      return window.geekNookAnalytics.getUtmParams();
+    }
+    try {
+      const stored = localStorage.getItem('geeknook_utm_params') || sessionStorage.getItem('geeknook_utm_params');
+      if (stored) return JSON.parse(stored);
+    } catch(e) {}
+    return {};
+  };
+
+  const formatUtmForMessage = () => {
+    const params = getCapturedUtm();
+    const pairs = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid']
+      .filter(k => params[k])
+      .map(k => `${k}: ${params[k]}`);
+    return pairs.length > 0 ? pairs.join(', ') : '';
+  };
+
   const quickBuyViaTelegram = () => {
     const prod = state.quickBuyProduct;
     if (!prod) return;
@@ -3072,6 +3091,20 @@
     text += `Итоговая стоимость: ${formatPrice(finalPrice)}\n\n`;
     text += `Свяжитесь со мной для подтверждения адреса доставки!`;
 
+    const utmStr = formatUtmForMessage();
+    if (utmStr) {
+      text += `\n\n[UTM: ${utmStr}]`;
+    }
+
+    // Track Analytics Goal (Yandex Metrika & Universal Analytics)
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackTelegramOrder === 'function') {
+      window.geekNookAnalytics.trackTelegramOrder('quick_buy', { product: prod.title, amount: finalPrice, promo: appliedPromo });
+    } else if (window.geekNookAnalytics && typeof window.geekNookAnalytics.reachGoal === 'function') {
+      window.geekNookAnalytics.reachGoal('TG_ORDER', { type: 'quick_buy', product: prod.title, amount: finalPrice, promo: appliedPromo });
+    } else if (typeof window.ym === 'function') {
+      try { window.ym(113130622, 'reachGoal', 'TG_ORDER', { type: 'quick_buy', product: prod.title, amount: finalPrice }); } catch(e) {}
+    }
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).catch(() => {});
     }
@@ -3104,6 +3137,20 @@
     msg += `\nДоставка СДЭК: ${isFreeShipping ? 'Бесплатно' : formatPrice(shippingCost)}`;
     msg += `\nИтого к оплате: ${formatPrice(grandTotal)}\n(Ваша экономия: ${formatPrice(discountAmount)})\n\nЖду подтверждения заказа!`;
 
+    const utmStr = formatUtmForMessage();
+    if (utmStr) {
+      msg += `\n\n[UTM: ${utmStr}]`;
+    }
+
+    // Track Analytics Goal (Yandex Metrika & Universal Analytics)
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackTelegramOrder === 'function') {
+      window.geekNookAnalytics.trackTelegramOrder('cart', { amount: grandTotal, itemsCount: state.cart.length, promo: state.activePromoCode });
+    } else if (window.geekNookAnalytics && typeof window.geekNookAnalytics.reachGoal === 'function') {
+      window.geekNookAnalytics.reachGoal('TG_ORDER', { type: 'cart', amount: grandTotal, itemsCount: state.cart.length, promo: state.activePromoCode });
+    } else if (typeof window.ym === 'function') {
+      try { window.ym(113130622, 'reachGoal', 'TG_ORDER', { type: 'cart', amount: grandTotal }); } catch(e) {}
+    }
+
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(msg).catch(() => {});
     }
@@ -3135,6 +3182,20 @@
     msg += `\nСумма по каталогу: ${formatPrice(catalogBaseTotal)}\n`;
     msg += `Скидка онлайн (-20%): -${formatPrice(discountAmount)}\n`;
     msg += `Итого к оплате: ${formatPrice(grandTotal)} (Доставка СДЭК бесплатно)\n\nХочу оформить заказ на эту сборку!`;
+
+    const utmStr = formatUtmForMessage();
+    if (utmStr) {
+      msg += `\n\n[UTM: ${utmStr}]`;
+    }
+
+    // Track Analytics Goal (Yandex Metrika & Universal Analytics)
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackTelegramOrder === 'function') {
+      window.geekNookAnalytics.trackTelegramOrder('configurator', { finish: finish.name, length: length.id, amount: grandTotal });
+    } else if (window.geekNookAnalytics && typeof window.geekNookAnalytics.reachGoal === 'function') {
+      window.geekNookAnalytics.reachGoal('TG_ORDER', { type: 'configurator', finish: finish.name, length: length.id, amount: grandTotal });
+    } else if (typeof window.ym === 'function') {
+      try { window.ym(113130622, 'reachGoal', 'TG_ORDER', { type: 'configurator', finish: finish.name, length: length.id, amount: grandTotal }); } catch(e) {}
+    }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(msg).catch(() => {});

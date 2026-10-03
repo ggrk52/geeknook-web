@@ -40,6 +40,7 @@
     const nativeOpenQuickBuy = window.geekNookApp.openQuickBuy;
     const nativeAddConfiguredBundleToCart = window.geekNookApp.addConfiguredBundleToCart;
     const nativeHandleCheckoutSubmit = window.geekNookApp.handleCheckoutSubmit;
+    const nativeHandleQuickBuySubmit = window.geekNookApp.handleQuickBuySubmit;
 
     const cdnBase = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
 
@@ -470,7 +471,27 @@
         const pvzCode = pvz ? pvz.code : (address.match(/\[([A-Z0-9_-]+)\]/i)?.[1] || address);
         const pvzString = pvz ? `ПВЗ СДЭК: [${pvz.code}] ${pvz.address} (${pvz.city})` : address;
         if (inpPvz) inpPvz.value = pvzCode;
-        if (inpComment) inpComment.value = `${pvzString}. Доставка: СДЭК (ПВЗ). Оплата: при получении в ПВЗ. ${checkoutPromo ? 'Промокод: ' + checkoutPromo : ''}`;
+        const utmParams = (window.geekNookAnalytics && typeof window.geekNookAnalytics.getUtmParams === 'function')
+          ? window.geekNookAnalytics.getUtmParams()
+          : {};
+        const utmEntries = Object.entries(utmParams).filter(([k]) => k.startsWith('utm_') || k === 'yclid');
+        const utmStr = utmEntries.length > 0 ? ` | UTM: ${utmEntries.map(([k, v]) => `${k}=${v}`).join(', ')}` : '';
+
+        if (inpComment) inpComment.value = `${pvzString}. Доставка: СДЭК (ПВЗ). Оплата: при получении в ПВЗ. ${checkoutPromo ? 'Промокод: ' + checkoutPromo : ''}${utmStr}`;
+
+        // Attach UTM hidden inputs to Tilda form
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid'].forEach(key => {
+          if (utmParams[key]) {
+            let utmInp = tildaCartForm.querySelector(`input[name="${key}"]`);
+            if (!utmInp) {
+              utmInp = document.createElement('input');
+              utmInp.type = 'hidden';
+              utmInp.name = key;
+              tildaCartForm.appendChild(utmInp);
+            }
+            utmInp.value = utmParams[key];
+          }
+        });
 
         // Trigger hidden Tilda submit
         const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
@@ -486,6 +507,206 @@
       // 3. Complete checkout in our beautiful UI (shows confirmation modal GN-XXXXXX)
       if (typeof nativeHandleCheckoutSubmit === 'function') {
         nativeHandleCheckoutSubmit(e);
+      }
+    };
+
+    // --- 7.1. OVERRIDE: handleQuickBuySubmit (Sync 1-Click Buy with Tilda CRM in background) ---
+    window.geekNookApp.handleQuickBuySubmit = function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+
+      const nameInput = document.getElementById('quickBuyName');
+      const phoneInput = document.getElementById('quickBuyPhone');
+      const rawName = nameInput ? nameInput.value.trim() : 'Покупатель';
+      const rawPhone = phoneInput ? phoneInput.value.trim() : '';
+
+      const digitsOnly = rawPhone.replace(/\D/g, '');
+      const phoneDigits = (digitsOnly.startsWith('7') || digitsOnly.startsWith('8')) ? digitsOnly.slice(1) : digitsOnly;
+      if (phoneDigits.length !== 10) {
+        if (typeof nativeHandleQuickBuySubmit === 'function') {
+          return nativeHandleQuickBuySubmit(e);
+        }
+        return false;
+      }
+
+      const prod = window.geekNookApp.state?.quickBuyProduct;
+      if (!prod) {
+        if (typeof nativeHandleQuickBuySubmit === 'function') {
+          return nativeHandleQuickBuySubmit(e);
+        }
+        return false;
+      }
+
+      const opt = window.geekNookApp.state?.quickBuyProductOption || 'Стандарт';
+      let basePrice = prod.price;
+      if (opt !== 'Стандарт' && prod.optionPrices && prod.optionPrices[opt]) {
+        basePrice = prod.optionPrices[opt];
+      }
+
+      const promoInput = document.getElementById('quickBuyPromo');
+      let promoCodeVal = promoInput ? promoInput.value.trim().toUpperCase() : '';
+      let promoPct = 0;
+      let appliedPromo = '';
+
+      const PROMOS = {
+        'DEVTOOLS10': 10,
+        'GEEK10': 10,
+        'ДАША': 10,
+        'DASHA': 10,
+        'FOCUS15': 15,
+        'WELCOME5': 5
+      };
+
+      const activePromo = window.geekNookApp.state?.activePromoCode;
+      if (promoCodeVal && PROMOS[promoCodeVal]) {
+        promoPct = PROMOS[promoCodeVal];
+        appliedPromo = promoCodeVal;
+      } else if (!promoCodeVal && activePromo && PROMOS[activePromo]) {
+        promoPct = PROMOS[activePromo];
+        appliedPromo = activePromo;
+      }
+
+      const siteDiscount = (typeof window.geekNookApp.state?.siteDiscountPercent === 'number')
+        ? window.geekNookApp.state.siteDiscountPercent
+        : 20;
+      const discountPct = Math.max(siteDiscount, promoPct);
+      const discountAmount = Math.round(basePrice * (discountPct / 100));
+      const finalPrice = Math.max(0, basePrice - discountAmount);
+      const optText = (opt && opt !== 'Стандарт') ? ` (${opt})` : '';
+      const fullProdTitle = `${prod.title}${optText}`;
+
+      // Retrieve captured UTM params
+      const utmParams = (window.geekNookAnalytics && typeof window.geekNookAnalytics.getUtmParams === 'function')
+        ? window.geekNookAnalytics.getUtmParams()
+        : {};
+      const utmEntries = Object.entries(utmParams).filter(([k]) => k.startsWith('utm_') || k === 'yclid');
+      const utmStr = utmEntries.length > 0 ? ` | UTM: ${utmEntries.map(([k, v]) => `${k}=${v}`).join(', ')}` : '';
+
+      // Map product for Tilda Cart / CRM
+      const mapped = mapProductToTilda(prod.id, opt);
+      const itemCatalogPrice = (mapped && mapped.price) ? mapped.price : basePrice;
+      const itemOpts = mapped ? [...(mapped.options || [])] : [];
+      itemOpts.push({ option: 'РРЦ', name: 'РРЦ', variant: `${itemCatalogPrice} ₽` });
+      itemOpts.push({ option: 'Скидка на сайте', name: 'Скидка', variant: `-${discountPct}%` });
+      if (appliedPromo) itemOpts.push({ option: 'Промокод', name: 'Промокод', variant: appliedPromo });
+
+      const tildaProduct = {
+        ...(mapped || { name: fullProdTitle }),
+        price: finalPrice,
+        catalogPrice: itemCatalogPrice,
+        quantity: 1,
+        amount: finalPrice,
+        options: itemOpts
+      };
+
+      // 1. Temporarily populate Tilda in-memory cart with this single product
+      if (window.tcart) {
+        window.tcart.products = [tildaProduct];
+        window.tcart.amount = finalPrice;
+        window.tcart.total = finalPrice;
+        window.tcart.prodamount = itemCatalogPrice;
+        window.tcart.prodamount_discountsum = discountAmount;
+        window.tcart.prodamount_withdiscount = finalPrice;
+        window.tcart.currency = 'RUB';
+        window.tcart.system = 'cash';
+        if (typeof window.tcart__saveLocalObj === 'function') {
+          try { window.tcart__saveLocalObj(); } catch(e) {}
+        }
+      }
+
+      // 2. Populate Tilda's hidden background order form to trigger Tilda CRM, TG & Email
+      const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form, form.t706__orderform, .t-form, form[name^="form"]');
+      if (tildaCartForm) {
+        // Force payment system to 'cash'
+        const pmRadios = tildaCartForm.querySelectorAll('input[name="paymentsystem"]');
+        const cashRadio = tildaCartForm.querySelector('input[name="paymentsystem"][value="cash"]');
+        if (cashRadio) {
+          pmRadios.forEach(r => { r.checked = false; });
+          cashRadio.checked = true;
+          try {
+            cashRadio.dispatchEvent(new Event('change', { bubbles: true }));
+          } catch(e) {}
+        }
+
+        if (window.tcart) {
+          window.tcart.system = 'cash';
+        }
+
+        if (window.tildaForm && typeof window.tildaForm.addPaymentInfoToForm === 'function') {
+          try {
+            window.tildaForm.addPaymentInfoToForm(tildaCartForm);
+          } catch(err) {}
+        }
+
+        if (window.tildaForm) {
+          window.tildaForm.amountForStat = finalPrice;
+          if (window.tildaForm.tildapayment) {
+            window.tildaForm.tildapayment.amount = finalPrice;
+            window.tildaForm.tildapayment.system = 'cash';
+            window.tildaForm.tildapayment.currency = 'RUB';
+          }
+        }
+
+        let paymentInput = tildaCartForm.querySelector('input.js-tilda-payment, input[name="tildapayment"]');
+        if (!paymentInput) {
+          paymentInput = document.createElement('input');
+          paymentInput.type = 'hidden';
+          paymentInput.name = 'tildapayment';
+          paymentInput.className = 'js-tilda-payment';
+          tildaCartForm.appendChild(paymentInput);
+        }
+        try {
+          let pData = {};
+          if (paymentInput.value) {
+            try { pData = JSON.parse(paymentInput.value); } catch(e) { pData = {}; }
+          }
+          pData.amount = finalPrice;
+          pData.system = 'cash';
+          pData.currency = 'RUB';
+          pData.products = [tildaProduct];
+          paymentInput.value = JSON.stringify(pData);
+        } catch(e) {}
+
+        const hiddenAmountInps = tildaCartForm.querySelectorAll('input[name="amount"], input[name="tcart_amount"], input[name="tcart_total"], input[name="payment[amount]"]');
+        hiddenAmountInps.forEach(inp => { inp.value = finalPrice; });
+
+        const inpName = tildaCartForm.querySelector('input[name="Name"], input[name="name"]');
+        const inpPhone = tildaCartForm.querySelector('input[name="Phone"], input[name="phone"]');
+        const inpComment = tildaCartForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
+
+        if (inpName) inpName.value = rawName;
+        if (inpPhone) inpPhone.value = rawPhone;
+        if (inpComment) {
+          inpComment.value = `[Быстрый заказ в 1 клик] Товар: ${fullProdTitle}. Сумма: ${finalPrice} ₽. Оплата: при получении СДЭК.${appliedPromo ? ' Промокод: ' + appliedPromo : ''}${utmStr}`;
+        }
+
+        // Attach UTM parameters as hidden inputs
+        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid'].forEach(key => {
+          if (utmParams[key]) {
+            let utmInp = tildaCartForm.querySelector(`input[name="${key}"]`);
+            if (!utmInp) {
+              utmInp = document.createElement('input');
+              utmInp.type = 'hidden';
+              utmInp.name = key;
+              tildaCartForm.appendChild(utmInp);
+            }
+            utmInp.value = utmParams[key];
+          }
+        });
+
+        // Trigger hidden Tilda submit
+        const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
+        if (submitBtn) {
+          try { submitBtn.click(); } catch(err) {}
+        }
+        try {
+          const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
+          tildaCartForm.dispatchEvent(submitEvt);
+        } catch(err) {}
+      }
+
+      // 3. Complete quick buy in our UI
+      if (typeof nativeHandleQuickBuySubmit === 'function') {
+        nativeHandleQuickBuySubmit(e);
       }
     };
 
@@ -960,6 +1181,11 @@
   }
 
   initTildaDomEnhancements();
+
+  window.geekNookTilda = {
+    init: initTildaAdapter,
+    isActive: isTildaActive
+  };
 
   // Auto-init main adapter when DOM is ready
   if (document.readyState === 'loading') {

@@ -202,6 +202,14 @@
     reachGoal('TG_CONSULT', { source });
   }
 
+  function trackTelegramOrder(orderType = 'cart', details = {}) {
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.reachGoal === 'function' && window.geekNookAnalytics.reachGoal !== reachGoal) {
+      window.geekNookAnalytics.reachGoal('TG_ORDER', { type: orderType, ...details });
+    } else {
+      reachGoal('TG_ORDER', { type: orderType, ...details });
+    }
+  }
+
   function trackRetailClick(store) {
     reachGoal('RETAIL_CLICK', { store });
   }
@@ -213,6 +221,63 @@
     });
   }
 
+  // --- UTM PARAMETERS ENGINE (152-ФЗ / Yandex Direct / Ads attribution) ---
+  const UTM_STORAGE_KEY = 'geeknook_utm_params';
+  const UTM_FIELDS = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid'];
+
+  function captureUtmParams() {
+    try {
+      if (typeof window === 'undefined' || !window.location || !window.location.search) return;
+      const urlParams = new URLSearchParams(window.location.search);
+      const captured = {};
+      let hasUtm = false;
+
+      UTM_FIELDS.forEach(field => {
+        const val = urlParams.get(field);
+        if (val) {
+          captured[field] = val.trim();
+          hasUtm = true;
+        }
+      });
+
+      if (hasUtm) {
+        let existing = {};
+        try {
+          const stored = localStorage.getItem(UTM_STORAGE_KEY) || sessionStorage.getItem(UTM_STORAGE_KEY);
+          if (stored) existing = JSON.parse(stored);
+        } catch (e) {}
+
+        const merged = { ...existing, ...captured, captured_at: new Date().toISOString() };
+        const json = JSON.stringify(merged);
+        try { localStorage.setItem(UTM_STORAGE_KEY, json); } catch(e) {}
+        try { sessionStorage.setItem(UTM_STORAGE_KEY, json); } catch(e) {}
+        console.log('[GeekNook Analytics] 🏷️ Captured UTM parameters:', captured);
+      }
+    } catch (e) {
+      console.warn('[GeekNook Analytics] Could not capture UTM params:', e);
+    }
+  }
+
+  function getUtmParams() {
+    try {
+      const stored = localStorage.getItem(UTM_STORAGE_KEY) || sessionStorage.getItem(UTM_STORAGE_KEY);
+      if (stored) return JSON.parse(stored);
+    } catch (e) {}
+    return {};
+  }
+
+  function getUtmString() {
+    const params = getUtmParams();
+    const parts = [];
+    UTM_FIELDS.forEach(field => {
+      if (params[field]) parts.push(`${field}=${params[field]}`);
+    });
+    return parts.join('&');
+  }
+
+  // Capture UTM immediately
+  captureUtmParams();
+
   // Export to global namespace
   window.geekNookAnalytics = {
     reachGoal,
@@ -222,8 +287,12 @@
     trackCdekMapClick,
     trackB2bLead,
     trackTelegramConsult,
+    trackTelegramOrder,
     trackRetailClick,
     trackJournalCta,
+    captureUtmParams,
+    getUtmParams,
+    getUtmString,
     getActiveCounters: getActiveMetrikaCounters
   };
 
