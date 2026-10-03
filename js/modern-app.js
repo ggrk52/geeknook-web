@@ -2932,7 +2932,11 @@
       text += `Стоимость: ${formatPrice(prod.price)}\n\n`;
     }
     text += `Свяжитесь со мной для подтверждения адреса доставки!`;
-    window.open(`https://t.me/geeknook?text=${encodeURIComponent(text)}`, '_blank');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+    showToast('Детали заказа скопированы! Отправьте их боту в чате', 'success');
+    window.open('https://t.me/GEEKNOOK_bot', '_blank');
     modalManager.close('quickBuyModal');
   };
 
@@ -2958,7 +2962,11 @@
     msg += `\nДоставка СДЭК: ${isFreeShipping ? 'Бесплатно' : formatPrice(shippingCost)}`;
     msg += `\nИтого к оплате: ${formatPrice(grandTotal)}\n\nЖду подтверждения заказа!`;
 
-    window.open(`https://t.me/geeknook?text=${encodeURIComponent(msg)}`, '_blank');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(msg).catch(() => {});
+    }
+    showToast('Детали заказа скопированы! Отправьте их боту в чате', 'success');
+    window.open('https://t.me/GEEKNOOK_bot', '_blank');
   };
 
   const orderConfigViaTelegram = () => {
@@ -2982,7 +2990,11 @@
     }
     msg += `\nИтоговая стоимость: ${formatPrice(grandTotal)} (Доставка бесплатно)\n\nХочу оформить заказ на эту сборку!`;
 
-    window.open(`https://t.me/geeknook?text=${encodeURIComponent(msg)}`, '_blank');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(msg).catch(() => {});
+    }
+    showToast('Спецификация сборки скопирована! Отправьте боту в чате', 'success');
+    window.open('https://t.me/GEEKNOOK_bot', '_blank');
   };
 
   // --- SHAREABLE CONFIGURATOR LINK ---
@@ -5790,7 +5802,7 @@
         sub: 'Быстрая консультация по сетапу и размерам',
         badge: 'Чат',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>',
-        action: () => { closeCommandPalette(); window.open('https://t.me/geeknook', '_blank'); }
+        action: () => { closeCommandPalette(); window.open('https://t.me/GEEKNOOK_bot', '_blank'); }
       },
       {
         id: 'action-legal',

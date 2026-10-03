@@ -683,7 +683,11 @@ window.GeekNook = window.GeekNook || {};
     if (!prod) return;
     const optText = state.quickBuyProductOption && state.quickBuyProductOption !== 'Стандарт' ? ` (${state.quickBuyProductOption})` : '';
     const text = `Здравствуйте! Хочу оформить быстрый заказ в 1 клик на GeekNook:\n\nТовар: ${prod.title}${optText}\nСтоимость: ${formatPrice(prod.price)}\n\nСвяжитесь со мной для подтверждения адреса доставки!`;
-    window.open(`https://t.me/geeknook?text=${encodeURIComponent(text)}`, '_blank');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).catch(() => {});
+    }
+    showToast('Детали заказа скопированы! Отправьте их боту в чате', 'success');
+    window.open('https://t.me/GEEKNOOK_bot', '_blank');
     modalManager.close('quickBuyModal');
   };
 
@@ -709,7 +713,11 @@ window.GeekNook = window.GeekNook || {};
     msg += `\nДоставка СДЭК: ${isFreeShipping ? 'Бесплатно' : formatPrice(shippingCost)}`;
     msg += `\nИтого к оплате: ${formatPrice(grandTotal)}\n\nЖду подтверждения заказа!`;
 
-    window.open(`https://t.me/geeknook?text=${encodeURIComponent(msg)}`, '_blank');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(msg).catch(() => {});
+    }
+    showToast('Детали заказа скопированы! Отправьте их боту в чате', 'success');
+    window.open('https://t.me/GEEKNOOK_bot', '_blank');
   };
 
   const orderConfigViaTelegram = () => {
@@ -733,7 +741,11 @@ window.GeekNook = window.GeekNook || {};
     }
     msg += `\nИтоговая стоимость: ${formatPrice(grandTotal)} (Доставка бесплатно)\n\nХочу оформить заказ на эту сборку!`;
 
-    window.open(`https://t.me/geeknook?text=${encodeURIComponent(msg)}`, '_blank');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(msg).catch(() => {});
+    }
+    showToast('Спецификация сборки скопирована! Отправьте боту в чате', 'success');
+    window.open('https://t.me/GEEKNOOK_bot', '_blank');
   };
 
 
