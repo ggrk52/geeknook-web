@@ -19,28 +19,34 @@ window.GeekNook = window.GeekNook || {};
           <img class="card-img-main" src="${p.images[0]}" alt="${p.title}" loading="lazy" decoding="async" />
           ${hasHoverImg ? `<img class="card-img-hover" src="${p.images[1]}" alt="${p.title}" loading="lazy" decoding="async" />` : ''}
           <div class="card-floating-glass-bar" onclick="event.stopPropagation();">
-            <button class="glass-action-btn quick-view-btn" onclick="window.geekNookApp.openQuickView('${p.id}')" title="Быстрый просмотр">
+            <button class="glass-action-btn quick-view-btn" onclick="window.geekNookApp.openQuickView('${p.id}')" title="Быстрый просмотр" aria-label="Быстрый просмотр ${escapeHTML(p.title)}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
               <span>Обзор</span>
             </button>
-            <button class="glass-action-btn quick-add-btn" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}');" title="Добавить в корзину">
+            <button class="glass-action-btn quick-add-btn" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}');" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
               <span>В корзину</span>
             </button>
           </div>
         </div>
-        <div class="card-meta-tag">${materialTag}</div>
-        <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('${p.id}')">${p.title}</h4>
+        <div class="card-meta-tag">${materialTag}${p.options && p.options.lengths ? ' • 2 размера: 85 и 116 см' : ''}</div>
+        <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('${p.id}')">${escapeHTML(p.title)}</h4>
         <div class="product-card-sub">${p.subtitle || p.shortDescr || ''}</div>
         <div class="product-card-price">
-          <span class="price-current">${formatPrice(p.price)}</span>
-          ${oldPriceHtml}
+          <div class="price-primary-row">
+            <span class="price-current">${p.options && p.options.lengths ? `от ${formatPrice(p.price)}` : formatPrice(p.price)}</span>
+            ${oldPriceHtml}
+          </div>
+          <div class="card-discount-pill" title="Автоматическая скидка 20% при заказе">
+            <span class="discount-pill-tag">−20%</span>
+            <span class="discount-pill-text">${p.options && p.options.lengths ? 'при заказе: от ' : 'при заказе: '}${formatPrice(Math.round(p.price * 0.8))}</span>
+          </div>
         </div>
         <div class="card-actions-row">
           <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('${p.id}')">
             <span>Подробнее</span>
           </button>
-          <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}'); event.stopPropagation();" title="Добавить в корзину">
+          <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <line x1="12" y1="5" x2="12" y2="19"></line>
               <line x1="5" y1="12" x2="19" y2="12"></line>

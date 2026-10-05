@@ -184,7 +184,7 @@
   </script>
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/modern-style.css" />
+  <link rel="stylesheet" href="css/modern-style.css?v=2.6" />
 </head>
 <body>
 
@@ -249,7 +249,7 @@
             <line x1="17" y1="9" x2="23" y2="15"></line>
           </svg>
         </button>
-        <button class="nav-icon-btn" onclick="window.geekNookApp.openCartDrawer()" title="Корзина">
+        <button class="nav-icon-btn" onclick="window.geekNookApp.openCartDrawer()" title="Корзина" aria-label="Корзина">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -935,10 +935,10 @@
           <div class="fea-controls-bar">
             <div class="fea-slider-group">
               <div class="fea-slider-label-row">
-                <span>Приложенная масса:</span>
+                <label for="feaWeightSlider" class="fea-slider-label">Приложенная масса:</label>
                 <strong id="feaWeightDisplay">25 кг (Два монитора)</strong>
               </div>
-              <input type="range" id="feaWeightSlider" min="0" max="85" step="1" value="25" oninput="window.geekNookApp.updateFeaWeight(this.value)" class="fea-slider" />
+              <input type="range" id="feaWeightSlider" min="0" max="85" step="1" value="25" oninput="window.geekNookApp.updateFeaWeight(this.value)" class="fea-slider" aria-label="Приложенная масса нагрузки в килограммах" />
             </div>
 
             <div class="fea-presets-row" id="feaPresetsRow">
@@ -1436,7 +1436,7 @@
       <div class="cart-footer">
         <div class="promo-box" id="cartPromoBox">
           <div class="promo-row" id="cartPromoRow">
-            <input type="text" class="promo-input" id="promoInput" placeholder="Промокод" autocomplete="off" autocorrect="off" autocapitalize="characters" />
+            <input type="text" class="promo-input" id="promoInput" placeholder="Промокод" autocomplete="off" autocorrect="off" autocapitalize="characters" aria-label="Промокод на скидку" />
             <button type="button" class="btn-apply-promo" onclick="window.geekNookApp.applyPromoCode()">Применить</button>
           </div>
           <div class="promo-applied-badge" id="cartPromoApplied" style="display:none;">
@@ -1545,8 +1545,8 @@
               </div>
 
               <div class="config-3d-track-slider-wrap" id="config3dTrackWrap" style="display:none;">
-                <div class="track-slider-label">Позиция в Т-пазе:</div>
-                <input type="range" id="config3dTrackSlider" min="-100" max="100" value="0" step="1" oninput="window.geekNookApp.update3dModulePosition(this.value)" class="track-slider" />
+                <label for="config3dTrackSlider" class="track-slider-label">Позиция в Т-пазе:</label>
+                <input type="range" id="config3dTrackSlider" min="-100" max="100" value="0" step="1" oninput="window.geekNookApp.update3dModulePosition(this.value)" class="track-slider" aria-label="Позиция навесного модуля в Т-пазе" />
               </div>
             </div>
 
@@ -1616,7 +1616,7 @@
                 </span>
               </label>
               <div class="config-engraving-input-wrap" id="configEngravingInputWrap" style="display:none;">
-                <input type="text" id="configEngravingInput" class="config-engraving-input" maxlength="24" placeholder="Например: STAY FOCUSED // LAB №042" oninput="window.geekNookApp.updateConfigEngravingText(this.value)" />
+                <input type="text" id="configEngravingInput" class="config-engraving-input" maxlength="24" placeholder="Например: STAY FOCUSED // LAB №042" oninput="window.geekNookApp.updateConfigEngravingText(this.value)" aria-label="Текст лазерной гравировки для шильдика" />
                 <div class="engraving-input-hint">До 24 символов (латиница, кириллица, цифры). Наносится волоконным лазером.</div>
               </div>
             </div>
@@ -1636,23 +1636,23 @@
         <div class="checkout-modal-layout">
           <div class="checkout-form-col">
             <div class="checkout-field-group">
-              <label class="checkout-field-label">Имя и Фамилия получателя *</label>
+              <label for="checkoutName" class="checkout-field-label">Имя и Фамилия получателя *</label>
               <input type="text" id="checkoutName" name="name" class="checkout-input" placeholder="Константин Иванов" autocomplete="name" required />
               <div class="field-error-msg" id="checkoutNameError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
             </div>
             <div class="checkout-field-group">
-              <label class="checkout-field-label">Номер телефона *</label>
+              <label for="checkoutPhone" class="checkout-field-label">Номер телефона *</label>
               <input type="tel" id="checkoutPhone" name="phone" class="checkout-input" placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel" required />
               <div class="field-error-msg" id="checkoutPhoneError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
             </div>
             <div class="checkout-field-group">
-              <label class="checkout-field-label">Электронная почта *</label>
+              <label for="checkoutEmail" class="checkout-field-label">Электронная почта *</label>
               <input type="email" id="checkoutEmail" name="email" class="checkout-input" placeholder="konstantin@example.com" autocomplete="email" required />
               <div class="field-error-msg" id="checkoutEmailError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
             </div>
             <div class="checkout-field-group">
               <div class="checkout-field-header-row">
-                <label class="checkout-field-label" style="margin-bottom:0;">Пункт выдачи СДЭК *</label>
+                <label for="checkoutAddressInput" class="checkout-field-label" style="margin-bottom:0;">Пункт выдачи СДЭК *</label>
                 <button type="button" class="btn-cdek-pick-action" onclick="window.geekNookApp.openCdekMap()" title="Открыть карту пунктов выдачи СДЭК">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
                   <span>Выбрать ПВЗ на карте</span>
@@ -1678,7 +1678,7 @@
 
           <div class="checkout-summary-col">
             <div class="checkout-field-group">
-              <label class="checkout-field-label">Способ доставки</label>
+              <label for="checkoutDeliverySelect" class="checkout-field-label">Способ доставки</label>
               <select id="checkoutDeliverySelect" name="delivery" class="checkout-select" onchange="window.geekNookApp.handleDeliveryChange(this.value)">
                 <option value="СДЭК — пункт выдачи (ПВЗ)">СДЭК — пункт выдачи (ПВЗ)</option>
               </select>
@@ -1686,14 +1686,14 @@
             </div>
 
             <div class="checkout-field-group">
-              <label class="checkout-field-label">Способ оплаты</label>
-              <select name="payment" class="checkout-select">
+              <label for="checkoutPaymentSelect" class="checkout-field-label">Способ оплаты</label>
+              <select id="checkoutPaymentSelect" name="payment" class="checkout-select">
                 <option value="Оплата при получении в ПВЗ СДЭК">Оплата при получении в ПВЗ СДЭК (картой или наличными)</option>
               </select>
             </div>
 
             <div class="checkout-promo-box" id="checkoutPromoBox">
-              <label class="checkout-field-label" style="margin-bottom:6px;display:block;">Промокод на скидку</label>
+              <label for="checkoutPromoInput" class="checkout-field-label" style="margin-bottom:6px;display:block;">Промокод на скидку</label>
               <div class="checkout-promo-row" id="checkoutPromoRow">
                 <input type="text" id="checkoutPromoInput" class="checkout-input promo-input" placeholder="Промокод" autocomplete="off" autocorrect="off" autocapitalize="characters" style="margin-bottom:0;" />
                 <button type="button" class="btn-apply-promo" onclick="window.geekNookApp.applyCheckoutPromo()">Применить</button>
@@ -1754,7 +1754,7 @@
       <div class="cdek-toolbar">
         <div class="cdek-search-wrap">
           <svg class="cdek-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-          <input type="text" id="cdekSearchInput" class="cdek-search-input" placeholder="Поиск по адресу, метро, городу или коду (напр. Тверская или MSK...)" autocomplete="off" />
+          <input type="text" id="cdekSearchInput" class="cdek-search-input" placeholder="Поиск по адресу, метро, городу или коду (напр. Тверская или MSK...)" autocomplete="off" aria-label="Поиск пункта выдачи СДЭК по адресу или городу" />
           <button type="button" id="cdekClearSearch" class="cdek-clear-search-btn" style="display:none;" aria-label="Очистить поиск">✕</button>
         </div>
 
@@ -1865,15 +1865,15 @@
       <div id="quickBuyProductSummary" class="quick-buy-prod-summary"></div>
       <form onsubmit="window.geekNookApp.handleQuickBuySubmit(event)" style="margin-top:16px;">
         <div class="checkout-field-group">
-          <label class="checkout-field-label">Ваше имя *</label>
+          <label for="quickBuyName" class="checkout-field-label">Ваше имя *</label>
           <input type="text" id="quickBuyName" class="checkout-input" placeholder="Александр" required />
         </div>
         <div class="checkout-field-group">
-          <label class="checkout-field-label">Телефон *</label>
+          <label for="quickBuyPhone" class="checkout-field-label">Телефон *</label>
           <input type="tel" id="quickBuyPhone" class="checkout-input" placeholder="+7 (999) 000-00-00" required />
         </div>
         <div class="checkout-field-group">
-          <label class="checkout-field-label">Промокод (если есть)</label>
+          <label for="quickBuyPromo" class="checkout-field-label">Промокод (если есть)</label>
           <input type="text" id="quickBuyPromo" class="checkout-input promo-input" placeholder="Промокод" autocomplete="off" autocorrect="off" autocapitalize="characters" />
         </div>
         <button type="submit" class="btn-checkout" style="margin-top:14px;width:100%;">
@@ -1939,7 +1939,7 @@
           <circle cx="11" cy="11" r="8"></circle>
           <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
         </svg>
-        <input type="text" id="cmdPaletteInput" class="cmd-palette-input" placeholder="Поиск товаров или действий (например: дуб, примерщик, корзина)..." autocomplete="off" />
+        <input type="text" id="cmdPaletteInput" class="cmd-palette-input" placeholder="Поиск товаров или действий (например: дуб, примерщик, корзина)..." autocomplete="off" aria-label="Поиск по товарам, действиям и разделам" />
         <span class="cmd-esc-hint" onclick="window.geekNookApp.closeCommandPalette()">ESC</span>
       </div>
       <div class="cmd-palette-results" id="cmdPaletteResults"></div>
@@ -2164,15 +2164,15 @@
             <p class="b2b-quote-subtitle">Оснащаем офисы от 5 до 100+ рабочих мест. Индивидуальные размеры, брендирование и работа по безналичному расчету с НДС.</p>
             <form onsubmit="window.geekNookApp.handleB2bSubmit(event)">
               <div class="checkout-field-group">
-                <label class="checkout-field-label">Компания / Студия *</label>
+                <label for="b2bCompany" class="checkout-field-label">Компания / Студия *</label>
                 <input type="text" id="b2bCompany" class="checkout-input" placeholder="Yandex, Ozon, Архитектурное бюро..." required />
               </div>
               <div class="checkout-field-group">
-                <label class="checkout-field-label">Корпоративный Email *</label>
+                <label for="b2bEmail" class="checkout-field-label">Корпоративный Email *</label>
                 <input type="email" id="b2bEmail" class="checkout-input" placeholder="procurement@company.ru" required />
               </div>
               <div class="checkout-field-group">
-                <label class="checkout-field-label">Количество рабочих мест *</label>
+                <label for="b2bWorkplaces" class="checkout-field-label">Количество рабочих мест *</label>
                 <select id="b2bWorkplaces" class="checkout-select">
                   <option value="5-10">5 – 10 рабочих мест (скидка 10%)</option>
                   <option value="11-25">11 – 25 рабочих мест (скидка 15%)</option>
@@ -2241,6 +2241,33 @@
     </button>
   </div>
 
+  <!-- Floating Mobile Cart Pill (Bottom Thumb Zone) -->
+  <aside class="floating-mobile-cart" id="floatingMobileCart" style="display:none;" aria-label="Быстрый переход в корзину">
+    <button type="button" class="btn-floating-mobile-cart" onclick="window.geekNookApp.openCartDrawer()" aria-label="Открыть корзину">
+      <div class="fmc-left">
+        <span class="fmc-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="21" r="1"></circle>
+            <circle cx="20" cy="21" r="1"></circle>
+            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+          </svg>
+          <span class="fmc-count" id="fmcCount">0</span>
+        </span>
+        <div class="fmc-info">
+          <span class="fmc-label">Корзина</span>
+          <span class="fmc-total" id="fmcTotal">0 ₽</span>
+        </div>
+      </div>
+      <div class="fmc-right">
+        <span class="fmc-cta">Оформить</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </div>
+    </button>
+  </aside>
+
   <!-- Toast Container -->
   <div class="toast-container" id="toastContainer"></div>
 
@@ -2250,7 +2277,7 @@
   <script src="js/modules/analytics.js"></script>
   <script src="js/data/cdek-popular.js"></script>
   <script src="js/modules/cdek-picker.js"></script>
-  <script src="js/modern-app.js"></script>
-  <script src="js/modules/tilda-adapter.js"></script>
+  <script src="js/modern-app.js?v=2.6"></script>
+  <script src="js/modules/tilda-adapter.js?v=2.6"></script>
 </body>
 </html>
