@@ -20,6 +20,7 @@ yarn-error.log*
 *.tmp
 *.bak
 *.swp
+*.xlsx
 
 # Agent skills cache / local plugins
 .agents/skills/
@@ -28,3 +29,4 @@ scratch/
 # Chat export tools & artifacts
 generate_chat_export.js
 GEEKNOOK_*
+

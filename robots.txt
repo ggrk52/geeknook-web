@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Clean-param: article /journal.html
 
 Sitemap: https://geeknook.ru/sitemap.xml
+

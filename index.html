@@ -1374,8 +1374,8 @@
               </span>
               <span class="mobile-theme-text">Тёмная тема</span>
             </div>
-            <label class="theme-switch-control" aria-label="Включить тёмную тему">
-              <input type="checkbox" id="mobileThemeCheckbox" onchange="window.geekNookApp.toggleTheme()" />
+            <label class="theme-switch-control" for="mobileThemeCheckbox" aria-label="Включить тёмную тему">
+              <input type="checkbox" id="mobileThemeCheckbox" aria-label="Включить тёмную тему" onchange="window.geekNookApp.toggleTheme()" />
               <span class="theme-switch-slider"></span>
             </label>
           </div>
@@ -1607,8 +1607,8 @@
           <div class="config-step-block">
             <div class="config-step-title">4. Индивидуальная гравировка:</div>
             <div class="config-engraving-card">
-              <label class="config-engraving-toggle">
-                <input type="checkbox" id="configEngravingCheckbox" onchange="window.geekNookApp.toggleConfigEngraving(this.checked)" />
+              <label class="config-engraving-toggle" for="configEngravingCheckbox">
+                <input type="checkbox" id="configEngravingCheckbox" aria-label="Фирменный металлический шильдик с гравировкой" onchange="window.geekNookApp.toggleConfigEngraving(this.checked)" />
                 <span class="engraving-toggle-slider"></span>
                 <span class="engraving-toggle-label">
                   <strong>Фирменный металлический шильдик с гравировкой</strong>
@@ -2272,12 +2272,12 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- Scripts -->
-  <script src="js/three.min.js"></script>
-  <script src="js/products-data.js"></script>
-  <script src="js/modules/analytics.js"></script>
-  <script src="js/data/cdek-popular.js"></script>
-  <script src="js/modules/cdek-picker.js"></script>
-  <script src="js/modern-app.js?v=2.6"></script>
-  <script src="js/modules/tilda-adapter.js?v=2.6"></script>
+  <script defer src="js/three.min.js"></script>
+  <script defer src="js/products-data.js"></script>
+  <script defer src="js/modules/analytics.js"></script>
+  <script defer src="js/data/cdek-popular.js"></script>
+  <script defer src="js/modules/cdek-picker.js"></script>
+  <script defer src="js/modern-app.js?v=2.7"></script>
+  <script defer src="js/modules/tilda-adapter.js?v=2.7"></script>
 </body>
 </html>

@@ -83,17 +83,23 @@ AddDefaultCharset UTF-8
 
 # 6. SECURITY HEADERS
 <IfModule mod_headers.c>
+  # Enforce HTTPS via HSTS
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" env=HTTPS
+
   # Prevent MIME type sniffing
   Header always set X-Content-Type-Options "nosniff"
 
   # Clickjacking protection
   Header always set X-Frame-Options "SAMEORIGIN"
 
-  # XSS filter
+  # XSS filter (legacy browsers)
   Header always set X-XSS-Protection "1; mode=block"
 
   # Referrer policy
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Feature permissions policy
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 
   # Cache-Control headers for static assets
   <FilesMatch "\.(css|js|webp|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|otf|webm|mp4)$">
@@ -104,3 +110,4 @@ AddDefaultCharset UTF-8
     Header set Cache-Control "max-age=3600, must-revalidate"
   </FilesMatch>
 </IfModule>
+
