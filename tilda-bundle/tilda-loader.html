@@ -184,6 +184,18 @@
         mountPoint.appendChild(child);
       });
 
+      // Ensure hero video triggers load() after dynamic append
+      const heroVid = mountPoint.querySelector('.hero-video-bg');
+      if (heroVid) {
+        heroVid.muted = true;
+        heroVid.defaultMuted = true;
+        const vSrc = heroVid.querySelector('source');
+        if (vSrc && !heroVid.src) {
+          heroVid.src = vSrc.src;
+        }
+        try { heroVid.load(); } catch (e) {}
+      }
+
       // Setup real-time MutationObserver to fix any dynamically injected images
       const observer = new MutationObserver(mutations => {
         for (let i = 0; i < mutations.length; i++) {

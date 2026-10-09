@@ -35,6 +35,13 @@ AddDefaultCharset UTF-8
   RewriteRule \.(xlsx|csv|log|bak|ps1|sh|env)$ - [F,L]
 </IfModule>
 
+# 3.1. MEDIA MIME TYPES (Ensures WebM / MP4 stream with Range requests)
+<IfModule mod_mime.c>
+  AddType video/webm .webm
+  AddType video/mp4 .mp4
+  AddType image/webp .webp
+</IfModule>
+
 # 4. GZIP / DEFLATE COMPRESSION
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html

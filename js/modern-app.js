@@ -3808,20 +3808,55 @@
   const initHeroVideo = () => {
     const video = document.querySelector('.hero-video-bg');
     if (!video) return;
+
+    // 1. Mandatory attributes for iOS / Safari / Chrome autoplay policies
     video.muted = true;
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        const startPlay = () => {
-          video.play().catch(() => {});
-          window.removeEventListener('click', startPlay);
-          window.removeEventListener('touchstart', startPlay);
-          window.removeEventListener('scroll', startPlay);
-        };
-        window.addEventListener('click', startPlay, { once: true });
-        window.addEventListener('touchstart', startPlay, { once: true });
-        window.addEventListener('scroll', startPlay, { once: true });
-      });
+    video.defaultMuted = true;
+    video.setAttribute('muted', '');
+    video.setAttribute('playsinline', '');
+    video.setAttribute('webkit-playsinline', 'true');
+
+    // 2. Resolve CDN URL if running in Tilda / headless environment
+    const source = video.querySelector('source');
+    if (source) {
+      const rawSrc = source.getAttribute('src');
+      if (rawSrc && typeof window.getGeekNookAssetUrl === 'function') {
+        const resolved = window.getGeekNookAssetUrl(rawSrc);
+        source.src = resolved;
+        video.src = resolved;
+      } else if (rawSrc && !video.src) {
+        video.src = source.src || rawSrc;
+      }
+    }
+
+    // 3. Force resource selection algorithm (fixes innerHTML dynamic mount issue)
+    try {
+      video.load();
+    } catch (e) {}
+
+    // 4. Robust autoplay with unlock handlers on any user interaction
+    const tryPlay = () => {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          const startPlay = () => {
+            video.play().catch(() => {});
+            ['click', 'touchstart', 'scroll', 'keydown', 'pointerdown'].forEach(ev => {
+              window.removeEventListener(ev, startPlay);
+            });
+          };
+          ['click', 'touchstart', 'scroll', 'keydown', 'pointerdown'].forEach(ev => {
+            window.addEventListener(ev, startPlay, { once: true, passive: true });
+          });
+        });
+      }
+    };
+
+    if (video.readyState >= 2) {
+      tryPlay();
+    } else {
+      video.addEventListener('canplay', tryPlay, { once: true });
+      tryPlay();
     }
   };
 
