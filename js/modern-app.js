@@ -6594,6 +6594,35 @@
     }
   };
 
+  // --- COOKIE CONSENT BANNER (152-ФЗ) ---
+  const initCookieConsent = () => {
+    try {
+      if (safeStorage.getItem('geeknook_cookie_consent') === 'true') {
+        return;
+      }
+    } catch (e) {}
+
+    const banner = document.getElementById('cookieBanner');
+    if (!banner) return;
+
+    setTimeout(() => {
+      banner.classList.add('visible');
+    }, 900);
+  };
+
+  const acceptCookies = () => {
+    try {
+      safeStorage.setItem('geeknook_cookie_consent', 'true');
+    } catch (e) {}
+    const banner = document.getElementById('cookieBanner');
+    if (banner) {
+      banner.classList.remove('visible');
+      setTimeout(() => {
+        banner.style.display = 'none';
+      }, 400);
+    }
+  };
+
   // --- INITIALIZE APPLICATION ---
   const init = () => {
     // 1. Global image fallback (Capture phase handles non-bubbling img error events)
@@ -6658,6 +6687,7 @@
     initSetupMatcher();
     initPhoneMasks();
     initPromoListeners();
+    initCookieConsent();
 
     initHeaderScroll();
     renderBoards();
@@ -6847,6 +6877,8 @@
     modalManager,
     safeStorage,
     escapeHTML,
+    acceptCookies,
+    initCookieConsent,
     state
   };
 
