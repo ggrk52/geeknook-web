@@ -28,6 +28,10 @@ AddDefaultCharset UTF-8
   # Block hidden files (except .well-known for SSL certificates)
   RewriteCond %{REQUEST_URI} "(^|/)\.(?!well-known)"
   RewriteRule .* - [F,L]
+
+  # Block access to internal directories and confidential spreadsheets
+  RewriteRule ^docs/internal(/.*)?$ - [F,L]
+  RewriteRule \.(xlsx|csv|log|bak|ps1|sh)$ - [F,L]
 </IfModule>
 
 # 4. GZIP / DEFLATE COMPRESSION

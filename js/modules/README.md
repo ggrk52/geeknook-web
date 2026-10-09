@@ -44,17 +44,3 @@ To guarantee rapid First Contentful Paint (FCP) and zero blocking on mobile (320
 2. **CDEK Points Catalog (`js/data/cdek-popular.js`, ~348 KB)**:
    - **Lazy-loaded on demand**: Only fetched when the user triggers the checkout process (`openCheckout` or `openQuickBuy`) or opens the PVZ selector.
    - Implemented via `window.geekNookCdekPicker.preload()`.
-
----
-
-## Legacy Reference Modules
-
-The following files in `js/modules/` are unbundled reference artifacts from an earlier modularization experiment:
-- `core.js`
-- `cart.js`
-- `catalog-ui.js`
-- `engineering-lab.js`
-- `three-studio.js`
-- `tools.js`
-
-> **Note for Contributors**: Active UI and business logic modifications should be made directly to `js/modern-app.js` (and `js/modules/analytics.js`, `js/modules/cdek-picker.js`, `js/modules/tilda-adapter.js` for their respective domains).

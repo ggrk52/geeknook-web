@@ -407,5 +407,238 @@
     }
   }
 
+  // --- JOURNAL ARTICLE CONVERSION FLOATING CTA ---
+  function initJournalFloatingCta() {
+    const isJournalArticle = window.location.pathname.includes('/journal/') || (window.location.pathname.endsWith('journal.html') && window.location.search.includes('article='));
+    if (!isJournalArticle) return;
+    if (sessionStorage.getItem('geeknook_journal_cta_closed') === '1') return;
+
+    let barEl = null;
+    let isBarVisible = false;
+    let ticking = false;
+
+    function createBar() {
+      if (document.getElementById('geeknookJournalFloatingCta')) return;
+
+      const style = document.createElement('style');
+      style.textContent = `
+        .gn-journal-cta-bar {
+          position: fixed;
+          bottom: 24px;
+          left: 50%;
+          transform: translate(-50%, 150%);
+          width: calc(100% - 32px);
+          max-width: 640px;
+          background: rgba(18, 22, 29, 0.95);
+          backdrop-filter: blur(16px);
+          -webkit-backdrop-filter: blur(16px);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 14px;
+          padding: 10px 14px;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(43, 112, 240, 0.15);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          z-index: 9999;
+          transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.35s ease;
+          opacity: 0;
+          pointer-events: none;
+          box-sizing: border-box;
+          font-family: 'Onest', -apple-system, sans-serif;
+        }
+        .gn-journal-cta-bar.active {
+          transform: translate(-50%, 0);
+          opacity: 1;
+          pointer-events: auto;
+        }
+        .gn-journal-cta-left {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          min-width: 0;
+          flex: 1;
+        }
+        .gn-journal-cta-thumb {
+          width: 44px;
+          height: 44px;
+          border-radius: 8px;
+          object-fit: cover;
+          background: #1a1f29;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          flex-shrink: 0;
+        }
+        .gn-journal-cta-info {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+          overflow: hidden;
+        }
+        .gn-journal-cta-title {
+          font-weight: 700;
+          font-size: 0.88rem;
+          color: #f8fafc;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          line-height: 1.25;
+        }
+        .gn-journal-cta-subtitle {
+          font-size: 0.78rem;
+          color: #94a3b8;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-top: 2px;
+        }
+        .gn-journal-cta-right {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-shrink: 0;
+        }
+        .gn-journal-cta-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: #2b70f0;
+          color: #ffffff !important;
+          padding: 8px 16px;
+          border-radius: 8px;
+          font-size: 0.84rem;
+          font-weight: 600;
+          text-decoration: none !important;
+          min-height: 44px;
+          min-width: 44px;
+          box-sizing: border-box;
+          transition: background 0.2s, transform 0.15s;
+          white-space: nowrap;
+        }
+        .gn-journal-cta-btn:hover {
+          background: #1b5ed6;
+          transform: translateY(-1px);
+        }
+        .gn-journal-cta-close {
+          background: transparent;
+          border: none;
+          color: #94a3b8;
+          width: 44px;
+          height: 44px;
+          min-width: 44px;
+          min-height: 44px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          font-size: 1.2rem;
+          line-height: 1;
+          border-radius: 8px;
+          transition: color 0.2s, background 0.2s;
+        }
+        .gn-journal-cta-close:hover {
+          color: #ffffff;
+          background: rgba(255, 255, 255, 0.08);
+        }
+        @media (max-width: 640px) {
+          .gn-journal-cta-bar {
+            bottom: 0;
+            left: 0;
+            transform: translateY(150%);
+            width: 100%;
+            max-width: 100vw;
+            border-radius: 16px 16px 0 0;
+            padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px));
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+          }
+          .gn-journal-cta-bar.active {
+            transform: translateY(0);
+          }
+          .gn-journal-cta-subtitle {
+            display: none;
+          }
+          .gn-journal-cta-btn {
+            padding: 8px 12px;
+            font-size: 0.8rem;
+          }
+        }
+      `;
+      document.head.appendChild(style);
+
+      barEl = document.createElement('div');
+      barEl.id = 'geeknookJournalFloatingCta';
+      barEl.className = 'gn-journal-cta-bar';
+      barEl.setAttribute('role', 'complementary');
+      barEl.setAttribute('aria-label', 'Быстрый переход к Focus Station');
+      barEl.innerHTML = `
+        <div class="gn-journal-cta-left">
+          <img src="../images/tild3763-3337-4662-b233-616531316364__3.jpg" alt="Focus Station" class="gn-journal-cta-thumb" />
+          <div class="gn-journal-cta-info">
+            <span class="gn-journal-cta-title">Настольная станция Focus Station</span>
+            <span class="gn-journal-cta-subtitle">Массив дуба и американского ореха • от 14 990 ₽</span>
+          </div>
+        </div>
+        <div class="gn-journal-cta-right">
+          <a href="https://geeknook.ru/#boards" class="gn-journal-cta-btn" id="gnJournalCtaBtn">
+            В каталог →
+          </a>
+          <button type="button" class="gn-journal-cta-close" id="gnJournalCtaClose" aria-label="Закрыть">✕</button>
+        </div>
+      `;
+      document.body.appendChild(barEl);
+
+      const btn = document.getElementById('gnJournalCtaBtn');
+      if (btn) {
+        btn.addEventListener('click', () => {
+          reachGoal('JOURNAL_CTA_CLICK', { article: window.location.pathname });
+        });
+      }
+
+      const closeBtn = document.getElementById('gnJournalCtaClose');
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+          barEl.classList.remove('active');
+          sessionStorage.setItem('geeknook_journal_cta_closed', '1');
+        });
+      }
+    }
+
+    function onScroll() {
+      if (sessionStorage.getItem('geeknook_journal_cta_closed') === '1') return;
+
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      if (docHeight <= 0) return;
+      const scrollPercent = window.scrollY / docHeight;
+
+      if (scrollPercent > 0.35 && !isBarVisible) {
+        if (!barEl) createBar();
+        if (barEl) {
+          barEl.classList.add('active');
+          isBarVisible = true;
+        }
+      } else if (scrollPercent <= 0.20 && isBarVisible && barEl) {
+        barEl.classList.remove('active');
+        isBarVisible = false;
+      }
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          onScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initJournalFloatingCta);
+  } else {
+    initJournalFloatingCta();
+  }
+
   console.log('[GeekNook Analytics] Initialized successfully. Ready for Yandex.Metrika & Ecommerce.');
 })();

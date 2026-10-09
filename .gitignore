@@ -16,17 +16,24 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Temporary files
+# Python & Build Cache
+__pycache__/
+*.pyc
+
+# Archives
+*.zip
+*.tar.gz
+
+# Temporary & Working Files
 *.tmp
 *.bak
 *.swp
 *.xlsx
-
-# Agent skills cache / local plugins
-.agents/skills/
 scratch/
+
+# Internal Business Documents & Analytics
+docs/internal/
 
 # Chat export tools & artifacts
 generate_chat_export.js
 GEEKNOOK_*
-

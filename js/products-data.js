@@ -1980,7 +1980,7 @@ E-mail:</p>`
   <p>3. <strong>Коды ТН ВЭД ЕАЭС:</strong> <code>4421 99 990 0</code> (подставки Focus Station, органайзеры), <code>7616 99 900 8</code> (подставки под наушники), <code>6307 90 980 0</code> / <code>4205 00 900 0</code> (настольные коврики).</p>
   <p>4. <strong>Коды ОКПД 2:</strong> <code>16.29.14.190</code>, <code>25.99.29.190</code>, <code>13.99.19.190</code>.</p>
   <div style="margin-top:16px;">
-    <a href="Информационное_письмо_о_сертификации_ООО_ГИК_НУК.docx" download class="btn-hero-primary" style="display:inline-flex;align-items:center;padding:10px 18px;font-size:0.9rem;text-decoration:none;border-radius:6px;background:#cba870;color:#000;font-weight:600;">
+    <a href="docs/Информационное_письмо_о_сертификации_ООО_ГИК_НУК.docx" download class="btn-hero-primary" style="display:inline-flex;align-items:center;padding:10px 18px;font-size:0.9rem;text-decoration:none;border-radius:6px;background:#cba870;color:#000;font-weight:600;">
       Скачать официальное информационное письмо (.docx)
     </a>
   </div>
