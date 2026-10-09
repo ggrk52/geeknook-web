@@ -57,12 +57,14 @@ def make_archive():
     ]
 
     include_dirs = [
+        "api",
         "css",
         "js",
         "images",
         "journal",
         "tilda-bundle",
         "docs",
+        "scripts",
     ]
 
     # Explicit exclude patterns

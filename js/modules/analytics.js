@@ -634,10 +634,292 @@
     }, { passive: true });
   }
 
+  // --- INTERACTIVE ERGONOMICS CALCULATOR FOR JOURNAL ARTICLES ---
+  function initJournalErgonomicsCalculator() {
+    const isJournalArticle = window.location.pathname.includes('/journal/') && !window.location.pathname.endsWith('/journal.html');
+    if (!isJournalArticle) return;
+
+    const articleBody = document.querySelector('.article-body');
+    if (!articleBody) return;
+
+    // Check if article is relevant for ergonomics or monitor setup
+    const pageText = (document.title + ' ' + (articleBody.textContent || '')).toLowerCase();
+    const isErgoTopic = pageText.includes('эргономик') || pageText.includes('монитор') || pageText.includes('подставк') || pageText.includes('осанк') || pageText.includes('стол') || pageText.includes('ше') || pageText.includes('спин');
+    if (!isErgoTopic) return;
+
+    // Insert after 2nd h2 or 3rd paragraph
+    const headings = articleBody.querySelectorAll('h2');
+    let targetSibling = headings.length >= 2 ? headings[1] : (headings[0] || null);
+    if (!targetSibling) {
+      const ps = articleBody.querySelectorAll('p');
+      targetSibling = ps.length >= 3 ? ps[2] : (ps[0] || null);
+    }
+    if (!targetSibling) return;
+
+    const widget = document.createElement('div');
+    widget.id = 'gnErgonomicsCalculatorWidget';
+    widget.className = 'gn-ergo-calc-box';
+    widget.innerHTML = `
+      <style>
+        .gn-ergo-calc-box {
+          margin: 36px 0;
+          padding: 24px;
+          background: linear-gradient(145deg, #131722, #0d1017);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 16px;
+          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+          box-sizing: border-box;
+          max-width: 100%;
+          color: #f1f5f9;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        }
+        .gn-ergo-calc-header {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 12px;
+        }
+        .gn-ergo-calc-badge {
+          background: rgba(43, 112, 240, 0.15);
+          border: 1px solid rgba(43, 112, 240, 0.3);
+          color: #60a5fa;
+          font-size: 0.75rem;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
+          padding: 3px 8px;
+          border-radius: 6px;
+        }
+        .gn-ergo-calc-title {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #ffffff;
+          line-height: 1.3;
+          margin: 0;
+        }
+        .gn-ergo-calc-desc {
+          font-size: 0.88rem;
+          color: #94a3b8;
+          margin-bottom: 20px;
+          line-height: 1.5;
+        }
+        .gn-ergo-slider-row {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          padding: 14px 18px;
+          margin-bottom: 20px;
+          flex-wrap: wrap;
+        }
+        .gn-ergo-slider-label {
+          font-weight: 600;
+          font-size: 0.95rem;
+          min-width: 120px;
+          color: #e2e8f0;
+        }
+        .gn-ergo-slider {
+          flex: 1;
+          min-width: 160px;
+          height: 8px;
+          border-radius: 4px;
+          background: #334155;
+          outline: none;
+          cursor: pointer;
+          accent-color: #2b70f0;
+        }
+        .gn-ergo-height-val {
+          font-family: 'JetBrains Mono', monospace, sans-serif;
+          font-size: 1.2rem;
+          font-weight: 700;
+          color: #60a5fa;
+          min-width: 75px;
+          text-align: right;
+        }
+        .gn-ergo-cards-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+          gap: 14px;
+          margin-bottom: 20px;
+        }
+        .gn-ergo-card {
+          background: rgba(255, 255, 255, 0.04);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 12px;
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+        }
+        .gn-ergo-card-title {
+          font-size: 0.78rem;
+          color: #94a3b8;
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          margin-bottom: 8px;
+          font-weight: 600;
+        }
+        .gn-ergo-card-value {
+          font-family: 'JetBrains Mono', monospace, sans-serif;
+          font-size: 1.35rem;
+          font-weight: 700;
+          color: #ffffff;
+          margin-bottom: 4px;
+        }
+        .gn-ergo-card-sub {
+          font-size: 0.78rem;
+          color: #64748b;
+          line-height: 1.4;
+        }
+        .gn-ergo-card.highlight {
+          border-color: rgba(43, 112, 240, 0.5);
+          background: rgba(43, 112, 240, 0.08);
+        }
+        .gn-ergo-card.highlight .gn-ergo-card-value {
+          color: #38bdf8;
+        }
+        .gn-ergo-cta-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 16px;
+          background: rgba(43, 112, 240, 0.1);
+          border: 1px solid rgba(43, 112, 240, 0.25);
+          border-radius: 12px;
+          padding: 14px 18px;
+          flex-wrap: wrap;
+        }
+        .gn-ergo-cta-text {
+          font-size: 0.88rem;
+          color: #e2e8f0;
+          line-height: 1.45;
+          flex: 1;
+          min-width: 240px;
+        }
+        .gn-ergo-cta-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: #2b70f0;
+          color: #ffffff !important;
+          font-size: 0.88rem;
+          font-weight: 600;
+          padding: 10px 18px;
+          border-radius: 8px;
+          text-decoration: none !important;
+          min-height: 44px;
+          box-sizing: border-box;
+          transition: all 0.2s;
+          white-space: nowrap;
+        }
+        .gn-ergo-cta-btn:hover {
+          background: #1b5ed6;
+          transform: translateY(-1px);
+        }
+        @media (max-width: 600px) {
+          .gn-ergo-calc-box {
+            padding: 16px;
+            margin: 28px 0;
+          }
+          .gn-ergo-slider-row {
+            padding: 12px;
+          }
+          .gn-ergo-cards-grid {
+            grid-template-columns: 1fr;
+          }
+          .gn-ergo-cta-btn {
+            width: 100%;
+          }
+        }
+      </style>
+      <div class="gn-ergo-calc-header">
+        <span class="gn-ergo-calc-badge">Инженерный калькулятор</span>
+      </div>
+      <h3 class="gn-ergo-calc-title">Калькулятор правильной высоты монитора и стола</h3>
+      <p class="gn-ergo-calc-desc">Укажите ваш рост, чтобы рассчитать анатомически верные параметры рабочей зоны по стандартам BIFMA/ГОСТ:</p>
+      
+      <div class="gn-ergo-slider-row">
+        <label for="gnErgoSlider" class="gn-ergo-slider-label">Ваш рост:</label>
+        <input type="range" id="gnErgoSlider" class="gn-ergo-slider" min="150" max="205" value="175" step="1" />
+        <span id="gnErgoHeightVal" class="gn-ergo-height-val">175 см</span>
+      </div>
+
+      <div class="gn-ergo-cards-grid">
+        <div class="gn-ergo-card">
+          <span class="gn-ergo-card-title">Высота стола</span>
+          <span class="gn-ergo-card-value" id="gnErgoDeskVal">74 см</span>
+          <span class="gn-ergo-card-sub">Плечи опущены, локти под углом 90°</span>
+        </div>
+        <div class="gn-ergo-card">
+          <span class="gn-ergo-card-title">Уровень глаз сидя</span>
+          <span class="gn-ergo-card-value" id="gnErgoEyeVal">118 см</span>
+          <span class="gn-ergo-card-sub">От пола в ровной посадке</span>
+        </div>
+        <div class="gn-ergo-card highlight">
+          <span class="gn-ergo-card-title">Подъем экрана</span>
+          <span class="gn-ergo-card-value" id="gnErgoLiftVal">10–12 см</span>
+          <span class="gn-ergo-card-sub">Focus Station (+11 см) идеально подходит</span>
+        </div>
+      </div>
+
+      <div class="gn-ergo-cta-row">
+        <div class="gn-ergo-cta-text">
+          Подставка <strong>Focus Station</strong> поднимает монитор ровно на 11 см, сохраняя естественный изгиб шеи и освобождая до 116 см пространства для клавиатуры и техники.
+        </div>
+        <a href="https://geeknook.ru/#boards" class="gn-ergo-cta-btn" id="gnErgoCtaBtn">
+          Подобрать Focus Station →
+        </a>
+      </div>
+    `;
+
+    targetSibling.parentNode.insertBefore(widget, targetSibling.nextSibling);
+
+    const slider = document.getElementById('gnErgoSlider');
+    const heightVal = document.getElementById('gnErgoHeightVal');
+    const deskVal = document.getElementById('gnErgoDeskVal');
+    const eyeVal = document.getElementById('gnErgoEyeVal');
+    const liftVal = document.getElementById('gnErgoLiftVal');
+    const ctaBtn = document.getElementById('gnErgoCtaBtn');
+
+    function updateErgoCalc(height) {
+      const h = parseInt(height, 10) || 175;
+      if (heightVal) heightVal.textContent = h + ' см';
+      
+      // Ergonomics formulas based on ergonomic standards
+      const deskHeight = Math.round(h * 0.422);
+      const eyeLevel = Math.round(h * 0.672);
+      const lift = Math.round(9 + (h - 150) * 0.07);
+
+      if (deskVal) deskVal.textContent = deskHeight + ' см';
+      if (eyeLevel && eyeVal) eyeVal.textContent = eyeLevel + ' см';
+      if (liftVal) liftVal.textContent = `${lift}–${lift + 2} см`;
+    }
+
+    if (slider) {
+      slider.addEventListener('input', (e) => {
+        updateErgoCalc(e.target.value);
+      });
+      slider.addEventListener('change', () => {
+        reachGoal('ERGONOMICS_CALC_USED', { height: slider.value, article: window.location.pathname });
+      });
+    }
+
+    if (ctaBtn) {
+      ctaBtn.addEventListener('click', () => {
+        reachGoal('JOURNAL_CALC_CTA_CLICK', { article: window.location.pathname });
+      });
+    }
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initJournalFloatingCta);
+    document.addEventListener('DOMContentLoaded', () => {
+      initJournalFloatingCta();
+      initJournalErgonomicsCalculator();
+    });
   } else {
     initJournalFloatingCta();
+    initJournalErgonomicsCalculator();
   }
 
   console.log('[GeekNook Analytics] Initialized successfully. Ready for Yandex.Metrika & Ecommerce.');

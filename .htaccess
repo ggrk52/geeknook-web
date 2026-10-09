@@ -29,9 +29,10 @@ AddDefaultCharset UTF-8
   RewriteCond %{REQUEST_URI} "(^|/)\.(?!well-known)"
   RewriteRule .* - [F,L]
 
-  # Block access to internal directories and confidential spreadsheets
+  # Block access to internal directories, confidential spreadsheets, and secret configs
   RewriteRule ^docs/internal(/.*)?$ - [F,L]
-  RewriteRule \.(xlsx|csv|log|bak|ps1|sh)$ - [F,L]
+  RewriteRule ^api/cdek-config(\.sample)?\.php$ - [F,L]
+  RewriteRule \.(xlsx|csv|log|bak|ps1|sh|env)$ - [F,L]
 </IfModule>
 
 # 4. GZIP / DEFLATE COMPRESSION

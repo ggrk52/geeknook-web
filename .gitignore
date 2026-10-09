@@ -37,3 +37,9 @@ docs/internal/
 # Chat export tools & artifacts
 generate_chat_export.js
 GEEKNOOK_*
+
+# API Credentials & Local Config
+api/cdek-config.php
+*cdek_token_cache*.json
+.env
+.env.*
