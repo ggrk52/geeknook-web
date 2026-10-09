@@ -678,11 +678,48 @@
     document.head.appendChild(script);
   }
 
-  // Initialize data from bundled popular points + lazy-load full catalog
-  function initData() {
+  let isPopularLoading = false;
+  const popularLoadCallbacks = [];
+
+  // Ensure popular CDEK catalog is loaded on demand
+  function ensurePopularDataLoaded(callback) {
     if (window.GEEKNOOK_CDEK_POPULAR && Array.isArray(window.GEEKNOOK_CDEK_POPULAR)) {
       state.allPoints = window.GEEKNOOK_CDEK_POPULAR;
+      if (callback) callback();
+      return;
     }
+    if (callback) popularLoadCallbacks.push(callback);
+    if (isPopularLoading) return;
+    isPopularLoading = true;
+
+    const script = document.createElement('script');
+    const cdnBase = window.GEEKNOOK_CDN_URL || '';
+    script.src = (cdnBase ? (cdnBase.endsWith('/') ? cdnBase : cdnBase + '/') : '') + 'js/data/cdek-popular.js';
+    script.async = true;
+    script.onload = () => {
+      isPopularLoading = false;
+      if (window.GEEKNOOK_CDEK_POPULAR && Array.isArray(window.GEEKNOOK_CDEK_POPULAR)) {
+        state.allPoints = window.GEEKNOOK_CDEK_POPULAR;
+      }
+      if (state.isOpen) {
+        renderPoints();
+        updateMapMarkers();
+      }
+      while (popularLoadCallbacks.length > 0) {
+        const cb = popularLoadCallbacks.shift();
+        try { cb(); } catch(e) {}
+      }
+    };
+    script.onerror = (err) => {
+      isPopularLoading = false;
+      console.warn('[GeekNook CDEK] Failed to load cdek-popular.js:', err);
+    };
+    document.body.appendChild(script);
+  }
+
+  // Initialize data from bundled popular points + lazy-load full catalog
+  function initData() {
+    ensurePopularDataLoaded();
 
     // Preload full database in idle time
     if (!state.loadedFullPoints && !state.loadingFullPoints) {
@@ -1148,17 +1185,15 @@
     }
   }
 
-  // Initialize on DOM ready
+  // Initialize styles & events on DOM ready (data loads on demand)
   ensureStylesInDOM();
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', () => {
       ensureStylesInDOM();
-      initData();
       setupEvents();
     });
   } else {
     ensureStylesInDOM();
-    initData();
     setupEvents();
   }
 
@@ -1166,6 +1201,7 @@
   window.geekNookCdekPicker = {
     open: openModal,
     close: closeModal,
+    preload: ensurePopularDataLoaded,
     setCity: setCity,
     selectPoint: selectPoint,
     confirmSelection: confirmSelection,

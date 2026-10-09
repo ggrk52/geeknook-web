@@ -62,6 +62,37 @@
     return base.endsWith('/') ? base + clean : base + '/' + clean;
   };
 
+  // --- LAZY THREE.JS LOADER ---
+  let isThreeLoading = false;
+  const threeLoadCallbacks = [];
+
+  function ensureThreeLoaded(callback) {
+    if (typeof THREE !== 'undefined') {
+      if (callback) callback();
+      return;
+    }
+    if (callback) threeLoadCallbacks.push(callback);
+    if (isThreeLoading) return;
+    isThreeLoading = true;
+
+    const script = document.createElement('script');
+    const cdnBase = (typeof window !== 'undefined' && window.GEEKNOOK_CDN_URL) || '';
+    script.src = (cdnBase ? (cdnBase.endsWith('/') ? cdnBase : cdnBase + '/') : '') + 'js/three.min.js';
+    script.async = true;
+    script.onload = () => {
+      isThreeLoading = false;
+      while (threeLoadCallbacks.length > 0) {
+        const cb = threeLoadCallbacks.shift();
+        try { cb(); } catch (e) { console.error('[GeekNook 3D] Callback error:', e); }
+      }
+    };
+    script.onerror = (err) => {
+      isThreeLoading = false;
+      console.warn('[GeekNook 3D] Failed to load three.min.js:', err);
+    };
+    document.head.appendChild(script);
+  }
+
   // --- DEFENSIVE MODAL & SCROLL-LOCK MANAGER ---
   const modalManager = {
     activeModals: new Set(),
@@ -75,10 +106,15 @@
       this.activeModals.add(modalId);
       this.syncOverflow();
 
-      if (modalId === 'configuratorModal' && typeof focusStation3DStudio !== 'undefined' && focusStation3DStudio.start) {
+      if (modalId === 'configuratorModal') {
         const wrap3d = document.getElementById('config3dViewport');
         if (wrap3d && wrap3d.style.display !== 'none') {
-          focusStation3DStudio.start();
+          ensureThreeLoaded(() => {
+            if (typeof focusStation3DStudio !== 'undefined' && focusStation3DStudio.start) {
+              if (!focusStation3DStudio.isInitialized) focusStation3DStudio.init();
+              focusStation3DStudio.start();
+            }
+          });
         }
       }
     },
@@ -1900,7 +1936,7 @@
       currentFinish: options.initialFinish || 'finish-oak',
       currentLength: options.initialLength || 85,
       lightingMode: 'studio',
-      clock: (typeof THREE !== 'undefined' && typeof THREE.Clock === 'function') ? new THREE.Clock() : { getDelta() { return 0.016; } },
+      clock: (typeof THREE !== 'undefined' && typeof THREE.Clock === 'function') ? new THREE.Clock() : { getDelta() { return 0.016; }, getElapsedTime() { return 0; } },
 
       start() {
         this.isRunning = true;
@@ -1924,6 +1960,9 @@
           return;
         }
         if (typeof THREE === 'undefined') return;
+        if (typeof THREE.Clock === 'function') {
+          this.clock = new THREE.Clock();
+        }
 
         const canvas = document.getElementById(options.canvasId);
         const container = document.getElementById(options.containerId);
@@ -2426,14 +2465,37 @@
   });
 
   const initProduction3DStudio = () => {
-    if (typeof THREE !== 'undefined' && !production3DStudio.isInitialized) {
-      production3DStudio.init();
+    const container = document.getElementById('prod3dViewport');
+    if (!container) return;
+
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries, obs) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            obs.disconnect();
+            ensureThreeLoaded(() => {
+              if (!production3DStudio.isInitialized) {
+                production3DStudio.init();
+              }
+            });
+          }
+        });
+      }, { rootMargin: '600px 0px' });
+      observer.observe(container);
+    } else {
+      ensureThreeLoaded(() => {
+        if (!production3DStudio.isInitialized) {
+          production3DStudio.init();
+        }
+      });
     }
   };
 
   const setProduction3dFinish = (finishId) => {
     soundEngine.play('click');
-    production3DStudio.setFinish(finishId);
+    ensureThreeLoaded(() => {
+      production3DStudio.setFinish(finishId);
+    });
     document.querySelectorAll('#prod3dFinishPills .prod-pill').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-finish') === finishId);
     });
@@ -2441,7 +2503,9 @@
 
   const setProduction3dLength = (len) => {
     soundEngine.play('click');
-    production3DStudio.setLength(len);
+    ensureThreeLoaded(() => {
+      production3DStudio.setLength(len);
+    });
     document.querySelectorAll('#prod3dLengthPills .prod-pill').forEach(btn => {
       btn.classList.toggle('active', Number(btn.getAttribute('data-len')) === Number(len));
     });
@@ -2449,7 +2513,9 @@
 
   const setProduction3dLighting = (mode) => {
     soundEngine.play('click');
-    production3DStudio.setLighting(mode);
+    ensureThreeLoaded(() => {
+      production3DStudio.setLighting(mode);
+    });
     document.querySelectorAll('#prod3dLightPills .prod-pill').forEach(btn => {
       btn.classList.toggle('active', btn.getAttribute('data-light') === mode);
     });
@@ -2457,37 +2523,43 @@
 
   const toggleProduction3dExplode = () => {
     soundEngine.play('click');
-    const isExp = production3DStudio.toggleExplode();
-    const btn = document.getElementById('btnProd3dExplode');
-    if (btn) btn.classList.toggle('active', isExp);
-    showToast(isExp ? '3D Взрыв-схема: компоненты разнесены' : '3D Сборка Focus Station');
+    ensureThreeLoaded(() => {
+      const isExp = production3DStudio.toggleExplode();
+      const btn = document.getElementById('btnProd3dExplode');
+      if (btn) btn.classList.toggle('active', isExp);
+      showToast(isExp ? '3D Взрыв-схема: компоненты разнесены' : '3D Сборка Focus Station');
+    });
   };
 
   const toggleProduction3dAutoRotate = () => {
     soundEngine.play('click');
-    const rotating = production3DStudio.toggleAutoRotate();
-    const btn = document.getElementById('btnProd3dAutoRotate');
-    if (btn) btn.classList.toggle('active', rotating);
-    showToast(rotating ? 'Авто-вращение 360° включено' : 'Авто-вращение остановлено');
+    ensureThreeLoaded(() => {
+      const rotating = production3DStudio.toggleAutoRotate();
+      const btn = document.getElementById('btnProd3dAutoRotate');
+      if (btn) btn.classList.toggle('active', rotating);
+      showToast(rotating ? 'Авто-вращение 360° включено' : 'Авто-вращение остановлено');
+    });
   };
 
   const toggleProduction3dAddon = (addonId) => {
     soundEngine.play('click');
-    if (!production3DStudio.modulesGroup) return;
-    const item = production3DStudio.modulesGroup.getObjectByName(addonId);
-    let isVisible = false;
-    if (item) {
-      item.visible = !item.visible;
-      isVisible = item.visible;
-    }
-    const btn = document.querySelector(`#prod3dAddonPills [data-addon="${addonId}"]`);
-    if (btn) btn.classList.toggle('active', isVisible);
+    ensureThreeLoaded(() => {
+      if (!production3DStudio.modulesGroup) return;
+      const item = production3DStudio.modulesGroup.getObjectByName(addonId);
+      let isVisible = false;
+      if (item) {
+        item.visible = !item.visible;
+        isVisible = item.visible;
+      }
+      const btn = document.querySelector(`#prod3dAddonPills [data-addon="${addonId}"]`);
+      if (btn) btn.classList.toggle('active', isVisible);
 
-    let label = 'Модуль';
-    if (addonId === 'addon-laptop-stand-open') label = 'Кронштейн ноутбука';
-    else if (addonId === 'addon-headphone-stand') label = 'Стойка наушников';
-    else if (addonId === 'addon-phone-dock') label = 'Док-станция для телефона';
-    showToast(isVisible ? `✨ ${label} установлен на Т-паз 45°` : `${label} снят с подставки`);
+      let label = 'Модуль';
+      if (addonId === 'addon-laptop-stand-open') label = 'Кронштейн ноутбука';
+      else if (addonId === 'addon-headphone-stand') label = 'Стойка наушников';
+      else if (addonId === 'addon-phone-dock') label = 'Док-станция для телефона';
+      showToast(isVisible ? `✨ ${label} установлен на Т-паз 45°` : `${label} снят с подставки`);
+    });
   };
 
   const setConfigViewMode = (mode) => {
@@ -2503,21 +2575,25 @@
       if (wrap2d) wrap2d.style.display = 'none';
       if (wrap3d) {
         wrap3d.style.display = 'block';
-        focusStation3DStudio.init();
-        focusStation3DStudio.start();
+        ensureThreeLoaded(() => {
+          focusStation3DStudio.init();
+          focusStation3DStudio.start();
+        });
       }
     } else {
       btn3d?.classList.remove('active');
       btn2d?.classList.add('active');
       if (wrap3d) wrap3d.style.display = 'none';
       if (wrap2d) wrap2d.style.display = 'block';
-      focusStation3DStudio.stop();
+      if (typeof focusStation3DStudio !== 'undefined' && focusStation3DStudio.stop) {
+        focusStation3DStudio.stop();
+      }
     }
   };
 
-  const toggle3dExplode = () => focusStation3DStudio.toggleExplode();
-  const set3dLighting = (mode) => focusStation3DStudio.setLighting(mode);
-  const update3dModulePosition = (val) => focusStation3DStudio.setModulePosition(val);
+  const toggle3dExplode = () => ensureThreeLoaded(() => focusStation3DStudio.toggleExplode());
+  const set3dLighting = (mode) => ensureThreeLoaded(() => focusStation3DStudio.setLighting(mode));
+  const update3dModulePosition = (val) => ensureThreeLoaded(() => focusStation3DStudio.setModulePosition(val));
 
   const addConfiguredBundleToCart = () => {
     const finish = GEEKNOOK_DATA.configurator.finishes.find(f => f.id === state.config.finishId);
@@ -2580,6 +2656,9 @@
 
   // --- CHECKOUT PROCESS ---
   const openCheckout = () => {
+    if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.preload === 'function') {
+      window.geekNookCdekPicker.preload();
+    }
     if (state.cart.length === 0) {
       showToast('Корзина пуста', 'error');
       return;
@@ -2939,6 +3018,9 @@
 
   // --- 1-CLICK QUICK BUY ---
   const openQuickBuy = (productId) => {
+    if (window.geekNookCdekPicker && typeof window.geekNookCdekPicker.preload === 'function') {
+      window.geekNookCdekPicker.preload();
+    }
     const product = GEEKNOOK_DATA?.allProducts?.find(p => p.id === productId);
     if (!product) return;
     state.quickBuyProduct = product;
@@ -6596,6 +6678,20 @@
     initCableSimulator();
     initFeaLab();
     initProduction3DStudio();
+    if ('IntersectionObserver' in window) {
+      const configSec = document.getElementById('configurator');
+      if (configSec) {
+        const obs = new IntersectionObserver((entries, o) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              o.disconnect();
+              ensureThreeLoaded();
+            }
+          });
+        }, { rootMargin: '600px 0px' });
+        obs.observe(configSec);
+      }
+    }
     parseUrlConfig();
 
     // 4. Global ESC key listener to close all active modals & drawers seamlessly
@@ -6740,6 +6836,7 @@
     focusStation3DStudio,
     production3DStudio,
     initProduction3DStudio,
+    ensureThreeLoaded,
     setProduction3dFinish,
     setProduction3dLength,
     setProduction3dLighting,
