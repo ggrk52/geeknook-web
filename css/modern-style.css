@@ -6853,6 +6853,9 @@ textarea:focus-visible {
   display: block;
   outline: none;
   cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .config-3d-canvas:active {
@@ -7193,6 +7196,9 @@ textarea:focus-visible {
   display: block;
   outline: none;
   cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .prod-3d-canvas:active {
