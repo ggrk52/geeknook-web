@@ -466,33 +466,6 @@ const GEEKNOOK_DATA = {
       images: [
         "images/tild3931-6666-4933-a466-373836393933__1.jpg"
       ]
-    },
-    {
-      id: "gift-voucher",
-      title: "Подарочный сертификат GeekNook",
-      subtitle: "Электронный или премиальный пластиковый сертификат",
-      category: "accessories",
-      price: 5000,
-      oldPrice: 5000,
-      sku: "GN-GIFT-CARD",
-      part: "GN-GIFT-2026",
-      barcode: "460042888999",
-      rating: 5.0,
-      reviewsCount: 56,
-      materials: "Пластиковая карта с тиснением золотой фольгой / Электронный PDF с QR-кодом",
-      specs: {
-        "Номиналы": "5 000, 10 000, 15 000, 25 000, 35 000 ₽ или произвольный",
-        "Срок действия": "12 месяцев с момента приобретения",
-        "Формат": "Мгновенно на email / в мессенджер или карта в крафтовом конверте",
-        "Применимость": "На любые доски Focus Station, комплекты и аксессуары",
-        "Персонализация": "Имя получателя, личное поздравление, выбор дизайна"
-      },
-      shortDescr: "Идеальный подарок для инженера, программиста, дизайнера и ценителя премиальных рабочих мест.",
-      fullDescr: "Подарочный сертификат GeekNook позволяет одариваемому самостоятельно собрать идеальный сетап Focus Station или выбрать нужные аксессуары T-Track. Выпускается в 3 дизайнерских темах (Obsidian Black, Imperial Gold, Titanium Silver) с персональным кодом активации и поздравительным сообщением.",
-      images: [
-        "images/tild3763-3337-4662-b233-616531316364__3.jpg"
-      ],
-      isGiftVoucher: true
     }
   ],
 
@@ -908,16 +881,6 @@ const GEEKNOOK_DATA = {
     ],
     brandingPricePerPlace: 600,
     matBrandingPricePerPlace: 400
-  },
-
-  // --- ПОДАРОЧНЫЕ СЕРТИФИКАТЫ ---
-  giftCards: {
-    nominals: [5000, 10000, 15000, 25000, 35000],
-    themes: [
-      { id: "obsidian", name: "Obsidian Black", subtitle: "Карбоновый чёрный & золото", bg: "linear-gradient(135deg, #09090b 0%, #18181b 50%, #27272a 100%)", textColor: "#f4f4f5", accentColor: "#d4af37" },
-      { id: "gold", name: "Imperial Gold", subtitle: "Матовое благородное золото", bg: "linear-gradient(135deg, #b45309 0%, #f59e0b 50%, #d97706 100%)", textColor: "#1c1917", accentColor: "#78350f" },
-      { id: "titanium", name: "Titanium Silver", subtitle: "Холодный шлифованный титан", bg: "linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)", textColor: "#f8fafc", accentColor: "#38bdf8" }
-    ]
   },
 
   // --- ПОЛНЫЕ СТАТЬИ ЖУРНАЛА ДЛЯ ПОП-АПА ---

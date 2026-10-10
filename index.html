@@ -203,7 +203,6 @@
           <li><a href="#accessories">Аксессуары</a></li>
           <li><a href="#mats">Коврики</a></li>
           <li><a href="#bundles">Комплекты</a></li>
-          <li><a href="javascript:void(0)" onclick="window.geekNookApp.openGiftCardModal()">Сертификаты</a></li>
           <li><a href="javascript:void(0)" onclick="window.geekNookApp.openCadModal()">B2B Офис</a></li>
           <li><a href="#advantages">Преимущества</a></li>
           <li><a href="#production">Производство</a></li>
@@ -1345,10 +1344,6 @@
             <span class="mobile-nav-title" style="color:var(--primary);">B2B Конфигуратор & Опт (-25%)</span>
             <span class="mobile-nav-sub">Оснащение офисов, расчет КП и CAD-модели</span>
           </a>
-          <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openGiftCardModal();" style="border: 1px dashed rgba(212,175,55,0.4); margin: 2px 0;">
-            <span class="mobile-nav-title" style="color:#d4af37;">Подарочные сертификаты</span>
-            <span class="mobile-nav-sub">Электронные и пластиковые карты от 5 000 ₽</span>
-          </a>
           <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openQuiz();">
             <span class="mobile-nav-title">Подбор сетапа (Квиз)</span>
             <span class="mobile-nav-sub">3 быстрых вопроса под ваши мониторы</span>
@@ -2428,151 +2423,6 @@
       <!-- Printable A4 Paper Document -->
       <div class="b2b-kp-sheet" id="b2bKpSheet">
         <!-- Rendered dynamically via renderB2bKpSheet() -->
-      </div>
-    </div>
-  </div>
-
-  <!-- Gift Voucher Studio Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="giftCardModal" onclick="if(event.target===this) window.geekNookApp.closeModal('giftCardModal')">
-    <div class="modal-card gift-card-modal-card">
-      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('giftCardModal')" aria-label="Закрыть">✕</button>
-      <div class="cad-header">
-        <span class="section-kicker kicker-dark" style="color:#d4af37;">GIFT EXPERIENCE STUDIO</span>
-        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Подарочный сертификат GeekNook</h2>
-        <p class="modal-subtitle">Премиальный электронный сертификат или пластиковая карта в черном матовом конверте с сургучной печатью.</p>
-      </div>
-
-      <div class="gift-card-layout">
-        <!-- Visual Card Column -->
-        <div class="gift-card-preview-column">
-          <div class="gift-voucher-card theme-obsidian" id="giftVoucherCardPreview">
-            <div class="voucher-bg-pattern"></div>
-            
-            <div class="voucher-top-bar">
-              <span class="voucher-brand">GEEK NOOK</span>
-              <div class="voucher-hologram" title="Защитная голограмма подлинности GEEK NOOK">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
-              </div>
-            </div>
-
-            <div class="voucher-center-area">
-              <div class="voucher-nominal-label">Подарочный номинал</div>
-              <div class="voucher-nominal" id="voucherCardNominal">15 000 ₽</div>
-              <div class="voucher-recipient-display" id="voucherCardRecipient">Для: Константина</div>
-            </div>
-
-            <div class="voucher-bottom-bar">
-              <div>
-                <div class="voucher-code" id="voucherCardCode">GN-GIFT-2026-8492</div>
-                <div class="voucher-meta" id="voucherCardGiver">От: Команды GeekNook</div>
-              </div>
-              <div class="voucher-chip-graphic"></div>
-            </div>
-          </div>
-
-          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;color:var(--text-muted);padding:0 4px;">
-            <span>✓ Бессрочная активация (12 мес.)</span>
-            <span>✓ На весь каталог GeekNook</span>
-          </div>
-
-          <div style="display:flex;gap:10px;">
-            <button type="button" class="btn-secondary" onclick="window.geekNookApp.downloadGiftCardPdf()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;font-size:0.8125rem;">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              <span>Печать / Макет карты</span>
-            </button>
-            <button type="button" class="btn-secondary" onclick="window.geekNookApp.copyGiftCardLink()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;font-size:0.8125rem;">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-              <span>Поделиться</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Customizer Controls Column -->
-        <div class="gift-controls-col">
-          <!-- Step 1: Nominal -->
-          <div class="gift-step-group">
-            <div class="gift-step-title">1. Выберите номинал сертификата:</div>
-            <div class="gift-nominals-grid" id="giftNominalsGrid">
-              <button type="button" class="gift-nominal-btn" data-nominal="5000" onclick="window.geekNookApp.selectGiftNominal(5000)">5 000 ₽</button>
-              <button type="button" class="gift-nominal-btn" data-nominal="10000" onclick="window.geekNookApp.selectGiftNominal(10000)">10 000 ₽</button>
-              <button type="button" class="gift-nominal-btn active" data-nominal="15000" onclick="window.geekNookApp.selectGiftNominal(15000)">15 000 ₽</button>
-              <button type="button" class="gift-nominal-btn" data-nominal="25000" onclick="window.geekNookApp.selectGiftNominal(25000)">25 000 ₽</button>
-              <button type="button" class="gift-nominal-btn" data-nominal="35000" onclick="window.geekNookApp.selectGiftNominal(35000)">35 000 ₽</button>
-              <button type="button" class="gift-nominal-btn" data-nominal="custom" onclick="window.geekNookApp.selectGiftNominal('custom')">Другая сумма</button>
-            </div>
-            
-            <div id="giftCustomNominalWrap" style="display:none;margin-top:6px;">
-              <input type="number" id="giftCustomNominalInput" class="gift-input" min="3000" max="250000" step="500" placeholder="Введите сумму (от 3 000 до 250 000 ₽)" oninput="window.geekNookApp.updateCustomNominal(this.value)" aria-label="Своя сумма номинала" />
-            </div>
-          </div>
-
-          <!-- Step 2: Theme -->
-          <div class="gift-step-group">
-            <div class="gift-step-title">2. Дизайн и тема карты:</div>
-            <div class="gift-themes-row" id="giftThemesRow">
-              <button type="button" class="gift-theme-btn active" data-theme="obsidian" onclick="window.geekNookApp.selectGiftTheme('obsidian')">
-                <span class="engraving-swatch-dot" style="background:#09090b;border-color:#d4af37;"></span>
-                <span>Obsidian</span>
-              </button>
-              <button type="button" class="gift-theme-btn" data-theme="gold" onclick="window.geekNookApp.selectGiftTheme('gold')">
-                <span class="engraving-swatch-dot" style="background:#f59e0b;border-color:#78350f;"></span>
-                <span>Imperial Gold</span>
-              </button>
-              <button type="button" class="gift-theme-btn" data-theme="titanium" onclick="window.geekNookApp.selectGiftTheme('titanium')">
-                <span class="engraving-swatch-dot" style="background:#334155;border-color:#38bdf8;"></span>
-                <span>Titanium</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Step 3: Recipient & Personalization -->
-          <div class="gift-step-group">
-            <div class="gift-step-title">3. Персонализация:</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-              <div>
-                <input type="text" id="giftRecipientInput" class="gift-input" placeholder="Имя получателя (Кому)" maxlength="28" oninput="window.geekNookApp.updateGiftRecipient(this.value)" aria-label="Имя получателя сертификата" />
-              </div>
-              <div>
-                <input type="text" id="giftGiverInput" class="gift-input" placeholder="От кого (Ваше имя)" maxlength="28" oninput="window.geekNookApp.updateGiftGiver(this.value)" aria-label="Имя дарителя сертификата" />
-              </div>
-            </div>
-            <textarea id="giftMessageInput" class="gift-input" rows="2" maxlength="120" placeholder="Теплое поздравление или пожелание (необязательно, до 120 симв.)" oninput="window.geekNookApp.updateGiftMessage(this.value)" aria-label="Поздравительное пожелание" style="min-height:60px;resize:vertical;margin-top:6px;"></textarea>
-          </div>
-
-          <!-- Step 4: Delivery Format -->
-          <div class="gift-step-group">
-            <div class="gift-step-title">4. Формат получения:</div>
-            <div class="gift-delivery-options">
-              <label class="gift-delivery-option" for="giftFormatDigital">
-                <input type="radio" name="giftFormat" id="giftFormatDigital" value="digital" checked onchange="window.geekNookApp.selectGiftFormat('digital')" />
-                <div class="gift-delivery-label">
-                  <strong>Электронный сертификат (Мгновенно)</strong>
-                  <span>PDF с персональным QR-кодом отправляется на email и в Telegram</span>
-                </div>
-              </label>
-
-              <label class="gift-delivery-option" for="giftFormatPhysical">
-                <input type="radio" name="giftFormat" id="giftFormatPhysical" value="physical" onchange="window.geekNookApp.selectGiftFormat('physical')" />
-                <div class="gift-delivery-label">
-                  <strong>Физическая пластиковая карта в подарочном конверте (+490 ₽)</strong>
-                  <span>Премиальный матовый картон, сургучная печать, доставка СДЭК до двери</span>
-                </div>
-              </label>
-            </div>
-          </div>
-
-          <!-- Total & CTA -->
-          <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px;">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
-              <span style="font-size:0.875rem;color:var(--text-muted);">Стоимость сертификата:</span>
-              <span style="font-size:1.45rem;font-weight:900;color:var(--text-main);" id="giftModalTotalPrice">15 000 ₽</span>
-            </div>
-
-            <button type="button" class="btn-checkout" onclick="window.geekNookApp.addGiftCardToCart()" style="width:100%;font-size:1rem;padding:14px;">
-              Добавить сертификат в корзину
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   </div>

@@ -1409,25 +1409,25 @@
     return `
       <div class="product-item-card reveal-card" style="--stagger-delay: ${(idx % 4) * 0.08}s;" data-product-id="${p.id}">
         <div class="card-spotlight"></div>
-        <div class="product-img-box" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.openQuickView('${p.id}')`}">
+        <div class="product-img-box" onclick="window.geekNookApp.openQuickView('${p.id}')">
           ${badgeHtml}
           ${xrayBtnHtml}
           <img class="card-img-main" src="${mainImg}" alt="${p.title}" loading="lazy" decoding="async" />
           ${hasHoverImg ? `<img class="card-img-hover" src="${hoverImg}" alt="${p.title}" loading="lazy" decoding="async" />` : ''}
           ${xrayBlueprintHtml}
           <div class="card-floating-glass-bar" onclick="event.stopPropagation();">
-            <button class="glass-action-btn quick-view-btn" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.openQuickView('${p.id}')`}" title="${p.isGiftVoucher ? 'Настроить сертификат' : 'Быстрый просмотр'}" aria-label="${p.isGiftVoucher ? 'Настроить сертификат' : `Быстрый просмотр ${escapeHTML(p.title)}`}">
+            <button class="glass-action-btn quick-view-btn" onclick="window.geekNookApp.openQuickView('${p.id}')" title="Быстрый просмотр" aria-label="Быстрый просмотр ${escapeHTML(p.title)}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-              <span>${p.isGiftVoucher ? 'Карта' : 'Обзор'}</span>
+              <span>Обзор</span>
             </button>
-            <button class="glass-action-btn quick-add-btn" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.quickAddWithFeedback(this, '${p.id}')`};" title="${p.isGiftVoucher ? 'Настроить сертификат' : 'Добавить в корзину'}" aria-label="${p.isGiftVoucher ? 'Настроить сертификат' : `Добавить «${escapeHTML(p.title)}» в корзину`}">
+            <button class="glass-action-btn quick-add-btn" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}');" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              <span>${p.isGiftVoucher ? 'Выбрать' : 'В корзину'}</span>
+              <span>В корзину</span>
             </button>
           </div>
         </div>
         <div class="card-meta-tag">${materialTag}${p.options && p.options.lengths ? ' • 2 размера: 85 и 116 см' : ''}</div>
-        <h4 class="product-card-title" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.openQuickView('${p.id}')`}">${escapeHTML(p.title)}</h4>
+        <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('${p.id}')">${escapeHTML(p.title)}</h4>
         <div class="product-card-sub">${p.subtitle || p.shortDescr || ''}</div>
         <div class="product-card-price">
           <div class="price-primary-row">
@@ -1440,11 +1440,11 @@
           </div>
         </div>
         <div class="card-actions-row">
-          <button class="btn-card-details" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.openQuickView('${p.id}')`}">
-            <span>${p.isGiftVoucher ? 'Настроить карту' : 'Подробнее'}</span>
+          <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('${p.id}')">
+            <span>Подробнее</span>
           </button>
-          <button class="btn-card-quick-add" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.quickAddWithFeedback(this, '${p.id}')`}; event.stopPropagation();" title="${p.isGiftVoucher ? 'Настроить сертификат' : 'Добавить в корзину'}" aria-label="${p.isGiftVoucher ? 'Настроить сертификат' : `Добавить «${escapeHTML(p.title)}» в корзину`}">
-            ${p.isGiftVoucher ? '<span style="font-size:1.1rem;line-height:1;">🎁</span>' : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`}
+          <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           </button>
         </div>
       </div>
@@ -7542,166 +7542,6 @@
     showToast(`Запрос для «${escapeHTML(company)}» принят! Мы свяжемся с вами в течение 15 минут.`, 'success');
   };
 
-  // --- GIFT VOUCHER ENGINE (FEATURE 6) ---
-  const giftCardState = {
-    nominal: 15000,
-    customNominal: null,
-    theme: 'obsidian',
-    recipientName: '',
-    giverName: '',
-    message: '',
-    deliveryFormat: 'digital',
-    cardCode: 'GN-GIFT-2026-8492'
-  };
-
-  const openGiftCardModal = () => {
-    if (!giftCardState.cardCode || giftCardState.cardCode === 'GN-GIFT-2026-8492') {
-      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
-      giftCardState.cardCode = `GN-GIFT-2026-${randomSuffix}`;
-    }
-    renderGiftCardUI();
-    modalManager.open('giftCardModal');
-    soundEngine.play('click');
-  };
-
-  const selectGiftNominal = (nom) => {
-    soundEngine.play('click');
-    const customWrap = document.getElementById('giftCustomNominalWrap');
-    if (nom === 'custom') {
-      giftCardState.nominal = giftCardState.customNominal || 15000;
-      if (customWrap) customWrap.style.display = 'block';
-    } else {
-      giftCardState.customNominal = null;
-      giftCardState.nominal = Number(nom);
-      if (customWrap) customWrap.style.display = 'none';
-    }
-    renderGiftCardUI();
-  };
-
-  const updateCustomNominal = (val) => {
-    const num = parseInt(val, 10);
-    if (!isNaN(num) && num >= 1000) {
-      giftCardState.customNominal = num;
-      giftCardState.nominal = num;
-      renderGiftCardUI();
-    }
-  };
-
-  const selectGiftTheme = (themeId) => {
-    giftCardState.theme = themeId;
-    soundEngine.play('click');
-    renderGiftCardUI();
-  };
-
-  const updateGiftRecipient = (val) => {
-    giftCardState.recipientName = val.trim();
-    renderGiftCardUI();
-  };
-
-  const updateGiftGiver = (val) => {
-    giftCardState.giverName = val.trim();
-    renderGiftCardUI();
-  };
-
-  const updateGiftMessage = (val) => {
-    giftCardState.message = val.trim();
-  };
-
-  const selectGiftFormat = (format) => {
-    giftCardState.deliveryFormat = format;
-    soundEngine.play('toggle');
-    renderGiftCardUI();
-  };
-
-  const renderGiftCardUI = () => {
-    const previewCard = document.getElementById('giftVoucherCardPreview');
-    const nominalEl = document.getElementById('voucherCardNominal');
-    const recipientEl = document.getElementById('voucherCardRecipient');
-    const giverEl = document.getElementById('voucherCardGiver');
-    const codeEl = document.getElementById('voucherCardCode');
-    const totalEl = document.getElementById('giftModalTotalPrice');
-
-    if (previewCard) {
-      previewCard.className = `gift-voucher-card theme-${giftCardState.theme}`;
-    }
-
-    const effectiveNominal = giftCardState.nominal;
-    const isPhysical = giftCardState.deliveryFormat === 'physical';
-    const totalCost = effectiveNominal + (isPhysical ? 490 : 0);
-
-    if (nominalEl) nominalEl.textContent = formatPrice(effectiveNominal);
-    if (totalEl) totalEl.textContent = formatPrice(totalCost);
-
-    if (recipientEl) {
-      recipientEl.textContent = giftCardState.recipientName ? `Для: ${giftCardState.recipientName}` : 'Для: Имя получателя';
-    }
-    if (giverEl) {
-      giverEl.textContent = giftCardState.giverName ? `От: ${giftCardState.giverName}` : 'От: Команды GeekNook';
-    }
-    if (codeEl) {
-      codeEl.textContent = giftCardState.cardCode;
-    }
-
-    document.querySelectorAll('#giftNominalsGrid .gift-nominal-btn').forEach(btn => {
-      const dataNom = btn.getAttribute('data-nominal');
-      if (dataNom === 'custom') {
-        btn.classList.toggle('active', Boolean(giftCardState.customNominal));
-      } else {
-        btn.classList.toggle('active', Number(dataNom) === effectiveNominal && !giftCardState.customNominal);
-      }
-    });
-
-    document.querySelectorAll('#giftThemesRow .gift-theme-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-theme') === giftCardState.theme);
-    });
-  };
-
-  const addGiftCardToCart = () => {
-    soundEngine.play('cart');
-    const isPhysical = giftCardState.deliveryFormat === 'physical';
-    const totalCost = giftCardState.nominal + (isPhysical ? 490 : 0);
-    const themeTitles = {
-      obsidian: 'Obsidian Black',
-      gold: 'Imperial Gold',
-      titanium: 'Titanium Silver'
-    };
-
-    const cartKey = `gift_card_${giftCardState.nominal}_${Date.now()}`;
-    const recipient = giftCardState.recipientName || 'Подарок';
-    const giver = giftCardState.giverName ? ` от ${giftCardState.giverName}` : '';
-    const physicalNote = isPhysical ? ' + Физическая карта в конверте с сургучом' : ' (Электронный сертификат с QR)';
-
-    state.cart.push({
-      cartKey,
-      id: 'gift-voucher',
-      title: `Подарочный сертификат GeekNook (${formatPrice(giftCardState.nominal)})`,
-      option: `Тема: ${themeTitles[giftCardState.theme] || 'Obsidian'}, Для: ${recipient}${giver}, Код: ${giftCardState.cardCode}${physicalNote}`,
-      price: totalCost,
-      image: 'images/tild3763-3337-4662-b233-616531316364__3.jpg',
-      quantity: 1
-    });
-
-    saveCart();
-    triggerBadgeBounce();
-    closeModal('giftCardModal');
-    showToast(`Подарочный сертификат на ${formatPrice(giftCardState.nominal)} добавлен в корзину!`, 'success');
-
-    const openDrawer = (window.geekNookApp && window.geekNookApp.openCartDrawer) ? window.geekNookApp.openCartDrawer : openCartDrawer;
-    openDrawer();
-  };
-
-  const downloadGiftCardPdf = () => {
-    soundEngine.play('click');
-    window.print();
-  };
-
-  const copyGiftCardLink = () => {
-    soundEngine.play('click');
-    const text = `Подарочный сертификат GeekNook на ${formatPrice(giftCardState.nominal)}! Код активации: ${giftCardState.cardCode}. Применим к любым товарам на https://geeknook.ru`;
-    copyToClipboard(text);
-    showToast('Код сертификата и детали скопированы!', 'success');
-  };
-
   // --- COMMAND PALETTE (Cmd+K / Ctrl+K) ---
   let cmdPaletteActiveIdx = 0;
   let cmdFilteredItems = [];
@@ -7797,15 +7637,6 @@
         badge: 'B2B -25%',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path></svg>',
         action: () => { closeCommandPalette(); openCadModal(); }
-      },
-      {
-        id: 'action-gift-voucher',
-        category: 'Подарки',
-        title: 'Подарочный сертификат GeekNook (5 000 – 35 000 ₽)',
-        sub: 'Электронный сертификат с QR или пластиковая карта в черном конверте',
-        badge: 'Сертификат',
-        icon: '<span style="font-size:14px;">🎁</span>',
-        action: () => { closeCommandPalette(); openGiftCardModal(); }
       },
       {
         id: 'action-cad',
@@ -8528,7 +8359,6 @@
     initFeaLab();
     initProduction3DStudio();
     renderB2bCalculatorUI();
-    renderGiftCardUI();
     if ('IntersectionObserver' in window) {
       const configSec = document.getElementById('configurator');
       if (configSec) {
@@ -8682,20 +8512,6 @@
     printB2bKp,
     copyB2bKpLink,
     handleB2bSubmit,
-    // Gift Voucher Engine
-    giftCardState,
-    openGiftCardModal,
-    selectGiftNominal,
-    updateCustomNominal,
-    selectGiftTheme,
-    updateGiftRecipient,
-    updateGiftGiver,
-    updateGiftMessage,
-    selectGiftFormat,
-    renderGiftCardUI,
-    addGiftCardToCart,
-    downloadGiftCardPdf,
-    copyGiftCardLink,
     // Hardcore Engineering Suite (Features 1-3 & Production 3D)
     calculateFeaPhysics,
     renderFeaCanvas,
