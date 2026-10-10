@@ -897,6 +897,64 @@
       }
     }
 
+    // Render Smart Bundle Engine (Upsell Desk Mat when Shelf is present)
+    const bundleWrap = document.getElementById('cartBundleUpsellWrap');
+    if (bundleWrap) {
+      const hasShelf = state.cart.some(i => (i.id && (i.id.includes('focus-station') || i.id.startsWith('board-'))) || (i.title && i.title.includes('Focus Station')));
+      const hasMat = state.cart.some(i => (i.id && (i.id.includes('desk-mat') || i.id.includes('mat-'))) || (i.title && i.title.toLowerCase().includes('коврик')));
+
+      if (hasShelf && !hasMat) {
+        const selectedMatId = state.selectedBundleMatId || 'desk-mat-dark';
+        const matOptions = [
+          { id: 'desk-mat-dark', name: 'Тёмный фетр', size: '80 × 40 см', price: 1499, discPrice: 1274, img: 'images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg' },
+          { id: 'desk-mat-light', name: 'Серый меланж', size: '80 × 40 см', price: 1499, discPrice: 1274, img: 'images/tild3139-3036-4738-b765-383337383336__dsc_3319.jpg' },
+          { id: 'desk-mat-xl', name: 'XL Формат', size: '120 × 60 см', price: 2999, discPrice: 2549, img: 'images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg' }
+        ];
+        const curMat = matOptions.find(m => m.id === selectedMatId) || matOptions[0];
+
+        bundleWrap.innerHTML = `
+          <div class="cart-bundle-upsell-card">
+            <div class="cart-bundle-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+              <span>Комплект // Скидка 15%</span>
+            </div>
+            <div class="cart-bundle-title">Добавьте кожаный коврик Desk Mat</div>
+            <div class="cart-bundle-desc">Премиальный акустический фетр и силиконовый грип защищают столешницу от царапин и завершают сетап Focus Station.</div>
+            <div class="cart-bundle-content">
+              <img class="cart-bundle-thumb" src="${toAssetUrl(curMat.img)}" alt="${curMat.name}" />
+              <div class="cart-bundle-controls">
+                <div class="cart-bundle-variants">
+                  ${matOptions.map(m => `
+                    <button type="button" class="bundle-variant-chip ${m.id === selectedMatId ? 'active' : ''}" onclick="window.geekNookApp.selectBundleMatVariant('${m.id}')">
+                      ${m.name}
+                    </button>
+                  `).join('')}
+                </div>
+                <div class="cart-bundle-bottom">
+                  <div class="bundle-prices-row">
+                    <span class="bundle-price-current">${formatPrice(curMat.discPrice)}</span>
+                    <span class="bundle-price-old">${formatPrice(curMat.price)}</span>
+                  </div>
+                  <button type="button" class="btn-bundle-add" onclick="window.geekNookApp.addBundleMatToCart('${curMat.id}', '${curMat.size}', ${curMat.discPrice})">
+                    + В комплект (-15%)
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (hasShelf && hasMat) {
+        bundleWrap.innerHTML = `
+          <div class="cart-bundle-active-banner">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            <span>Комплект «Focus Station + Коврик» активирован со скидкой!</span>
+          </div>
+        `;
+      } else {
+        bundleWrap.innerHTML = '';
+      }
+    }
+
     const drawerCheckoutBtn = document.querySelector('#cartDrawerOverlay .btn-checkout');
     const drawerTgBtn = document.querySelector('#cartDrawerOverlay .btn-checkout-telegram');
     const isCartEmpty = state.cart.length === 0;
@@ -926,6 +984,45 @@
         document.body.classList.remove('has-floating-cart');
       }
     }
+  };
+
+  const selectBundleMatVariant = (matId) => {
+    state.selectedBundleMatId = matId;
+    soundEngine.play('click');
+    updateCartUI();
+  };
+
+  const addBundleMatToCart = (matId, sizeStr, customPrice) => {
+    soundEngine.play('cart');
+    const matProduct = (typeof GEEKNOOK_DATA !== 'undefined' && GEEKNOOK_DATA.allProducts) 
+      ? GEEKNOOK_DATA.allProducts.find(p => p.id === matId) 
+      : null;
+    const title = matProduct ? matProduct.title : 'Коврик Desk Mat';
+    const price = customPrice || (matProduct ? Math.round(matProduct.price * 0.85) : 1274);
+    const image = (matProduct && matProduct.images && matProduct.images[0]) 
+      ? matProduct.images[0] 
+      : 'images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg';
+    const option = `В комплекте со скидкой 15% (${sizeStr || '80 × 40 см'})`;
+    const cartKey = `${matId}_${option}`;
+
+    const existing = state.cart.find(i => i.cartKey === cartKey);
+    if (existing) {
+      existing.quantity = Math.min(99, (parseInt(existing.quantity, 10) || 1) + 1);
+    } else {
+      state.cart.push({
+        cartKey,
+        id: matId,
+        title,
+        option,
+        price,
+        image,
+        quantity: 1
+      });
+    }
+    saveCart();
+    triggerBadgeBounce();
+    showToast(`🎉 «${title}» добавлен в комплект со скидкой 15%!`, 'success');
+    updateCartUI();
   };
 
   const openCartDrawer = () => {
@@ -1226,6 +1323,24 @@
     showToast('Промокод удалён (действует стандартная скидка 20%)');
   };
 
+  const toggleCardXRay = (productId, event) => {
+    if (event) {
+      event.stopPropagation();
+      event.preventDefault();
+    }
+    soundEngine.play('snap');
+    const blueprint = document.getElementById(`cardXray_${productId}`);
+    if (!blueprint) return;
+    const isActive = blueprint.classList.toggle('active');
+    const card = blueprint.closest('.product-item-card');
+    const btn = card ? card.querySelector('.btn-card-xray') : null;
+    if (btn) {
+      btn.classList.toggle('active', isActive);
+      const span = btn.querySelector('span');
+      if (span) span.textContent = isActive ? 'Фото' : 'X-Ray';
+    }
+  };
+
   // --- PRODUCT CARD COMPONENT ---
   const renderProductCard = (p, idx = 0) => {
     const badgeHtml = p.badge ? `<span class="card-badge">${p.badge}</span>` : '';
@@ -1234,14 +1349,70 @@
     const hasHoverImg = p.images && p.images.length > 1;
     const mainImg = toAssetUrl(p.images && p.images[0] ? p.images[0] : (p.image || ''));
     const hoverImg = hasHoverImg ? toAssetUrl(p.images[1]) : '';
+    const isFocusStation = p.id.includes('focus-station') || p.id.startsWith('board-') || Boolean(p.options && p.options.lengths);
+
+    const xrayBtnHtml = isFocusStation ? `
+      <button type="button" class="btn-card-xray" onclick="window.geekNookApp.toggleCardXRay('${p.id}', event);" title="Инженерный чертёж и рентген узлов" aria-label="Рентген-чертёж узлов Focus Station">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="22" y1="12" x2="18" y2="12"></line><line x1="6" y1="12" x2="2" y2="12"></line><line x1="12" y1="6" x2="12" y2="2"></line><line x1="12" y1="22" x2="12" y2="18"></line></svg>
+        <span>X-Ray</span>
+      </button>
+    ` : '';
+
+    const xrayBlueprintHtml = isFocusStation ? `
+      <div class="card-xray-blueprint" id="cardXray_${p.id}" onclick="event.stopPropagation();">
+        <div class="xray-grid-bg"></div>
+        <div class="xray-header-tag">ISO-9241 // CAD SCHEMATIC</div>
+        <svg class="xray-schematic-svg" viewBox="0 0 340 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Deck Profile -->
+          <rect x="25" y="65" width="290" height="20" rx="3" fill="rgba(37, 99, 235, 0.2)" stroke="#38bdf8" stroke-width="1.6"/>
+          <line x1="35" y1="72" x2="305" y2="72" stroke="#60a5fa" stroke-width="1.2" stroke-dasharray="3 3"/>
+          <!-- T-Track groove -->
+          <rect x="55" y="62" width="230" height="6" rx="1.5" fill="#0284c7" stroke="#38bdf8" stroke-width="1"/>
+          <!-- Aluminum legs -->
+          <rect x="42" y="85" width="16" height="65" rx="2" fill="rgba(15, 23, 42, 0.9)" stroke="#38bdf8" stroke-width="1.5"/>
+          <rect x="282" y="85" width="16" height="65" rx="2" fill="rgba(15, 23, 42, 0.9)" stroke="#38bdf8" stroke-width="1.5"/>
+          <!-- Cork dampers -->
+          <rect x="40" y="150" width="20" height="7" rx="1" fill="#d97706" stroke="#f59e0b" stroke-width="1"/>
+          <rect x="280" y="150" width="20" height="7" rx="1" fill="#d97706" stroke="#f59e0b" stroke-width="1"/>
+          <!-- Dimension lines -->
+          <line x1="25" y1="48" x2="315" y2="48" stroke="#38bdf8" stroke-width="1" stroke-dasharray="2 2"/>
+          <text x="170" y="44" fill="#38bdf8" font-size="9" font-family="monospace" text-anchor="middle">↔ 850 / 1160 мм</text>
+          <line x1="14" y1="65" x2="14" y2="157" stroke="#38bdf8" stroke-width="1" stroke-dasharray="2 2"/>
+          <text x="10" y="115" fill="#38bdf8" font-size="9" font-family="monospace" text-anchor="middle" transform="rotate(-90 10 115)">↕ 92 мм</text>
+          <!-- Node Pins -->
+          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('Массив 22 мм: 11 слоев натурального масла Osmo')">
+            <circle cx="170" cy="75" r="7" fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
+            <text x="170" y="78" fill="#ffffff" font-size="8" text-anchor="middle">1</text>
+          </g>
+          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('Сплав Д16Т: анодированные опоры, нагрузка до 70 кг')">
+            <circle cx="50" cy="115" r="7" fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
+            <text x="50" y="118" fill="#ffffff" font-size="8" text-anchor="middle">2</text>
+          </g>
+          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('T-Track 45°: быстрый монтаж держателей гаджетов')">
+            <circle cx="110" cy="65" r="7" fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
+            <text x="110" y="68" fill="#ffffff" font-size="8" text-anchor="middle">3</text>
+          </g>
+          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('Пробка 4 мм: гашение вибраций и защита стола от царапин')">
+            <circle cx="50" cy="153" r="7" fill="#d97706" stroke="#fde68a" stroke-width="1.5"/>
+            <text x="50" y="156" fill="#ffffff" font-size="8" text-anchor="middle">4</text>
+          </g>
+        </svg>
+        <div class="xray-footer-bar">
+          <span class="xray-footer-tip">1: Дуб 22 мм • 2: Д16Т • 3: T-Track • 4: Пробка</span>
+          <button type="button" class="xray-3d-link" onclick="window.geekNookApp.openConfigurator();">3D Студия →</button>
+        </div>
+      </div>
+    ` : '';
 
     return `
       <div class="product-item-card reveal-card" style="--stagger-delay: ${(idx % 4) * 0.08}s;" data-product-id="${p.id}">
         <div class="card-spotlight"></div>
         <div class="product-img-box" onclick="window.geekNookApp.openQuickView('${p.id}')">
           ${badgeHtml}
+          ${xrayBtnHtml}
           <img class="card-img-main" src="${mainImg}" alt="${p.title}" loading="lazy" decoding="async" />
           ${hasHoverImg ? `<img class="card-img-hover" src="${hoverImg}" alt="${p.title}" loading="lazy" decoding="async" />` : ''}
+          ${xrayBlueprintHtml}
           <div class="card-floating-glass-bar" onclick="event.stopPropagation();">
             <button class="glass-action-btn quick-view-btn" onclick="window.geekNookApp.openQuickView('${p.id}')" title="Быстрый просмотр" aria-label="Быстрый просмотр ${escapeHTML(p.title)}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
@@ -2293,6 +2464,8 @@
       corkGroup: null,
       shadowMesh: null,
       modulesGroup: null,
+      monitorsGroup: null,
+      currentMonitorPreset: 'none',
       lights: {},
       isExploded: false,
       autoRotate: Boolean(options.autoRotateDefault),
@@ -2407,6 +2580,9 @@
 
           if (this.deckMesh) {
             this.deckMesh.position.y += (targetDeckY + idleFloatY - this.deckMesh.position.y) * 0.08;
+            if (this.monitorsGroup) {
+              this.monitorsGroup.position.y = this.deckMesh.position.y;
+            }
           }
           if (this.legsGroup) {
             this.legsGroup.children.forEach(l => {
@@ -2666,6 +2842,11 @@
 
         trayMod.position.set(0, 1.12, -0.85);
         this.modulesGroup.add(trayMod);
+
+        // 8. Procedural Monitors Visualizer Group
+        this.monitorsGroup = new THREE.Group();
+        this.mainGroup.add(this.monitorsGroup);
+        this.updateMonitors();
       },
 
       updateBadgeTexture(text) {
@@ -2704,6 +2885,295 @@
         ctx.fillText(clean, w / 2, h / 2);
 
         if (this.badgeTexture) this.badgeTexture.needsUpdate = true;
+      },
+
+      createScreenTexture(title, mode = 'studio') {
+        const scCanvas = document.createElement('canvas');
+        scCanvas.width = 512;
+        scCanvas.height = 320;
+        const ctx = scCanvas.getContext('2d');
+        const w = scCanvas.width;
+        const h = scCanvas.height;
+
+        // Background wallpaper gradient
+        const bgGrad = ctx.createLinearGradient(0, 0, w, h);
+        if (mode === 'cyber') {
+          bgGrad.addColorStop(0, '#061325');
+          bgGrad.addColorStop(0.5, '#0f172a');
+          bgGrad.addColorStop(1, '#1e1035');
+        } else if (mode === 'sunset') {
+          bgGrad.addColorStop(0, '#1c1917');
+          bgGrad.addColorStop(0.5, '#431407');
+          bgGrad.addColorStop(1, '#1e1b4b');
+        } else {
+          bgGrad.addColorStop(0, '#0a0f1d');
+          bgGrad.addColorStop(0.6, '#111827');
+          bgGrad.addColorStop(1, '#1e293b');
+        }
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, w, h);
+
+        // Subtle desktop grid / wallpaper glow
+        ctx.strokeStyle = mode === 'cyber' ? 'rgba(6, 182, 212, 0.15)' : 'rgba(59, 130, 246, 0.12)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < w; x += 32) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, h);
+          ctx.stroke();
+        }
+        for (let y = 0; y < h; y += 32) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(w, y);
+          ctx.stroke();
+        }
+
+        // Top Menubar / Window Chrome
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.75)';
+        ctx.fillRect(0, 0, w, 28);
+        const drawDot = (cx, cy, col) => {
+          ctx.fillStyle = col;
+          ctx.beginPath();
+          ctx.arc(cx, cy, 4, 0, Math.PI * 2);
+          ctx.fill();
+        };
+        drawDot(16, 14, '#ef4444');
+        drawDot(28, 14, '#f59e0b');
+        drawDot(40, 14, '#10b981');
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = 'bold 11px monospace';
+        ctx.textAlign = 'left';
+        ctx.fillText(title || 'GEEKNOOK // RETINA PRO', 60, 18);
+
+        // Minimalist IDE / Workspace lines
+        const lineColors = mode === 'cyber' ? ['#06b6d4', '#ec4899', '#3b82f6', '#a855f7'] : ['#38bdf8', '#818cf8', '#34d399', '#f59e0b'];
+        for (let i = 0; i < 7; i++) {
+          ctx.fillStyle = lineColors[i % lineColors.length];
+          const lw = 60 + Math.sin(i * 1.5) * 45;
+          ctx.fillRect(24, 48 + i * 22, lw, 8);
+
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+          ctx.fillRect(24 + lw + 12, 48 + i * 22, 120 + Math.cos(i * 2) * 60, 8);
+        }
+
+        // Bottom right subtle watermark
+        ctx.fillStyle = mode === 'cyber' ? '#06b6d4' : '#38bdf8';
+        ctx.font = 'bold 13px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText('FOCUS STATION 3D', w - 20, h - 16);
+
+        const tex = new THREE.CanvasTexture(scCanvas);
+        if (typeof THREE.sRGBEncoding !== 'undefined') {
+          tex.encoding = THREE.sRGBEncoding;
+        }
+        return tex;
+      },
+
+      createSingleMonitorUnit(width, height, isCurved = false, curveAngle = 0, screenTex) {
+        const group = new THREE.Group();
+        const alumMat = new THREE.MeshStandardMaterial({
+          color: 0x1f2937,
+          metalness: 0.88,
+          roughness: 0.22,
+          envMapIntensity: 1.25
+        });
+        const bezelMat = new THREE.MeshStandardMaterial({
+          color: 0x05070a,
+          roughness: 0.6,
+          metalness: 0.1
+        });
+        const screenMat = new THREE.MeshStandardMaterial({
+          map: screenTex,
+          roughness: 0.15,
+          metalness: 0.05,
+          envMapIntensity: 0.95
+        });
+
+        // 1. Stand Base (rests on Focus Station top surface at local y = 0.12)
+        const baseGeo = new THREE.BoxGeometry(1.8, 0.04, 1.25);
+        const base = new THREE.Mesh(baseGeo, alumMat);
+        base.position.set(0, 0.14, -0.45);
+        base.castShadow = true;
+        group.add(base);
+
+        // 2. Stand Stem Riser
+        const stemGeo = new THREE.BoxGeometry(0.3, 1.9, 0.14);
+        const stem = new THREE.Mesh(stemGeo, alumMat);
+        stem.position.set(0, 1.05, -0.45);
+        stem.castShadow = true;
+        group.add(stem);
+
+        // 3. Monitor Panel
+        const panelGroup = new THREE.Group();
+        panelGroup.position.set(0, 2.05, -0.32);
+
+        if (!isCurved) {
+          const chassis = new THREE.Mesh(new THREE.BoxGeometry(width, height, 0.12), alumMat);
+          chassis.castShadow = true;
+          panelGroup.add(chassis);
+
+          const bezel = new THREE.Mesh(new THREE.BoxGeometry(width - 0.04, height - 0.04, 0.02), bezelMat);
+          bezel.position.z = 0.06;
+          panelGroup.add(bezel);
+
+          const display = new THREE.Mesh(new THREE.PlaneGeometry(width - 0.16, height - 0.16), screenMat);
+          display.position.z = 0.075;
+          panelGroup.add(display);
+        } else {
+          const centerW = width * 0.52;
+          const wingW = width * 0.25;
+
+          const centerChassis = new THREE.Mesh(new THREE.BoxGeometry(centerW, height, 0.12), alumMat);
+          centerChassis.castShadow = true;
+          panelGroup.add(centerChassis);
+
+          const centerDisplay = new THREE.Mesh(new THREE.PlaneGeometry(centerW - 0.1, height - 0.14), screenMat);
+          centerDisplay.position.z = 0.065;
+          panelGroup.add(centerDisplay);
+
+          const leftWing = new THREE.Group();
+          leftWing.position.set(-centerW / 2, 0, 0);
+          leftWing.rotation.y = curveAngle;
+
+          const leftChassis = new THREE.Mesh(new THREE.BoxGeometry(wingW, height, 0.12), alumMat);
+          leftChassis.position.set(-wingW / 2, 0, 0);
+          leftChassis.castShadow = true;
+          leftWing.add(leftChassis);
+
+          const leftDisplay = new THREE.Mesh(new THREE.PlaneGeometry(wingW - 0.08, height - 0.14), screenMat);
+          leftDisplay.position.set(-wingW / 2, 0, 0.065);
+          leftWing.add(leftDisplay);
+          panelGroup.add(leftWing);
+
+          const rightWing = new THREE.Group();
+          rightWing.position.set(centerW / 2, 0, 0);
+          rightWing.rotation.y = -curveAngle;
+
+          const rightChassis = new THREE.Mesh(new THREE.BoxGeometry(wingW, height, 0.12), alumMat);
+          rightChassis.position.set(wingW / 2, 0, 0);
+          rightChassis.castShadow = true;
+          rightWing.add(rightChassis);
+
+          const rightDisplay = new THREE.Mesh(new THREE.PlaneGeometry(wingW - 0.08, height - 0.14), screenMat);
+          rightDisplay.position.set(wingW / 2, 0, 0.065);
+          rightWing.add(rightDisplay);
+          panelGroup.add(rightWing);
+        }
+
+        group.add(panelGroup);
+        return group;
+      },
+
+      updateMonitors() {
+        if (!this.monitorsGroup) return;
+        while (this.monitorsGroup.children.length > 0) {
+          const c = this.monitorsGroup.children[0];
+          this.monitorsGroup.remove(c);
+        }
+
+        const preset = this.currentMonitorPreset || 'none';
+        if (preset === 'none') {
+          this.updateCompatibilityAlert();
+          return;
+        }
+
+        const screenTex = this.createScreenTexture(
+          preset === 'dual27' ? 'DUAL RETINA 27"' : (preset === 'ultrawide34' ? '34" CURVED ULTRAWIDE' : (preset === 'superwide49' ? '49" ODYSSEY SUPERWIDE' : 'STUDIO DISPLAY 27"')),
+          this.lightingMode
+        );
+
+        if (preset === 'single27') {
+          const mon = this.createSingleMonitorUnit(6.1, 3.55, false, 0, screenTex);
+          this.monitorsGroup.add(mon);
+        } else if (preset === 'dual27') {
+          const leftMon = this.createSingleMonitorUnit(6.1, 3.55, false, 0, screenTex);
+          leftMon.position.set(-3.1, 0, 0);
+          leftMon.rotation.y = 0.13;
+          this.monitorsGroup.add(leftMon);
+
+          const rightMon = this.createSingleMonitorUnit(6.1, 3.55, false, 0, screenTex);
+          rightMon.position.set(3.1, 0, 0);
+          rightMon.rotation.y = -0.13;
+          this.monitorsGroup.add(rightMon);
+        } else if (preset === 'ultrawide34') {
+          const mon = this.createSingleMonitorUnit(8.2, 3.4, true, 0.18, screenTex);
+          this.monitorsGroup.add(mon);
+        } else if (preset === 'superwide49') {
+          const mon = this.createSingleMonitorUnit(11.8, 3.3, true, 0.25, screenTex);
+          this.monitorsGroup.add(mon);
+        }
+
+        this.updateCompatibilityAlert();
+      },
+
+      setMonitorPreset(preset) {
+        this.currentMonitorPreset = preset;
+        this.updateMonitors();
+
+        if (options.containerId === 'prod3dViewport') {
+          document.querySelectorAll('#prod3dMonitorPills .prod-pill').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-mon') === preset);
+          });
+        }
+        if (options.containerId === 'config3dViewport') {
+          document.querySelectorAll('#config3dMonitorsBar .btn-3d-mon').forEach(b => {
+            b.classList.toggle('active', b.getAttribute('data-mon') === preset);
+          });
+        }
+      },
+
+      updateCompatibilityAlert() {
+        const badgeId = (options.containerId === 'prod3dViewport') ? 'prod3dCompatBadge' : 'config3dCompatBadge';
+        const textId = (options.containerId === 'prod3dViewport') ? 'prod3dCompatText' : 'config3dCompatText';
+        const btnId = (options.containerId === 'prod3dViewport') ? 'prod3dCompatBtn' : 'config3dCompatBtn';
+
+        const badge = document.getElementById(badgeId);
+        const text = document.getElementById(textId);
+        const btn = document.getElementById(btnId);
+        if (!badge || !text) return;
+
+        const preset = this.currentMonitorPreset || 'none';
+        const len = Number(this.currentLength) || 85;
+
+        if (preset === 'none') {
+          badge.style.display = 'none';
+          return;
+        }
+
+        if (preset === 'dual27') {
+          badge.style.display = 'flex';
+          if (len === 85) {
+            badge.className = 'config-3d-compat-badge badge-warning';
+            text.textContent = '⚠️ Размах 2× 27" — 122 см (свес 18 см с боков). Рекомендуем Focus Station 116 см!';
+            if (btn) btn.style.display = 'inline-flex';
+          } else {
+            badge.className = 'config-3d-compat-badge badge-success';
+            text.textContent = '✓ Идеальная геометрия: полка 116 см точно соответствует дуал-сетапу 2× 27".';
+            if (btn) btn.style.display = 'none';
+          }
+        } else if (preset === 'superwide49') {
+          badge.style.display = 'flex';
+          if (len === 85) {
+            badge.className = 'config-3d-compat-badge badge-warning';
+            text.textContent = '⚠️ Экран 49" (119 см) шире полки 85 см. Рекомендуем 116 см для устойчивого базирования!';
+            if (btn) btn.style.display = 'inline-flex';
+          } else {
+            badge.className = 'config-3d-compat-badge badge-success';
+            text.textContent = '✓ Превосходный масштаб: пропорции 116 см гармоничны с супер-ультравайдом 49".';
+            if (btn) btn.style.display = 'none';
+          }
+        } else if (preset === 'single27' || preset === 'ultrawide34') {
+          badge.style.display = 'flex';
+          badge.className = 'config-3d-compat-badge badge-success';
+          if (len === 85) {
+            text.textContent = '✓ Отличная посадка: компактная полка 85 см оставляет максимум свободного места на столе.';
+          } else {
+            text.textContent = '✓ Просторная посадка: на полке 116 см свободно помещаются колонки, планшет или ноутбук.';
+          }
+          if (btn) btn.style.display = 'none';
+        }
       },
 
       initOrbitControls(canvas) {
@@ -2866,6 +3336,8 @@
             badge.textContent = `Focus Station • ${woodName} • ${this.currentLength} см • Сплав Д16Т • Т-паз 45°`;
           }
         }
+
+        this.updateCompatibilityAlert();
       },
 
       setFinish(finishId) {
@@ -2912,6 +3384,9 @@
           if (this.renderer && typeof THREE.ACESFilmicToneMapping !== 'undefined') {
             this.renderer.toneMappingExposure = 1.12;
           }
+        }
+        if (this.monitorsGroup && this.currentMonitorPreset !== 'none') {
+          this.updateMonitors();
         }
       }
     };
@@ -3096,6 +3571,29 @@
   const toggle3dExplode = () => ensureThreeLoaded(() => focusStation3DStudio.toggleExplode());
   const set3dLighting = (mode) => ensureThreeLoaded(() => focusStation3DStudio.setLighting(mode));
   const update3dModulePosition = (val) => ensureThreeLoaded(() => focusStation3DStudio.setModulePosition(val));
+
+  const set3dMonitorPreset = (preset) => {
+    soundEngine.play('click');
+    ensureThreeLoaded(() => {
+      focusStation3DStudio.setMonitorPreset(preset);
+    });
+  };
+
+  const setProduction3dMonitorPreset = (preset) => {
+    soundEngine.play('click');
+    ensureThreeLoaded(() => {
+      production3DStudio.setMonitorPreset(preset);
+    });
+  };
+
+  const switchShelfTo116FromWarning = () => {
+    soundEngine.play('snap');
+    selectConfigLength('116');
+    ensureThreeLoaded(() => {
+      focusStation3DStudio.setLength(116);
+    });
+    showToast('✓ Выбран размер Focus Station 116 см для двух мониторов!', 'success');
+  };
 
   const addConfiguredBundleToCart = () => {
     const finish = GEEKNOOK_DATA.configurator.finishes.find(f => f.id === state.config.finishId);
@@ -6870,6 +7368,7 @@
   // --- SETUP MATCHER (Инженерный примерщик мониторов) ---
   const matcherState = {
     deskWidth: 140,
+    deskDepth: 70,
     monitorSetup: 'single-27'
   };
 
@@ -6889,9 +7388,13 @@
         const parsed = JSON.parse(saved);
         if (parsed && typeof parsed === 'object') {
           if (parsed.deskWidth) matcherState.deskWidth = parsed.deskWidth;
+          if (parsed.deskDepth) matcherState.deskDepth = parsed.deskDepth;
           if (parsed.monitorSetup && MONITOR_SETUPS[parsed.monitorSetup]) matcherState.monitorSetup = parsed.monitorSetup;
           document.querySelectorAll('#deskWidthChips .matcher-chip').forEach(btn => {
             btn.classList.toggle('active', parseInt(btn.dataset.width, 10) === matcherState.deskWidth);
+          });
+          document.querySelectorAll('#deskDepthChips .matcher-chip').forEach(btn => {
+            btn.classList.toggle('active', parseInt(btn.dataset.depth, 10) === matcherState.deskDepth);
           });
           document.querySelectorAll('#monitorSetupChips .matcher-chip').forEach(btn => {
             btn.classList.toggle('active', btn.dataset.setup === matcherState.monitorSetup);
@@ -6916,7 +7419,25 @@
     document.querySelectorAll('#deskWidthChips .matcher-chip').forEach(btn => {
       btn.classList.toggle('active', parseInt(btn.dataset.width, 10) === matcherState.deskWidth);
     });
-    safeStorage.setItem('geeknook_matcher_state', JSON.stringify({ deskWidth: matcherState.deskWidth, monitorSetup: matcherState.monitorSetup }));
+    safeStorage.setItem('geeknook_matcher_state', JSON.stringify({
+      deskWidth: matcherState.deskWidth,
+      deskDepth: matcherState.deskDepth,
+      monitorSetup: matcherState.monitorSetup
+    }));
+    renderMatcherVisualizer();
+  };
+
+  const selectMatcherDeskDepth = (depthCm) => {
+    soundEngine.play('click');
+    matcherState.deskDepth = parseInt(depthCm, 10) || 70;
+    document.querySelectorAll('#deskDepthChips .matcher-chip').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.depth, 10) === matcherState.deskDepth);
+    });
+    safeStorage.setItem('geeknook_matcher_state', JSON.stringify({
+      deskWidth: matcherState.deskWidth,
+      deskDepth: matcherState.deskDepth,
+      monitorSetup: matcherState.monitorSetup
+    }));
     renderMatcherVisualizer();
   };
 
@@ -6926,7 +7447,11 @@
     document.querySelectorAll('#monitorSetupChips .matcher-chip').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.setup === setupKey);
     });
-    safeStorage.setItem('geeknook_matcher_state', JSON.stringify({ deskWidth: matcherState.deskWidth, monitorSetup: matcherState.monitorSetup }));
+    safeStorage.setItem('geeknook_matcher_state', JSON.stringify({
+      deskWidth: matcherState.deskWidth,
+      deskDepth: matcherState.deskDepth,
+      monitorSetup: matcherState.monitorSetup
+    }));
     renderMatcherVisualizer();
   };
 
@@ -6937,6 +7462,8 @@
     if (!svgWrap || !specsRow) return;
 
     const deskWidthMm = matcherState.deskWidth * 10;
+    const deskDepthCm = matcherState.deskDepth || 70;
+    const freeDepthCm = deskDepthCm - 23;
     const mon = MONITOR_SETUPS[matcherState.monitorSetup];
     const monWidthMm = mon.widthMm;
 
@@ -7007,7 +7534,7 @@
       <svg viewBox="0 0 ${svgW} ${svgH}" width="100%" height="190" preserveAspectRatio="xMidYMid meet">
         <!-- Desk Top Plate -->
         <rect x="${deskX}" y="${deskY}" width="${deskPx}" height="${deskH}" rx="4" fill="#1e2532" stroke="#334155" stroke-width="1.5"/>
-        <text x="${deskX + 16}" y="${deskY + 15}" fill="#64748b" font-family="monospace" font-size="10" font-weight="bold">СТОЛ ${matcherState.deskWidth} СМ</text>
+        <text x="${deskX + 16}" y="${deskY + 15}" fill="#64748b" font-family="monospace" font-size="10" font-weight="bold">СТОЛ ${matcherState.deskWidth}×${deskDepthCm} СМ</text>
 
         <!-- Monitors -->
         ${monitorsSvg}
@@ -7023,14 +7550,27 @@
         <text x="${shelfX + shelfPx / 2}" y="${shelfY - 10}" fill="#60a5fa" font-family="monospace" font-size="10" text-anchor="middle">↔ ${recommendedShelfMm} мм</text>
 
         <line x1="${deskX}" y1="${deskY + deskH + 10}" x2="${deskX + deskPx}" y2="${deskY + deskH + 10}" stroke="#94a3b8" stroke-width="1.2"/>
-        <text x="${deskX + deskPx / 2}" y="${deskY + deskH + 22}" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="middle">Ширина столешницы: ${matcherState.deskWidth} см</text>
+        <text x="${deskX + deskPx / 2}" y="${deskY + deskH + 22}" fill="#94a3b8" font-family="monospace" font-size="10" text-anchor="middle">Столешница: ширина ${matcherState.deskWidth} см • глубина ${deskDepthCm} см</text>
       </svg>
     `;
+
+    let depthTip = '';
+    if (deskDepthCm === 60) {
+      depthTip = ' 💡 Стол 60 см: Focus Station экономит +40% площади стола благодаря 90 мм нише под клавиатуру.';
+    } else if (deskDepthCm === 70) {
+      depthTip = ' 💡 Стол 70 см: идеальная глубина, свободно помещается коврик Desk Mat 80×40 см.';
+    } else {
+      depthTip = ` 💡 Стол ${deskDepthCm} см: профессиональный простор, комфортная дистанция до монитора (65–75 см до глаз).`;
+    }
 
     specsRow.innerHTML = `
       <div class="matcher-spec-col">
         <div class="matcher-spec-title">Ширина столешницы</div>
         <div class="matcher-spec-val">${matcherState.deskWidth} см</div>
+      </div>
+      <div class="matcher-spec-col">
+        <div class="matcher-spec-title">Глубина столешницы</div>
+        <div class="matcher-spec-val highlight">${deskDepthCm} см (зона перед полкой: ${freeDepthCm} см)</div>
       </div>
       <div class="matcher-spec-col">
         <div class="matcher-spec-title">Размах мониторов</div>
@@ -7040,10 +7580,14 @@
         <div class="matcher-spec-title">Свободно по бокам</div>
         <div class="matcher-spec-val highlight">${remainingSideCm} см с каждой стороны</div>
       </div>
+      <div class="matcher-spec-col">
+        <div class="matcher-spec-title">Ниша под клавиатуру</div>
+        <div class="matcher-spec-val">90 мм (прячет кейборд до 48 см)</div>
+      </div>
     `;
 
     if (recEl) {
-      recEl.innerHTML = `Рекомендуемая модель: <strong>${recommendedShelfName}</strong> — идеальный баланс рабочей зоны.`;
+      recEl.innerHTML = `Рекомендуемая модель: <strong>${recommendedShelfName}</strong> — оптимальная посадка под ваш сетап.${depthTip}`;
     }
   };
 
@@ -7380,6 +7924,7 @@
     executeCommand,
     openSetupMatcher,
     selectMatcherDeskWidth,
+    selectMatcherDeskDepth,
     selectMatcherMonitor,
     applyMatcherToConfigurator,
     toggleTheme,
@@ -7425,6 +7970,12 @@
     setProduction3dFinish,
     setProduction3dLength,
     setProduction3dLighting,
+    set3dMonitorPreset,
+    setProduction3dMonitorPreset,
+    switchShelfTo116FromWarning,
+    selectBundleMatVariant,
+    addBundleMatToCart,
+    toggleCardXRay,
     toggleProduction3dExplode,
     toggleProduction3dAutoRotate,
     toggleProduction3dAddon,

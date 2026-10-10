@@ -22,70 +22,154 @@ def minify_css(css_text):
     return css.strip()
 
 def minify_js_safe(js_text):
-    # Safe regex-based JS compression (removes comments, trims spaces around operators)
-    # 1. Preserve strings and regex literals while stripping comments
-    tokens = []
-    in_str = None
-    in_regex = False
-    in_line_comment = False
-    in_block_comment = False
-    prev = ''
+    res = []
     i = 0
     n = len(js_text)
-    res = []
+    stack = []
+    is_escaped = False
+    last_non_ws = None
 
     while i < n:
         ch = js_text[i]
-        
-        if in_line_comment:
-            if ch == '\n':
-                in_line_comment = False
-                res.append('\n')
-            i += 1
-            continue
+        current_state = stack[-1][0] if stack else None
 
-        if in_block_comment:
-            if prev == '*' and ch == '/':
-                in_block_comment = False
-            prev = ch
-            i += 1
-            continue
-
-        if in_str:
+        # 1. Inside single- or double-quoted strings
+        if current_state in ('STR_SINGLE', 'STR_DOUBLE'):
             res.append(ch)
-            if ch == in_str and prev != '\\':
-                in_str = None
-            prev = ch
+            if is_escaped:
+                is_escaped = False
+            elif ch == '\\':
+                is_escaped = True
+            elif (current_state == 'STR_SINGLE' and ch == "'") or (current_state == 'STR_DOUBLE' and ch == '"'):
+                stack.pop()
+                last_non_ws = ch
             i += 1
             continue
 
-        # Check comment starts
-        if prev == '/' and ch == '/':
-            res.pop() # remove previous '/'
-            in_line_comment = True
-            i += 1
-            prev = ''
-            continue
-        elif prev == '/' and ch == '*':
-            res.pop() # remove previous '/'
-            in_block_comment = True
-            i += 1
-            prev = ''
-            continue
+        # 2. Inside template literal string segments
+        elif current_state == 'TEMPLATE':
+            if is_escaped:
+                res.append(ch)
+                is_escaped = False
+                i += 1
+                continue
+            elif ch == '\\':
+                res.append(ch)
+                is_escaped = True
+                i += 1
+                continue
+            elif ch == '$' and i + 1 < n and js_text[i+1] == '{':
+                res.append('${')
+                stack.append(('EXPR', 0))
+                last_non_ws = '{'
+                i += 2
+                continue
+            elif ch == '`':
+                res.append(ch)
+                stack.pop()
+                last_non_ws = '`'
+                i += 1
+                continue
+            else:
+                res.append(ch)
+                i += 1
+                continue
 
-        if ch in ('"', "'", '`'):
-            in_str = ch
+        # 3. Comments, regex literals, or division
+        if ch == '/' and i + 1 < n:
+            next_ch = js_text[i+1]
+            if next_ch == '/':
+                # Line comment
+                i += 2
+                while i < n and js_text[i] != '\n':
+                    i += 1
+                if i < n:
+                    res.append('\n')
+                    i += 1
+                continue
+            elif next_ch == '*':
+                # Block comment
+                i += 2
+                while i + 1 < n and not (js_text[i] == '*' and js_text[i+1] == '/'):
+                    i += 1
+                i += 2
+                continue
+            else:
+                # Distinguish regex literal from division
+                is_regex = False
+                if last_non_ws in (None, '(', '[', '{', ',', ';', ':', '?', '=', '!', '&', '|', '+', '-', '*', '%', '^', '~', '<', '>'):
+                    is_regex = True
+                elif isinstance(last_non_ws, str) and last_non_ws in ('return', 'typeof', 'case', 'throw', 'yield', 'await'):
+                    is_regex = True
+
+                if is_regex:
+                    res.append(ch)
+                    i += 1
+                    in_char_class = False
+                    reg_escaped = False
+                    while i < n:
+                        rc = js_text[i]
+                        res.append(rc)
+                        if reg_escaped:
+                            reg_escaped = False
+                        elif rc == '\\':
+                            reg_escaped = True
+                        elif rc == '[' and not in_char_class:
+                            in_char_class = True
+                        elif rc == ']' and in_char_class:
+                            in_char_class = False
+                        elif rc == '/' and not in_char_class:
+                            i += 1
+                            while i < n and js_text[i] in 'gimsuy':
+                                res.append(js_text[i])
+                                i += 1
+                            break
+                        i += 1
+                    last_non_ws = '/'
+                    continue
+
+        # 4. Opening quotes
+        if ch == "'":
+            stack.append(('STR_SINGLE', 0))
             res.append(ch)
-            prev = ch
+            last_non_ws = "'"
             i += 1
             continue
+        elif ch == '"':
+            stack.append(('STR_DOUBLE', 0))
+            res.append(ch)
+            last_non_ws = '"'
+            i += 1
+            continue
+        elif ch == '`':
+            stack.append(('TEMPLATE', 0))
+            res.append(ch)
+            last_non_ws = '`'
+            i += 1
+            continue
+
+        # 5. Expressions inside template literals
+        if current_state == 'EXPR':
+            if ch == '{':
+                state, d = stack.pop()
+                stack.append((state, d + 1))
+            elif ch == '}':
+                state, d = stack.pop()
+                if d == 0:
+                    res.append(ch)
+                    last_non_ws = '}'
+                    i += 1
+                    continue
+                else:
+                    stack.append((state, d - 1))
+
+        if not ch.isspace():
+            last_non_ws = ch
 
         res.append(ch)
-        prev = ch
         i += 1
 
     cleaned = ''.join(res)
-    # Compress consecutive blank lines
     cleaned = re.sub(r'\n\s*\n+', '\n', cleaned)
     return cleaned.strip()
 
