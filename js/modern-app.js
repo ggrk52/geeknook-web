@@ -291,7 +291,9 @@
       lengthId: '85',
       selectedAddonIds: ['addon-headphones', 'addon-phone'],
       engravingEnabled: false,
-      engravingText: 'GEEKNOOK // LAB'
+      engravingText: 'GEEKNOOK // LAB',
+      engravingFont: 'mono',
+      engravingMaterial: 'brass'
     },
     quickBuyProduct: null,
     quickBuyProductOption: 'Стандарт',
@@ -1407,25 +1409,25 @@
     return `
       <div class="product-item-card reveal-card" style="--stagger-delay: ${(idx % 4) * 0.08}s;" data-product-id="${p.id}">
         <div class="card-spotlight"></div>
-        <div class="product-img-box" onclick="window.geekNookApp.openQuickView('${p.id}')">
+        <div class="product-img-box" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.openQuickView('${p.id}')`}">
           ${badgeHtml}
           ${xrayBtnHtml}
           <img class="card-img-main" src="${mainImg}" alt="${p.title}" loading="lazy" decoding="async" />
           ${hasHoverImg ? `<img class="card-img-hover" src="${hoverImg}" alt="${p.title}" loading="lazy" decoding="async" />` : ''}
           ${xrayBlueprintHtml}
           <div class="card-floating-glass-bar" onclick="event.stopPropagation();">
-            <button class="glass-action-btn quick-view-btn" onclick="window.geekNookApp.openQuickView('${p.id}')" title="Быстрый просмотр" aria-label="Быстрый просмотр ${escapeHTML(p.title)}">
+            <button class="glass-action-btn quick-view-btn" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.openQuickView('${p.id}')`}" title="${p.isGiftVoucher ? 'Настроить сертификат' : 'Быстрый просмотр'}" aria-label="${p.isGiftVoucher ? 'Настроить сертификат' : `Быстрый просмотр ${escapeHTML(p.title)}`}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-              <span>Обзор</span>
+              <span>${p.isGiftVoucher ? 'Карта' : 'Обзор'}</span>
             </button>
-            <button class="glass-action-btn quick-add-btn" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}');" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
+            <button class="glass-action-btn quick-add-btn" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.quickAddWithFeedback(this, '${p.id}')`};" title="${p.isGiftVoucher ? 'Настроить сертификат' : 'Добавить в корзину'}" aria-label="${p.isGiftVoucher ? 'Настроить сертификат' : `Добавить «${escapeHTML(p.title)}» в корзину`}">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
-              <span>В корзину</span>
+              <span>${p.isGiftVoucher ? 'Выбрать' : 'В корзину'}</span>
             </button>
           </div>
         </div>
         <div class="card-meta-tag">${materialTag}${p.options && p.options.lengths ? ' • 2 размера: 85 и 116 см' : ''}</div>
-        <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('${p.id}')">${escapeHTML(p.title)}</h4>
+        <h4 class="product-card-title" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.openQuickView('${p.id}')`}">${escapeHTML(p.title)}</h4>
         <div class="product-card-sub">${p.subtitle || p.shortDescr || ''}</div>
         <div class="product-card-price">
           <div class="price-primary-row">
@@ -1438,14 +1440,11 @@
           </div>
         </div>
         <div class="card-actions-row">
-          <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('${p.id}')">
-            <span>Подробнее</span>
+          <button class="btn-card-details" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.openQuickView('${p.id}')`}">
+            <span>${p.isGiftVoucher ? 'Настроить карту' : 'Подробнее'}</span>
           </button>
-          <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="12" y1="5" x2="12" y2="19"></line>
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
+          <button class="btn-card-quick-add" onclick="${p.isGiftVoucher ? 'window.geekNookApp.openGiftCardModal()' : `window.geekNookApp.quickAddWithFeedback(this, '${p.id}')`}; event.stopPropagation();" title="${p.isGiftVoucher ? 'Настроить сертификат' : 'Добавить в корзину'}" aria-label="${p.isGiftVoucher ? 'Настроить сертификат' : `Добавить «${escapeHTML(p.title)}» в корзину`}">
+            ${p.isGiftVoucher ? '<span style="font-size:1.1rem;line-height:1;">🎁</span>' : `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`}
           </button>
         </div>
       </div>
@@ -1912,12 +1911,35 @@
     const engravingCheckbox = document.getElementById('configEngravingCheckbox');
     const engravingInputWrap = document.getElementById('configEngravingInputWrap');
     const engravingInput = document.getElementById('configEngravingInput');
+    const engravingCharCount = document.getElementById('engravingCharCount');
+
+    const curFont = state.config.engravingFont || 'mono';
+    const curMat = state.config.engravingMaterial || 'brass';
 
     if (engravingCheckbox) engravingCheckbox.checked = Boolean(state.config.engravingEnabled);
     if (engravingInputWrap) engravingInputWrap.style.display = state.config.engravingEnabled ? 'block' : 'none';
-    if (engravingBadge) engravingBadge.style.display = state.config.engravingEnabled ? 'flex' : 'none';
-    if (engravingText) engravingText.textContent = state.config.engravingText ? state.config.engravingText.toUpperCase() : 'GEEKNOOK // LAB';
+    if (engravingBadge) {
+      engravingBadge.style.display = state.config.engravingEnabled ? 'flex' : 'none';
+      engravingBadge.className = `engraving-badge-overlay mat-${curMat}`;
+    }
+    if (engravingText) {
+      engravingText.className = `engraving-text font-${curFont}`;
+      engravingText.textContent = state.config.engravingText ? state.config.engravingText.toUpperCase() : 'GEEKNOOK // LAB';
+    }
     if (engravingInput && !engravingInput.value) engravingInput.value = state.config.engravingText || '';
+    if (engravingCharCount) {
+      engravingCharCount.textContent = `${(state.config.engravingText || '').length} / 24`;
+    }
+
+    // Sync font chips active state
+    document.querySelectorAll('#engravingFontChips .engraving-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-font') === curFont);
+    });
+
+    // Sync material chips active state
+    document.querySelectorAll('#engravingMaterialChips .engraving-chip').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-mat') === curMat);
+    });
 
     // Finishes
     const finishesWrap = document.getElementById('modalConfigFinishes');
@@ -2015,17 +2037,50 @@
     soundEngine.play('toggle');
     renderConfiguratorUI();
     triggerPricePulse();
+    if (focusStation3DStudio?.isInitialized) {
+      focusStation3DStudio.updateModel();
+    }
   };
 
   const updateConfigEngravingText = (text) => {
-    state.config.engravingText = text;
+    const clean = (text || '').slice(0, 24);
+    state.config.engravingText = clean;
     const badgeText = document.getElementById('engravingBadgeText');
     if (badgeText) {
-      badgeText.textContent = text.trim() ? text.trim().toUpperCase() : 'GEEKNOOK // LAB';
+      badgeText.textContent = clean.trim() ? clean.trim().toUpperCase() : 'GEEKNOOK // LAB';
+    }
+    const charCount = document.getElementById('engravingCharCount');
+    if (charCount) {
+      charCount.textContent = `${clean.length} / 24`;
     }
     if (focusStation3DStudio?.isInitialized) {
       focusStation3DStudio.updateModel();
     }
+  };
+
+  const selectEngravingFont = (fontId) => {
+    state.config.engravingFont = fontId;
+    soundEngine.play('click');
+    renderConfiguratorUI();
+    if (focusStation3DStudio?.isInitialized) {
+      focusStation3DStudio.updateModel();
+    }
+  };
+
+  const selectEngravingMaterial = (matId) => {
+    state.config.engravingMaterial = matId;
+    soundEngine.play('click');
+    renderConfiguratorUI();
+    if (focusStation3DStudio?.isInitialized) {
+      focusStation3DStudio.updateModel();
+    }
+  };
+
+  const setEngravingPreset = (text) => {
+    soundEngine.play('click');
+    const input = document.getElementById('configEngravingInput');
+    if (input) input.value = text;
+    updateConfigEngravingText(text);
   };
 
   // --- PROCEDURAL PHOTOREALISTIC PBR WOOD TEXTURES & THREE.JS 3D ENGINE ---
@@ -2849,25 +2904,52 @@
         this.updateMonitors();
       },
 
-      updateBadgeTexture(text) {
+      updateBadgeTexture(text, fontId, matId) {
         if (!this.badgeCanvas) return;
+        const font = fontId || state.config.engravingFont || 'mono';
+        const mat = matId || state.config.engravingMaterial || 'brass';
         const ctx = this.badgeCanvas.getContext('2d');
         const w = this.badgeCanvas.width;
         const h = this.badgeCanvas.height;
 
-        const grad = ctx.createLinearGradient(0, 0, w, h);
-        grad.addColorStop(0, '#d4af37');
-        grad.addColorStop(0.5, '#fef08a');
-        grad.addColorStop(1, '#b45309');
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, w, h);
+        if (mat === 'brass') {
+          const grad = ctx.createLinearGradient(0, 0, w, h);
+          grad.addColorStop(0, '#d4af37');
+          grad.addColorStop(0.45, '#fef08a');
+          grad.addColorStop(1, '#b45309');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+          ctx.strokeStyle = '#78350f';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(2, 2, w - 4, h - 4);
+        } else if (mat === 'black') {
+          const grad = ctx.createLinearGradient(0, 0, w, h);
+          grad.addColorStop(0, '#18181b');
+          grad.addColorStop(0.5, '#27272a');
+          grad.addColorStop(1, '#09090b');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+          ctx.strokeStyle = '#3f3f46';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(2, 2, w - 4, h - 4);
+        } else {
+          const grad = ctx.createLinearGradient(0, 0, w, h);
+          grad.addColorStop(0, '#78350f');
+          grad.addColorStop(0.5, '#92400e');
+          grad.addColorStop(1, '#582408');
+          ctx.fillStyle = grad;
+          ctx.fillRect(0, 0, w, h);
+          ctx.strokeStyle = '#451a03';
+          ctx.lineWidth = 4;
+          ctx.strokeRect(2, 2, w - 4, h - 4);
+        }
 
         const drawScrew = (x, y) => {
-          ctx.fillStyle = '#78350f';
+          ctx.fillStyle = mat === 'black' ? '#52525b' : (mat === 'wood' ? '#3e1a06' : '#78350f');
           ctx.beginPath();
           ctx.arc(x, y, 9, 0, Math.PI * 2);
           ctx.fill();
-          ctx.strokeStyle = '#451a03';
+          ctx.strokeStyle = mat === 'black' ? '#a1a1aa' : (mat === 'wood' ? '#1c0b02' : '#451a03');
           ctx.lineWidth = 2;
           ctx.beginPath();
           ctx.moveTo(x - 6, y);
@@ -2877,12 +2959,44 @@
         drawScrew(24, h / 2);
         drawScrew(w - 24, h / 2);
 
-        ctx.fillStyle = '#291403';
-        ctx.font = 'bold 36px monospace';
+        let fontStr = 'bold 34px monospace';
+        if (font === 'sans') {
+          fontStr = 'bold 36px -apple-system, BlinkMacSystemFont, sans-serif';
+        } else if (font === 'serif') {
+          fontStr = 'italic bold 36px Georgia, serif';
+        }
+        ctx.font = fontStr;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+
         const clean = (text || 'GEEKNOOK // LAB').toUpperCase();
-        ctx.fillText(clean, w / 2, h / 2);
+        if (mat === 'black') {
+          ctx.fillStyle = '#f4f4f5';
+          ctx.fillText(clean, w / 2, h / 2);
+        } else if (mat === 'wood') {
+          ctx.fillStyle = '#1c1917';
+          ctx.fillText(clean, w / 2, h / 2);
+        } else {
+          ctx.fillStyle = '#291403';
+          ctx.fillText(clean, w / 2, h / 2);
+        }
+
+        if (this.badgeMesh && this.badgeMesh.material) {
+          if (mat === 'brass') {
+            this.badgeMesh.material.metalness = 0.92;
+            this.badgeMesh.material.roughness = 0.20;
+            this.badgeMesh.material.envMapIntensity = 1.4;
+          } else if (mat === 'black') {
+            this.badgeMesh.material.metalness = 0.85;
+            this.badgeMesh.material.roughness = 0.35;
+            this.badgeMesh.material.envMapIntensity = 0.9;
+          } else {
+            this.badgeMesh.material.metalness = 0.05;
+            this.badgeMesh.material.roughness = 0.85;
+            this.badgeMesh.material.envMapIntensity = 0.3;
+          }
+          this.badgeMesh.material.needsUpdate = true;
+        }
 
         if (this.badgeTexture) this.badgeTexture.needsUpdate = true;
       },
@@ -3410,7 +3524,7 @@
     if (this.badgeMesh) {
       this.badgeMesh.visible = Boolean(state.config.engravingEnabled);
       if (state.config.engravingEnabled) {
-        this.updateBadgeTexture(state.config.engravingText);
+        this.updateBadgeTexture(state.config.engravingText, state.config.engravingFont, state.config.engravingMaterial);
       }
     }
 
@@ -3600,15 +3714,17 @@
     const length = GEEKNOOK_DATA.configurator.lengths.find(l => l.id === state.config.lengthId);
 
     // Add main shelf
+    const fontNames = { mono: 'Mono Code', sans: 'Clean Sans', serif: 'Executive Serif' };
+    const matNames = { brass: 'Латунь', black: 'Чёрный анод', wood: 'Выжигание' };
     const engravingSuffix = state.config.engravingEnabled 
-      ? ` + Лазерная гравировка [${state.config.engravingText || 'GEEKNOOK LAB'}]` 
+      ? ` + Шильдик (${matNames[state.config.engravingMaterial] || 'Латунь'}, ${fontNames[state.config.engravingFont] || 'Mono'}) «${state.config.engravingText || 'GEEKNOOK LAB'}»` 
       : '';
     const mainShelfPrice = length.priceBase + finish.priceDelta + (state.config.engravingEnabled ? 1200 : 0);
     
     // Custom shelf cart key
     const boardId = finish.id === 'oak' ? 'focus-station-oak' : (finish.id === 'black' ? 'focus-station-black' : 'focus-station-walnut');
     const boardTitle = `Focus Station ${length.id} (${finish.name})`;
-    const shelfKey = `${boardId}_${length.id}_${state.config.engravingEnabled ? 'engraved' : 'plain'}`;
+    const shelfKey = `${boardId}_${length.id}_${state.config.engravingEnabled ? `engraved_${state.config.engravingMaterial}_${state.config.engravingFont}` : 'plain'}`;
     const existingShelf = state.cart.find(i => i.cartKey === shelfKey);
     if (existingShelf) {
       existingShelf.quantity += 1;
@@ -6964,6 +7080,7 @@
 
   // --- 3D CAD LIBRARY & B2B ASSET DOWNLOAD ---
   const openCadModal = () => {
+    renderB2bCalculatorUI();
     modalManager.open('cadLibraryModal');
     soundEngine.play('click');
   };
@@ -6984,20 +7101,605 @@
     showToast(`Файл «${filename}» загружен!`, 'success');
   };
 
+  // --- B2B OFFICE PACK CONFIGURATOR & OFFICIAL PROPOSAL (FEATURE 4) ---
+  const b2bCalcState = {
+    workplaces: 15,
+    selectedTierId: 'growth',
+    addonBranding: false,
+    addonMatBranding: false,
+    clientCompany: '',
+    clientInn: '',
+    clientContactName: '',
+    clientEmail: ''
+  };
+
+  const getPlacesPlural = (n) => {
+    const mod10 = n % 10;
+    const mod100 = n % 100;
+    if (mod100 >= 11 && mod100 <= 19) return 'мест';
+    if (mod10 === 1) return 'место';
+    if (mod10 >= 2 && mod10 <= 4) return 'места';
+    return 'мест';
+  };
+
+  const calculateB2bPricing = () => {
+    const places = b2bCalcState.workplaces;
+    const tiers = (GEEKNOOK_DATA.b2b && GEEKNOOK_DATA.b2b.tiers) ? GEEKNOOK_DATA.b2b.tiers : [];
+    const tier = tiers.find(t => t.id === b2bCalcState.selectedTierId) || tiers[1] || tiers[0] || {
+      id: 'growth',
+      name: 'Growth Team',
+      subtitle: 'Оптимальный сетап для продуктовой разработки',
+      discountPercent: 15,
+      itemsPerPlace: [
+        { name: "Focus Station 85 / 116 (Дуб / Орех)", price: 21999 },
+        { name: "Держатель ноутбука Laptop Stand Open", price: 4999 },
+        { name: "Кронштейн для наушников Headphone Stand", price: 2999 }
+      ]
+    };
+
+    const basePlaceCost = tier.itemsPerPlace.reduce((sum, item) => sum + item.price, 0);
+
+    let discountPercent = 10;
+    if (places >= 51) discountPercent = 25;
+    else if (places >= 26) discountPercent = 20;
+    else if (places >= 11) discountPercent = 15;
+    else discountPercent = 10;
+
+    const brandingPerPlace = (places >= 25) ? 0 : 600;
+    const brandingTotal = b2bCalcState.addonBranding ? (brandingPerPlace * places) : 0;
+    const matBrandingTotal = b2bCalcState.addonMatBranding ? (400 * places) : 0;
+
+    const retailSubtotal = (basePlaceCost * places) + (b2bCalcState.addonBranding ? (600 * places) : 0) + matBrandingTotal;
+    const discountAmount = Math.round((basePlaceCost * places) * (discountPercent / 100));
+    const brandingSavings = (b2bCalcState.addonBranding && places >= 25) ? (600 * places) : 0;
+    const grandTotal = (basePlaceCost * places - discountAmount) + brandingTotal + matBrandingTotal;
+    const totalSavings = discountAmount + brandingSavings;
+
+    return {
+      tier,
+      places,
+      basePlaceCost,
+      discountPercent,
+      retailSubtotal,
+      discountAmount,
+      brandingTotal,
+      matBrandingTotal,
+      brandingSavings,
+      grandTotal,
+      totalSavings
+    };
+  };
+
+  const renderB2bCalculatorUI = () => {
+    const pricing = calculateB2bPricing();
+    const tiers = (GEEKNOOK_DATA.b2b && GEEKNOOK_DATA.b2b.tiers) ? GEEKNOOK_DATA.b2b.tiers : [];
+
+    const badge = document.getElementById('b2bWorkplacesCountBadge');
+    if (badge) badge.textContent = `${pricing.places} ${getPlacesPlural(pricing.places)}`;
+    const slider = document.getElementById('b2bWorkplacesSlider');
+    if (slider && Number(slider.value) !== pricing.places) slider.value = pricing.places;
+
+    document.querySelectorAll('#b2bQuickChipsRow .b2b-quick-chip').forEach(btn => {
+      const count = Number(btn.getAttribute('data-count'));
+      btn.classList.toggle('active', count === pricing.places);
+    });
+
+    const tierGrid = document.getElementById('b2bTierGrid');
+    if (tierGrid && tiers.length) {
+      tierGrid.innerHTML = tiers.map(t => {
+        const isActive = t.id === b2bCalcState.selectedTierId;
+        const placeSum = t.itemsPerPlace.reduce((s, i) => s + i.price, 0);
+        return `
+          <div class="b2b-tier-card ${isActive ? 'active' : ''}" onclick="window.geekNookApp.selectB2bTier('${t.id}')">
+            <div class="b2b-tier-header">
+              <span class="b2b-tier-name">${escapeHTML(t.name)}</span>
+              <span class="b2b-tier-badge">${escapeHTML(t.badge)}</span>
+            </div>
+            <div class="b2b-tier-desc">${escapeHTML(t.subtitle)}</div>
+            <ul class="b2b-tier-items-list">
+              ${t.itemsPerPlace.map(item => `<li>${escapeHTML(item.name)}</li>`).join('')}
+            </ul>
+            <div class="b2b-tier-price-unit">
+              ${formatPrice(placeSum)} / место
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    const brandingCost = document.getElementById('b2bBrandingCost');
+    if (brandingCost) {
+      brandingCost.textContent = pricing.places >= 25 ? 'Бесплатно (от 25 мест)' : '+600 ₽ / место';
+      brandingCost.style.color = pricing.places >= 25 ? '#10b981' : 'var(--primary)';
+    }
+
+    const subtotalEl = document.getElementById('b2bSubtotalVal');
+    if (subtotalEl) subtotalEl.textContent = formatPrice(pricing.retailSubtotal);
+
+    const discPercEl = document.getElementById('b2bDiscountPercentVal');
+    if (discPercEl) discPercEl.textContent = `${pricing.discountPercent}%`;
+
+    const discAmtEl = document.getElementById('b2bDiscountAmountVal');
+    if (discAmtEl) discAmtEl.textContent = `-${formatPrice(pricing.discountAmount)}`;
+
+    const totalEl = document.getElementById('b2bTotalAmountVal');
+    if (totalEl) totalEl.textContent = formatPrice(pricing.grandTotal);
+
+    const savingsBadge = document.getElementById('b2bSavingsBadge');
+    if (savingsBadge) {
+      savingsBadge.textContent = `✓ Экономия бюджета: ${formatPrice(pricing.totalSavings)}`;
+    }
+  };
+
+  const updateB2bWorkplaces = (val) => {
+    b2bCalcState.workplaces = Math.max(5, Math.min(100, parseInt(val, 10) || 15));
+    renderB2bCalculatorUI();
+  };
+
+  const setB2bWorkplacesPreset = (count) => {
+    b2bCalcState.workplaces = count;
+    soundEngine.play('click');
+    renderB2bCalculatorUI();
+  };
+
+  const selectB2bTier = (tierId) => {
+    b2bCalcState.selectedTierId = tierId;
+    soundEngine.play('click');
+    renderB2bCalculatorUI();
+  };
+
+  const toggleB2bAddon = (key, checked) => {
+    if (key === 'branding') b2bCalcState.addonBranding = Boolean(checked);
+    if (key === 'matBranding') b2bCalcState.addonMatBranding = Boolean(checked);
+    soundEngine.play('toggle');
+    renderB2bCalculatorUI();
+  };
+
+  const rublesToWordsRu = (amount) => {
+    const unitsM = ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+    const unitsF = ['', 'одна', 'две', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+    const teens = ['десять', 'одиннадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+    const tens = ['', '', 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+    const hundreds = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
+
+    const triad = (num, isFemale) => {
+      let res = '';
+      const h = Math.floor(num / 100);
+      const rem = num % 100;
+      const t = Math.floor(rem / 10);
+      const u = rem % 10;
+      if (h > 0) res += hundreds[h] + ' ';
+      if (rem >= 10 && rem <= 19) {
+        res += teens[rem - 10] + ' ';
+      } else {
+        if (t > 0) res += tens[t] + ' ';
+        if (u > 0) res += (isFemale ? unitsF[u] : unitsM[u]) + ' ';
+      }
+      return res.trim();
+    };
+
+    const n = Math.floor(amount);
+    if (n === 0) return 'Ноль рублей 00 копеек';
+
+    const millions = Math.floor(n / 1000000);
+    const thousands = Math.floor((n % 1000000) / 1000);
+    const ones = n % 1000;
+    const parts = [];
+
+    if (millions > 0) {
+      const str = triad(millions, false);
+      const mRem = millions % 10;
+      const mRem100 = millions % 100;
+      let word = 'миллионов';
+      if (mRem100 < 10 || mRem100 > 20) {
+        if (mRem === 1) word = 'миллион';
+        else if (mRem >= 2 && mRem <= 4) word = 'миллиона';
+      }
+      parts.push(str + ' ' + word);
+    }
+
+    if (thousands > 0) {
+      const str = triad(thousands, true);
+      const tRem = thousands % 10;
+      const tRem100 = thousands % 100;
+      let word = 'тысяч';
+      if (tRem100 < 10 || tRem100 > 20) {
+        if (tRem === 1) word = 'тысяча';
+        else if (tRem >= 2 && tRem <= 4) word = 'тысячи';
+      }
+      parts.push(str + ' ' + word);
+    }
+
+    if (ones > 0) {
+      const str = triad(ones, false);
+      const oRem = ones % 10;
+      const oRem100 = ones % 100;
+      let word = 'рублей';
+      if (oRem100 < 10 || oRem100 > 20) {
+        if (oRem === 1) word = 'рубль';
+        else if (oRem >= 2 && oRem <= 4) word = 'рубля';
+      }
+      parts.push(str + ' ' + word);
+    } else {
+      parts.push('рублей');
+    }
+
+    let fullStr = parts.join(' ').trim();
+    fullStr = fullStr.charAt(0).toUpperCase() + fullStr.slice(1);
+    return `${fullStr} 00 копеек`;
+  };
+
+  const getB2bSealSvg = () => `
+    <svg class="b2b-kp-stamp-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <path id="sealCircleOuter" d="M 100, 100 m -85, 0 a 85,85 0 1,1 170,0 a 85,85 0 1,1 -170,0"/>
+        <path id="sealCircleInner" d="M 100, 100 m -62, 0 a 62,62 0 1,1 124,0 a 62,62 0 1,1 -124,0"/>
+      </defs>
+      <circle cx="100" cy="100" r="95" fill="none" stroke="#1d4ed8" stroke-width="2.5" stroke-dasharray="8 2"/>
+      <circle cx="100" cy="100" r="88" fill="none" stroke="#1d4ed8" stroke-width="1.5"/>
+      <circle cx="100" cy="100" r="66" fill="none" stroke="#1d4ed8" stroke-width="1.2"/>
+      <text fill="#1d4ed8" font-size="8.8" font-weight="bold" font-family="Arial, sans-serif" letter-spacing="1">
+        <textPath href="#sealCircleOuter" startOffset="0%">
+          * ОБЩЕСТВО С ОГРАНИЧЕННОЙ ОТВЕТСТВЕННОСТЬЮ * «ГИК НУК»
+        </textPath>
+      </text>
+      <text fill="#1d4ed8" font-size="7.8" font-family="Arial, sans-serif" letter-spacing="0.8">
+        <textPath href="#sealCircleInner" startOffset="0%">
+          * ОГРН 1247700620265 * МОСКВА * ИНН 9723239478 *
+        </textPath>
+      </text>
+      <circle cx="100" cy="100" r="48" fill="none" stroke="#1d4ed8" stroke-width="1" stroke-dasharray="3 3"/>
+      <text x="100" y="88" text-anchor="middle" fill="#1d4ed8" font-size="11" font-weight="900" font-family="Arial, sans-serif" letter-spacing="2">GEEK NOOK</text>
+      <text x="100" y="104" text-anchor="middle" fill="#1d4ed8" font-size="7.5" font-weight="bold" font-family="Arial, sans-serif">ДЛЯ ДОКУМЕНТОВ</text>
+      <text x="100" y="118" text-anchor="middle" fill="#1d4ed8" font-size="7" font-family="Arial, sans-serif">№ 1</text>
+    </svg>
+  `;
+
+  const getB2bSignatureSvg = () => `
+    <svg width="120" height="50" viewBox="0 0 120 50" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;left:20px;bottom:10px;pointer-events:none;">
+      <path d="M10 32C22 18 28 8 36 24C44 40 40 48 54 28C68 8 62 38 78 22C86 14 96 28 112 18" stroke="#1e3a8a" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M42 36C56 32 80 34 105 26" stroke="#1e3a8a" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  `;
+
+  const generateB2bKp = () => {
+    soundEngine.play('cart');
+    const company = document.getElementById('b2bCompany')?.value.trim() || 'ООО «Заказчик»';
+    const inn = document.getElementById('b2bInn')?.value.trim() || '';
+    const contact = document.getElementById('b2bContactName')?.value.trim() || 'Руководитель департамента';
+    const email = document.getElementById('b2bEmail')?.value.trim() || 'procurement@company.ru';
+
+    b2bCalcState.clientCompany = company;
+    b2bCalcState.clientInn = inn;
+    b2bCalcState.clientContactName = contact;
+    b2bCalcState.clientEmail = email;
+
+    const pricing = calculateB2bPricing();
+    const sheet = document.getElementById('b2bKpSheet');
+    if (!sheet) return;
+
+    const today = new Date();
+    const dateFormatted = today.toLocaleDateString('ru-RU', { day: 'numeric', month: 'long', year: 'numeric' });
+    const kpNumber = `КП-ГН-${today.getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+    let tableRowsHtml = pricing.tier.itemsPerPlace.map((item, idx) => {
+      const lineRetail = item.price * pricing.places;
+      const lineDisc = Math.round(lineRetail * (pricing.discountPercent / 100));
+      const lineTotal = lineRetail - lineDisc;
+      return `
+        <tr>
+          <td style="text-align:center;">${idx + 1}</td>
+          <td><strong>${escapeHTML(item.name)}</strong></td>
+          <td style="text-align:center;">${pricing.places} шт.</td>
+          <td style="text-align:right;">${formatPrice(item.price)}</td>
+          <td style="text-align:center;color:#10b981;font-weight:700;">-${pricing.discountPercent}%</td>
+          <td style="text-align:right;font-weight:700;">${formatPrice(lineTotal)}</td>
+        </tr>
+      `;
+    }).join('');
+
+    let itemCounter = pricing.tier.itemsPerPlace.length + 1;
+
+    if (b2bCalcState.addonBranding) {
+      const isFree = pricing.places >= 25;
+      tableRowsHtml += `
+        <tr>
+          <td style="text-align:center;">${itemCounter++}</td>
+          <td><strong>Фирменная лазерная гравировка логотипа компании на металлическом шильдике</strong></td>
+          <td style="text-align:center;">${pricing.places} шт.</td>
+          <td style="text-align:right;">${isFree ? '0 ₽' : '600 ₽'}</td>
+          <td style="text-align:center;color:#10b981;font-weight:700;">${isFree ? '100%' : '0%'}</td>
+          <td style="text-align:right;font-weight:700;">${isFree ? '0 ₽ (Бонус)' : formatPrice(600 * pricing.places)}</td>
+        </tr>
+      `;
+    }
+
+    if (b2bCalcState.addonMatBranding) {
+      tableRowsHtml += `
+        <tr>
+          <td style="text-align:center;">${itemCounter++}</td>
+          <td><strong>Фирменное блинтовое тиснение корпоративной айдентики на ковриках</strong></td>
+          <td style="text-align:center;">${pricing.places} шт.</td>
+          <td style="text-align:right;">400 ₽</td>
+          <td style="text-align:center;">0%</td>
+          <td style="text-align:right;font-weight:700;">${formatPrice(400 * pricing.places)}</td>
+        </tr>
+      `;
+    }
+
+    sheet.innerHTML = `
+      <div class="b2b-kp-header-row">
+        <div class="b2b-kp-logo-area">
+          <div class="b2b-kp-logo-title">GEEK NOOK</div>
+          <div class="b2b-kp-logo-sub">Engineering Workspace Solutions</div>
+        </div>
+        <div class="b2b-kp-requisites-block">
+          <strong>Общество с ограниченной ответственностью «ГИК НУК»</strong><br>
+          ОГРН: 1247700620265 | ИНН: 9723239478 | КПП: 772301001<br>
+          115193, г. Москва, ул. Петра Романова, д. 7, стр. 1, пом. 20/5<br>
+          Р/с: 40702810938000123456 в ПАО Сбербанк | БИК: 044525225<br>
+          Тел: +7 (495) 120-42-88 | Email: b2b@geeknook.ru | Сайт: geeknook.ru
+        </div>
+      </div>
+
+      <div class="b2b-kp-doc-meta">
+        <div>
+          <div class="b2b-kp-doc-number">КОММЕРЧЕСКОЕ ПРЕДЛОЖЕНИЕ № ${kpNumber}</div>
+          <div class="b2b-kp-doc-date">от ${dateFormatted} • Срок действия: 30 календарных дней</div>
+        </div>
+        <div style="font-size:0.8rem;color:#1e293b;text-align:right;">
+          Пакет: <strong>${escapeHTML(pricing.tier.name)}</strong> (${pricing.places} рабочих мест)
+        </div>
+      </div>
+
+      <div class="b2b-kp-recipient-box">
+        <strong>Заказчик:</strong> ${escapeHTML(company)}${inn ? ` (ИНН: ${escapeHTML(inn)})` : ''}<br>
+        <strong>Контактное лицо:</strong> ${escapeHTML(contact)} | <strong>Email:</strong> ${escapeHTML(email)}
+      </div>
+
+      <div class="b2b-kp-table-wrap">
+        <table class="b2b-kp-table">
+          <thead>
+            <tr>
+              <th style="width:36px;text-align:center;">№</th>
+              <th>Наименование оборудования и спецификация</th>
+              <th style="width:70px;text-align:center;">Кол-во</th>
+              <th style="width:90px;text-align:right;">Цена, руб</th>
+              <th style="width:75px;text-align:center;">Скидка</th>
+              <th style="width:110px;text-align:right;">Сумма, руб</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${tableRowsHtml}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="b2b-kp-total-summary">
+        <div class="b2b-kp-summary-line">Базовая розничная стоимость: ${formatPrice(pricing.retailSubtotal)}</div>
+        <div class="b2b-kp-summary-line" style="color:#10b981;font-weight:700;">Корпоративная скидка (${pricing.discountPercent}%): -${formatPrice(pricing.discountAmount)}</div>
+        <div class="b2b-kp-grand-total">ИТОГО К ОПЛАТЕ: ${formatPrice(pricing.grandTotal)}</div>
+        <div class="b2b-kp-words-sum">(${rublesToWordsRu(pricing.grandTotal)})</div>
+        <div style="font-size:0.75rem;color:#64748b;margin-top:4px;">НДС не облагается в связи с применением упрощенной системы налогообложения (УСН)</div>
+      </div>
+
+      <div class="b2b-kp-conditions">
+        <h4>Условия поставки и гарантийные обязательства:</h4>
+        <ol style="padding-left:18px;margin:0;">
+          <li><strong>Порядок расчетов:</strong> Безналичный расчет в рублях РФ по выставленному счету. Предоставляется полный комплект закрывающих документов (УПД).</li>
+          <li><strong>Электронный документооборот (ЭДО):</strong> Диадок (АО «ПФ «СКБ Контур») или СБИС (ООО «Компания «Тензор»).</li>
+          <li><strong>Сроки производства и комплектации:</strong> 3–7 рабочих дней с даты зачисления денежных средств на расчетный счет.</li>
+          <li><strong>Логистика:</strong> Прямая доставка логистической службой СДЭК / Деловые Линии до офиса заказчика с обязательным страхованием груза.</li>
+          <li><strong>Гарантия производителя:</strong> 12 месяцев на все несущие алюминиевые кронштейны Д16Т, массив древесины и систему T-Track. Замена любых элементов при рекламации за счет производителя.</li>
+        </ol>
+      </div>
+
+      <div class="b2b-kp-signatures-row">
+        <div class="b2b-kp-sign-info">
+          <strong>Поставщик:</strong> ООО «ГИК НУК»<br>
+          Генеральный директор / Затовка С. В.
+        </div>
+        <div class="b2b-kp-stamp-wrap">
+          ${getB2bSignatureSvg()}
+          ${getB2bSealSvg()}
+        </div>
+      </div>
+    `;
+
+    modalManager.open('b2bKpModal');
+    showToast(`✓ Официальное КП № ${kpNumber} сформировано!`, 'success');
+
+    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackB2bLead === 'function') {
+      window.geekNookAnalytics.trackB2bLead(company, email, `${pricing.places} мест, сумма ${pricing.grandTotal}`);
+    }
+  };
+
+  const printB2bKp = () => {
+    soundEngine.play('click');
+    window.print();
+  };
+
+  const copyB2bKpLink = () => {
+    soundEngine.play('click');
+    const pricing = calculateB2bPricing();
+    const text = `Коммерческое предложение GeekNook для ${b2bCalcState.clientCompany || 'компании'}\nПакет: ${pricing.tier.name} (${pricing.places} мест)\nСумма со скидкой: ${formatPrice(pricing.grandTotal)}\nЭкономия: ${formatPrice(pricing.totalSavings)}\nКонтакты: b2b@geeknook.ru | https://geeknook.ru`;
+    copyToClipboard(text);
+    showToast('Спецификация КП скопирована в буфер обмена!', 'success');
+  };
+
   const handleB2bSubmit = (e) => {
     e.preventDefault();
     soundEngine.play('cart');
-    const company = document.getElementById('b2bCompany')?.value || 'Компания';
-    const email = document.getElementById('b2bEmail')?.value || '';
-    const workplaces = document.getElementById('b2bWorkplaces')?.value || '5-10';
+    const company = document.getElementById('b2bCompany')?.value.trim() || 'Компания';
+    const email = document.getElementById('b2bEmail')?.value.trim() || '';
+    const workplaces = b2bCalcState.workplaces;
 
-    // Track Analytics Goal
     if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackB2bLead === 'function') {
-      window.geekNookAnalytics.trackB2bLead(company, email, workplaces);
+      window.geekNookAnalytics.trackB2bLead(company, email, `${workplaces} мест`);
     }
 
     closeModal('cadLibraryModal');
-    showToast(`Запрос для «${escapeHTML(company)}» принят! КП отправлено на email.`, 'success');
+    showToast(`Запрос для «${escapeHTML(company)}» принят! Мы свяжемся с вами в течение 15 минут.`, 'success');
+  };
+
+  // --- GIFT VOUCHER ENGINE (FEATURE 6) ---
+  const giftCardState = {
+    nominal: 15000,
+    customNominal: null,
+    theme: 'obsidian',
+    recipientName: '',
+    giverName: '',
+    message: '',
+    deliveryFormat: 'digital',
+    cardCode: 'GN-GIFT-2026-8492'
+  };
+
+  const openGiftCardModal = () => {
+    if (!giftCardState.cardCode || giftCardState.cardCode === 'GN-GIFT-2026-8492') {
+      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+      giftCardState.cardCode = `GN-GIFT-2026-${randomSuffix}`;
+    }
+    renderGiftCardUI();
+    modalManager.open('giftCardModal');
+    soundEngine.play('click');
+  };
+
+  const selectGiftNominal = (nom) => {
+    soundEngine.play('click');
+    const customWrap = document.getElementById('giftCustomNominalWrap');
+    if (nom === 'custom') {
+      giftCardState.nominal = giftCardState.customNominal || 15000;
+      if (customWrap) customWrap.style.display = 'block';
+    } else {
+      giftCardState.customNominal = null;
+      giftCardState.nominal = Number(nom);
+      if (customWrap) customWrap.style.display = 'none';
+    }
+    renderGiftCardUI();
+  };
+
+  const updateCustomNominal = (val) => {
+    const num = parseInt(val, 10);
+    if (!isNaN(num) && num >= 1000) {
+      giftCardState.customNominal = num;
+      giftCardState.nominal = num;
+      renderGiftCardUI();
+    }
+  };
+
+  const selectGiftTheme = (themeId) => {
+    giftCardState.theme = themeId;
+    soundEngine.play('click');
+    renderGiftCardUI();
+  };
+
+  const updateGiftRecipient = (val) => {
+    giftCardState.recipientName = val.trim();
+    renderGiftCardUI();
+  };
+
+  const updateGiftGiver = (val) => {
+    giftCardState.giverName = val.trim();
+    renderGiftCardUI();
+  };
+
+  const updateGiftMessage = (val) => {
+    giftCardState.message = val.trim();
+  };
+
+  const selectGiftFormat = (format) => {
+    giftCardState.deliveryFormat = format;
+    soundEngine.play('toggle');
+    renderGiftCardUI();
+  };
+
+  const renderGiftCardUI = () => {
+    const previewCard = document.getElementById('giftVoucherCardPreview');
+    const nominalEl = document.getElementById('voucherCardNominal');
+    const recipientEl = document.getElementById('voucherCardRecipient');
+    const giverEl = document.getElementById('voucherCardGiver');
+    const codeEl = document.getElementById('voucherCardCode');
+    const totalEl = document.getElementById('giftModalTotalPrice');
+
+    if (previewCard) {
+      previewCard.className = `gift-voucher-card theme-${giftCardState.theme}`;
+    }
+
+    const effectiveNominal = giftCardState.nominal;
+    const isPhysical = giftCardState.deliveryFormat === 'physical';
+    const totalCost = effectiveNominal + (isPhysical ? 490 : 0);
+
+    if (nominalEl) nominalEl.textContent = formatPrice(effectiveNominal);
+    if (totalEl) totalEl.textContent = formatPrice(totalCost);
+
+    if (recipientEl) {
+      recipientEl.textContent = giftCardState.recipientName ? `Для: ${giftCardState.recipientName}` : 'Для: Имя получателя';
+    }
+    if (giverEl) {
+      giverEl.textContent = giftCardState.giverName ? `От: ${giftCardState.giverName}` : 'От: Команды GeekNook';
+    }
+    if (codeEl) {
+      codeEl.textContent = giftCardState.cardCode;
+    }
+
+    document.querySelectorAll('#giftNominalsGrid .gift-nominal-btn').forEach(btn => {
+      const dataNom = btn.getAttribute('data-nominal');
+      if (dataNom === 'custom') {
+        btn.classList.toggle('active', Boolean(giftCardState.customNominal));
+      } else {
+        btn.classList.toggle('active', Number(dataNom) === effectiveNominal && !giftCardState.customNominal);
+      }
+    });
+
+    document.querySelectorAll('#giftThemesRow .gift-theme-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-theme') === giftCardState.theme);
+    });
+  };
+
+  const addGiftCardToCart = () => {
+    soundEngine.play('cart');
+    const isPhysical = giftCardState.deliveryFormat === 'physical';
+    const totalCost = giftCardState.nominal + (isPhysical ? 490 : 0);
+    const themeTitles = {
+      obsidian: 'Obsidian Black',
+      gold: 'Imperial Gold',
+      titanium: 'Titanium Silver'
+    };
+
+    const cartKey = `gift_card_${giftCardState.nominal}_${Date.now()}`;
+    const recipient = giftCardState.recipientName || 'Подарок';
+    const giver = giftCardState.giverName ? ` от ${giftCardState.giverName}` : '';
+    const physicalNote = isPhysical ? ' + Физическая карта в конверте с сургучом' : ' (Электронный сертификат с QR)';
+
+    state.cart.push({
+      cartKey,
+      id: 'gift-voucher',
+      title: `Подарочный сертификат GeekNook (${formatPrice(giftCardState.nominal)})`,
+      option: `Тема: ${themeTitles[giftCardState.theme] || 'Obsidian'}, Для: ${recipient}${giver}, Код: ${giftCardState.cardCode}${physicalNote}`,
+      price: totalCost,
+      image: 'images/tild3763-3337-4662-b233-616531316364__3.jpg',
+      quantity: 1
+    });
+
+    saveCart();
+    triggerBadgeBounce();
+    closeModal('giftCardModal');
+    showToast(`Подарочный сертификат на ${formatPrice(giftCardState.nominal)} добавлен в корзину!`, 'success');
+
+    const openDrawer = (window.geekNookApp && window.geekNookApp.openCartDrawer) ? window.geekNookApp.openCartDrawer : openCartDrawer;
+    openDrawer();
+  };
+
+  const downloadGiftCardPdf = () => {
+    soundEngine.play('click');
+    window.print();
+  };
+
+  const copyGiftCardLink = () => {
+    soundEngine.play('click');
+    const text = `Подарочный сертификат GeekNook на ${formatPrice(giftCardState.nominal)}! Код активации: ${giftCardState.cardCode}. Применим к любым товарам на https://geeknook.ru`;
+    copyToClipboard(text);
+    showToast('Код сертификата и детали скопированы!', 'success');
   };
 
   // --- COMMAND PALETTE (Cmd+K / Ctrl+K) ---
@@ -7088,11 +7790,29 @@
         action: () => { closeCommandPalette(); openErgonomicsCalculator(); }
       },
       {
+        id: 'action-b2b',
+        category: 'B2B & Опт',
+        title: 'B2B Конфигуратор & Официальное КП (PDF)',
+        sub: 'Оснащение офисов 5–100+ мест, скидки до 25%, закрывающие документы',
+        badge: 'B2B -25%',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path></svg>',
+        action: () => { closeCommandPalette(); openCadModal(); }
+      },
+      {
+        id: 'action-gift-voucher',
+        category: 'Подарки',
+        title: 'Подарочный сертификат GeekNook (5 000 – 35 000 ₽)',
+        sub: 'Электронный сертификат с QR или пластиковая карта в черном конверте',
+        badge: 'Сертификат',
+        icon: '<span style="font-size:14px;">🎁</span>',
+        action: () => { closeCommandPalette(); openGiftCardModal(); }
+      },
+      {
         id: 'action-cad',
         category: 'Инструменты',
-        title: '3D CAD-библиотека (.STEP / .GLB)',
-        sub: 'Файлы для архитекторов и оптовое КП для офисов',
-        badge: 'B2B CAD',
+        title: '3D CAD-библиотека (.STEP / .GLB / .DWG)',
+        sub: 'Файлы для дизайнеров и архитекторов',
+        badge: 'CAD Models',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.3 15.3l-6.6 6.6c-.4.4-1 .4-1.4 0l-9.9-9.9c-.4-.4-.4-1 0-1.4l6.6-6.6c.4-.4 1-.4 1.4 0l9.9 9.9c.4.4.4 1 0 1.4z"></path></svg>',
         action: () => { closeCommandPalette(); openCadModal(); }
       },
@@ -7807,6 +8527,8 @@
     initCableSimulator();
     initFeaLab();
     initProduction3DStudio();
+    renderB2bCalculatorUI();
+    renderGiftCardUI();
     if ('IntersectionObserver' in window) {
       const configSec = document.getElementById('configurator');
       if (configSec) {
@@ -7892,6 +8614,9 @@
     toggleConfigAddon,
     toggleConfigEngraving,
     updateConfigEngravingText,
+    selectEngravingFont,
+    selectEngravingMaterial,
+    setEngravingPreset,
     addConfiguredBundleToCart,
     openCheckout,
     handleCheckoutSubmit,
@@ -7945,7 +8670,32 @@
     applyErgonomicsRecommendation,
     openCadModal,
     downloadCadAsset,
+    // B2B Configurator & Commercial Proposal (КП)
+    b2bCalcState,
+    calculateB2bPricing,
+    renderB2bCalculatorUI,
+    updateB2bWorkplaces,
+    setB2bWorkplacesPreset,
+    selectB2bTier,
+    toggleB2bAddon,
+    generateB2bKp,
+    printB2bKp,
+    copyB2bKpLink,
     handleB2bSubmit,
+    // Gift Voucher Engine
+    giftCardState,
+    openGiftCardModal,
+    selectGiftNominal,
+    updateCustomNominal,
+    selectGiftTheme,
+    updateGiftRecipient,
+    updateGiftGiver,
+    updateGiftMessage,
+    selectGiftFormat,
+    renderGiftCardUI,
+    addGiftCardToCart,
+    downloadGiftCardPdf,
+    copyGiftCardLink,
     // Hardcore Engineering Suite (Features 1-3 & Production 3D)
     calculateFeaPhysics,
     renderFeaCanvas,

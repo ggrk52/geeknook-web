@@ -203,9 +203,10 @@
           <li><a href="#accessories">Аксессуары</a></li>
           <li><a href="#mats">Коврики</a></li>
           <li><a href="#bundles">Комплекты</a></li>
+          <li><a href="javascript:void(0)" onclick="window.geekNookApp.openGiftCardModal()">Сертификаты</a></li>
+          <li><a href="javascript:void(0)" onclick="window.geekNookApp.openCadModal()">B2B Офис</a></li>
           <li><a href="#advantages">Преимущества</a></li>
           <li><a href="#production">Производство</a></li>
-          <li><a href="#retail">Где купить</a></li>
           <li><a href="#journal">Журнал</a></li>
           <li><a href="#footer">Контакты</a></li>
         </ul>
@@ -1341,8 +1342,12 @@
             <span class="mobile-nav-sub">Расчет высоты подставки под ваш рост</span>
           </a>
           <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openCadModal();" style="border: 1px dashed rgba(59,130,246,0.4); margin: 2px 0;">
-            <span class="mobile-nav-title" style="color:var(--primary);">3D CAD библиотека & Опт B2B</span>
-            <span class="mobile-nav-sub">Файлы .STEP, .GLB и корпоративные КП</span>
+            <span class="mobile-nav-title" style="color:var(--primary);">B2B Конфигуратор & Опт (-25%)</span>
+            <span class="mobile-nav-sub">Оснащение офисов, расчет КП и CAD-модели</span>
+          </a>
+          <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openGiftCardModal();" style="border: 1px dashed rgba(212,175,55,0.4); margin: 2px 0;">
+            <span class="mobile-nav-title" style="color:#d4af37;">Подарочные сертификаты</span>
+            <span class="mobile-nav-sub">Электронные и пластиковые карты от 5 000 ₽</span>
           </a>
           <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openQuiz();">
             <span class="mobile-nav-title">Подбор сетапа (Квиз)</span>
@@ -1634,21 +1639,75 @@
             <div id="modalConfigAddons" class="config-addons-list"></div>
           </div>
 
-          <!-- Step 4: Laser Engraving Personalization -->
+          <!-- Step 4: Laser Engraving Studio Personalization -->
           <div class="config-step-block">
-            <div class="config-step-title">4. Индивидуальная гравировка:</div>
+            <div class="config-step-title">4. Лазерная гравировка шильдика:</div>
             <div class="config-engraving-card">
               <label class="config-engraving-toggle" for="configEngravingCheckbox">
-                <input type="checkbox" id="configEngravingCheckbox" aria-label="Фирменный металлический шильдик с гравировкой" onchange="window.geekNookApp.toggleConfigEngraving(this.checked)" />
+                <input type="checkbox" id="configEngravingCheckbox" aria-label="Фирменный металлический шильдик с лазерной гравировкой" onchange="window.geekNookApp.toggleConfigEngraving(this.checked)" />
                 <span class="engraving-toggle-slider"></span>
                 <span class="engraving-toggle-label">
-                  <strong>Фирменный металлический шильдик с гравировкой</strong>
+                  <strong>Фирменный шильдик с волоконной гравировкой</strong>
                   <span class="engraving-toggle-price">+1 200 ₽</span>
                 </span>
               </label>
+              
               <div class="config-engraving-input-wrap" id="configEngravingInputWrap" style="display:none;">
                 <input type="text" id="configEngravingInput" class="config-engraving-input" maxlength="24" placeholder="Например: STAY FOCUSED // LAB №042" oninput="window.geekNookApp.updateConfigEngravingText(this.value)" aria-label="Текст лазерной гравировки для шильдика" />
-                <div class="engraving-input-hint">До 24 символов (латиница, кириллица, цифры). Наносится волоконным лазером.</div>
+                
+                <div class="engraving-input-hint">
+                  <span>Волоконный лазер (до 24 симв.)</span>
+                  <span id="engravingCharCount">0 / 24</span>
+                </div>
+
+                <!-- Quick Preset Ideas -->
+                <div class="engraving-studio-subgroup">
+                  <div class="engraving-subgroup-label">Идеи для гравировки:</div>
+                  <div class="engraving-presets-row">
+                    <button type="button" class="engraving-preset-pill" onclick="window.geekNookApp.setEngravingPreset('STAY FOCUSED')">STAY FOCUSED</button>
+                    <button type="button" class="engraving-preset-pill" onclick="window.geekNookApp.setEngravingPreset('BUILD & SHIP')">BUILD & SHIP</button>
+                    <button type="button" class="engraving-preset-pill" onclick="window.geekNookApp.setEngravingPreset('HEURISTIC // 042')">HEURISTIC // 042</button>
+                    <button type="button" class="engraving-preset-pill" onclick="window.geekNookApp.setEngravingPreset('GEEKNOOK LAB')">GEEKNOOK LAB</button>
+                  </div>
+                </div>
+
+                <!-- Font Selector -->
+                <div class="engraving-studio-subgroup">
+                  <div class="engraving-subgroup-label">Шрифт гравировки:</div>
+                  <div class="engraving-chips-row" id="engravingFontChips">
+                    <button type="button" class="engraving-chip active" data-font="mono" onclick="window.geekNookApp.selectEngravingFont('mono')">
+                      <span>Mono</span>
+                      <small style="opacity:0.7;">Code</small>
+                    </button>
+                    <button type="button" class="engraving-chip" data-font="sans" onclick="window.geekNookApp.selectEngravingFont('sans')">
+                      <span>Sans</span>
+                      <small style="opacity:0.7;">Clean</small>
+                    </button>
+                    <button type="button" class="engraving-chip" data-font="serif" onclick="window.geekNookApp.selectEngravingFont('serif')">
+                      <span>Serif</span>
+                      <small style="opacity:0.7;">Luxury</small>
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Material & Finish Selector -->
+                <div class="engraving-studio-subgroup">
+                  <div class="engraving-subgroup-label">Материал шильдика:</div>
+                  <div class="engraving-chips-row" id="engravingMaterialChips">
+                    <button type="button" class="engraving-chip active" data-mat="brass" onclick="window.geekNookApp.selectEngravingMaterial('brass')">
+                      <span class="engraving-swatch-dot" style="background:#d4af37;"></span>
+                      <span>Латунь</span>
+                    </button>
+                    <button type="button" class="engraving-chip" data-mat="black" onclick="window.geekNookApp.selectEngravingMaterial('black')">
+                      <span class="engraving-swatch-dot" style="background:#18181b;"></span>
+                      <span>Чёрный анод</span>
+                    </button>
+                    <button type="button" class="engraving-chip" data-mat="wood" onclick="window.geekNookApp.selectEngravingMaterial('wood')">
+                      <span class="engraving-swatch-dot" style="background:#78350f;"></span>
+                      <span>Выжигание</span>
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2141,12 +2200,12 @@
 
   <!-- B2B & 3D CAD Asset Library Modal -->
   <div class="modal-backdrop" role="dialog" aria-modal="true" id="cadLibraryModal" onclick="if(event.target===this) window.geekNookApp.closeModal('cadLibraryModal')">
-    <div class="modal-card cad-library-card" style="max-width:920px;">
+    <div class="modal-card cad-library-card" style="max-width:1080px;">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('cadLibraryModal')" aria-label="Закрыть">✕</button>
       <div class="cad-header">
         <span class="section-kicker kicker-dark" style="color:var(--primary);">B2B & ARCHITECTURE PORTAL</span>
-        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Инженерная 3D CAD библиотека и опт</h2>
-        <p class="modal-subtitle">Точные 3D-модели для дизайнеров интерьеров, архитекторов и оптовое оснащение IT-офисов со скидкой до 25%.</p>
+        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Оснащение IT-офисов & 3D CAD библиотека</h2>
+        <p class="modal-subtitle">Интерактивный конфигуратор оснащения офисов от 5 до 100+ мест со скидкой до 25%, официальное КП с печатью и 3D-модели для архитекторов.</p>
       </div>
 
       <div class="cad-layout-grid">
@@ -2208,37 +2267,310 @@
               <span>PDF</span>
             </button>
           </div>
+
+          <!-- B2B Direct Manager Contact Card -->
+          <div style="background:rgba(43,112,240,0.06);border:1px solid rgba(43,112,240,0.25);border-radius:12px;padding:16px;margin-top:16px;">
+            <div style="font-weight:700;font-size:0.875rem;color:var(--text-main);margin-bottom:6px;">Прямая связь с B2B-отделом GeekNook:</div>
+            <div style="font-size:0.775rem;color:var(--text-muted);line-height:1.5;margin-bottom:10px;">Выставление счёта с НДС/без НДС, работа через ЭДО (Диадок / СБИС), предоставление образцов в офис в Москве и Санкт-Петербурге.</div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;font-size:0.8125rem;">
+              <a href="mailto:b2b@geeknook.ru" style="color:var(--primary);font-weight:700;text-decoration:none;">✉ b2b@geeknook.ru</a>
+              <a href="https://t.me/GEEKNOOK_bot" target="_blank" rel="noopener" style="color:#0ea5e9;font-weight:700;text-decoration:none;">✈ Telegram: @geeknook</a>
+            </div>
+          </div>
         </div>
 
         <div class="cad-form-col">
-          <div class="b2b-quote-card">
-            <div class="b2b-quote-title">Запрос корпоративного КП</div>
-            <p class="b2b-quote-subtitle">Оснащаем офисы от 5 до 100+ рабочих мест. Индивидуальные размеры, брендирование и работа по безналичному расчету с НДС.</p>
-            <form onsubmit="window.geekNookApp.handleB2bSubmit(event)">
-              <div class="checkout-field-group">
-                <label for="b2bCompany" class="checkout-field-label">Компания / Студия *</label>
-                <input type="text" id="b2bCompany" class="checkout-input" placeholder="Yandex, Ozon, Архитектурное бюро..." required />
+          <div class="b2b-calc-wrap">
+            <!-- Workplace Range Slider -->
+            <div class="b2b-slider-card">
+              <div class="b2b-slider-header">
+                <div class="b2b-slider-title">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+                  <span>Количество рабочих мест:</span>
+                </div>
+                <span class="b2b-places-count-badge" id="b2bWorkplacesCountBadge">15 мест</span>
               </div>
-              <div class="checkout-field-group">
-                <label for="b2bEmail" class="checkout-field-label">Корпоративный Email *</label>
-                <input type="email" id="b2bEmail" class="checkout-input" placeholder="procurement@company.ru" required />
+              
+              <input type="range" id="b2bWorkplacesSlider" class="b2b-range-slider" min="5" max="100" value="15" step="1" oninput="window.geekNookApp.updateB2bWorkplaces(this.value)" aria-label="Количество рабочих мест для B2B расчета" />
+              
+              <div class="b2b-slider-ticks">
+                <span>5 мест (-10%)</span>
+                <span>25 мест (-15%)</span>
+                <span>50 мест (-20%)</span>
+                <span>100+ (-25%)</span>
               </div>
-              <div class="checkout-field-group">
-                <label for="b2bWorkplaces" class="checkout-field-label">Количество рабочих мест *</label>
-                <select id="b2bWorkplaces" class="checkout-select">
-                  <option value="5-10">5 – 10 рабочих мест (скидка 10%)</option>
-                  <option value="11-25">11 – 25 рабочих мест (скидка 15%)</option>
-                  <option value="26-50">26 – 50 рабочих мест (скидка 20%)</option>
-                  <option value="50+">50+ мест (индивидуальный спецпроект, -25%)</option>
-                </select>
+
+              <div class="b2b-quick-chips-row" id="b2bQuickChipsRow">
+                <button type="button" class="b2b-quick-chip" data-count="5" onclick="window.geekNookApp.setB2bWorkplacesPreset(5)">5 мест</button>
+                <button type="button" class="b2b-quick-chip" data-count="10" onclick="window.geekNookApp.setB2bWorkplacesPreset(10)">10 мест</button>
+                <button type="button" class="b2b-quick-chip active" data-count="15" onclick="window.geekNookApp.setB2bWorkplacesPreset(15)">15 мест</button>
+                <button type="button" class="b2b-quick-chip" data-count="30" onclick="window.geekNookApp.setB2bWorkplacesPreset(30)">30 мест</button>
+                <button type="button" class="b2b-quick-chip" data-count="50" onclick="window.geekNookApp.setB2bWorkplacesPreset(50)">50 мест</button>
+                <button type="button" class="b2b-quick-chip" data-count="100" onclick="window.geekNookApp.setB2bWorkplacesPreset(100)">100+ мест</button>
               </div>
-              <button type="submit" class="btn-checkout" style="margin-top:14px;width:100%;">
-                Получить коммерческое предложение
-              </button>
+            </div>
+
+            <!-- Tier Selection Grid -->
+            <div>
+              <div class="b2b-slider-title" style="margin-bottom:8px;">Пакет оснащения рабочего места:</div>
+              <div class="b2b-tier-grid" id="b2bTierGrid"></div>
+            </div>
+
+            <!-- Addons: Custom Branding -->
+            <div class="b2b-addons-block">
+              <label class="b2b-addon-item" for="b2bBrandingCheckbox">
+                <input type="checkbox" id="b2bBrandingCheckbox" onchange="window.geekNookApp.toggleB2bAddon('branding', this.checked)" />
+                <div class="b2b-addon-info">
+                  <strong>Лазерная гравировка логотипа компании на шильдике</strong>
+                  <span>Индивидуальный металлический шильдик на каждой подставке</span>
+                </div>
+                <div class="b2b-addon-cost" id="b2bBrandingCost">+600 ₽ / место</div>
+              </label>
+
+              <label class="b2b-addon-item" for="b2bMatBrandingCheckbox">
+                <input type="checkbox" id="b2bMatBrandingCheckbox" onchange="window.geekNookApp.toggleB2bAddon('matBranding', this.checked)" />
+                <div class="b2b-addon-info">
+                  <strong>Фирменное блинтовое тиснение на ковриках</strong>
+                  <span>Нанесение корпоративной айдентики на войлочные/кожаные коврики</span>
+                </div>
+                <div class="b2b-addon-cost">+400 ₽ / место</div>
+              </label>
+            </div>
+
+            <!-- Calculation Box -->
+            <div class="b2b-calculation-box">
+              <div class="b2b-calc-row">
+                <span>Базовая стоимость (розница):</span>
+                <span id="b2bSubtotalVal">449 955 ₽</span>
+              </div>
+              <div class="b2b-calc-row highlight">
+                <span>Корпоративная скидка (<span id="b2bDiscountPercentVal">15%</span>):</span>
+                <span id="b2bDiscountAmountVal">-67 493 ₽</span>
+              </div>
+              <div class="b2b-calc-divider"></div>
+              <div class="b2b-calc-total-row">
+                <span class="b2b-calc-total-label">Итого по предложению:</span>
+                <span class="b2b-calc-total-val" id="b2bTotalAmountVal">382 462 ₽</span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+                <span class="b2b-savings-callout" id="b2bSavingsBadge">
+                  ✓ Экономия бюджета: 67 493 ₽
+                </span>
+                <span style="font-size:0.75rem;color:var(--text-muted);">Без НДС (УСН) • Закрывающие документы УПД</span>
+              </div>
+            </div>
+
+            <!-- Client Requisites Inputs -->
+            <form id="b2bLeadForm" onsubmit="window.geekNookApp.handleB2bSubmit(event)" style="display:flex;flex-direction:column;gap:10px;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div class="checkout-field-group" style="margin-bottom:0;">
+                  <label for="b2bCompany" class="checkout-field-label">Компания / Студия *</label>
+                  <input type="text" id="b2bCompany" class="checkout-input" placeholder="ООО «Яндекс», Ozon, Бюро" required />
+                </div>
+                <div class="checkout-field-group" style="margin-bottom:0;">
+                  <label for="b2bInn" class="checkout-field-label">ИНН компании (для счета/КП)</label>
+                  <input type="text" id="b2bInn" class="checkout-input" placeholder="7707083893" maxlength="12" />
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div class="checkout-field-group" style="margin-bottom:0;">
+                  <label for="b2bContactName" class="checkout-field-label">Контактное лицо *</label>
+                  <input type="text" id="b2bContactName" class="checkout-input" placeholder="Константин (руководитель закупки)" required />
+                </div>
+                <div class="checkout-field-group" style="margin-bottom:0;">
+                  <label for="b2bEmail" class="checkout-field-label">Корпоративный Email *</label>
+                  <input type="email" id="b2bEmail" class="checkout-input" placeholder="procurement@company.ru" required />
+                </div>
+              </div>
+
+              <div class="b2b-actions-cluster" style="margin-top:6px;">
+                <button type="button" class="btn-checkout" onclick="window.geekNookApp.generateB2bKp()" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                  <span>Сформировать официальное КП (PDF)</span>
+                </button>
+                <button type="submit" class="btn-secondary" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                  <span>Отправить заявку в B2B</span>
+                </button>
+              </div>
               <div class="b2b-legal-notice checkout-legal-notice">
-                Нажимая «Получить коммерческое предложение», вы соглашаетесь с <a href="https://geeknook.ru/legal#privacy" target="_blank" rel="noopener" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Политикой конфиденциальности</a>
+                Нажимая на кнопку, вы соглашаетесь с <a href="https://geeknook.ru/legal#privacy" target="_blank" rel="noopener" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Политикой конфиденциальности</a>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B2B Commercial Proposal (КП) Modal & Printable Sheet -->
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="b2bKpModal" onclick="if(event.target===this) window.geekNookApp.closeModal('b2bKpModal')">
+    <div class="modal-card b2b-kp-modal-card">
+      <div class="b2b-kp-toolbar">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span style="font-size:0.9rem;font-weight:800;color:#fff;">Официальное коммерческое предложение</span>
+          <span class="b2b-tier-badge" id="b2bKpToolbarBadge">ООО «ГИК НУК»</span>
+        </div>
+        <div class="b2b-kp-toolbar-actions">
+          <button type="button" class="btn-kp-action btn-kp-primary" onclick="window.geekNookApp.printB2bKp()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            <span>Печать / Сохранить в PDF</span>
+          </button>
+          <button type="button" class="btn-kp-action btn-kp-secondary" onclick="window.geekNookApp.copyB2bKpLink()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span>Скопировать КП</span>
+          </button>
+          <button type="button" class="btn-kp-action btn-kp-secondary" onclick="window.geekNookApp.closeModal('b2bKpModal')" aria-label="Закрыть">✕</button>
+        </div>
+      </div>
+
+      <!-- Printable A4 Paper Document -->
+      <div class="b2b-kp-sheet" id="b2bKpSheet">
+        <!-- Rendered dynamically via renderB2bKpSheet() -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Gift Voucher Studio Modal -->
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="giftCardModal" onclick="if(event.target===this) window.geekNookApp.closeModal('giftCardModal')">
+    <div class="modal-card gift-card-modal-card">
+      <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('giftCardModal')" aria-label="Закрыть">✕</button>
+      <div class="cad-header">
+        <span class="section-kicker kicker-dark" style="color:#d4af37;">GIFT EXPERIENCE STUDIO</span>
+        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Подарочный сертификат GeekNook</h2>
+        <p class="modal-subtitle">Премиальный электронный сертификат или пластиковая карта в черном матовом конверте с сургучной печатью.</p>
+      </div>
+
+      <div class="gift-card-layout">
+        <!-- Visual Card Column -->
+        <div class="gift-card-preview-column">
+          <div class="gift-voucher-card theme-obsidian" id="giftVoucherCardPreview">
+            <div class="voucher-bg-pattern"></div>
+            
+            <div class="voucher-top-bar">
+              <span class="voucher-brand">GEEK NOOK</span>
+              <div class="voucher-hologram" title="Защитная голограмма подлинности GEEK NOOK">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><polyline points="20 6 9 17 4 12"></polyline></svg>
+              </div>
+            </div>
+
+            <div class="voucher-center-area">
+              <div class="voucher-nominal-label">Подарочный номинал</div>
+              <div class="voucher-nominal" id="voucherCardNominal">15 000 ₽</div>
+              <div class="voucher-recipient-display" id="voucherCardRecipient">Для: Константина</div>
+            </div>
+
+            <div class="voucher-bottom-bar">
+              <div>
+                <div class="voucher-code" id="voucherCardCode">GN-GIFT-2026-8492</div>
+                <div class="voucher-meta" id="voucherCardGiver">От: Команды GeekNook</div>
+              </div>
+              <div class="voucher-chip-graphic"></div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:0.75rem;color:var(--text-muted);padding:0 4px;">
+            <span>✓ Бессрочная активация (12 мес.)</span>
+            <span>✓ На весь каталог GeekNook</span>
+          </div>
+
+          <div style="display:flex;gap:10px;">
+            <button type="button" class="btn-secondary" onclick="window.geekNookApp.downloadGiftCardPdf()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;font-size:0.8125rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Печать / Макет карты</span>
+            </button>
+            <button type="button" class="btn-secondary" onclick="window.geekNookApp.copyGiftCardLink()" style="flex:1;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;font-size:0.8125rem;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+              <span>Поделиться</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Customizer Controls Column -->
+        <div class="gift-controls-col">
+          <!-- Step 1: Nominal -->
+          <div class="gift-step-group">
+            <div class="gift-step-title">1. Выберите номинал сертификата:</div>
+            <div class="gift-nominals-grid" id="giftNominalsGrid">
+              <button type="button" class="gift-nominal-btn" data-nominal="5000" onclick="window.geekNookApp.selectGiftNominal(5000)">5 000 ₽</button>
+              <button type="button" class="gift-nominal-btn" data-nominal="10000" onclick="window.geekNookApp.selectGiftNominal(10000)">10 000 ₽</button>
+              <button type="button" class="gift-nominal-btn active" data-nominal="15000" onclick="window.geekNookApp.selectGiftNominal(15000)">15 000 ₽</button>
+              <button type="button" class="gift-nominal-btn" data-nominal="25000" onclick="window.geekNookApp.selectGiftNominal(25000)">25 000 ₽</button>
+              <button type="button" class="gift-nominal-btn" data-nominal="35000" onclick="window.geekNookApp.selectGiftNominal(35000)">35 000 ₽</button>
+              <button type="button" class="gift-nominal-btn" data-nominal="custom" onclick="window.geekNookApp.selectGiftNominal('custom')">Другая сумма</button>
+            </div>
+            
+            <div id="giftCustomNominalWrap" style="display:none;margin-top:6px;">
+              <input type="number" id="giftCustomNominalInput" class="gift-input" min="3000" max="250000" step="500" placeholder="Введите сумму (от 3 000 до 250 000 ₽)" oninput="window.geekNookApp.updateCustomNominal(this.value)" aria-label="Своя сумма номинала" />
+            </div>
+          </div>
+
+          <!-- Step 2: Theme -->
+          <div class="gift-step-group">
+            <div class="gift-step-title">2. Дизайн и тема карты:</div>
+            <div class="gift-themes-row" id="giftThemesRow">
+              <button type="button" class="gift-theme-btn active" data-theme="obsidian" onclick="window.geekNookApp.selectGiftTheme('obsidian')">
+                <span class="engraving-swatch-dot" style="background:#09090b;border-color:#d4af37;"></span>
+                <span>Obsidian</span>
+              </button>
+              <button type="button" class="gift-theme-btn" data-theme="gold" onclick="window.geekNookApp.selectGiftTheme('gold')">
+                <span class="engraving-swatch-dot" style="background:#f59e0b;border-color:#78350f;"></span>
+                <span>Imperial Gold</span>
+              </button>
+              <button type="button" class="gift-theme-btn" data-theme="titanium" onclick="window.geekNookApp.selectGiftTheme('titanium')">
+                <span class="engraving-swatch-dot" style="background:#334155;border-color:#38bdf8;"></span>
+                <span>Titanium</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Step 3: Recipient & Personalization -->
+          <div class="gift-step-group">
+            <div class="gift-step-title">3. Персонализация:</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div>
+                <input type="text" id="giftRecipientInput" class="gift-input" placeholder="Имя получателя (Кому)" maxlength="28" oninput="window.geekNookApp.updateGiftRecipient(this.value)" aria-label="Имя получателя сертификата" />
+              </div>
+              <div>
+                <input type="text" id="giftGiverInput" class="gift-input" placeholder="От кого (Ваше имя)" maxlength="28" oninput="window.geekNookApp.updateGiftGiver(this.value)" aria-label="Имя дарителя сертификата" />
+              </div>
+            </div>
+            <textarea id="giftMessageInput" class="gift-input" rows="2" maxlength="120" placeholder="Теплое поздравление или пожелание (необязательно, до 120 симв.)" oninput="window.geekNookApp.updateGiftMessage(this.value)" aria-label="Поздравительное пожелание" style="min-height:60px;resize:vertical;margin-top:6px;"></textarea>
+          </div>
+
+          <!-- Step 4: Delivery Format -->
+          <div class="gift-step-group">
+            <div class="gift-step-title">4. Формат получения:</div>
+            <div class="gift-delivery-options">
+              <label class="gift-delivery-option" for="giftFormatDigital">
+                <input type="radio" name="giftFormat" id="giftFormatDigital" value="digital" checked onchange="window.geekNookApp.selectGiftFormat('digital')" />
+                <div class="gift-delivery-label">
+                  <strong>Электронный сертификат (Мгновенно)</strong>
+                  <span>PDF с персональным QR-кодом отправляется на email и в Telegram</span>
+                </div>
+              </label>
+
+              <label class="gift-delivery-option" for="giftFormatPhysical">
+                <input type="radio" name="giftFormat" id="giftFormatPhysical" value="physical" onchange="window.geekNookApp.selectGiftFormat('physical')" />
+                <div class="gift-delivery-label">
+                  <strong>Физическая пластиковая карта в подарочном конверте (+490 ₽)</strong>
+                  <span>Премиальный матовый картон, сургучная печать, доставка СДЭК до двери</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Total & CTA -->
+          <div style="border-top:1px solid var(--border);padding-top:14px;margin-top:4px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+              <span style="font-size:0.875rem;color:var(--text-muted);">Стоимость сертификата:</span>
+              <span style="font-size:1.45rem;font-weight:900;color:var(--text-main);" id="giftModalTotalPrice">15 000 ₽</span>
+            </div>
+
+            <button type="button" class="btn-checkout" onclick="window.geekNookApp.addGiftCardToCart()" style="width:100%;font-size:1rem;padding:14px;">
+              Добавить сертификат в корзину
+            </button>
           </div>
         </div>
       </div>

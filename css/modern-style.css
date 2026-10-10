@@ -5702,13 +5702,13 @@ textarea:focus-visible {
   color: #94a3b8;
 }
 
-/* Configurator Laser Engraving */
+/* Configurator Laser Engraving Studio */
 .engraving-badge-overlay {
   position: absolute;
   bottom: 16px;
   right: 16px;
   background: linear-gradient(135deg, #d4af37 0%, #fef3c7 45%, #b45309 100%);
-  padding: 5px 14px;
+  padding: 6px 14px;
   border-radius: 4px;
   border: 1px solid #78350f;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.3) inset;
@@ -5717,23 +5717,77 @@ textarea:focus-visible {
   gap: 10px;
   z-index: 10;
   animation: fadeIn 0.3s ease;
+  transition: all var(--transition-fast, 0.2s ease);
+}
+
+.engraving-badge-overlay.mat-brass {
+  background: linear-gradient(135deg, #d4af37 0%, #fef08a 45%, #b45309 100%);
+  border-color: #78350f;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+}
+.engraving-badge-overlay.mat-brass .engraving-text {
+  color: #291403;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), 0 -1px 0 rgba(0, 0, 0, 0.4);
+}
+.engraving-badge-overlay.mat-brass .engraving-screw {
+  background: #451a03;
+}
+
+.engraving-badge-overlay.mat-black {
+  background: linear-gradient(135deg, #18181b 0%, #27272a 50%, #09090b 100%);
+  border-color: #3f3f46;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+.engraving-badge-overlay.mat-black .engraving-text {
+  color: #f4f4f5;
+  text-shadow: 0 0 2px rgba(255, 255, 255, 0.4), 0 1px 2px rgba(0, 0, 0, 0.9);
+}
+.engraving-badge-overlay.mat-black .engraving-screw {
+  background: #71717a;
+  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+}
+
+.engraving-badge-overlay.mat-wood {
+  background: linear-gradient(135deg, #78350f 0%, #92400e 50%, #582408 100%);
+  border-color: #451a03;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+}
+.engraving-badge-overlay.mat-wood .engraving-text {
+  color: #1c1917;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2), 0 -1px 1px rgba(0, 0, 0, 0.8);
+}
+.engraving-badge-overlay.mat-wood .engraving-screw {
+  background: #361605;
 }
 
 .engraving-text {
-  font-family: monospace;
-  font-size: 0.72rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.engraving-text.font-mono {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+}
+.engraving-text.font-sans {
+  font-family: var(--font-sans, "Inter", -apple-system, sans-serif);
   font-weight: 900;
-  letter-spacing: 2px;
-  color: #1c1917;
-  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5), 0 -1px 0 rgba(0, 0, 0, 0.4);
+  letter-spacing: 1px;
+}
+.engraving-text.font-serif {
+  font-family: "Playfair Display", Georgia, serif;
+  font-style: italic;
+  font-weight: 700;
+  letter-spacing: 1.5px;
 }
 
 .engraving-screw {
-  width: 5px;
-  height: 5px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
-  background: #451a03;
-  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+  flex-shrink: 0;
+  box-shadow: 0 1px 1px rgba(255, 255, 255, 0.3);
 }
 
 .config-engraving-card {
@@ -5749,11 +5803,12 @@ textarea:focus-visible {
   align-items: center;
   gap: 12px;
   cursor: pointer;
+  min-height: 44px;
 }
 
 .config-engraving-toggle input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   accent-color: var(--primary);
   cursor: pointer;
 }
@@ -5785,17 +5840,114 @@ textarea:focus-visible {
   padding: 10px 14px;
   border: 1px solid var(--border);
   border-radius: 8px;
-  font-family: monospace;
+  font-family: inherit;
   font-size: 0.875rem;
   letter-spacing: 1px;
   background: var(--input-bg);
   color: var(--text-main);
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.config-engraving-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(43, 112, 240, 0.2);
+}
+
+.engraving-studio-subgroup {
+  margin-top: 12px;
+}
+
+.engraving-subgroup-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.engraving-chips-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.engraving-chip {
+  flex: 1;
+  min-width: 90px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--surface-card, #1e2634);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.2s ease);
+}
+
+.engraving-chip:hover {
+  border-color: var(--primary);
+  background: rgba(43, 112, 240, 0.08);
+}
+
+.engraving-chip.active {
+  border-color: var(--primary);
+  background: rgba(43, 112, 240, 0.15);
+  color: var(--primary-light, #60a5fa);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.engraving-swatch-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.engraving-presets-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.engraving-preset-pill {
+  min-height: 32px;
+  padding: 4px 10px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono, monospace);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.2s ease);
+  display: inline-flex;
+  align-items: center;
+}
+
+.engraving-preset-pill:hover {
+  color: var(--text-main);
+  border-color: var(--primary);
+  background: rgba(43, 112, 240, 0.12);
 }
 
 .engraving-input-hint {
   font-size: 0.75rem;
   color: var(--text-muted);
-  margin-top: 4px;
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Ergonomics Calculator Modal */
@@ -9830,3 +9982,999 @@ textarea.input-error {
   color: #ffffff;
   text-decoration: underline;
 }
+
+/* ==========================================================================
+   DIRECTION 2: REVENUE, B2B OFFICE PACKS & GIFT VOUCHERS
+   ========================================================================== */
+
+/* --- 1. B2B OFFICE PACK CONFIGURATOR --- */
+.b2b-calc-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.b2b-slider-card {
+  background: var(--surface-card, #141923);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.1));
+  border-radius: var(--radius-md, 12px);
+  padding: 18px 20px;
+}
+
+.b2b-slider-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.b2b-slider-title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.b2b-places-count-badge {
+  font-family: var(--font-mono, monospace);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--primary, #2b70f0);
+  background: rgba(43, 112, 240, 0.12);
+  border: 1px solid rgba(43, 112, 240, 0.25);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+.b2b-range-slider {
+  width: 100%;
+  height: 8px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: var(--border, #334155);
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+  margin: 14px 0 10px 0;
+}
+
+.b2b-range-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary, #2b70f0);
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.b2b-range-slider::-webkit-slider-thumb:hover,
+.b2b-range-slider:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+}
+
+.b2b-range-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary, #2b70f0);
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.b2b-slider-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono, monospace);
+}
+
+.b2b-quick-chips-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 14px;
+}
+
+.b2b-quick-chip {
+  min-height: 44px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.2s ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.b2b-quick-chip:hover {
+  color: var(--text-main);
+  border-color: var(--primary);
+  background: rgba(43, 112, 240, 0.08);
+}
+
+.b2b-quick-chip.active {
+  border-color: var(--primary);
+  background: rgba(43, 112, 240, 0.16);
+  color: var(--primary-light, #60a5fa);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+/* Tier Selection Cards */
+.b2b-tier-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 640px) {
+  .b2b-tier-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.b2b-tier-card {
+  background: var(--surface-card, #141923);
+  border: 2px solid var(--border);
+  border-radius: var(--radius-md, 12px);
+  padding: 14px;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.2s ease);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.b2b-tier-card:hover {
+  border-color: var(--border-hover, #64748b);
+  transform: translateY(-2px);
+}
+
+.b2b-tier-card.active {
+  border-color: var(--primary, #2b70f0);
+  background: rgba(43, 112, 240, 0.06);
+  box-shadow: 0 4px 16px rgba(43, 112, 240, 0.15);
+}
+
+.b2b-tier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+
+.b2b-tier-name {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.b2b-tier-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  white-space: nowrap;
+}
+
+.b2b-tier-desc {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.b2b-tier-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.b2b-tier-items-list li {
+  font-size: 0.75rem;
+  color: var(--text-secondary, #cbd5e1);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.b2b-tier-items-list li::before {
+  content: "✓";
+  color: var(--primary, #2b70f0);
+  font-weight: bold;
+}
+
+.b2b-tier-price-unit {
+  margin-top: auto;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-main);
+  padding-top: 8px;
+  border-top: 1px dashed var(--border);
+}
+
+/* B2B Addons & Customization Checkboxes */
+.b2b-addons-block {
+  background: var(--surface-card, #141923);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 12px);
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.b2b-addon-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.b2b-addon-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--primary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.b2b-addon-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.b2b-addon-info strong {
+  font-size: 0.85rem;
+  color: var(--text-main);
+}
+
+.b2b-addon-info span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.b2b-addon-cost {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--primary);
+  white-space: nowrap;
+}
+
+/* B2B Calculation & Live Quote Box */
+.b2b-calculation-box {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.85) 100%);
+  border: 1px solid rgba(43, 112, 240, 0.3);
+  border-radius: var(--radius-md, 12px);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.b2b-calc-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.b2b-calc-row.highlight {
+  color: #10b981;
+  font-weight: 700;
+}
+
+.b2b-calc-divider {
+  height: 1px;
+  background: var(--border, rgba(255, 255, 255, 0.1));
+  margin: 4px 0;
+}
+
+.b2b-calc-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.b2b-calc-total-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.b2b-calc-total-val {
+  font-family: var(--font-display, inherit);
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--primary-light, #60a5fa);
+}
+
+.b2b-savings-callout {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.25);
+  color: #10b981;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.b2b-actions-cluster {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.b2b-actions-cluster .btn-checkout,
+.b2b-actions-cluster .btn-secondary {
+  flex: 1;
+  min-width: 180px;
+}
+
+/* --- 2. OFFICIAL COMMERCIAL PROPOSAL (КП) MODAL & SHEET --- */
+.b2b-kp-modal-card {
+  max-width: 920px;
+  width: 95vw;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: #0f172a;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7);
+}
+
+.b2b-kp-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(12px);
+  padding: 12px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-wrap: wrap;
+}
+
+.b2b-kp-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-kp-action {
+  min-height: 44px;
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all var(--transition-fast, 0.2s ease);
+}
+
+.btn-kp-primary {
+  background: var(--primary, #2b70f0);
+  color: #ffffff;
+  border: none;
+}
+.btn-kp-primary:hover {
+  background: var(--primary-hover, #1d4ed8);
+  transform: translateY(-1px);
+}
+
+.btn-kp-secondary {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text-main, #f8fafc);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.btn-kp-secondary:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+/* Simulated A4 Proposal Paper Sheet */
+.b2b-kp-sheet {
+  background: #ffffff;
+  color: #0f172a;
+  padding: 40px 45px;
+  margin: 20px auto;
+  max-width: 820px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  border-radius: 4px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.b2b-kp-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 2px solid #0f172a;
+  padding-bottom: 18px;
+  margin-bottom: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.b2b-kp-logo-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.b2b-kp-logo-title {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #0f172a;
+}
+
+.b2b-kp-logo-sub {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #475569;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.b2b-kp-requisites-block {
+  font-size: 0.72rem;
+  color: #475569;
+  text-align: right;
+  line-height: 1.45;
+}
+
+.b2b-kp-doc-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e2e8f0;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.b2b-kp-doc-number {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.b2b-kp-doc-date {
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.b2b-kp-recipient-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 12px 16px;
+  margin-bottom: 24px;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .b2b-kp-sheet {
+    padding: 20px 16px;
+    margin: 10px auto;
+  }
+}
+
+.b2b-kp-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin-bottom: 20px;
+}
+
+.b2b-kp-table {
+  width: 100%;
+  min-width: 540px;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+
+.b2b-kp-table th {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 700;
+  font-size: 0.775rem;
+}
+
+.b2b-kp-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #e2e8f0;
+  color: #1e293b;
+}
+
+.b2b-kp-table tr:nth-child(even) td {
+  background: #f8fafc;
+}
+
+.b2b-kp-total-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  margin-bottom: 24px;
+  padding: 14px 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+}
+
+.b2b-kp-summary-line {
+  font-size: 0.85rem;
+  color: #475569;
+}
+
+.b2b-kp-grand-total {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: #0f172a;
+}
+
+.b2b-kp-words-sum {
+  font-size: 0.78rem;
+  font-style: italic;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+.b2b-kp-conditions {
+  margin-bottom: 24px;
+  font-size: 0.775rem;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.b2b-kp-conditions h4 {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 6px;
+}
+
+.b2b-kp-signatures-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #cbd5e1;
+  position: relative;
+}
+
+.b2b-kp-sign-info {
+  font-size: 0.8rem;
+  color: #1e293b;
+  line-height: 1.5;
+}
+
+.b2b-kp-stamp-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.b2b-kp-stamp-svg {
+  width: 130px;
+  height: 130px;
+  opacity: 0.88;
+  transform: rotate(-10deg);
+}
+
+/* --- 3. GIFT VOUCHER ENGINE MODAL & CARD PREVIEW --- */
+.gift-card-modal-card {
+  max-width: 960px;
+  width: 95vw;
+}
+
+.gift-card-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .gift-card-layout {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.gift-card-preview-column {
+  position: sticky;
+  top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Physical Plastic Voucher Card */
+.gift-voucher-card {
+  width: 100%;
+  aspect-ratio: 1.586;
+  border-radius: 16px;
+  padding: 24px 26px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.15) inset;
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  user-select: none;
+}
+
+.gift-voucher-card:hover {
+  transform: translateY(-4px) rotateX(4deg);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.25) inset;
+}
+
+/* Themes */
+.gift-voucher-card.theme-obsidian {
+  background: linear-gradient(135deg, #09090b 0%, #18181b 50%, #27272a 100%);
+  color: #f4f4f5;
+}
+.gift-voucher-card.theme-obsidian .voucher-brand { color: #d4af37; }
+.gift-voucher-card.theme-obsidian .voucher-nominal { color: #ffffff; text-shadow: 0 0 12px rgba(212, 175, 55, 0.3); }
+.gift-voucher-card.theme-obsidian .voucher-meta { color: #a1a1aa; }
+
+.gift-voucher-card.theme-gold {
+  background: linear-gradient(135deg, #b45309 0%, #f59e0b 50%, #d97706 100%);
+  color: #1c1917;
+}
+.gift-voucher-card.theme-gold .voucher-brand { color: #451a03; }
+.gift-voucher-card.theme-gold .voucher-nominal { color: #1c1917; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4); }
+.gift-voucher-card.theme-gold .voucher-meta { color: #451a03; }
+
+.gift-voucher-card.theme-titanium {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%);
+  color: #f8fafc;
+}
+.gift-voucher-card.theme-titanium .voucher-brand { color: #38bdf8; }
+.gift-voucher-card.theme-titanium .voucher-nominal { color: #ffffff; text-shadow: 0 0 12px rgba(56, 189, 248, 0.3); }
+.gift-voucher-card.theme-titanium .voucher-meta { color: #cbd5e1; }
+
+/* Micro-Textures & Watermark */
+.voucher-bg-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
+  background-size: 16px 16px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.voucher-top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.voucher-brand {
+  font-size: 1.15rem;
+  font-weight: 900;
+  letter-spacing: 2.5px;
+}
+
+.voucher-hologram {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6, #10b981);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  animation: hologramShimmer 6s infinite ease-in-out;
+}
+
+@keyframes hologramShimmer {
+  0%, 100% { filter: hue-rotate(0deg); }
+  50% { filter: hue-rotate(180deg); }
+}
+
+.voucher-center-area {
+  position: relative;
+  z-index: 2;
+  margin: 10px 0;
+}
+
+.voucher-nominal-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.75;
+}
+
+.voucher-nominal {
+  font-family: var(--font-display, inherit);
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  line-height: 1.1;
+}
+
+.voucher-recipient-display {
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-top: 4px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.voucher-bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  position: relative;
+  z-index: 2;
+  font-size: 0.72rem;
+}
+
+.voucher-code {
+  font-family: var(--font-mono, monospace);
+  letter-spacing: 2px;
+  font-weight: 700;
+}
+
+.voucher-chip-graphic {
+  width: 32px;
+  height: 24px;
+  border-radius: 4px;
+  background: linear-gradient(135deg, #d4af37 0%, #fef08a 50%, #b45309 100%);
+  border: 1px solid #78350f;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Controls Column */
+.gift-controls-col {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.gift-step-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gift-step-title {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gift-nominals-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .gift-nominals-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.gift-nominal-btn {
+  min-height: 44px;
+  padding: 8px 10px;
+  background: var(--surface-card, #141923);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-main);
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-fast, 0.2s ease);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gift-nominal-btn:hover {
+  border-color: var(--primary);
+  background: rgba(43, 112, 240, 0.08);
+}
+
+.gift-nominal-btn.active {
+  border-color: var(--primary);
+  background: rgba(43, 112, 240, 0.16);
+  color: var(--primary-light, #60a5fa);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+
+.gift-themes-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.gift-theme-btn {
+  flex: 1;
+  min-width: 90px;
+  min-height: 44px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface-card, #141923);
+  color: var(--text-main);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast, 0.2s ease);
+}
+
+.gift-theme-btn.active {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary);
+  background: rgba(43, 112, 240, 0.12);
+  color: var(--primary-light, #60a5fa);
+}
+
+.gift-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  background: var(--input-bg);
+  color: var(--text-main);
+  min-height: 44px;
+  box-sizing: border-box;
+}
+
+.gift-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(43, 112, 240, 0.2);
+}
+
+.gift-delivery-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gift-delivery-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-card, #141923);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 14px;
+  cursor: pointer;
+  min-height: 44px;
+}
+
+.gift-delivery-option input[type="radio"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--primary);
+  cursor: pointer;
+}
+
+.gift-delivery-label strong {
+  font-size: 0.85rem;
+  color: var(--text-main);
+  display: block;
+}
+
+.gift-delivery-label span {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* PRINT MEDIA QUERIES FOR COMMERCIAL PROPOSAL (КП) */
+@media print {
+  body * {
+    visibility: hidden !important;
+  }
+  
+  .b2b-kp-modal-card,
+  .b2b-kp-modal-card * {
+    visibility: visible !important;
+  }
+  
+  .modal-backdrop {
+    position: static !important;
+    background: transparent !important;
+    padding: 0 !important;
+    overflow: visible !important;
+  }
+  
+  .b2b-kp-modal-card {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    max-height: none !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #ffffff !important;
+  }
+  
+  .b2b-kp-toolbar,
+  .btn-close-modal {
+    display: none !important;
+  }
+  
+  .b2b-kp-sheet {
+    box-shadow: none !important;
+    margin: 0 !important;
+    padding: 20px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    page-break-inside: avoid;
+  }
+
+  .b2b-kp-table-wrap {
+    overflow: visible !important;
+    margin-bottom: 20px !important;
+  }
+
+  .b2b-kp-table {
+    min-width: auto !important;
+    width: 100% !important;
+  }
+}
+

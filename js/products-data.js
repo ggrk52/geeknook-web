@@ -466,6 +466,33 @@ const GEEKNOOK_DATA = {
       images: [
         "images/tild3931-6666-4933-a466-373836393933__1.jpg"
       ]
+    },
+    {
+      id: "gift-voucher",
+      title: "Подарочный сертификат GeekNook",
+      subtitle: "Электронный или премиальный пластиковый сертификат",
+      category: "accessories",
+      price: 5000,
+      oldPrice: 5000,
+      sku: "GN-GIFT-CARD",
+      part: "GN-GIFT-2026",
+      barcode: "460042888999",
+      rating: 5.0,
+      reviewsCount: 56,
+      materials: "Пластиковая карта с тиснением золотой фольгой / Электронный PDF с QR-кодом",
+      specs: {
+        "Номиналы": "5 000, 10 000, 15 000, 25 000, 35 000 ₽ или произвольный",
+        "Срок действия": "12 месяцев с момента приобретения",
+        "Формат": "Мгновенно на email / в мессенджер или карта в крафтовом конверте",
+        "Применимость": "На любые доски Focus Station, комплекты и аксессуары",
+        "Персонализация": "Имя получателя, личное поздравление, выбор дизайна"
+      },
+      shortDescr: "Идеальный подарок для инженера, программиста, дизайнера и ценителя премиальных рабочих мест.",
+      fullDescr: "Подарочный сертификат GeekNook позволяет одариваемому самостоятельно собрать идеальный сетап Focus Station или выбрать нужные аксессуары T-Track. Выпускается в 3 дизайнерских темах (Obsidian Black, Imperial Gold, Titanium Silver) с персональным кодом активации и поздравительным сообщением.",
+      images: [
+        "images/tild3763-3337-4662-b233-616531316364__3.jpg"
+      ],
+      isGiftVoucher: true
     }
   ],
 
@@ -815,6 +842,81 @@ const GEEKNOOK_DATA = {
       { id: "addon-mac", name: "Подвесная полка Mac Studio / Mini", price: 4999, img: "images/tild3132-6562-4533-a638-646132613661__1_1.jpg" },
       { id: "addon-cable", name: "Кабель-органайзер Power Strip", price: 4999, img: "images/tild3931-6666-4933-a466-373836393933__1.jpg" },
       { id: "addon-mat", name: "Войлочный коврик Desk Mat XL", price: 2999, img: "images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg" }
+    ]
+  },
+
+  // --- B2B КОРПОРАТИВНЫЙ КОНФИГУРАТОР ---
+  b2b: {
+    tiers: [
+      {
+        id: "startup",
+        name: "Startup Pack",
+        subtitle: "Базовый эргономичный минимум для IT-команд",
+        minPlaces: 5,
+        maxPlaces: 10,
+        discountPercent: 10,
+        itemsPerPlace: [
+          { name: "Focus Station 85 (Массив дуба/ореха)", price: 19999 },
+          { name: "Держатель ноутбука Laptop Stand Closed", price: 4499 }
+        ],
+        badge: "Скидка 10%"
+      },
+      {
+        id: "growth",
+        name: "Growth Team",
+        subtitle: "Оптимальный сетап для продуктовой разработки",
+        minPlaces: 11,
+        maxPlaces: 25,
+        discountPercent: 15,
+        itemsPerPlace: [
+          { name: "Focus Station 85 / 116 (Дуб / Орех)", price: 21999 },
+          { name: "Держатель ноутбука Laptop Stand Open", price: 4999 },
+          { name: "Кронштейн для наушников Headphone Stand", price: 2999 }
+        ],
+        badge: "Хит • Скидка 15%"
+      },
+      {
+        id: "enterprise",
+        name: "Enterprise Pro Suite",
+        subtitle: "Максимальный комфорт для ведущих инженеров и дизайнеров",
+        minPlaces: 26,
+        maxPlaces: 50,
+        discountPercent: 20,
+        itemsPerPlace: [
+          { name: "Focus Station 116 (Американский орех)", price: 24999 },
+          { name: "Держатель ноутбука Laptop Stand Open", price: 4999 },
+          { name: "Кронштейн для наушников Headphone Stand", price: 2999 },
+          { name: "Коврик для стола Desk Mat XL (120×60 см)", price: 3499 },
+          { name: "Кабель-органайзер Power Strip", price: 4999 }
+        ],
+        badge: "Скидка 20%"
+      },
+      {
+        id: "custom",
+        name: "Custom Flagship Office",
+        subtitle: "Индивидуальный спецпроект под дизайн-код офиса",
+        minPlaces: 51,
+        maxPlaces: 200,
+        discountPercent: 25,
+        itemsPerPlace: [
+          { name: "Focus Station Custom 116 (Премиум орех/ясень)", price: 24999 },
+          { name: "Полный комплект навесных модулей T-Track (4 шт.)", price: 15996 },
+          { name: "Натуральный кожаный коврик Desk Mat Pro", price: 4999 }
+        ],
+        badge: "VIP • Скидка 25%"
+      }
+    ],
+    brandingPricePerPlace: 600,
+    matBrandingPricePerPlace: 400
+  },
+
+  // --- ПОДАРОЧНЫЕ СЕРТИФИКАТЫ ---
+  giftCards: {
+    nominals: [5000, 10000, 15000, 25000, 35000],
+    themes: [
+      { id: "obsidian", name: "Obsidian Black", subtitle: "Карбоновый чёрный & золото", bg: "linear-gradient(135deg, #09090b 0%, #18181b 50%, #27272a 100%)", textColor: "#f4f4f5", accentColor: "#d4af37" },
+      { id: "gold", name: "Imperial Gold", subtitle: "Матовое благородное золото", bg: "linear-gradient(135deg, #b45309 0%, #f59e0b 50%, #d97706 100%)", textColor: "#1c1917", accentColor: "#78350f" },
+      { id: "titanium", name: "Titanium Silver", subtitle: "Холодный шлифованный титан", bg: "linear-gradient(135deg, #1e293b 0%, #334155 50%, #475569 100%)", textColor: "#f8fafc", accentColor: "#38bdf8" }
     ]
   },
 
