@@ -328,6 +328,20 @@
     return new Intl.NumberFormat('ru-RU').format(safeNum) + ' ₽';
   };
 
+  // --- ANALYTICS MICRO-CONVERSIONS HELPER ---
+  const trackGoal = (goalName, params = {}) => {
+    try {
+      if (typeof window.ym === 'function') {
+        window.ym(113130622, 'reachGoal', goalName, params);
+      }
+      if (window.geekNookAnalytics && typeof window.geekNookAnalytics.reachGoal === 'function') {
+        window.geekNookAnalytics.reachGoal(goalName, params);
+      }
+    } catch (e) {
+      console.warn('[Analytics] reachGoal error:', e);
+    }
+  };
+
   // --- CART PERSISTENCE & TOASTS ---
   const saveCart = () => {
     try {
@@ -1872,6 +1886,7 @@
 
   // --- CONFIGURATOR WORKBENCH ---
   const openConfigurator = () => {
+    trackGoal('CONFIG_OPEN');
     renderConfiguratorUI();
     modalManager.open('configuratorModal');
   };
@@ -2034,6 +2049,9 @@
 
   const toggleConfigEngraving = (enabled) => {
     state.config.engravingEnabled = Boolean(enabled);
+    if (enabled) {
+      trackGoal('CONFIG_ENGRAVE', { material: state.config.engravingMaterial });
+    }
     soundEngine.play('toggle');
     renderConfiguratorUI();
     triggerPricePulse();
@@ -3936,6 +3954,21 @@
     if (emailErrEl) emailErrEl.style.display = 'none';
     if (addressErrEl) addressErrEl.style.display = 'none';
 
+    // 0. 152-FZ Personal Data Consent Validation
+    const consentInput = document.getElementById('checkoutConsentCheckbox');
+    const consentErrEl = document.getElementById('checkoutConsentError');
+    if (consentErrEl) consentErrEl.style.display = 'none';
+
+    if (consentInput && !consentInput.checked) {
+      if (consentErrEl) {
+        consentErrEl.textContent = 'Пожалуйста, подтвердите согласие на обработку персональных данных (152-ФЗ)';
+        consentErrEl.style.display = 'block';
+      }
+      consentInput.focus();
+      showToast('Подтвердите согласие на обработку персональных данных', 'error');
+      return;
+    }
+
     // 1. Full Name Validation (First Name & Last Name, at least 2 words)
     const rawName = (formData.get('name') || '').trim();
     const nameWords = rawName.split(/\s+/).filter(w => w.length >= 2);
@@ -4212,6 +4245,21 @@
     const nameInput = document.getElementById('quickBuyName');
     const phoneInput = document.getElementById('quickBuyPhone');
 
+    // 152-FZ Personal Data Consent Validation
+    const qConsentInput = document.getElementById('quickBuyConsentCheckbox');
+    const qConsentErrEl = document.getElementById('quickBuyConsentError');
+    if (qConsentErrEl) qConsentErrEl.style.display = 'none';
+
+    if (qConsentInput && !qConsentInput.checked) {
+      if (qConsentErrEl) {
+        qConsentErrEl.textContent = 'Подтвердите согласие на обработку данных (152-ФЗ)';
+        qConsentErrEl.style.display = 'block';
+      }
+      qConsentInput.focus();
+      showToast('Подтвердите согласие на обработку персональных данных', 'error');
+      return;
+    }
+
     const rawPhone = phoneInput ? phoneInput.value.trim() : '';
     const digitsOnly = rawPhone.replace(/\D/g, '');
     const phoneDigits = (digitsOnly.startsWith('7') || digitsOnly.startsWith('8')) ? digitsOnly.slice(1) : digitsOnly;
@@ -4339,149 +4387,45 @@
   };
 
   const quickBuyViaTelegram = () => {
-    const prod = state.quickBuyProduct;
-    if (!prod) return;
-    const optText = state.quickBuyProductOption && state.quickBuyProductOption !== 'Стандарт' ? ` (${state.quickBuyProductOption})` : '';
-
-    let basePrice = prod.price;
-    if (state.quickBuyProductOption !== 'Стандарт' && prod.optionPrices && prod.optionPrices[state.quickBuyProductOption]) {
-      basePrice = prod.optionPrices[state.quickBuyProductOption];
-    }
-
-    const promoInput = document.getElementById('quickBuyPromo');
-    let promoCodeVal = promoInput ? promoInput.value.trim().toUpperCase() : '';
-    let promoPct = 0;
-    let appliedPromo = '';
-
-    if (promoCodeVal && PROMO_CODES[promoCodeVal]) {
-      promoPct = PROMO_CODES[promoCodeVal].discount;
-      appliedPromo = promoCodeVal;
-    } else if (!promoCodeVal && state.activePromoCode && PROMO_CODES[state.activePromoCode]) {
-      promoPct = PROMO_CODES[state.activePromoCode].discount;
-      appliedPromo = state.activePromoCode;
-    }
-
-    const discountPct = Math.max(state.siteDiscountPercent || 20, promoPct);
-    const discountAmount = Math.round(basePrice * (discountPct / 100));
-    const finalPrice = Math.max(0, basePrice - discountAmount);
-
-    let text = `Здравствуйте! Хочу оформить быстрый заказ в 1 клик на GeekNook:\n\nТовар: ${prod.title}${optText}\n`;
-    text += `РРЦ (без скидки): ${formatPrice(basePrice)}\n`;
-    text += `Скидка на сайте (-${discountPct}%): -${formatPrice(discountAmount)}${appliedPromo ? ` (Промокод: ${appliedPromo})` : ''}\n`;
-    text += `Итоговая стоимость: ${formatPrice(finalPrice)}\n\n`;
-    text += `Свяжитесь со мной для подтверждения адреса доставки!`;
-
-    const utmStr = formatUtmForMessage();
-    if (utmStr) {
-      text += `\n\n[UTM: ${utmStr}]`;
-    }
-
-    // Track Analytics Goal (Yandex Metrika & Universal Analytics)
-    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackTelegramOrder === 'function') {
-      window.geekNookAnalytics.trackTelegramOrder('quick_buy', { product: prod.title, amount: finalPrice, promo: appliedPromo });
-    } else if (window.geekNookAnalytics && typeof window.geekNookAnalytics.reachGoal === 'function') {
-      window.geekNookAnalytics.reachGoal('TG_ORDER', { type: 'quick_buy', product: prod.title, amount: finalPrice, promo: appliedPromo });
-    } else if (typeof window.ym === 'function') {
-      try { window.ym(113130622, 'reachGoal', 'TG_ORDER', { type: 'quick_buy', product: prod.title, amount: finalPrice }); } catch(e) {}
-    }
-
-    copyToClipboard(text);
-    showToast('Детали заказа скопированы! Отправьте их боту в чате', 'success');
-    window.open('https://t.me/GEEKNOOK_bot', '_blank');
     modalManager.close('quickBuyModal');
+    openCheckout();
+    showToast('Оформите заказ через официальную корзину', 'info');
   };
 
-  // --- TELEGRAM CHECKOUT ---
+  // --- OFFICIAL CHECKOUT REDIRECTION ---
   const orderViaTelegram = () => {
-    if (state.cart.length === 0) {
-      showToast('Корзина пуста', 'error');
-      return;
-    }
-    const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
-    const subtotal = state.cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
-    const discountAmount = Math.round(subtotal * (discountPercent / 100));
-    const isFreeShipping = (subtotal - discountAmount) >= 7000;
-    const shippingCost = isFreeShipping ? 0 : 490;
-    const grandTotal = (subtotal - discountAmount) + shippingCost;
-
-    let msg = `Здравствуйте! Хочу оформить заказ в GeekNook:\n\n`;
-    state.cart.forEach((item, idx) => {
-      const itemCatalogTotal = item.price * item.quantity;
-      const itemDiscountedTotal = Math.round(itemCatalogTotal * ((100 - discountPercent) / 100));
-      msg += `${idx + 1}. ${item.title} ${item.option !== 'Стандарт' ? `[${item.option}]` : ''} × ${item.quantity} шт. = ${formatPrice(itemDiscountedTotal)} (РРЦ: ${formatPrice(itemCatalogTotal)})\n`;
-    });
-    msg += `\nСумма по каталогу: ${formatPrice(subtotal)}`;
-    msg += `\nСкидка на сайте (-${discountPercent}%): -${formatPrice(discountAmount)}${state.activePromoCode ? ` (${state.activePromoCode})` : ''}`;
-    msg += `\nДоставка СДЭК: ${isFreeShipping ? 'Бесплатно' : formatPrice(shippingCost)}`;
-    msg += `\nИтого к оплате: ${formatPrice(grandTotal)}\n(Ваша экономия: ${formatPrice(discountAmount)})\n\nЖду подтверждения заказа!`;
-
-    const utmStr = formatUtmForMessage();
-    if (utmStr) {
-      msg += `\n\n[UTM: ${utmStr}]`;
-    }
-
-    // Track Analytics Goal (Yandex Metrika & Universal Analytics)
-    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackTelegramOrder === 'function') {
-      window.geekNookAnalytics.trackTelegramOrder('cart', { amount: grandTotal, itemsCount: state.cart.length, promo: state.activePromoCode });
-    } else if (window.geekNookAnalytics && typeof window.geekNookAnalytics.reachGoal === 'function') {
-      window.geekNookAnalytics.reachGoal('TG_ORDER', { type: 'cart', amount: grandTotal, itemsCount: state.cart.length, promo: state.activePromoCode });
-    } else if (typeof window.ym === 'function') {
-      try { window.ym(113130622, 'reachGoal', 'TG_ORDER', { type: 'cart', amount: grandTotal }); } catch(e) {}
-    }
-
-    copyToClipboard(msg);
-    showToast('Детали заказа скопированы! Отправьте их боту в чате', 'success');
-    window.open('https://t.me/GEEKNOOK_bot', '_blank');
+    openCheckout();
+    showToast('Оформите заказ через официальную корзину', 'info');
   };
 
   const orderConfigViaTelegram = () => {
-    const finish = (GEEKNOOK_DATA?.configurator?.finishes || []).find(f => f.id === state.config.finishId) || GEEKNOOK_DATA?.configurator?.finishes?.[0] || { name: 'Орех', priceDelta: 0 };
-    const length = (GEEKNOOK_DATA?.configurator?.lengths || []).find(l => l.id === state.config.lengthId) || GEEKNOOK_DATA?.configurator?.lengths?.[0] || { id: '85', name: '85 см', priceBase: 19999 };
-    const addons = state.config.selectedAddonIds.map(id => (GEEKNOOK_DATA?.configurator?.addons || []).find(a => a.id === id)).filter(Boolean);
-
-    const addonsTotal = addons.reduce((sum, a) => sum + a.price, 0);
-    const catalogBaseTotal = length.priceBase + finish.priceDelta + addonsTotal;
-    const discountAmount = Math.round(catalogBaseTotal * 0.20);
-    const grandTotal = catalogBaseTotal - discountAmount;
-
-    let msg = `Здравствуйте! Собрал кастомный сетап в 3D-конфигураторе GeekNook:\n\n`;
-    msg += `• Основание: Focus Station (${length.id} см)\n`;
-    msg += `• Отделка: ${finish.name}\n`;
-    if (addons.length > 0) {
-      msg += `• Модули T-Track:\n`;
-      addons.forEach(a => {
-        msg += `  - ${a.name} (+${formatPrice(a.price)})\n`;
-      });
-    } else {
-      msg += `• Модули: Базовая комплектация\n`;
-    }
-    msg += `\nСумма по каталогу: ${formatPrice(catalogBaseTotal)}\n`;
-    msg += `Скидка онлайн (-20%): -${formatPrice(discountAmount)}\n`;
-    msg += `Итого к оплате: ${formatPrice(grandTotal)} (Доставка СДЭК бесплатно)\n\nХочу оформить заказ на эту сборку!`;
-
-    const utmStr = formatUtmForMessage();
-    if (utmStr) {
-      msg += `\n\n[UTM: ${utmStr}]`;
-    }
-
-    // Track Analytics Goal (Yandex Metrika & Universal Analytics)
-    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackTelegramOrder === 'function') {
-      window.geekNookAnalytics.trackTelegramOrder('configurator', { finish: finish.name, length: length.id, amount: grandTotal });
-    } else if (window.geekNookAnalytics && typeof window.geekNookAnalytics.reachGoal === 'function') {
-      window.geekNookAnalytics.reachGoal('TG_ORDER', { type: 'configurator', finish: finish.name, length: length.id, amount: grandTotal });
-    } else if (typeof window.ym === 'function') {
-      try { window.ym(113130622, 'reachGoal', 'TG_ORDER', { type: 'configurator', finish: finish.name, length: length.id, amount: grandTotal }); } catch(e) {}
-    }
-
-    copyToClipboard(msg);
-    showToast('Спецификация сборки скопирована! Отправьте боту в чате', 'success');
-    window.open('https://t.me/GEEKNOOK_bot', '_blank');
+    addConfiguredBundleToCart();
+    openCheckout();
+    showToast('Сборка добавлена в корзину!', 'success');
   };
 
-  // --- SHAREABLE CONFIGURATOR LINK ---
+
+  // --- SHAREABLE CONFIGURATOR LINK & PERSISTENCE ---
   const shareConfiguredSetup = () => {
-    const hash = `config=finish:${state.config.finishId};length:${state.config.lengthId};addons:${state.config.selectedAddonIds.join(',')}`;
+    const parts = [
+      `finish:${state.config.finishId}`,
+      `length:${state.config.lengthId}`,
+      `addons:${state.config.selectedAddonIds.join(',')}`
+    ];
+    if (state.config.engravingEnabled) {
+      parts.push(`engrave:1`);
+      parts.push(`text:${encodeURIComponent(state.config.engravingText || '')}`);
+      parts.push(`font:${state.config.engravingFont || 'mono'}`);
+      parts.push(`mat:${state.config.engravingMaterial || 'brass'}`);
+    }
+    const hash = `config=${parts.join(';')}`;
     const shareUrl = `${window.location.origin}${window.location.pathname}#${hash}`;
+
+    trackGoal('CONFIG_SHARE', {
+      finish: state.config.finishId,
+      length: state.config.lengthId,
+      engrave: state.config.engravingEnabled ? 1 : 0
+    });
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(shareUrl).then(() => {
@@ -4507,7 +4451,8 @@
 
       const parts = match[1].split(';');
       parts.forEach(part => {
-        const [rawKey, rawVal] = part.split(':');
+        const [rawKey, ...valParts] = part.split(':');
+        const rawVal = valParts.join(':');
         const key = String(rawKey || '').trim().toLowerCase();
         const val = String(rawVal || '').trim();
 
@@ -4518,9 +4463,25 @@
         } else if (key === 'addons') {
           const requested = val ? val.split(',').map(s => s.trim()).filter(Boolean) : [];
           state.config.selectedAddonIds = requested.filter(id => validAddonIds.includes(id));
+        } else if (key === 'engrave') {
+          state.config.engravingEnabled = val === '1' || val === 'true';
+        } else if (key === 'text') {
+          try {
+            state.config.engravingText = decodeURIComponent(val || '').slice(0, 24);
+          } catch(e) {
+            state.config.engravingText = (val || '').slice(0, 24);
+          }
+        } else if (key === 'font' && ['mono', 'sans', 'serif'].includes(val)) {
+          state.config.engravingFont = val;
+        } else if (key === 'mat' && ['brass', 'black', 'wood'].includes(val)) {
+          state.config.engravingMaterial = val;
         }
       });
 
+      renderConfiguratorUI();
+      if (focusStation3DStudio?.isInitialized) {
+        focusStation3DStudio.updateModel();
+      }
       openConfigurator();
       showToast('Сохранённая конфигурация сетапа загружена!');
     } catch (e) {
@@ -4763,6 +4724,16 @@
     const video = document.querySelector('.hero-video-bg');
     if (!video) return;
 
+    // Zero-lag mobile LCP & data-saver protection
+    const isMobileViewport = window.innerWidth <= 768;
+    const isDataSaver = Boolean(navigator.connection && (navigator.connection.saveData || navigator.connection.effectiveType === '2g' || navigator.connection.effectiveType === '3g'));
+    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    if (isMobileViewport || isDataSaver || prefersReducedMotion) {
+      // Keep crisp high-res poster; do not download or decode 20MB WebM stream on mobile
+      return;
+    }
+
     // 1. Mandatory attributes for iOS / Safari / Chrome autoplay policies
     video.muted = true;
     video.defaultMuted = true;
@@ -4773,7 +4744,7 @@
     // 2. Resolve CDN URL if running in Tilda / headless environment
     const source = video.querySelector('source');
     if (source) {
-      const rawSrc = source.getAttribute('src');
+      const rawSrc = source.getAttribute('data-src') || source.getAttribute('src');
       if (rawSrc && typeof window.getGeekNookAssetUrl === 'function') {
         const resolved = window.getGeekNookAssetUrl(rawSrc);
         source.src = resolved;
@@ -4816,6 +4787,9 @@
 
   // --- GOOGLE ANTIGRAVITY INTERACTIVE 3D PARTICLE SPHERE ---
   const initAntigravitySphere = () => {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
     const canvas = document.getElementById('antigravityCanvas');
     const hero = document.getElementById('hero');
     if (!canvas || !hero) return;
@@ -5638,6 +5612,7 @@
 
   const setFeaPreset = (weight) => {
     soundEngine.play('click');
+    trackGoal('FEA_RUN', { weight });
     updateFeaWeight(weight);
   };
 
@@ -7238,6 +7213,7 @@
 
   const setB2bWorkplacesPreset = (count) => {
     b2bCalcState.workplaces = count;
+    trackGoal('B2B_CALC', { count: b2bCalcState.workplaces, tier: b2bCalcState.selectedTierId });
     soundEngine.play('click');
     renderB2bCalculatorUI();
   };
@@ -7794,6 +7770,7 @@
   };
 
   const openCommandPalette = () => {
+    trackGoal('COMMAND_PALETTE');
     modalManager.open('commandPaletteModal');
     const input = document.getElementById('cmdPaletteInput');
     if (input) {
