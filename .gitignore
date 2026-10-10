@@ -43,3 +43,17 @@ api/cdek-config.php
 *cdek_token_cache*.json
 .env
 .env.*
+
+# AI Agent Workflows, Skills, & Internal Plans
+.agent/
+.agents/
+.gemini/
+.gsd/
+*.plan.md
+model_capabilities.yaml
+optimization-execution-plan.md
+GSD-STYLE.md
+PROJECT_RULES.md
+GEMINI.md
+PLAN.md
+
