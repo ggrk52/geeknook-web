@@ -326,6 +326,7 @@
       <nav>
         <ul class="nav-links">
           <li><a href="#boards">Каталог</a></li>
+          <li><a href="#anatomy">Анатомия</a></li>
           <li><a href="#accessories">Аксессуары</a></li>
           <li><a href="#mats">Коврики</a></li>
           <li><a href="#bundles">Комплекты</a></li>
@@ -419,8 +420,8 @@
         <a href="#boards" class="btn-hero-primary">
           <span>Смотреть каталог</span>
         </a>
-        <a href="#about" class="btn-hero-outline">
-          Подробнее
+        <a href="#anatomy" class="btn-hero-outline">
+          Анатомия сетапа
         </a>
       </div>
 
@@ -451,6 +452,280 @@
             </svg>
           </span>
           <span>Гарантия качества</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       2.1. CAD ENGINEERING SPECS TICKER (Infinite Marquee Bridge)
+       ========================================================================== -->
+  <div class="hero-specs-ticker-wrap" aria-hidden="true">
+    <div class="hero-specs-ticker-track">
+      <div class="ticker-item"><span class="ticker-chip">50 KG</span><span>STATIC LOAD TESTED</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">22 MM</span><span>SOLID CAUCASIAN OAK & WALNUT</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">D16T</span><span>AEROSPACE ALUMINUM ALLOY</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">T-TRACK</span><span>45° MODULAR MOUNTING SYSTEM</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">4 MM</span><span>PORTUGUESE ACOUSTIC CORK</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">11 LAYERS</span><span>OSMO NATURAL HARDWAX-OIL</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">CNC 0.05MM</span><span>PRECISION MILLED IN MOSCOW</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">STEALTH</span><span>INTEGRATED CABLE MANAGEMENT</span><span class="ticker-bullet">/</span></div>
+      <!-- Seamless marquee loop duplicate -->
+      <div class="ticker-item"><span class="ticker-chip">50 KG</span><span>STATIC LOAD TESTED</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">22 MM</span><span>SOLID CAUCASIAN OAK & WALNUT</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">D16T</span><span>AEROSPACE ALUMINUM ALLOY</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">T-TRACK</span><span>45° MODULAR MOUNTING SYSTEM</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">4 MM</span><span>PORTUGUESE ACOUSTIC CORK</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">11 LAYERS</span><span>OSMO NATURAL HARDWAX-OIL</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">CNC 0.05MM</span><span>PRECISION MILLED IN MOSCOW</span><span class="ticker-bullet">/</span></div>
+      <div class="ticker-item"><span class="ticker-chip">STEALTH</span><span>INTEGRATED CABLE MANAGEMENT</span><span class="ticker-bullet">/</span></div>
+    </div>
+  </div>
+
+  <!-- ==========================================================================
+       2.2. АНАТОМИЯ FOCUS STATION — PINNED HORIZONTAL SHOWCASE
+       ========================================================================== -->
+  <section class="anatomy-section" id="anatomy">
+    <div class="anatomy-sticky-container">
+      <div class="container anatomy-header-wrap">
+        <div class="anatomy-header-row">
+          <div class="anatomy-header-left">
+            <span class="section-kicker kicker-dark">00 // АНАТОМИЯ FOCUS STATION</span>
+            <h2 class="block-title title-dark">ИНЖЕНЕРИЯ СОВЕРШЕННОГО СЕТАПА</h2>
+            <p class="anatomy-sub">
+              5 ключевых решений, которые превращают массив дерева и металл в единый модульный командный центр.
+            </p>
+          </div>
+
+          <div class="anatomy-controls-side">
+            <div class="anatomy-stepper-pills" role="tablist" aria-label="Узлы Focus Station">
+              <button type="button" class="anatomy-step-pill active" onclick="window.geekNookApp.jumpToAnatomyStep(0)" role="tab" aria-selected="true">
+                <span class="pill-num">01</span><span>Массив 22 мм</span>
+              </button>
+              <button type="button" class="anatomy-step-pill" onclick="window.geekNookApp.jumpToAnatomyStep(1)" role="tab" aria-selected="false">
+                <span class="pill-num">02</span><span>Опоры Д16Т</span>
+              </button>
+              <button type="button" class="anatomy-step-pill" onclick="window.geekNookApp.jumpToAnatomyStep(2)" role="tab" aria-selected="false">
+                <span class="pill-num">03</span><span>Паз T-Track</span>
+              </button>
+              <button type="button" class="anatomy-step-pill" onclick="window.geekNookApp.jumpToAnatomyStep(3)" role="tab" aria-selected="false">
+                <span class="pill-num">04</span><span>Пробка 4 мм</span>
+              </button>
+              <button type="button" class="anatomy-step-pill" onclick="window.geekNookApp.jumpToAnatomyStep(4)" role="tab" aria-selected="false">
+                <span class="pill-num">05</span><span>Кабель-канал</span>
+              </button>
+            </div>
+
+            <div class="anatomy-nav-actions">
+              <span class="anatomy-counter" id="anatomyCounterDisplay">01 / 05</span>
+              <button type="button" class="anatomy-arrow-btn" onclick="window.geekNookApp.stepAnatomySlide(-1)" title="Предыдущий слайд" aria-label="Предыдущий слайд">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+              </button>
+              <button type="button" class="anatomy-arrow-btn" onclick="window.geekNookApp.stepAnatomySlide(1)" title="Следующий слайд" aria-label="Следующий слайд">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="anatomy-progress-track">
+          <div class="anatomy-progress-bar" id="anatomyProgressFill" style="width: 20%;"></div>
+        </div>
+      </div>
+
+      <div class="anatomy-rail-viewport" id="anatomyViewport">
+        <div class="anatomy-rail-track" id="anatomyTrack">
+
+          <!-- Card 1: Solid Wood -->
+          <article class="anatomy-card" data-step="0">
+            <div class="anatomy-card-content">
+              <div class="anatomy-card-meta">
+                <span class="anatomy-card-level">LEVEL 01 // МАТЕРИАЛ ОСНОВАНИЯ</span>
+                <span class="anatomy-card-tag">КАВКАЗСКИЙ ДУБ & ОРЕХ</span>
+              </div>
+              <h3 class="anatomy-card-title">Натуральный массив 22 мм и ручная доводка</h3>
+              <p class="anatomy-card-desc">
+                Никакого прессованного МДФ, пустотелых сотовых панелей или пластика. Мы бережно отбираем цельные ламели твёрдых пород и вручную доводим каждую фаску под углом 45°. Поверхность покрывается 11 слоями немецкого экологичного масла с твёрдым воском Osmo — дерево дышит, не боится пролитого кофе и дарит бархатистую тактильность.
+              </p>
+              <div class="anatomy-specs-row">
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val" data-counter="22" data-counter-suffix=" мм">22 мм</strong>
+                  <span class="anatomy-spec-lbl">Толщина массива</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val" data-counter="11" data-counter-suffix=" слоёв">11 слоёв</strong>
+                  <span class="anatomy-spec-lbl">Масло Osmo с воском</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val">100%</strong>
+                  <span class="anatomy-spec-lbl">Экологичный массив</span>
+                </div>
+              </div>
+              <div class="anatomy-card-actions">
+                <a href="#boards" class="anatomy-card-btn">
+                  <span>Выбрать оттенок в каталоге</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+              </div>
+            </div>
+            <div class="anatomy-card-visual">
+              <img src="images/tild6335-3035-4235-b932-393935393563__26.jpg" alt="Текстура массива кавказского дуба Focus Station" class="anatomy-card-img" loading="lazy" decoding="async" />
+              <div class="anatomy-visual-tag">ISO-9241 // SOLID WOOD GRAIN</div>
+            </div>
+          </article>
+
+          <!-- Card 2: D16T Alloy Legs -->
+          <article class="anatomy-card" data-step="1">
+            <div class="anatomy-card-content">
+              <div class="anatomy-card-meta">
+                <span class="anatomy-card-level">LEVEL 02 // СИЛОВОЙ КАРКАС</span>
+                <span class="anatomy-card-tag">AEROSPACE ALLOY D16T</span>
+              </div>
+              <h3 class="anatomy-card-title">Опоры из авиационного алюминия Д16Т</h3>
+              <p class="anatomy-card-desc">
+                Стойки выточены на пятикоординатном ЧПУ-центре из цельного слитка термообработанного авиационного сплава Д16Т. Глубокое химическое анодирование толщиной 25 мкм исключает сколы и отпечатки пальцев. Конструкция рассчитана на колоссальную статическую нагрузку до 50+ кг: два тяжелых монитора или ультраширокий 49" экран стоят монументально.
+              </p>
+              <div class="anatomy-specs-row">
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val highlight-cyan" data-counter="50" data-counter-prefix="до " data-counter-suffix=" кг">до 50 кг</strong>
+                  <span class="anatomy-spec-lbl">Статическая нагрузка</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val" data-counter="25" data-counter-suffix=" мкм">25 мкм</strong>
+                  <span class="anatomy-spec-lbl">Глубокий матовый анод</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val" data-counter="0.21" data-counter-suffix=" мм" data-counter-decimals="2">0.21 мм</strong>
+                  <span class="anatomy-spec-lbl">Мин. прогиб по FEA</span>
+                </div>
+              </div>
+              <div class="anatomy-card-actions">
+                <a href="#fea" class="anatomy-card-btn">
+                  <span>Проверить в FEA-симуляторе</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+              </div>
+            </div>
+            <div class="anatomy-card-visual">
+              <img src="images/tild3637-3261-4364-b133-386465326266__16.jpg" alt="Опоры из сплава Д16Т Focus Station" class="anatomy-card-img" loading="lazy" decoding="async" />
+              <div class="anatomy-visual-tag">CNC MILLED // D16T CHASSIS</div>
+            </div>
+          </article>
+
+          <!-- Card 3: T-Track Slot -->
+          <article class="anatomy-card" data-step="2">
+            <div class="anatomy-card-content">
+              <div class="anatomy-card-meta">
+                <span class="anatomy-card-level">LEVEL 03 // МОДУЛЬНОСТЬ</span>
+                <span class="anatomy-card-tag">T-TRACK 45° SLOTS</span>
+              </div>
+              <h3 class="anatomy-card-title">Направляющая T-Track: кастомизация за 1 секунду</h3>
+              <p class="anatomy-card-desc">
+                Вдоль всей длины основания профрезерован рельсовый паз T-Track под углом 45°. Это открытая модульная архитектура: любые аксессуары (кронштейны ноутбуков, наушников, геймпадов, беспроводные MagSafe-докстанции) вставляются в паз и фиксируются лёгким движением руки. Вы можете менять конфигурацию стола каждый день без инструментов и клея.
+              </p>
+              <div class="anatomy-specs-row">
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val" data-counter="1" data-counter-suffix=" сек">1 сек</strong>
+                  <span class="anatomy-spec-lbl">Монтаж любого модуля</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val" data-counter="11" data-counter-suffix=" шт">11 шт</strong>
+                  <span class="anatomy-spec-lbl">Модулей в экосистеме</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val">0 винтов</strong>
+                  <span class="anatomy-spec-lbl">Для перестановки</span>
+                </div>
+              </div>
+              <div class="anatomy-card-actions">
+                <a href="#accessories" class="anatomy-card-btn">
+                  <span>Смотреть модули T-Track</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </a>
+              </div>
+            </div>
+            <div class="anatomy-card-visual">
+              <img src="images/tild6565-3263-4938-b233-376334646532__14.jpg" alt="Модульная система T-Track в работе" class="anatomy-card-img" loading="lazy" decoding="async" />
+              <div class="anatomy-visual-tag">PATENTED // 45° DOCKING RAIL</div>
+            </div>
+          </article>
+
+          <!-- Card 4: Portuguese Cork -->
+          <article class="anatomy-card" data-step="3">
+            <div class="anatomy-card-content">
+              <div class="anatomy-card-meta">
+                <span class="anatomy-card-level">LEVEL 04 // АКУСТИКА & ЗАЩИТА</span>
+                <span class="anatomy-card-tag">NATURAL CORK FOOTPADS</span>
+              </div>
+              <h3 class="anatomy-card-title">4 мм португальская пробка: ноль царапин</h3>
+              <p class="anatomy-card-desc">
+                Нижняя поверхность каждой алюминиевой опоры оснащена цельной демпфирующей пластиной из натуральной агломерированной пробки толщиной 4 мм. Пробка обладает уникальным коэффициентом упругости: она гасит 92% механических микровибраций от ударов по клавиатуре, предотвращает дребезжание монитора и полностью защищает даже деликатный шпонированный стол от царапин.
+              </p>
+              <div class="anatomy-specs-row">
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val" data-counter="4" data-counter-suffix=" мм">4 мм</strong>
+                  <span class="anatomy-spec-lbl">Толщина пробки</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val highlight-green" data-counter="92" data-counter-suffix="%">92%</strong>
+                  <span class="anatomy-spec-lbl">Гашение микровибраций</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val">0 царапин</strong>
+                  <span class="anatomy-spec-lbl">Защита столешницы</span>
+                </div>
+              </div>
+              <div class="anatomy-card-actions">
+                <button type="button" class="anatomy-card-btn" onclick="window.geekNookApp.openQuickView('focus-station-walnut')">
+                  <span>X-Ray рентген узлов</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                </button>
+              </div>
+            </div>
+            <div class="anatomy-card-visual">
+              <img src="images/tild3466-6262-4864-b463-663737363436__7.jpg" alt="Виброразвязка из натуральной пробки" class="anatomy-card-img" loading="lazy" decoding="async" />
+              <div class="anatomy-visual-tag">ACOUSTIC // DAMPING MATRIX</div>
+            </div>
+          </article>
+
+          <!-- Card 5: Stealth Cable Management -->
+          <article class="anatomy-card" data-step="4">
+            <div class="anatomy-card-content">
+              <div class="anatomy-card-meta">
+                <span class="anatomy-card-level">LEVEL 05 // ОРГАНИЗАЦИЯ</span>
+                <span class="anatomy-card-tag">STEALTH CABLE MATRIX</span>
+              </div>
+              <h3 class="anatomy-card-title">Stealth кабель-менеджмент: визуальный дзен</h3>
+              <p class="anatomy-card-desc">
+                Провода — главный враг фокуса и чистоты рабочего места. Навесной стальной лоток Power Strip размещает массивные сетевые фильтры и блоки питания мощностью до 140W прямо под основанием подставки. Все кабели питания монитора, ноутбука и настольного света уходят в единый скрытый жгут, оставляя стол абсолютно свободным.
+              </p>
+              <div class="anatomy-specs-row">
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val" data-counter="100" data-counter-suffix="%">100%</strong>
+                  <span class="anatomy-spec-lbl">Скрытая разводка</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val" data-counter="140" data-counter-prefix="до " data-counter-suffix="W">до 140W</strong>
+                  <span class="anatomy-spec-lbl">Блоки питания</span>
+                </div>
+                <div class="anatomy-spec-box">
+                  <strong class="anatomy-spec-val">0 хаоса</strong>
+                  <span class="anatomy-spec-lbl">Дзен на столе</span>
+                </div>
+              </div>
+              <div class="anatomy-card-actions">
+                <button type="button" class="anatomy-card-btn" onclick="window.geekNookApp.setCableMode('magnetic'); window.geekNookApp.scrollToProductionBlock();">
+                  <span>Интерактивный симулятор кабелей</span>
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                </button>
+              </div>
+            </div>
+            <div class="anatomy-card-visual">
+              <img src="images/tild3931-6666-4933-a466-373836393933__1.jpg" alt="Скрытый кабель-менеджер Focus Station" class="anatomy-card-img" loading="lazy" decoding="async" />
+              <div class="anatomy-visual-tag">CABLE MATRIX // ZERO CLUTTER</div>
+            </div>
+          </article>
+
         </div>
       </div>
     </div>

@@ -8332,6 +8332,8 @@
     renderFAQ();
     updateCartUI();
     initScrollReveals();
+    initAnatomyScroll();
+    initNumberCounters();
     initCableSimulator();
     initFeaLab();
     initProduction3DStudio();
@@ -8395,8 +8397,216 @@
     }
   };
 
+
+  // --- 2.1. PINNED HORIZONTAL ANATOMY SHOWCASE MODULE ---
+  let anatomyState = {
+    activeIndex: 0,
+    totalSlides: 5,
+    isDesktop: false
+  };
+
+  const jumpToAnatomyStep = (index) => {
+    const idx = Math.max(0, Math.min(anatomyState.totalSlides - 1, index));
+    anatomyState.activeIndex = idx;
+    soundEngine.play('click');
+    trackGoal('ANATOMY_STEP', { step: idx + 1 });
+
+    const pills = document.querySelectorAll('.anatomy-step-pill');
+    pills.forEach((p, i) => {
+      p.classList.toggle('active', i === idx);
+      p.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+    });
+
+    const counterEl = document.getElementById('anatomyCounterDisplay');
+    if (counterEl) {
+      counterEl.textContent = `0${idx + 1} / 05`;
+    }
+
+    const progressFill = document.getElementById('anatomyProgressFill');
+    if (progressFill) {
+      progressFill.style.width = `${((idx + 1) / anatomyState.totalSlides) * 100}%`;
+    }
+
+    const isDesktop = window.innerWidth >= 769;
+    if (isDesktop) {
+      const section = document.getElementById('anatomy');
+      if (section) {
+        const rect = section.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const sectionTop = rect.top + scrollTop;
+        const scrollRange = section.offsetHeight - window.innerHeight;
+        const targetScroll = sectionTop + ((idx / (anatomyState.totalSlides - 1)) * scrollRange);
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      }
+    } else {
+      const viewport = document.getElementById('anatomyViewport');
+      const cards = document.querySelectorAll('.anatomy-card');
+      if (viewport && cards[idx]) {
+        cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  };
+
+  const stepAnatomySlide = (delta) => {
+    jumpToAnatomyStep(anatomyState.activeIndex + delta);
+  };
+
+  const initAnatomyScroll = () => {
+    const section = document.getElementById('anatomy');
+    const track = document.getElementById('anatomyTrack');
+    const viewport = document.getElementById('anatomyViewport');
+    const progressFill = document.getElementById('anatomyProgressFill');
+    const counterEl = document.getElementById('anatomyCounterDisplay');
+    const pills = document.querySelectorAll('.anatomy-step-pill');
+
+    if (!section || !track) return;
+
+    let ticking = false;
+    let sectionTop = 0;
+    let scrollRange = 0;
+    let maxTranslate = 0;
+
+    const measure = () => {
+      anatomyState.isDesktop = window.innerWidth >= 769;
+      if (!anatomyState.isDesktop) {
+        track.style.transform = '';
+        return;
+      }
+      const rect = section.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      sectionTop = rect.top + scrollTop;
+      scrollRange = Math.max(1, section.offsetHeight - window.innerHeight);
+      const trackWidth = track.scrollWidth;
+      const viewportWidth = viewport ? viewport.clientWidth : window.innerWidth;
+      maxTranslate = Math.max(0, trackWidth - viewportWidth + 60);
+    };
+
+    measure();
+    window.addEventListener('resize', measure, { passive: true });
+
+    const updateScroll = () => {
+      if (!anatomyState.isDesktop) return;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const progress = Math.max(0, Math.min(1, (scrollTop - sectionTop) / scrollRange));
+      const currentX = progress * maxTranslate;
+
+      track.style.transform = `translate3d(-${currentX}px, 0, 0)`;
+
+      if (progressFill) {
+        progressFill.style.width = `${Math.round(20 + progress * 80)}%`;
+      }
+
+      const activeIdx = Math.min(anatomyState.totalSlides - 1, Math.floor(progress * anatomyState.totalSlides));
+      if (activeIdx !== anatomyState.activeIndex) {
+        anatomyState.activeIndex = activeIdx;
+        pills.forEach((p, i) => {
+          p.classList.toggle('active', i === activeIdx);
+          p.setAttribute('aria-selected', i === activeIdx ? 'true' : 'false');
+        });
+        if (counterEl) {
+          counterEl.textContent = `0${activeIdx + 1} / 05`;
+        }
+      }
+      ticking = false;
+    };
+
+    // Desktop Scroll Sync with IntersectionObserver Pause
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            measure();
+            window.addEventListener('scroll', onScroll, { passive: true });
+          } else {
+            window.removeEventListener('scroll', onScroll);
+          }
+        });
+      }, { threshold: 0.01 });
+      io.observe(section);
+    } else {
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScroll);
+      }
+    }
+
+    // Mobile Horizontal Touch Swipe Listener
+    if (viewport) {
+      viewport.addEventListener('scroll', () => {
+        if (anatomyState.isDesktop) return;
+        const cards = document.querySelectorAll('.anatomy-card');
+        if (!cards.length) return;
+        const cardWidth = cards[0].offsetWidth + 16;
+        const scrollLeft = viewport.scrollLeft;
+        const idx = Math.min(anatomyState.totalSlides - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
+
+        if (idx !== anatomyState.activeIndex) {
+          anatomyState.activeIndex = idx;
+          pills.forEach((p, i) => {
+            p.classList.toggle('active', i === idx);
+            p.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+          });
+          if (counterEl) {
+            counterEl.textContent = `0${idx + 1} / 05`;
+          }
+          if (progressFill) {
+            progressFill.style.width = `${((idx + 1) / anatomyState.totalSlides) * 100}%`;
+          }
+        }
+      }, { passive: true });
+    }
+  };
+
+  // --- 2.2. LIVE NUMBER COUNTER ROLLERS ---
+  const initNumberCounters = () => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
+    const counters = document.querySelectorAll('[data-counter]');
+    if (!counters.length) return;
+
+    const observer = new IntersectionObserver((entries, obs) => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting) return;
+        obs.unobserve(entry.target);
+
+        const el = entry.target;
+        const target = parseFloat(el.getAttribute('data-counter'));
+        if (isNaN(target)) return;
+
+        const suffix = el.getAttribute('data-counter-suffix') || '';
+        const prefix = el.getAttribute('data-counter-prefix') || '';
+        const decimals = parseInt(el.getAttribute('data-counter-decimals') || '0', 10);
+        const duration = 1200;
+        const startTime = performance.now();
+
+        const animate = (currentTime) => {
+          const elapsed = currentTime - startTime;
+          const progress = Math.min(1, elapsed / duration);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          const current = (target * eased).toFixed(decimals);
+          el.textContent = `${prefix}${current}${suffix}`;
+
+          if (progress < 1) {
+            requestAnimationFrame(animate);
+          } else {
+            el.textContent = `${prefix}${target.toFixed(decimals)}${suffix}`;
+          }
+        };
+
+        requestAnimationFrame(animate);
+      });
+    }, { threshold: 0.15 });
+
+    counters.forEach(c => observer.observe(c));
+  };
+
   // Public API
   window.geekNookApp = {
+    jumpToAnatomyStep,
+    stepAnatomySlide,
     init,
     toggleSupportWidget,
     addToCart,
