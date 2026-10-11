@@ -10910,7 +10910,8 @@ textarea.input-error {
   will-change: transform;
 }
 
-.hero-specs-ticker-wrap:hover .hero-specs-ticker-track {
+.hero-specs-ticker-wrap:hover .hero-specs-ticker-track,
+.hero-specs-ticker-wrap.paused .hero-specs-ticker-track {
   animation-play-state: paused;
 }
 
@@ -11986,4 +11987,136 @@ textarea.input-error {
 [data-theme="dark"] .checkout-select:focus {
   border-color: #3b82f6 !important;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+
+/* ==========================================================================
+   MASTERPIECE POLISH SUITE: FILM GRAIN, CHAMFERS, AMBIENT LIGHT & SPRINGS
+   ========================================================================== */
+
+/* 1. SUB-PIXEL FILM GRAIN OVERLAY */
+.subpixel-grain-layer {
+  position: fixed;
+  inset: -50px;
+  width: calc(100vw + 100px);
+  height: calc(100vh + 100px);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.65;
+  mix-blend-mode: overlay;
+  transform: translateZ(0);
+}
+
+[data-theme="light"] .subpixel-grain-layer {
+  opacity: 0.28;
+  mix-blend-mode: multiply;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .subpixel-grain-layer {
+    display: none !important;
+  }
+}
+
+/* 2. LIQUID GLASS & PRECISION MACHINED CHAMFER HIGHLIGHTS */
+[data-theme="dark"] .product-item-card,
+[data-theme="dark"] .bundle-card,
+[data-theme="dark"] .anatomy-card,
+[data-theme="dark"] .advantages-card,
+[data-theme="dark"] .cad-asset-item,
+[data-theme="dark"] .b2b-tier-card,
+[data-theme="dark"] .fea-lab-card,
+[data-theme="dark"] .modal-card {
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.12),
+              inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="light"] .product-item-card,
+[data-theme="light"] .bundle-card,
+[data-theme="light"] .anatomy-card,
+[data-theme="light"] .advantages-card,
+[data-theme="light"] .cad-asset-item,
+[data-theme="light"] .b2b-tier-card,
+[data-theme="light"] .fea-lab-card,
+[data-theme="light"] .modal-card {
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06),
+              inset 0 1px 0 rgba(255, 255, 255, 0.9),
+              inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+/* 3. AMBIENT DEPTH LIGHTING BEHIND HARDWARE SHOWCASES */
+.boards-section {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .boards-section::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: clamp(500px, 70vw, 900px);
+  height: clamp(350px, 45vw, 550px);
+  background: radial-gradient(circle, rgba(43, 112, 240, 0.09) 0%, rgba(217, 119, 6, 0.035) 45%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(50px);
+}
+
+[data-theme="dark"] .advantages-section {
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .advantages-section::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  right: 10%;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.07) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+  filter: blur(40px);
+}
+
+/* 4. MOBILE BUNDLES TOUCH-SNAP CAROUSEL */
+@media (max-width: 768px) {
+  .bundles-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-snap-type: x mandatory !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    gap: 16px !important;
+    padding: 8px 16px 20px 16px !important;
+    margin-left: -16px !important;
+    margin-right: -16px !important;
+    box-sizing: border-box !important;
+  }
+  .bundles-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+  .bundle-card {
+    flex: 0 0 calc(100vw - 44px) !important;
+    max-width: 380px !important;
+    scroll-snap-align: center !important;
+  }
+}
+
+/* 5. MAGNETIC BUTTONS & SPRING FEEDBACK (DESKTOP) */
+@media (hover: hover) and (pointer: fine) {
+  .btn-hero-primary,
+  .btn-checkout,
+  .btn-bundle-buy,
+  .btn-cad-download,
+  .btn-kp-action,
+  .anatomy-arrow-btn,
+  .btn-header-catalog {
+    will-change: transform;
+    cursor: pointer;
+  }
 }

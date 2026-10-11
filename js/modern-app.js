@@ -8425,6 +8425,8 @@
     initScrollReveals();
     initAnatomyScroll();
     initNumberCounters();
+    initTickerObserver();
+    initMagneticButtons();
     initCableSimulator();
     initFeaLab();
     initProduction3DStudio();
@@ -8716,6 +8718,67 @@
     }, { threshold: 0.15 });
 
     counters.forEach(c => observer.observe(c));
+  };
+
+  // --- 2.3. CAD SPECS TICKER INTERSECTION OBSERVER (Off-screen Culling) ---
+  const initTickerObserver = () => {
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
+    const tickerWrap = document.getElementById('heroSpecsTicker');
+    if (!tickerWrap) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          tickerWrap.classList.remove('paused');
+        } else {
+          tickerWrap.classList.add('paused');
+        }
+      });
+    }, { threshold: 0.05 });
+
+    observer.observe(tickerWrap);
+  };
+
+  // --- 2.4. MAGNETIC BUTTON HOVER (Desktop Micro-Pull) ---
+  const initMagneticButtons = () => {
+    if (typeof window === 'undefined') return;
+    const isFinePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (!isFinePointer) return;
+
+    const selectors = [
+      '.btn-hero-primary',
+      '.btn-checkout',
+      '.btn-bundle-buy',
+      '.btn-cad-download',
+      '.btn-kp-action',
+      '.anatomy-arrow-btn',
+      '.btn-header-catalog'
+    ];
+
+    const elements = document.querySelectorAll(selectors.join(', '));
+    elements.forEach(btn => {
+      let rect = null;
+
+      btn.addEventListener('mouseenter', () => {
+        rect = btn.getBoundingClientRect();
+        btn.style.transition = 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)';
+      }, { passive: true });
+
+      btn.addEventListener('mousemove', (e) => {
+        if (!rect) return;
+        const centerX = rect.left + rect.width / 2;
+        const centerY = rect.top + rect.height / 2;
+        const dx = (e.clientX - centerX) * 0.24;
+        const dy = (e.clientY - centerY) * 0.24;
+        btn.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0)`;
+      }, { passive: true });
+
+      btn.addEventListener('mouseleave', () => {
+        rect = null;
+        btn.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        btn.style.transform = 'translate3d(0, 0, 0)';
+      }, { passive: true });
+    });
   };
 
   // Public API
