@@ -10438,10 +10438,36 @@ textarea.input-error {
   flex-wrap: wrap;
 }
 
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--surface);
+  color: var(--text-main);
+  border: 1px solid var(--border);
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 14px 20px;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  min-height: 44px;
+}
+
+.btn-secondary:hover {
+  background: var(--primary-surface);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
 .b2b-actions-cluster .btn-checkout,
 .b2b-actions-cluster .btn-secondary {
   flex: 1;
   min-width: 180px;
+  min-height: 48px;
+  padding: 13px 18px;
+  font-size: 0.9375rem;
 }
 
 /* --- 2. OFFICIAL COMMERCIAL PROPOSAL (КП) MODAL & SHEET --- */
@@ -10502,12 +10528,13 @@ textarea.input-error {
 }
 
 .btn-kp-secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-main, #f8fafc);
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 .btn-kp-secondary:hover {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff !important;
 }
 
 /* Simulated A4 Proposal Paper Sheet */
@@ -11424,4 +11451,539 @@ textarea.input-error {
   .anatomy-rail-track {
     transition: none !important;
   }
+}
+
+/* ==========================================================================
+   THEME POLISH, CONTRAST AUDIT & ADAPTIVE INVERSION (LIGHT & DARK THEMES)
+   ========================================================================== */
+
+/* 1. ANATOMY SECTION CONTRAST & ADAPTATION */
+[data-theme="light"] .anatomy-section {
+  background: #f8fafc;
+}
+
+[data-theme="light"] .anatomy-section .block-title,
+[data-theme="light"] .anatomy-section .block-title.title-dark {
+  color: #0f172a !important;
+}
+
+[data-theme="light"] .anatomy-section .section-kicker,
+[data-theme="light"] .anatomy-section .section-kicker.kicker-dark {
+  color: #2563eb !important;
+}
+
+[data-theme="light"] .anatomy-sub {
+  color: #475569;
+}
+
+[data-theme="light"] .anatomy-card-level {
+  color: #0284c7;
+}
+
+[data-theme="light"] .anatomy-card-btn {
+  color: #2563eb;
+}
+
+[data-theme="light"] .anatomy-card-btn:hover {
+  color: #1d4ed8;
+}
+
+[data-theme="light"] .anatomy-spec-val.highlight-cyan {
+  color: #0284c7;
+}
+
+[data-theme="light"] .anatomy-spec-val.highlight-green {
+  color: #059669;
+}
+
+[data-theme="light"] .anatomy-step-pill {
+  background: #ffffff;
+  color: #475569;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .anatomy-step-pill:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+[data-theme="light"] .anatomy-step-pill.active {
+  background: #2563eb;
+  color: #ffffff;
+  border-color: #2563eb;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+[data-theme="light"] .anatomy-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.07);
+}
+
+[data-theme="light"] .anatomy-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 20px 48px rgba(15, 23, 42, 0.12), 0 0 24px rgba(37, 99, 235, 0.08);
+}
+
+[data-theme="light"] .anatomy-card-visual {
+  background: #f1f5f9;
+}
+
+[data-theme="light"] .anatomy-visual-tag {
+  background: rgba(255, 255, 255, 0.94);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #0284c7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="dark"] .anatomy-section {
+  background: #080a0f;
+}
+
+[data-theme="dark"] .anatomy-section .block-title,
+[data-theme="dark"] .anatomy-section .block-title.title-dark {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .anatomy-section .section-kicker,
+[data-theme="dark"] .anatomy-section .section-kicker.kicker-dark {
+  color: #38bdf8 !important;
+}
+
+[data-theme="dark"] .anatomy-sub {
+  color: #94a3b8;
+}
+
+/* 2. CAD SPECS TICKER CONTRAST */
+[data-theme="light"] .hero-specs-ticker-wrap {
+  background: #f8fafc;
+  border-top-color: #e2e8f0;
+  border-bottom-color: #e2e8f0;
+}
+
+[data-theme="light"] .ticker-item {
+  color: #334155;
+}
+
+[data-theme="light"] .ticker-chip {
+  background: rgba(2, 132, 199, 0.1);
+  color: #0369a1;
+  border-color: rgba(2, 132, 199, 0.25);
+}
+
+[data-theme="light"] .ticker-bullet {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .hero-specs-ticker-wrap {
+  background: #080a0e;
+  border-top-color: rgba(255, 255, 255, 0.08);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .ticker-item {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .ticker-chip {
+  background: rgba(56, 189, 248, 0.12);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+[data-theme="dark"] .ticker-bullet {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* 3. B2B CAD MODAL FULL THEME CONTRAST */
+[data-theme="light"] .cad-library-card {
+  background: #ffffff !important;
+  color: #0f172a;
+  border-color: #e2e8f0;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.14);
+}
+
+[data-theme="light"] .cad-modal-tabs {
+  border-bottom-color: #e2e8f0;
+}
+
+[data-theme="light"] .cad-modal-tab {
+  background: #f1f5f9;
+  border-color: #e2e8f0;
+  color: #475569;
+}
+
+[data-theme="light"] .cad-modal-tab:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+  border-color: #cbd5e1;
+}
+
+[data-theme="light"] .cad-modal-tab.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+[data-theme="light"] .cad-asset-item {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .cad-asset-item:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.12);
+}
+
+[data-theme="light"] .cad-asset-icon {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+[data-theme="light"] .cad-asset-info strong {
+  color: #0f172a;
+}
+
+[data-theme="light"] .cad-asset-info span {
+  color: #64748b;
+}
+
+[data-theme="light"] .b2b-slider-card {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .b2b-slider-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .b2b-slider-ticks span {
+  color: #64748b;
+}
+
+[data-theme="light"] .b2b-places-count-badge {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+  color: #1d4ed8;
+}
+
+[data-theme="light"] .b2b-quick-chip {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #334155;
+}
+
+[data-theme="light"] .b2b-quick-chip:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+  border-color: #94a3b8;
+}
+
+[data-theme="light"] .b2b-quick-chip.active {
+  background: #2563eb;
+  border-color: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+[data-theme="light"] .b2b-tier-card {
+  background: #ffffff;
+  border-color: #e2e8f0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+[data-theme="light"] .b2b-tier-card:hover {
+  border-color: #94a3b8;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .b2b-tier-card.active {
+  background: #f0f7ff;
+  border-color: #2563eb;
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.16);
+}
+
+[data-theme="light"] .b2b-tier-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .b2b-tier-desc {
+  color: #64748b;
+}
+
+[data-theme="light"] .b2b-tier-items-list li {
+  color: #334155 !important;
+}
+
+[data-theme="light"] .b2b-tier-price-unit {
+  color: #0f172a;
+  border-top-color: #e2e8f0;
+}
+
+[data-theme="light"] .b2b-tier-badge {
+  background: rgba(16, 185, 129, 0.12);
+  color: #047857;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+[data-theme="light"] .btn-secondary {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  color: #1e293b;
+}
+
+[data-theme="light"] .btn-secondary:hover {
+  background: #e2e8f0;
+  border-color: #2563eb;
+  color: #2563eb;
+}
+
+[data-theme="light"] .b2b-addons-block {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+}
+
+[data-theme="light"] .b2b-addon-info strong {
+  color: #0f172a;
+}
+
+[data-theme="light"] .b2b-addon-info span {
+  color: #64748b;
+}
+
+[data-theme="light"] .b2b-calculation-box {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e0f2fe 100%);
+  border-color: rgba(37, 99, 235, 0.25);
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.06);
+}
+
+[data-theme="light"] .b2b-calc-row {
+  color: #475569;
+}
+
+[data-theme="light"] .b2b-calc-total-label {
+  color: #0f172a;
+}
+
+[data-theme="light"] .b2b-calc-total-val {
+  color: #1d4ed8;
+}
+
+[data-theme="light"] .b2b-calc-divider {
+  background: rgba(37, 99, 235, 0.15);
+}
+
+[data-theme="light"] .b2b-savings-callout {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #047857;
+}
+
+[data-theme="dark"] .cad-library-card {
+  background: #0f131a !important;
+  color: #f8fafc;
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+}
+
+[data-theme="dark"] .cad-modal-tabs {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] .cad-modal-tab {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .cad-modal-tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .cad-modal-tab.active {
+  background: #2563eb;
+  border-color: #3b82f6;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+}
+
+[data-theme="dark"] .cad-asset-item {
+  background: #141923;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .cad-asset-item:hover {
+  border-color: rgba(59, 130, 246, 0.5);
+}
+
+[data-theme="dark"] .cad-asset-icon {
+  background: rgba(59, 130, 246, 0.15);
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .cad-asset-info strong {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .cad-asset-info span {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .b2b-slider-card {
+  background: #141923;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .b2b-slider-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .b2b-slider-ticks span {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .b2b-places-count-badge {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #38bdf8;
+}
+
+[data-theme="dark"] .b2b-quick-chip {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .b2b-quick-chip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .b2b-quick-chip.active {
+  background: #2563eb;
+  border-color: #3b82f6;
+  color: #ffffff;
+}
+
+[data-theme="dark"] .b2b-tier-card {
+  background: #141923;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .b2b-tier-card.active {
+  background: rgba(37, 99, 235, 0.12);
+  border-color: #3b82f6;
+  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.25);
+}
+
+[data-theme="dark"] .b2b-tier-name {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .b2b-tier-desc {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .b2b-tier-items-list li {
+  color: #cbd5e1 !important;
+}
+
+[data-theme="dark"] .b2b-tier-price-unit {
+  color: #f8fafc;
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .b2b-tier-badge {
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  border-color: rgba(16, 185, 129, 0.35);
+}
+
+[data-theme="dark"] .btn-secondary {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.14);
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: #3b82f6;
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .b2b-addons-block {
+  background: #141923;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .b2b-addon-info strong {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .b2b-addon-info span {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .b2b-calculation-box {
+  background: linear-gradient(135deg, rgba(20, 27, 40, 0.95) 0%, rgba(11, 15, 23, 0.98) 100%);
+  border-color: rgba(43, 112, 240, 0.35);
+}
+
+[data-theme="dark"] .b2b-calc-row {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .b2b-calc-total-label {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .b2b-calc-total-val {
+  color: #60a5fa;
+}
+
+[data-theme="dark"] .b2b-calc-divider {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* 4. SELECTION & SCROLLBAR ADAPTATION */
+[data-theme="light"] ::selection {
+  background: rgba(37, 99, 235, 0.2);
+  color: #1e3a8a;
+}
+
+[data-theme="dark"] ::selection {
+  background: rgba(59, 130, 246, 0.35);
+  color: #ffffff;
+}
+
+/* 5. FORM CONTROLS INVERT & ADAPT */
+[data-theme="light"] .checkout-input,
+[data-theme="light"] .checkout-select {
+  background: #ffffff !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+[data-theme="light"] .checkout-input:focus,
+[data-theme="light"] .checkout-select:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+}
+
+[data-theme="dark"] .checkout-input,
+[data-theme="dark"] .checkout-select {
+  background: #0f131a !important;
+  color: #f8fafc !important;
+  border-color: rgba(255, 255, 255, 0.14) !important;
+}
+
+[data-theme="dark"] .checkout-input:focus,
+[data-theme="dark"] .checkout-select:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
 }
