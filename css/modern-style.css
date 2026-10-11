@@ -129,7 +129,7 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
 }
 
@@ -138,7 +138,7 @@ body {
   background-color: var(--bg-page);
   color: var(--text-main);
   line-height: 1.6;
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100vw;
   width: 100%;
   -webkit-font-smoothing: antialiased;
@@ -10835,7 +10835,9 @@ textarea.input-error {
 .anatomy-section {
   position: relative;
   background: #0c0e14;
-  overflow: visible;
+  height: auto;
+  padding: 64px 0 54px;
+  overflow: hidden;
   transition: background 0.3s ease;
 }
 
@@ -10843,36 +10845,18 @@ textarea.input-error {
   background: #f1f5f9;
 }
 
-/* Desktop: Pinned Sticky 320vh */
-@media (min-width: 769px) {
+@media (max-width: 768px) {
   .anatomy-section {
-    height: 320vh;
-  }
-  .anatomy-sticky-container {
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 30px 0 40px;
-    box-sizing: border-box;
+    padding: 44px 0 36px;
   }
 }
 
-/* Mobile: Auto Height with Smooth Touch Snap Carousel */
-@media (max-width: 768px) {
-  .anatomy-section {
-    height: auto;
-    padding: 48px 0 36px;
-    overflow: hidden;
-  }
-  .anatomy-sticky-container {
-    position: relative;
-    height: auto;
-    padding: 0;
-  }
+.anatomy-sticky-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 .anatomy-header-wrap {
@@ -11054,43 +11038,55 @@ textarea.input-error {
 .anatomy-rail-viewport {
   width: 100%;
   box-sizing: border-box;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  cursor: grab;
+}
+
+.anatomy-rail-viewport::-webkit-scrollbar {
+  display: none;
+}
+
+.anatomy-rail-viewport.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+  scroll-snap-type: none;
+}
+
+.anatomy-rail-viewport.is-wheeling {
+  scroll-snap-type: none;
 }
 
 @media (min-width: 769px) {
-  .anatomy-rail-viewport {
-    overflow: hidden;
-    padding-left: max(20px, calc((100vw - 1200px) / 2));
-  }
   .anatomy-rail-track {
     display: flex;
-    gap: 32px;
+    gap: 28px;
     width: max-content;
-    will-change: transform;
-    transition: transform 0.05s linear;
+    padding: 8px 0 24px;
+    padding-left: max(20px, calc((100vw - 1200px) / 2));
+    padding-right: max(20px, calc((100vw - 1200px) / 2));
+    box-sizing: border-box;
   }
 }
 
 @media (max-width: 768px) {
-  .anatomy-rail-viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 0 20px;
-  }
-  .anatomy-rail-viewport::-webkit-scrollbar {
-    display: none;
-  }
   .anatomy-rail-track {
     display: flex;
     gap: 16px;
     width: max-content;
-    padding: 10px 0 20px;
+    padding: 8px 20px 20px;
+    box-sizing: border-box;
   }
 }
 
 /* Anatomy Card */
 .anatomy-card {
+  scroll-snap-align: start;
+  flex-shrink: 0;
   background: rgba(19, 22, 31, 0.88);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
@@ -11110,8 +11106,8 @@ textarea.input-error {
 
 @media (min-width: 769px) {
   .anatomy-card {
-    width: clamp(740px, 66vw, 920px);
-    height: clamp(420px, 54vh, 480px);
+    width: clamp(740px, 64vw, 920px);
+    min-height: 440px;
     display: grid;
     grid-template-columns: 1.2fr 0.8fr;
   }
@@ -11120,7 +11116,7 @@ textarea.input-error {
 @media (max-width: 768px) {
   .anatomy-card {
     width: calc(100vw - 44px);
-    max-width: 360px;
+    max-width: 380px;
     display: flex;
     flex-direction: column;
     scroll-snap-align: center;

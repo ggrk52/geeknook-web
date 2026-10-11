@@ -8398,17 +8398,18 @@
   };
 
 
-  // --- 2.1. PINNED HORIZONTAL ANATOMY SHOWCASE MODULE ---
+  // --- 2.1. FLUID HORIZONTAL ANATOMY SHOWCASE MODULE ---
   let anatomyState = {
     activeIndex: 0,
-    totalSlides: 5,
-    isDesktop: false
+    totalSlides: 5
   };
 
   const jumpToAnatomyStep = (index) => {
     const idx = Math.max(0, Math.min(anatomyState.totalSlides - 1, index));
     anatomyState.activeIndex = idx;
-    soundEngine.play('click');
+    if (typeof soundEngine !== 'undefined' && soundEngine.play) {
+      soundEngine.play('click');
+    }
     trackGoal('ANATOMY_STEP', { step: idx + 1 });
 
     const pills = document.querySelectorAll('.anatomy-step-pill');
@@ -8427,23 +8428,14 @@
       progressFill.style.width = `${((idx + 1) / anatomyState.totalSlides) * 100}%`;
     }
 
-    const isDesktop = window.innerWidth >= 769;
-    if (isDesktop) {
-      const section = document.getElementById('anatomy');
-      if (section) {
-        const rect = section.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const sectionTop = rect.top + scrollTop;
-        const scrollRange = section.offsetHeight - window.innerHeight;
-        const targetScroll = sectionTop + ((idx / (anatomyState.totalSlides - 1)) * scrollRange);
-        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
-      }
-    } else {
-      const viewport = document.getElementById('anatomyViewport');
-      const cards = document.querySelectorAll('.anatomy-card');
-      if (viewport && cards[idx]) {
-        cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
+    const viewport = document.getElementById('anatomyViewport');
+    const cards = document.querySelectorAll('.anatomy-card');
+    if (viewport && cards[idx]) {
+      const card = cards[idx];
+      const isDesktop = window.innerWidth >= 769;
+      const padLeft = isDesktop ? Math.max(20, (window.innerWidth - 1200) / 2) : 20;
+      const targetLeft = Math.max(0, card.offsetLeft - padLeft);
+      viewport.scrollTo({ left: targetLeft, behavior: 'smooth' });
     }
   };
 
@@ -8453,112 +8445,127 @@
 
   const initAnatomyScroll = () => {
     const section = document.getElementById('anatomy');
-    const track = document.getElementById('anatomyTrack');
     const viewport = document.getElementById('anatomyViewport');
     const progressFill = document.getElementById('anatomyProgressFill');
     const counterEl = document.getElementById('anatomyCounterDisplay');
     const pills = document.querySelectorAll('.anatomy-step-pill');
 
-    if (!section || !track) return;
+    if (!section || !viewport) return;
 
-    let ticking = false;
-    let sectionTop = 0;
-    let scrollRange = 0;
-    let maxTranslate = 0;
+    // 1. Mouse Drag-to-Scroll on Desktop
+    let isDown = false;
+    let startX = 0;
+    let scrollStart = 0;
+    let hasDragged = false;
 
-    const measure = () => {
-      anatomyState.isDesktop = window.innerWidth >= 769;
-      if (!anatomyState.isDesktop) {
-        track.style.transform = '';
-        return;
+    viewport.addEventListener('mousedown', (e) => {
+      if (e.target.closest('button, a, input, select')) return;
+      isDown = true;
+      hasDragged = false;
+      startX = e.pageX - viewport.offsetLeft;
+      scrollStart = viewport.scrollLeft;
+      viewport.classList.add('is-dragging');
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDown) return;
+      isDown = false;
+      viewport.classList.remove('is-dragging');
+      setTimeout(() => { hasDragged = false; }, 60);
+    });
+
+    viewport.addEventListener('mouseleave', () => {
+      if (isDown) {
+        isDown = false;
+        viewport.classList.remove('is-dragging');
       }
-      const rect = section.getBoundingClientRect();
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      sectionTop = rect.top + scrollTop;
-      scrollRange = Math.max(1, section.offsetHeight - window.innerHeight);
-      const trackWidth = track.scrollWidth;
-      const viewportWidth = viewport ? viewport.clientWidth : window.innerWidth;
-      maxTranslate = Math.max(0, trackWidth - viewportWidth + 60);
-    };
+    });
 
-    measure();
-    window.addEventListener('resize', measure, { passive: true });
-
-    const updateScroll = () => {
-      if (!anatomyState.isDesktop) return;
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const progress = Math.max(0, Math.min(1, (scrollTop - sectionTop) / scrollRange));
-      const currentX = progress * maxTranslate;
-
-      track.style.transform = `translate3d(-${currentX}px, 0, 0)`;
-
-      if (progressFill) {
-        progressFill.style.width = `${Math.round(20 + progress * 80)}%`;
+    viewport.addEventListener('mousemove', (e) => {
+      if (!isDown) return;
+      const x = e.pageX - viewport.offsetLeft;
+      const walk = (x - startX);
+      if (Math.abs(walk) > 5) {
+        hasDragged = true;
       }
+      e.preventDefault();
+      viewport.scrollLeft = scrollStart - walk;
+    });
 
-      const activeIdx = Math.min(anatomyState.totalSlides - 1, Math.floor(progress * anatomyState.totalSlides));
-      if (activeIdx !== anatomyState.activeIndex) {
-        anatomyState.activeIndex = activeIdx;
+    viewport.addEventListener('click', (e) => {
+      if (hasDragged) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    }, true);
+
+    // 2. Wheel translation (smooth horizontal slide when mouse wheeling over the cards rail)
+    let wheelTimeout = null;
+    viewport.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // Trackpad horizontal swipe
+      const maxScrollLeft = viewport.scrollWidth - viewport.clientWidth;
+      if (maxScrollLeft <= 0) return;
+
+      const isScrollingDown = e.deltaY > 0;
+      const isScrollingUp = e.deltaY < 0;
+
+      const atEnd = viewport.scrollLeft >= maxScrollLeft - 3;
+      const atStart = viewport.scrollLeft <= 3;
+
+      if ((isScrollingDown && !atEnd) || (isScrollingUp && !atStart)) {
+        e.preventDefault();
+        viewport.classList.add('is-wheeling');
+        viewport.scrollLeft += e.deltaY;
+        clearTimeout(wheelTimeout);
+        wheelTimeout = setTimeout(() => {
+          viewport.classList.remove('is-wheeling');
+        }, 150);
+      }
+    }, { passive: false });
+
+    // 3. Horizontal Scroll Observer (sync active pill, counter and progress bar)
+    let scrollTicking = false;
+    const onViewportScroll = () => {
+      const cards = document.querySelectorAll('.anatomy-card');
+      if (!cards.length) return;
+
+      const isDesktop = window.innerWidth >= 769;
+      const padLeft = isDesktop ? Math.max(20, (window.innerWidth - 1200) / 2) : 20;
+      const currentScroll = viewport.scrollLeft;
+
+      let closestIdx = 0;
+      let minDiff = Infinity;
+      cards.forEach((card, i) => {
+        const cardTarget = card.offsetLeft - padLeft;
+        const diff = Math.abs(currentScroll - cardTarget);
+        if (diff < minDiff) {
+          minDiff = diff;
+          closestIdx = i;
+        }
+      });
+
+      if (closestIdx !== anatomyState.activeIndex) {
+        anatomyState.activeIndex = closestIdx;
         pills.forEach((p, i) => {
-          p.classList.toggle('active', i === activeIdx);
-          p.setAttribute('aria-selected', i === activeIdx ? 'true' : 'false');
+          p.classList.toggle('active', i === closestIdx);
+          p.setAttribute('aria-selected', i === closestIdx ? 'true' : 'false');
         });
         if (counterEl) {
-          counterEl.textContent = `0${activeIdx + 1} / 05`;
+          counterEl.textContent = `0${closestIdx + 1} / 05`;
+        }
+        if (progressFill) {
+          progressFill.style.width = `${((closestIdx + 1) / anatomyState.totalSlides) * 100}%`;
         }
       }
-      ticking = false;
+      scrollTicking = false;
     };
 
-    // Desktop Scroll Sync with IntersectionObserver Pause
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            measure();
-            window.addEventListener('scroll', onScroll, { passive: true });
-          } else {
-            window.removeEventListener('scroll', onScroll);
-          }
-        });
-      }, { threshold: 0.01 });
-      io.observe(section);
-    } else {
-      window.addEventListener('scroll', onScroll, { passive: true });
-    }
-
-    function onScroll() {
-      if (!ticking) {
-        ticking = true;
-        requestAnimationFrame(updateScroll);
+    viewport.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        scrollTicking = true;
+        requestAnimationFrame(onViewportScroll);
       }
-    }
-
-    // Mobile Horizontal Touch Swipe Listener
-    if (viewport) {
-      viewport.addEventListener('scroll', () => {
-        if (anatomyState.isDesktop) return;
-        const cards = document.querySelectorAll('.anatomy-card');
-        if (!cards.length) return;
-        const cardWidth = cards[0].offsetWidth + 16;
-        const scrollLeft = viewport.scrollLeft;
-        const idx = Math.min(anatomyState.totalSlides - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
-
-        if (idx !== anatomyState.activeIndex) {
-          anatomyState.activeIndex = idx;
-          pills.forEach((p, i) => {
-            p.classList.toggle('active', i === idx);
-            p.setAttribute('aria-selected', i === idx ? 'true' : 'false');
-          });
-          if (counterEl) {
-            counterEl.textContent = `0${idx + 1} / 05`;
-          }
-          if (progressFill) {
-            progressFill.style.width = `${((idx + 1) / anatomyState.totalSlides) * 100}%`;
-          }
-        }
-      }, { passive: true });
-    }
+    }, { passive: true });
   };
 
   // --- 2.2. LIVE NUMBER COUNTER ROLLERS ---
