@@ -505,31 +505,51 @@
 
   // --- THEME MANAGER (Dark / Light Mode) ---
   const THEME_STORAGE_KEY = 'geeknook_theme';
+  const THEME_MANUAL_KEY = 'geeknook_theme_manual';
 
   const themeManager = {
-    currentTheme: 'light',
+    currentTheme: 'dark',
+
+    getResolvedTheme() {
+      const manual = safeStorage.getItem(THEME_MANUAL_KEY);
+      if (manual === 'dark' || manual === 'light') {
+        return manual;
+      }
+      if (window.matchMedia) {
+        if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+          return 'light';
+        }
+        if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          return 'dark';
+        }
+      }
+      return 'dark'; // Default GeekNook theme is dark
+    },
 
     init() {
-      const saved = safeStorage.getItem(THEME_STORAGE_KEY);
-      if (saved === 'dark' || saved === 'light') {
-        this.currentTheme = saved;
-      } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        this.currentTheme = 'dark';
-      } else {
-        this.currentTheme = 'light';
-      }
-
-      this.applyTheme(this.currentTheme, false);
+      this.currentTheme = this.getResolvedTheme();
+      this.applyTheme(this.currentTheme, false, false);
       soundEngine.updateButtonUI();
 
       if (window.matchMedia) {
-        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-        mediaQuery.addEventListener('change', (e) => {
-          const userSaved = safeStorage.getItem(THEME_STORAGE_KEY);
-          if (!userSaved) {
-            this.applyTheme(e.matches ? 'dark' : 'light', false);
+        const lightMq = window.matchMedia('(prefers-color-scheme: light)');
+        const darkMq = window.matchMedia('(prefers-color-scheme: dark)');
+        
+        const handleSystemThemeChange = () => {
+          const manual = safeStorage.getItem(THEME_MANUAL_KEY);
+          if (!manual) {
+            const nextTheme = this.getResolvedTheme();
+            this.applyTheme(nextTheme, false, false);
           }
-        });
+        };
+
+        if (lightMq.addEventListener) {
+          lightMq.addEventListener('change', handleSystemThemeChange);
+          darkMq.addEventListener('change', handleSystemThemeChange);
+        } else if (lightMq.addListener) {
+          lightMq.addListener(handleSystemThemeChange);
+          darkMq.addListener(handleSystemThemeChange);
+        }
       }
 
       // Global keyboard shortcuts ('T' for theme, 'S' for sound when not in inputs)
@@ -555,10 +575,14 @@
       });
     },
 
-    applyTheme(theme, showToastNotification = false) {
+    applyTheme(theme, showToastNotification = false, isManualUserChoice = false) {
       this.currentTheme = theme === 'dark' ? 'dark' : 'light';
       document.documentElement.setAttribute('data-theme', this.currentTheme);
-      safeStorage.setItem(THEME_STORAGE_KEY, this.currentTheme);
+
+      if (isManualUserChoice) {
+        safeStorage.setItem(THEME_MANUAL_KEY, this.currentTheme);
+        safeStorage.setItem(THEME_STORAGE_KEY, this.currentTheme);
+      }
 
       const mobileCheckbox = document.getElementById('mobileThemeCheckbox');
       if (mobileCheckbox) {
@@ -584,13 +608,26 @@
 
     toggleTheme(showToastNotification = true) {
       const nextTheme = this.currentTheme === 'dark' ? 'light' : 'dark';
-      this.applyTheme(nextTheme, showToastNotification);
+      this.applyTheme(nextTheme, showToastNotification, true);
       return nextTheme;
+    },
+
+    resetToSystem(showToastNotification = true) {
+      safeStorage.removeItem(THEME_MANUAL_KEY);
+      safeStorage.removeItem(THEME_STORAGE_KEY);
+      const systemTheme = this.getResolvedTheme();
+      this.applyTheme(systemTheme, false, false);
+      if (showToastNotification && typeof showToast === 'function') {
+        soundEngine.play('toggle');
+        showToast('Тема синхронизирована с системой');
+      }
+      return systemTheme;
     }
   };
 
   const toggleTheme = (showToast = true) => themeManager.toggleTheme(showToast);
-  const setTheme = (theme, showToast = true) => themeManager.applyTheme(theme, showToast);
+  const setTheme = (theme, showToast = true) => themeManager.applyTheme(theme, showToast, true);
+  const resetThemeToSystem = (showToast = true) => themeManager.resetToSystem(showToast);
   const getTheme = () => themeManager.currentTheme;
 
   // --- HEADER SCROLL DYNAMICS ---
@@ -7579,6 +7616,15 @@
         action: () => { closeCommandPalette(); themeManager.toggleTheme(true); }
       },
       {
+        id: 'action-theme-system',
+        category: 'Настройки',
+        title: 'Синхронизировать тему с системой (Auto)',
+        sub: 'Автоматически следовать системной теме устройства (тёмная / светлая)',
+        badge: 'Системная',
+        icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>',
+        action: () => { closeCommandPalette(); themeManager.resetToSystem(true); }
+      },
+      {
         id: 'action-sound-toggle',
         category: 'Настройки',
         title: 'Тактильный звук (Micro-Haptics)',
@@ -8740,6 +8786,7 @@
     applyMatcherToConfigurator,
     toggleTheme,
     setTheme,
+    resetThemeToSystem,
     getTheme,
     toggleSound,
     soundEngine,

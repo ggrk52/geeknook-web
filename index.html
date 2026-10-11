@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -300,11 +300,21 @@
   <script>
     (function() {
       try {
-        var saved = localStorage.getItem('geeknook_theme');
-        var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-        var theme = saved ? saved : (prefersDark ? 'dark' : 'light');
+        var manual = localStorage.getItem('geeknook_theme_manual');
+        var theme = 'dark';
+        if (manual === 'dark' || manual === 'light') {
+          theme = manual;
+        } else if (window.matchMedia) {
+          if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+            theme = 'light';
+          } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            theme = 'dark';
+          }
+        }
         document.documentElement.setAttribute('data-theme', theme);
-      } catch (e) {}
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
     })();
   </script>
 
