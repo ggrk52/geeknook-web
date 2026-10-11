@@ -7054,10 +7054,55 @@
   };
 
   // --- 3D CAD LIBRARY & B2B ASSET DOWNLOAD ---
-  const openCadModal = () => {
+  const switchCadModalTab = (tabId) => {
+    const calcPanel = document.getElementById('cadTabPanelCalc');
+    const assetsPanel = document.getElementById('cadTabPanelAssets');
+    const calcBtn = document.getElementById('cadTabBtnCalc');
+    const assetsBtn = document.getElementById('cadTabBtnAssets');
+
+    if (!calcPanel || !assetsPanel) return;
+
+    if (tabId === 'assets') {
+      calcPanel.classList.add('hidden');
+      calcPanel.style.display = 'none';
+      assetsPanel.classList.remove('hidden');
+      assetsPanel.style.display = 'block';
+
+      if (calcBtn) {
+        calcBtn.classList.remove('active');
+        calcBtn.setAttribute('aria-selected', 'false');
+      }
+      if (assetsBtn) {
+        assetsBtn.classList.add('active');
+        assetsBtn.setAttribute('aria-selected', 'true');
+      }
+    } else {
+      assetsPanel.classList.add('hidden');
+      assetsPanel.style.display = 'none';
+      calcPanel.classList.remove('hidden');
+      calcPanel.style.display = 'block';
+
+      if (assetsBtn) {
+        assetsBtn.classList.remove('active');
+        assetsBtn.setAttribute('aria-selected', 'false');
+      }
+      if (calcBtn) {
+        calcBtn.classList.add('active');
+        calcBtn.setAttribute('aria-selected', 'true');
+      }
+    }
+    if (typeof soundEngine !== 'undefined' && soundEngine.play) {
+      soundEngine.play('click');
+    }
+  };
+
+  const openCadModal = (defaultTab = 'calc') => {
     renderB2bCalculatorUI();
+    switchCadModalTab(defaultTab);
     modalManager.open('cadLibraryModal');
-    soundEngine.play('click');
+    if (typeof soundEngine !== 'undefined' && soundEngine.play) {
+      soundEngine.play('click');
+    }
   };
 
   const downloadCadAsset = (filename) => {
@@ -8398,10 +8443,11 @@
   };
 
 
-  // --- 2.1. FLUID HORIZONTAL ANATOMY SHOWCASE MODULE ---
+  // --- 2.1. HARDWARE-ACCELERATED PINNED ANATOMY SHOWCASE MODULE ---
   let anatomyState = {
     activeIndex: 0,
-    totalSlides: 5
+    totalSlides: 5,
+    isDesktop: false
   };
 
   const jumpToAnatomyStep = (index) => {
@@ -8428,14 +8474,23 @@
       progressFill.style.width = `${((idx + 1) / anatomyState.totalSlides) * 100}%`;
     }
 
-    const viewport = document.getElementById('anatomyViewport');
-    const cards = document.querySelectorAll('.anatomy-card');
-    if (viewport && cards[idx]) {
-      const card = cards[idx];
-      const isDesktop = window.innerWidth >= 769;
-      const padLeft = isDesktop ? Math.max(20, (window.innerWidth - 1200) / 2) : 20;
-      const targetLeft = Math.max(0, card.offsetLeft - padLeft);
-      viewport.scrollTo({ left: targetLeft, behavior: 'smooth' });
+    const isDesktop = window.innerWidth >= 769;
+    if (isDesktop) {
+      const section = document.getElementById('anatomy');
+      if (section) {
+        const rect = section.getBoundingClientRect();
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const sectionTop = rect.top + scrollTop;
+        const scrollRange = Math.max(1, section.offsetHeight - window.innerHeight);
+        const targetScroll = sectionTop + ((idx / (anatomyState.totalSlides - 1)) * scrollRange);
+        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+      }
+    } else {
+      const viewport = document.getElementById('anatomyViewport');
+      const cards = document.querySelectorAll('.anatomy-card');
+      if (viewport && cards[idx]) {
+        cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
     }
   };
 
@@ -8445,127 +8500,134 @@
 
   const initAnatomyScroll = () => {
     const section = document.getElementById('anatomy');
+    const stickyContainer = section ? section.querySelector('.anatomy-sticky-container') : null;
+    const track = document.getElementById('anatomyTrack');
     const viewport = document.getElementById('anatomyViewport');
     const progressFill = document.getElementById('anatomyProgressFill');
     const counterEl = document.getElementById('anatomyCounterDisplay');
     const pills = document.querySelectorAll('.anatomy-step-pill');
 
-    if (!section || !viewport) return;
+    if (!section || !track) return;
 
-    // 1. Mouse Drag-to-Scroll on Desktop
-    let isDown = false;
-    let startX = 0;
-    let scrollStart = 0;
-    let hasDragged = false;
+    let ticking = false;
+    let sectionTop = 0;
+    let scrollRange = 0;
+    let maxTranslate = 0;
 
-    viewport.addEventListener('mousedown', (e) => {
-      if (e.target.closest('button, a, input, select')) return;
-      isDown = true;
-      hasDragged = false;
-      startX = e.pageX - viewport.offsetLeft;
-      scrollStart = viewport.scrollLeft;
-      viewport.classList.add('is-dragging');
-    });
-
-    window.addEventListener('mouseup', () => {
-      if (!isDown) return;
-      isDown = false;
-      viewport.classList.remove('is-dragging');
-      setTimeout(() => { hasDragged = false; }, 60);
-    });
-
-    viewport.addEventListener('mouseleave', () => {
-      if (isDown) {
-        isDown = false;
-        viewport.classList.remove('is-dragging');
-      }
-    });
-
-    viewport.addEventListener('mousemove', (e) => {
-      if (!isDown) return;
-      const x = e.pageX - viewport.offsetLeft;
-      const walk = (x - startX);
-      if (Math.abs(walk) > 5) {
-        hasDragged = true;
-      }
-      e.preventDefault();
-      viewport.scrollLeft = scrollStart - walk;
-    });
-
-    viewport.addEventListener('click', (e) => {
-      if (hasDragged) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-    }, true);
-
-    // 2. Wheel translation (smooth horizontal slide when mouse wheeling over the cards rail)
-    let wheelTimeout = null;
-    viewport.addEventListener('wheel', (e) => {
-      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return; // Trackpad horizontal swipe
-      const maxScrollLeft = viewport.scrollWidth - viewport.clientWidth;
-      if (maxScrollLeft <= 0) return;
-
-      const isScrollingDown = e.deltaY > 0;
-      const isScrollingUp = e.deltaY < 0;
-
-      const atEnd = viewport.scrollLeft >= maxScrollLeft - 3;
-      const atStart = viewport.scrollLeft <= 3;
-
-      if ((isScrollingDown && !atEnd) || (isScrollingUp && !atStart)) {
-        e.preventDefault();
-        viewport.classList.add('is-wheeling');
-        viewport.scrollLeft += e.deltaY;
-        clearTimeout(wheelTimeout);
-        wheelTimeout = setTimeout(() => {
-          viewport.classList.remove('is-wheeling');
-        }, 150);
-      }
-    }, { passive: false });
-
-    // 3. Horizontal Scroll Observer (sync active pill, counter and progress bar)
-    let scrollTicking = false;
-    const onViewportScroll = () => {
-      const cards = document.querySelectorAll('.anatomy-card');
-      if (!cards.length) return;
-
-      const isDesktop = window.innerWidth >= 769;
-      const padLeft = isDesktop ? Math.max(20, (window.innerWidth - 1200) / 2) : 20;
-      const currentScroll = viewport.scrollLeft;
-
-      let closestIdx = 0;
-      let minDiff = Infinity;
-      cards.forEach((card, i) => {
-        const cardTarget = card.offsetLeft - padLeft;
-        const diff = Math.abs(currentScroll - cardTarget);
-        if (diff < minDiff) {
-          minDiff = diff;
-          closestIdx = i;
+    const measure = () => {
+      anatomyState.isDesktop = window.innerWidth >= 769;
+      if (!anatomyState.isDesktop) {
+        track.style.transform = '';
+        if (stickyContainer) {
+          stickyContainer.style.position = '';
+          stickyContainer.style.top = '';
+          stickyContainer.style.left = '';
+          stickyContainer.style.width = '';
+          stickyContainer.style.bottom = '';
         }
-      });
-
-      if (closestIdx !== anatomyState.activeIndex) {
-        anatomyState.activeIndex = closestIdx;
-        pills.forEach((p, i) => {
-          p.classList.toggle('active', i === closestIdx);
-          p.setAttribute('aria-selected', i === closestIdx ? 'true' : 'false');
-        });
-        if (counterEl) {
-          counterEl.textContent = `0${closestIdx + 1} / 05`;
-        }
-        if (progressFill) {
-          progressFill.style.width = `${((closestIdx + 1) / anatomyState.totalSlides) * 100}%`;
-        }
+        return;
       }
-      scrollTicking = false;
+      const rect = section.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      sectionTop = rect.top + scrollTop;
+      scrollRange = Math.max(1, section.offsetHeight - window.innerHeight);
+      const trackWidth = track.scrollWidth;
+      const viewportWidth = viewport ? viewport.clientWidth : window.innerWidth;
+      maxTranslate = Math.max(0, trackWidth - viewportWidth + 60);
     };
 
-    viewport.addEventListener('scroll', () => {
-      if (!scrollTicking) {
-        scrollTicking = true;
-        requestAnimationFrame(onViewportScroll);
+    measure();
+    window.addEventListener('resize', measure, { passive: true });
+
+    const updateScroll = () => {
+      if (!anatomyState.isDesktop) return;
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const progress = Math.max(0, Math.min(1, (scrollTop - sectionTop) / scrollRange));
+      const currentX = progress * maxTranslate;
+
+      track.style.transform = `translate3d(-${currentX}px, 0, 0)`;
+
+      if (progressFill) {
+        progressFill.style.width = `${Math.round(20 + progress * 80)}%`;
       }
-    }, { passive: true });
+
+      const activeIdx = Math.min(anatomyState.totalSlides - 1, Math.floor(progress * anatomyState.totalSlides));
+      if (activeIdx !== anatomyState.activeIndex) {
+        anatomyState.activeIndex = activeIdx;
+        pills.forEach((p, i) => {
+          p.classList.toggle('active', i === activeIdx);
+          p.setAttribute('aria-selected', i === activeIdx ? 'true' : 'false');
+        });
+        if (counterEl) {
+          counterEl.textContent = `0${activeIdx + 1} / 05`;
+        }
+      }
+
+      // Defensive Pinning Fallback (ensures smooth pinning across WebKit/Safari/Tilda)
+      if (stickyContainer) {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
+          // Inside sticky zone: active lock to top of viewport
+          stickyContainer.style.position = 'fixed';
+          stickyContainer.style.top = '0';
+          stickyContainer.style.left = '0';
+          stickyContainer.style.width = '100%';
+          stickyContainer.style.bottom = '';
+        } else if (rect.bottom < window.innerHeight) {
+          // Scrolled past section: park cleanly at the bottom
+          stickyContainer.style.position = 'absolute';
+          stickyContainer.style.top = 'auto';
+          stickyContainer.style.bottom = '0';
+          stickyContainer.style.left = '0';
+          stickyContainer.style.width = '100%';
+        } else {
+          // Above section: park at top
+          stickyContainer.style.position = 'absolute';
+          stickyContainer.style.top = '0';
+          stickyContainer.style.bottom = 'auto';
+          stickyContainer.style.left = '0';
+          stickyContainer.style.width = '100%';
+        }
+      }
+
+      ticking = false;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateScroll);
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    updateScroll();
+
+    // Mobile Horizontal Touch Swipe Listener
+    if (viewport) {
+      viewport.addEventListener('scroll', () => {
+        if (anatomyState.isDesktop) return;
+        const cards = document.querySelectorAll('.anatomy-card');
+        if (!cards.length) return;
+        const cardWidth = cards[0].offsetWidth + 16;
+        const scrollLeft = viewport.scrollLeft;
+        const idx = Math.min(anatomyState.totalSlides - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
+
+        if (idx !== anatomyState.activeIndex) {
+          anatomyState.activeIndex = idx;
+          pills.forEach((p, i) => {
+            p.classList.toggle('active', i === idx);
+            p.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+          });
+          if (counterEl) {
+            counterEl.textContent = `0${idx + 1} / 05`;
+          }
+          if (progressFill) {
+            progressFill.style.width = `${((idx + 1) / anatomyState.totalSlides) * 100}%`;
+          }
+        }
+      }, { passive: true });
+    }
   };
 
   // --- 2.2. LIVE NUMBER COUNTER ROLLERS ---
@@ -8694,6 +8756,7 @@
     applyErgonomicsRecommendation,
     openCadModal,
     downloadCadAsset,
+    switchCadModalTab,
     // B2B Configurator & Commercial Proposal (КП)
     b2bCalcState,
     calculateB2bPricing,

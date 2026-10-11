@@ -6121,12 +6121,104 @@ textarea:focus-visible {
   color: var(--text-main);
 }
 
-/* 3D CAD Library Modal */
-.cad-layout-grid {
+/* 3D CAD Library & B2B Fitout Modal */
+.cad-library-card {
+  padding: clamp(24px, 3.5vw, 36px) !important;
+  max-height: 88vh !important;
+  overflow-y: auto !important;
+  box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(37, 99, 235, 0.4) transparent;
+}
+
+.cad-library-card::-webkit-scrollbar {
+  width: 8px;
+}
+
+.cad-library-card::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 4px;
+}
+
+.cad-library-card::-webkit-scrollbar-thumb {
+  background: rgba(37, 99, 235, 0.35);
+  border-radius: 4px;
+}
+
+.cad-library-card::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+.cad-modal-tabs {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.cad-modal-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--surface-secondary, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.cad-modal-tab:hover {
+  color: var(--text-main);
+  border-color: rgba(37, 99, 235, 0.4);
+}
+
+.cad-modal-tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.cad-tab-panel {
+  display: block;
+  margin-top: 20px;
+}
+
+.cad-tab-panel.hidden {
+  display: none !important;
+}
+
+.cad-assets-grid {
   display: grid;
-  grid-template-columns: 1.35fr 1fr;
-  gap: 28px;
-  margin-top: 24px;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 768px) {
+  .cad-assets-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.b2b-bottom-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 18px;
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .b2b-bottom-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 .cad-subheading {
@@ -10125,11 +10217,17 @@ textarea.input-error {
 /* Tier Selection Cards */
 .b2b-tier-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: 12px;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 960px) {
+  .b2b-tier-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 580px) {
   .b2b-tier-grid {
     grid-template-columns: 1fr;
   }
@@ -10835,9 +10933,7 @@ textarea.input-error {
 .anatomy-section {
   position: relative;
   background: #0c0e14;
-  height: auto;
-  padding: 64px 0 54px;
-  overflow: hidden;
+  overflow: visible;
   transition: background 0.3s ease;
 }
 
@@ -10845,18 +10941,38 @@ textarea.input-error {
   background: #f1f5f9;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 769px) {
   .anatomy-section {
-    padding: 44px 0 36px;
+    height: 250vh;
+    overflow: visible;
+  }
+  .anatomy-sticky-container {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 24px 0 32px;
+    z-index: 2;
   }
 }
 
-.anatomy-sticky-container {
-  position: relative;
-  width: 100%;
-  height: auto;
-  padding: 0;
-  box-sizing: border-box;
+@media (max-width: 768px) {
+  .anatomy-section {
+    height: auto;
+    padding: 44px 0 36px;
+    overflow: hidden;
+  }
+  .anatomy-sticky-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
 }
 
 .anatomy-header-wrap {
@@ -11038,47 +11154,40 @@ textarea.input-error {
 .anatomy-rail-viewport {
   width: 100%;
   box-sizing: border-box;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  cursor: grab;
-}
-
-.anatomy-rail-viewport::-webkit-scrollbar {
-  display: none;
-}
-
-.anatomy-rail-viewport.is-dragging {
-  cursor: grabbing;
-  user-select: none;
-  scroll-snap-type: none;
-}
-
-.anatomy-rail-viewport.is-wheeling {
-  scroll-snap-type: none;
 }
 
 @media (min-width: 769px) {
+  .anatomy-rail-viewport {
+    overflow: hidden;
+    padding-left: max(24px, calc((100vw - 1200px) / 2));
+  }
   .anatomy-rail-track {
     display: flex;
-    gap: 28px;
+    gap: 32px;
     width: max-content;
-    padding: 8px 0 24px;
-    padding-left: max(20px, calc((100vw - 1200px) / 2));
-    padding-right: max(20px, calc((100vw - 1200px) / 2));
+    will-change: transform;
+    transition: transform 0.05s linear;
+    padding: 10px 0 20px;
     box-sizing: border-box;
   }
 }
 
 @media (max-width: 768px) {
+  .anatomy-rail-viewport {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 0 20px;
+  }
+  .anatomy-rail-viewport::-webkit-scrollbar {
+    display: none;
+  }
   .anatomy-rail-track {
     display: flex;
     gap: 16px;
     width: max-content;
-    padding: 8px 20px 20px;
+    padding: 8px 0 20px;
     box-sizing: border-box;
   }
 }
