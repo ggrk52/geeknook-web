@@ -1877,12 +1877,31 @@
   </section>
 
   <!-- ==========================================================================
-       7. ТРАНСФОРМАЦИЯ РАБОЧЕГО ПРОСТРАНСТВА: ДО И ПОСЛЕ
+       5. РАБОЧИЕ МЕСТА НАШИХ КЛИЕНТОВ (Отзывы и реальные фото сетапов)
+       ========================================================================== -->
+  <section class="section-surface" id="setups">
+    <div class="container">
+      <div class="block-header">
+        <div class="block-header-left">
+          <span class="section-kicker">05 // РЕАЛЬНЫЕ СЕТАПЫ — ОТЗЫВЫ 5.0</span>
+          <h2 class="block-title">РАБОЧИЕ МЕСТА НАШИХ КЛИЕНТОВ</h2>
+          <p class="section-subtitle-lead">
+            Честные отзывы архитекторов, разработчиков и дизайнеров, создавших рабочее пространство мечты с Focus Station.
+          </p>
+        </div>
+      </div>
+
+      <div class="client-setups-row" id="clientSetupsRow"></div>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       6. ТРАНСФОРМАЦИЯ РАБОЧЕГО ПРОСТРАНСТВА: ДО И ПОСЛЕ
        ========================================================================== -->
   <section class="transformation-section section-white" id="transformation">
     <div class="container">
       <div class="block-header block-header-center">
-        <span class="section-kicker">05 // ТРАНСФОРМАЦИЯ РАБОЧЕГО МЕСТА</span>
+        <span class="section-kicker">06 // ТРАНСФОРМАЦИЯ РАБОЧЕГО МЕСТА</span>
         <h2 class="block-title">ХАОС ПРОТИВ СИСТЕМЫ</h2>
         <p class="transformation-lead-text">
           Потяните интерактивный разделитель, чтобы оценить разницу между обычным захламленным столом и организованной средой Focus Station.
@@ -1954,143 +1973,16 @@
           </div>
         </div>
       </div>
-
-      <!-- Interactive Desk Setup Cable Management Studio -->
-      <div class="cable-physics-card" id="cableSimulatorCard">
-        <div class="cable-card-header">
-          <div class="cable-header-text">
-            <span class="section-kicker" style="color:var(--primary);">05.1 // СИМУЛЯТОР РАБОЧЕГО СТОЛА // 360° STEALTH CABLE MANAGEMENT</span>
-            <h3 class="cable-card-title">Интерактивный сетап: Как GeekNook побеждает хаос проводов</h3>
-            <p class="cable-card-subtitle">
-              Взгляните на реальный рабочий стол с монитором 5K, MacBook и гаджетами. В режиме «Хаос» провода свисают со стола и путаются под руками. Активируйте <strong>GeekNook Stealth</strong> — магнитный Т-паз подставки Focus Station мгновенно уложит все кабели в скрытый лоток, а в режиме «Рентген» вы увидите распределение потоков энергии и данных изнутри.
-            </p>
-          </div>
-          <div class="cable-controls-group">
-            <div class="cable-mode-switcher">
-              <button type="button" class="cable-mode-btn" id="cableModeChaosBtn" onclick="window.geekNookApp.setCableMode('chaos')">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"></path><path d="M9.6 4.6A2 2 0 1 1 11 8H2"></path><path d="M12.6 19.4A2 2 0 1 0 14 16H2"></path></svg>
-                <span>Без GeekNook (Хаос)</span>
-              </button>
-              <button type="button" class="cable-mode-btn active" id="cableModeMagneticBtn" onclick="window.geekNookApp.setCableMode('magnetic')">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4a2 2 0 0 0-4 0v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4z"></path></svg>
-                <span>GeekNook Stealth (Дзен)</span>
-              </button>
-              <button type="button" class="cable-mode-btn" id="cableModeXrayBtn" onclick="window.geekNookApp.setCableMode('xray')">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
-                <span>Рентген лотка (X-Ray)</span>
-              </button>
-            </div>
-            <button type="button" class="btn-cable-shake" onclick="window.geekNookApp.shakeCables()" title="Встряхнуть кабели и проверить упругость">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-              <span>Магнитный импульс</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Connected Devices Bar -->
-        <div class="cable-devices-bar">
-          <span class="cable-devices-label">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"></path><path d="M9 8V2"></path><path d="M15 8V2"></path><path d="M18 8v5a6 6 0 0 1-12 0V8z"></path></svg>
-            Устройства на столе:
-          </span>
-          <button type="button" class="cable-device-pill active" id="devToggleMonitor" onclick="window.geekNookApp.toggleCableDevice('monitor')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
-            <span>Studio Display 5K</span>
-          </button>
-          <button type="button" class="cable-device-pill active" id="devToggleMacbook" onclick="window.geekNookApp.toggleCableDevice('macbook')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg>
-            <span>MacBook Pro M3</span>
-          </button>
-          <button type="button" class="cable-device-pill active" id="devToggleIPhone" onclick="window.geekNookApp.toggleCableDevice('iphone')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
-            <span>iPhone MagSafe Stand</span>
-          </button>
-          <button type="button" class="cable-device-pill active" id="devToggleScreenbar" onclick="window.geekNookApp.toggleCableDevice('screenbar')">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="12" y1="6" x2="12" y2="14"></line><circle cx="12" cy="17" r="3"></circle></svg>
-            <span>Лампа ScreenBar</span>
-          </button>
-        </div>
-
-        <div class="cable-canvas-box" id="cableCanvasBox">
-          <canvas id="cablePhysicsCanvas" width="1200" height="540" class="cable-canvas"></canvas>
-          <div class="cable-canvas-hint">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path></svg>
-            <span>Тяните кабель пальцем или курсором • Магниты N52</span>
-          </div>
-          <div class="cable-status-pill magnetic" id="cableStatusPill">
-            <span class="cable-status-indicator"></span>
-            <span id="cableStatusText">T-Track замок: 4 канала зафиксированы</span>
-          </div>
-        </div>
-
-        <!-- Live Desk Health Telemetry Grid -->
-        <div class="cable-desk-metrics-grid" id="cableMetricsGrid">
-          <div class="cable-metric-card">
-            <div class="cable-metric-title">Визуальный шум на столе</div>
-            <div class="cable-metric-value-row">
-              <span class="cable-metric-val" id="cableMetricNoise">0%</span>
-              <span class="cable-metric-badge badge-good" id="cableMetricNoiseBadge">Идеальный Дзен</span>
-            </div>
-            <div class="cable-metric-desc" id="cableMetricNoiseDesc">Все провода скрыты под полкой в алюминиевом профиле Т-паза</div>
-          </div>
-
-          <div class="cable-metric-card">
-            <div class="cable-metric-title">Полезная площадь стола</div>
-            <div class="cable-metric-value-row">
-              <span class="cable-metric-val" id="cableMetricSpace">+40%</span>
-              <span class="cable-metric-badge badge-good" id="cableMetricSpaceBadge">Клавиатура спрятана</span>
-            </div>
-            <div class="cable-metric-desc" id="cableMetricSpaceDesc">Клавиатура и мышь легко убираются в нишу под подставку (90 мм)</div>
-          </div>
-
-          <div class="cable-metric-card">
-            <div class="cable-metric-title">Скрыто кабелей</div>
-            <div class="cable-metric-value-row">
-              <span class="cable-metric-val" id="cableMetricHidden">4 из 4</span>
-              <span class="cable-metric-badge badge-good" id="cableMetricHiddenBadge">100% Stealth</span>
-            </div>
-            <div class="cable-metric-desc" id="cableMetricHiddenDesc">Thunderbolt 4, 8K DisplayPort, MagSafe 140W и питание 220V</div>
-          </div>
-
-          <div class="cable-metric-card">
-            <div class="cable-metric-title">Магнитная фиксация T-Track</div>
-            <div class="cable-metric-value-row">
-              <span class="cable-metric-val" id="cableMetricHold">4× N52</span>
-              <span class="cable-metric-badge badge-tech" id="cableMetricHoldBadge">1.2 кг на отрыв</span>
-            </div>
-            <div class="cable-metric-desc" id="cableMetricHoldDesc">Неодимовые фиксаторы удерживают даже массивные оплетенные корды</div>
-          </div>
-        </div>
-
-        <div class="cable-legend-row">
-          <div class="cable-legend-item">
-            <span class="cable-dot" style="background:#38bdf8;box-shadow:0 0 8px #38bdf8;"></span>
-            <span>Thunderbolt 4 (40 Gbps // 100W PD)</span>
-          </div>
-          <div class="cable-legend-item">
-            <span class="cable-dot" style="background:#fbbf24;box-shadow:0 0 8px #fbbf24;"></span>
-            <span>DisplayPort 2.1 (5K Retina // 120Hz)</span>
-          </div>
-          <div class="cable-legend-item">
-            <span class="cable-dot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></span>
-            <span>MagSafe 3 Fast Charge (140W)</span>
-          </div>
-          <div class="cable-legend-item">
-            <span class="cable-dot" style="background:#f97316;box-shadow:0 0 8px #f97316;"></span>
-            <span>AC Mains Power 220V (Скрытый блок питания)</span>
-          </div>
-        </div>
-      </div>
     </div>
   </section>
 
   <!-- ==========================================================================
-       8. ПРЕИМУЩЕСТВА (Dark BG #0e1114, 6 Columns)
+       7. ПРЕИМУЩЕСТВА (Dark BG #0e1114, 6 Columns)
        ========================================================================== -->
   <section class="advantages-section" id="advantages">
     <div class="container">
       <div class="block-header block-header-center">
-        <span class="section-kicker kicker-dark">06 // ИНЖЕНЕРНЫЕ СТАНДАРТЫ</span>
+        <span class="section-kicker kicker-dark">07 // ИНЖЕНЕРНЫЕ СТАНДАРТЫ</span>
         <h2 class="block-title title-dark">ПРЕИМУЩЕСТВА GEEK NOOK</h2>
       </div>
       <div class="advantages-grid" id="advantagesGrid"></div>
@@ -2278,208 +2170,358 @@
         </div>
       </div>
 
-      <!-- Feature 3: Exploded View Blueprint Schematics -->
-      <div class="production-block-item" id="productionExplodedView" style="margin-top:40px;">
-        <div class="fea-lab-header" style="margin-bottom:16px;">
-          <div class="fea-lab-title-group">
-            <span class="section-kicker kicker-dark" style="color:var(--primary);">07.3 // ИНЖЕНЕРНЫЙ ЧЕРТЁЖ И ВЗРЫВ-СХЕМА</span>
-            <h3 class="fea-lab-title">Взрыв-схема компонентов Focus Station</h3>
-            <p class="fea-lab-subtitle">
-              Интерактивные хотспоты раскрывают устройство каждого узла: от вакуумной сушки древесины до прессованных резьбовых муфт и пробки.
+      <!-- Feature 3: GeekNook Engineering Lab Hub (Tabbed Simulators) -->
+      <div class="production-block-item" id="engineeringLabHub" style="margin-top:40px;">
+        <div class="lab-hub-header">
+          <div class="lab-hub-title-group">
+            <span class="section-kicker kicker-dark" style="color:var(--primary);">08.3 // GEEKNOOK ENGINEERING LAB // ИНЖЕНЕРНЫЙ ЦЕНТР</span>
+            <h3 class="lab-hub-title">Инженерный хаб: FEA, Stealth-кабели и взрыв-схема</h3>
+            <p class="lab-hub-subtitle">
+              Интерактивные стенды лаборатории GeekNook: динамический расчет прочности балки методом МКЭ, тестирование укладки кабелей в Т-паз и поузловая взрыв-схема Focus Station.
             </p>
           </div>
-        </div>
 
-        <div class="production-blueprint-container">
-          <div class="blueprint-canvas-box">
-            <div class="blueprint-grid-bg"></div>
-            <div class="blueprint-watermark">GEEKNOOK // EXPLODED SCHEMATIC REV.4 // ISO-9241</div>
-            
-            <div class="blueprint-graphic-wrap">
-              <img src="images/tild6138-3463-4138-b133-323262633039__2.jpg" alt="Focus Station Exploded View" class="blueprint-base-img" loading="lazy" decoding="async" />
-              
-              <div class="blueprint-hotspot" style="top: 24%; left: 35%;" data-hotspot="wood">
-                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали массива дуба">
-                  <span class="hotspot-pulse"></span>
-                  <span class="hotspot-core">1</span>
-                </button>
-                <div class="hotspot-popover">
-                  <div class="hotspot-title">Массив кавказского дуба 22 мм</div>
-                  <div class="hotspot-desc">Селективная вакуумная сушка до влажности 8%. Глубокая шелковистая текстура, пропитка натуральным маслом Osmo. Не деформируется со временем.</div>
-                </div>
-              </div>
-
-              <div class="blueprint-hotspot" style="top: 38%; left: 62%;" data-hotspot="ttrack">
-                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали системы T-Track">
-                  <span class="hotspot-pulse"></span>
-                  <span class="hotspot-core">2</span>
-                </button>
-                <div class="hotspot-popover">
-                  <div class="hotspot-title">Фрезерованный паз T-Track 45°</div>
-                  <div class="hotspot-desc">Патентованная геометрия профиля для безинструментальной фиксации держателей ноутбука, наушников и подвесных полок.</div>
-                </div>
-              </div>
-
-              <div class="blueprint-hotspot" style="top: 66%; left: 24%;" data-hotspot="steel">
-                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали стальных опор">
-                  <span class="hotspot-pulse"></span>
-                  <span class="hotspot-core">3</span>
-                </button>
-                <div class="hotspot-popover">
-                  <div class="hotspot-title">Опоры из стали Д16Т толщиной 3 мм</div>
-                  <div class="hotspot-desc">Конструкционный сплав с матовым порошковым полимерным напылением. Выдерживает вертикальную нагрузку свыше 60 кг.</div>
-                </div>
-              </div>
-
-              <div class="blueprint-hotspot" style="top: 75%; left: 74%;" data-hotspot="screws">
-                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали крепежа">
-                  <span class="hotspot-pulse"></span>
-                  <span class="hotspot-core">4</span>
-                </button>
-                <div class="hotspot-popover">
-                  <div class="hotspot-title">Каленые винты класса прочности 8.8</div>
-                  <div class="hotspot-desc">Резьбовые стальные муфты M5, впрессованные в массив. Позволяют многократно собирать и разбирать подставку без повреждения дерева.</div>
-                </div>
-              </div>
-
-              <div class="blueprint-hotspot" style="top: 84%; left: 45%;" data-hotspot="cork">
-                <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали пробковых демпферов">
-                  <span class="hotspot-pulse"></span>
-                  <span class="hotspot-core">5</span>
-                </button>
-                <div class="hotspot-popover">
-                  <div class="hotspot-title">Виброгасящая португальская пробка 2 мм</div>
-                  <div class="hotspot-desc">Акустическая развязка со столешницей. Исключает дребезжание колонок и надежно защищает полировку дорогого стола от царапин.</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="blueprint-specs-table">
-            <div class="spec-cell">
-              <span class="spec-code">MAT-01</span>
-              <strong>Кавказский дуб / Орех</strong>
-              <span>Плотность 720 кг/м³</span>
-            </div>
-            <div class="spec-cell">
-              <span class="spec-code">CNC-02</span>
-              <strong>5-осевая ЧПУ фрезеровка</strong>
-              <span>Допуск ±0.15 мм</span>
-            </div>
-            <div class="spec-cell">
-              <span class="spec-code">ISO-03</span>
-              <strong>Стандарт эргономики</strong>
-              <span>ISO 9241-5:1998</span>
-            </div>
-            <div class="spec-cell">
-              <span class="spec-code">WAR-04</span>
-              <strong>Гарантия производителя</strong>
-              <span>24 месяца сервиса</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Feature 4: FEA Stress Test & Materials Lab -->
-      <div class="production-block-item" id="productionStressView" style="margin-top:40px;">
-        <div class="fea-lab-card">
-          <div class="fea-lab-header">
-            <div class="fea-lab-title-group">
-              <span class="section-kicker kicker-dark" style="color:var(--primary);">07.4 // FEA LABORATORY // МЕТОД КОНЕЧНЫХ ЭЛЕМЕНТОВ</span>
-              <h3 class="fea-lab-title">Симулятор прочности и упругой деформации</h3>
-              <p class="fea-lab-subtitle">
-                Интерактивный расчет напряженно-деформированного состояния дубовой балки (сечение 230×22 мм) и опор Д16Т по формуле Эйлера-Бернулли.
-              </p>
-            </div>
-            <div class="fea-lab-actions">
-              <button type="button" class="btn-fea-shock" id="btnFeaShockTest" onclick="window.geekNookApp.runFeaShockTest()">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
-                <span>Импульсный дроп-тест</span>
+          <!-- Cyber-toolbar tabs -->
+          <div class="lab-hub-tabs-wrap">
+            <div class="lab-hub-tabs" role="tablist" aria-label="Инженерные симуляторы GeekNook Lab">
+              <button type="button" class="lab-hub-tab active" id="labTabBtnFea" role="tab" aria-selected="true" aria-controls="labTabFea" onclick="window.geekNookApp.switchLabTab('fea')">
+                <span class="lab-tab-num">01 //</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span>FEA Прочность</span>
+              </button>
+              <button type="button" class="lab-hub-tab" id="labTabBtnCables" role="tab" aria-selected="false" aria-controls="labTabCables" onclick="window.geekNookApp.switchLabTab('cables')">
+                <span class="lab-tab-num">02 //</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4a2 2 0 0 0-4 0v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4z"></path></svg>
+                <span>Stealth Кабели</span>
+              </button>
+              <button type="button" class="lab-hub-tab" id="labTabBtnBlueprint" role="tab" aria-selected="false" aria-controls="labTabBlueprint" onclick="window.geekNookApp.switchLabTab('blueprint')">
+                <span class="lab-tab-num">03 //</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
+                <span>Взрыв-схема</span>
               </button>
             </div>
           </div>
+        </div>
 
-          <!-- Controls row -->
-          <div class="fea-controls-bar">
-            <div class="fea-slider-group">
-              <div class="fea-slider-label-row">
-                <label for="feaWeightSlider" class="fea-slider-label">Приложенная масса:</label>
-                <strong id="feaWeightDisplay">25 кг (Два монитора)</strong>
+        <!-- Tab Panels Container -->
+        <div class="lab-hub-panels">
+          <!-- Tab 1: FEA Stress Test & Materials Lab -->
+          <div class="lab-hub-panel active" id="labTabFea" role="tabpanel" aria-labelledby="labTabBtnFea">
+            <div class="fea-lab-card" id="productionStressView">
+              <div class="fea-lab-header">
+                <div class="fea-lab-title-group">
+                  <span class="section-kicker kicker-dark" style="color:var(--primary);">08.3.1 // FEA LABORATORY // МЕТОД КОНЕЧНЫХ ЭЛЕМЕНТОВ</span>
+                  <h3 class="fea-lab-title">Симулятор прочности и упругой деформации</h3>
+                  <p class="fea-lab-subtitle">
+                    Интерактивный расчет напряженно-деформированного состояния дубовой балки (сечение 230×22 мм) и опор Д16Т по формуле Эйлера-Бернулли.
+                  </p>
+                </div>
+                <div class="fea-lab-actions">
+                  <button type="button" class="btn-fea-shock" id="btnFeaShockTest" onclick="window.geekNookApp.runFeaShockTest()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <span>Импульсный дроп-тест</span>
+                  </button>
+                </div>
               </div>
-              <input type="range" id="feaWeightSlider" min="0" max="85" step="1" value="25" oninput="window.geekNookApp.updateFeaWeight(this.value)" class="fea-slider" aria-label="Приложенная масса нагрузки в килограммах" />
-            </div>
 
-            <div class="fea-presets-row" id="feaPresetsRow">
-              <button type="button" class="fea-preset-chip" onclick="window.geekNookApp.setFeaPreset(5)">5 кг (24" LCD)</button>
-              <button type="button" class="fea-preset-chip active" onclick="window.geekNookApp.setFeaPreset(25)">25 кг (2× Studio)</button>
-              <button type="button" class="fea-preset-chip" onclick="window.geekNookApp.setFeaPreset(50)">50 кг (Два моноблока)</button>
-              <button type="button" class="fea-preset-chip" onclick="window.geekNookApp.setFeaPreset(85)">85 кг (Человек)</button>
+              <!-- Controls row -->
+              <div class="fea-controls-bar">
+                <div class="fea-slider-group">
+                  <div class="fea-slider-label-row">
+                    <label for="feaWeightSlider" class="fea-slider-label">Приложенная масса:</label>
+                    <strong id="feaWeightDisplay">25 кг (Два монитора)</strong>
+                  </div>
+                  <input type="range" id="feaWeightSlider" min="0" max="85" step="1" value="25" oninput="window.geekNookApp.updateFeaWeight(this.value)" class="fea-slider" aria-label="Приложенная масса нагрузки в килограммах" />
+                </div>
+
+                <div class="fea-presets-row" id="feaPresetsRow">
+                  <button type="button" class="fea-preset-chip" onclick="window.geekNookApp.setFeaPreset(5)">5 кг (24" LCD)</button>
+                  <button type="button" class="fea-preset-chip active" onclick="window.geekNookApp.setFeaPreset(25)">25 кг (2× Studio)</button>
+                  <button type="button" class="fea-preset-chip" onclick="window.geekNookApp.setFeaPreset(50)">50 кг (Два моноблока)</button>
+                  <button type="button" class="fea-preset-chip" onclick="window.geekNookApp.setFeaPreset(85)">85 кг (Человек)</button>
+                </div>
+              </div>
+
+              <!-- FEA Canvas Box -->
+              <div class="fea-canvas-wrapper">
+                <div class="fea-canvas-header-info">
+                  <span class="fea-indicator-live">● LIVE FEA SOLVER</span>
+                  <span class="fea-colormap-label">Сжатие волокон (+) ◄ 0 МПа ► Растяжение (-)</span>
+                </div>
+                <canvas id="feaStressCanvas" width="900" height="260" class="fea-stress-canvas"></canvas>
+                
+                <div class="fea-colormap-scale">
+                  <span class="fea-scale-step" style="background:#1d4ed8;">-25 МПа (Сжатие)</span>
+                  <span class="fea-scale-step" style="background:#0284c7;">-10 МПа</span>
+                  <span class="fea-scale-step" style="background:#10b981;">0 МПа (Нейтраль)</span>
+                  <span class="fea-scale-step" style="background:#eab308;">+10 МПа</span>
+                  <span class="fea-scale-step" style="background:#ef4444;">+25 МПа (Растяжение)</span>
+                </div>
+              </div>
+
+              <!-- Telemetry readouts -->
+              <div class="fea-telemetry-grid">
+                <div class="fea-telemetry-card">
+                  <span class="fea-telem-name">Максимальный прогиб:</span>
+                  <strong class="fea-telem-val" id="feaDeflectionVal">0.21 мм</strong>
+                  <span class="fea-telem-sub">Допуск ГОСТ: до 2.0 мм</span>
+                </div>
+                <div class="fea-telemetry-card">
+                  <span class="fea-telem-name">Пиковое напряжение:</span>
+                  <strong class="fea-telem-val" id="feaStressVal">14.8 МПа</strong>
+                  <span class="fea-telem-sub">Предел дуба: 85.0 МПа</span>
+                </div>
+                <div class="fea-telemetry-card">
+                  <span class="fea-telem-name">Запас прочности:</span>
+                  <strong class="fea-telem-val highlight-green" id="feaSafetyVal">5.7x (Авиационный)</strong>
+                  <span class="fea-telem-sub">Коэффициент запаса K</span>
+                </div>
+                <div class="fea-telemetry-card">
+                  <span class="fea-telem-name">Гашение вибрации:</span>
+                  <strong class="fea-telem-val" id="feaDampingVal">0.14 с</strong>
+                  <span class="fea-telem-sub">Пробка 2 мм гасит 92% волны</span>
+                </div>
+              </div>
+
+              <div class="fea-disclaimer-note">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fea-disclaimer-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
+                <span>*Инженерный расчёт напряжений методом конечных элементов (МКЭ / FEA). Серийные образцы Focus Station прошли физические стендовые испытания статической нагрузкой до 50 кг без остаточной деформации (стендовый протокол GeekNook Lab). Расчёт носит информационно-демонстрационный характер.</span>
+              </div>
             </div>
           </div>
 
-          <!-- FEA Canvas Box -->
-          <div class="fea-canvas-wrapper">
-            <div class="fea-canvas-header-info">
-              <span class="fea-indicator-live">● LIVE FEA SOLVER</span>
-              <span class="fea-colormap-label">Сжатие волокон (+) ◄ 0 МПа ► Растяжение (-)</span>
-            </div>
-            <canvas id="feaStressCanvas" width="900" height="260" class="fea-stress-canvas"></canvas>
-            
-            <div class="fea-colormap-scale">
-              <span class="fea-scale-step" style="background:#1d4ed8;">-25 МПа (Сжатие)</span>
-              <span class="fea-scale-step" style="background:#0284c7;">-10 МПа</span>
-              <span class="fea-scale-step" style="background:#10b981;">0 МПа (Нейтраль)</span>
-              <span class="fea-scale-step" style="background:#eab308;">+10 МПа</span>
-              <span class="fea-scale-step" style="background:#ef4444;">+25 МПа (Растяжение)</span>
+          <!-- Tab 2: Stealth Cable Physics Simulator -->
+          <div class="lab-hub-panel" id="labTabCables" role="tabpanel" aria-labelledby="labTabBtnCables" style="display:none;">
+            <div class="cable-physics-card" id="cableSimulatorCard">
+              <div class="cable-card-header">
+                <div class="cable-header-text">
+                  <span class="section-kicker" style="color:var(--primary);">08.3.2 // СИМУЛЯТОР РАБОЧЕГО СТОЛА // 360° STEALTH CABLE MANAGEMENT</span>
+                  <h3 class="cable-card-title">Интерактивный сетап: Как GeekNook побеждает хаос проводов</h3>
+                  <p class="cable-card-subtitle">
+                    Взгляните на реальный рабочий стол с монитором 5K, MacBook и гаджетами. В режиме «Хаос» провода свисают со стола и путаются под руками. Активируйте <strong>GeekNook Stealth</strong> — магнитный Т-паз подставки Focus Station мгновенно уложит все кабели в скрытый лоток, а в режиме «Рентген» вы увидите распределение потоков энергии и данных изнутри.
+                  </p>
+                </div>
+                <div class="cable-controls-group">
+                  <div class="cable-mode-switcher">
+                    <button type="button" class="cable-mode-btn" id="cableModeChaosBtn" onclick="window.geekNookApp.setCableMode('chaos')">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"></path><path d="M9.6 4.6A2 2 0 1 1 11 8H2"></path><path d="M12.6 19.4A2 2 0 1 0 14 16H2"></path></svg>
+                      <span>Без GeekNook (Хаос)</span>
+                    </button>
+                    <button type="button" class="cable-mode-btn active" id="cableModeMagneticBtn" onclick="window.geekNookApp.setCableMode('magnetic')">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4a2 2 0 0 0-4 0v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4z"></path></svg>
+                      <span>GeekNook Stealth (Дзен)</span>
+                    </button>
+                    <button type="button" class="cable-mode-btn" id="cableModeXrayBtn" onclick="window.geekNookApp.setCableMode('xray')">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                      <span>Рентген лотка (X-Ray)</span>
+                    </button>
+                  </div>
+                  <button type="button" class="btn-cable-shake" onclick="window.geekNookApp.shakeCables()" title="Встряхнуть кабели и проверить упругость">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <span>Магнитный импульс</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Connected Devices Bar -->
+              <div class="cable-devices-bar">
+                <span class="cable-devices-label">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"></path><path d="M9 8V2"></path><path d="M15 8V2"></path><path d="M18 8v5a6 6 0 0 1-12 0V8z"></path></svg>
+                  Устройства на столе:
+                </span>
+                <button type="button" class="cable-device-pill active" id="devToggleMonitor" onclick="window.geekNookApp.toggleCableDevice('monitor')">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+                  <span>Studio Display 5K</span>
+                </button>
+                <button type="button" class="cable-device-pill active" id="devToggleMacbook" onclick="window.geekNookApp.toggleCableDevice('macbook')">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg>
+                  <span>MacBook Pro M3</span>
+                </button>
+                <button type="button" class="cable-device-pill active" id="devToggleIPhone" onclick="window.geekNookApp.toggleCableDevice('iphone')">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+                  <span>iPhone MagSafe Stand</span>
+                </button>
+                <button type="button" class="cable-device-pill active" id="devToggleScreenbar" onclick="window.geekNookApp.toggleCableDevice('screenbar')">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="12" y1="6" x2="12" y2="14"></line><circle cx="12" cy="17" r="3"></circle></svg>
+                  <span>Лампа ScreenBar</span>
+                </button>
+              </div>
+
+              <div class="cable-canvas-box" id="cableCanvasBox">
+                <canvas id="cablePhysicsCanvas" width="1200" height="540" class="cable-canvas"></canvas>
+                <div class="cable-canvas-hint">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path></svg>
+                  <span>Тяните кабель пальцем или курсором • Магниты N52</span>
+                </div>
+                <div class="cable-status-pill magnetic" id="cableStatusPill">
+                  <span class="cable-status-indicator"></span>
+                  <span id="cableStatusText">T-Track замок: 4 канала зафиксированы</span>
+                </div>
+              </div>
+
+              <!-- Live Desk Health Telemetry Grid -->
+              <div class="cable-desk-metrics-grid" id="cableMetricsGrid">
+                <div class="cable-metric-card">
+                  <div class="cable-metric-title">Визуальный шум на столе</div>
+                  <div class="cable-metric-value-row">
+                    <span class="cable-metric-val" id="cableMetricNoise">0%</span>
+                    <span class="cable-metric-badge badge-good" id="cableMetricNoiseBadge">Идеальный Дзен</span>
+                  </div>
+                  <div class="cable-metric-desc" id="cableMetricNoiseDesc">Все провода скрыты под полкой в алюминиевом профиле Т-паза</div>
+                </div>
+
+                <div class="cable-metric-card">
+                  <div class="cable-metric-title">Полезная площадь стола</div>
+                  <div class="cable-metric-value-row">
+                    <span class="cable-metric-val" id="cableMetricSpace">+40%</span>
+                    <span class="cable-metric-badge badge-good" id="cableMetricSpaceBadge">Клавиатура спрятана</span>
+                  </div>
+                  <div class="cable-metric-desc" id="cableMetricSpaceDesc">Клавиатура и мышь легко убираются в нишу под подставку (90 мм)</div>
+                </div>
+
+                <div class="cable-metric-card">
+                  <div class="cable-metric-title">Скрыто кабелей</div>
+                  <div class="cable-metric-value-row">
+                    <span class="cable-metric-val" id="cableMetricHidden">4 из 4</span>
+                    <span class="cable-metric-badge badge-good" id="cableMetricHiddenBadge">100% Stealth</span>
+                  </div>
+                  <div class="cable-metric-desc" id="cableMetricHiddenDesc">Thunderbolt 4, 8K DisplayPort, MagSafe 140W и питание 220V</div>
+                </div>
+
+                <div class="cable-metric-card">
+                  <div class="cable-metric-title">Магнитная фиксация T-Track</div>
+                  <div class="cable-metric-value-row">
+                    <span class="cable-metric-val" id="cableMetricHold">4× N52</span>
+                    <span class="cable-metric-badge badge-tech" id="cableMetricHoldBadge">1.2 кг на отрыв</span>
+                  </div>
+                  <div class="cable-metric-desc" id="cableMetricHoldDesc">Неодимовые фиксаторы удерживают даже массивные оплетенные корды</div>
+                </div>
+              </div>
+
+              <div class="cable-legend-row">
+                <div class="cable-legend-item">
+                  <span class="cable-dot" style="background:#38bdf8;box-shadow:0 0 8px #38bdf8;"></span>
+                  <span>Thunderbolt 4 (40 Gbps // 100W PD)</span>
+                </div>
+                <div class="cable-legend-item">
+                  <span class="cable-dot" style="background:#fbbf24;box-shadow:0 0 8px #fbbf24;"></span>
+                  <span>DisplayPort 2.1 (5K Retina // 120Hz)</span>
+                </div>
+                <div class="cable-legend-item">
+                  <span class="cable-dot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></span>
+                  <span>MagSafe 3 Fast Charge (140W)</span>
+                </div>
+                <div class="cable-legend-item">
+                  <span class="cable-dot" style="background:#f97316;box-shadow:0 0 8px #f97316;"></span>
+                  <span>AC Mains Power 220V (Скрытый блок питания)</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Telemetry readouts -->
-          <div class="fea-telemetry-grid">
-            <div class="fea-telemetry-card">
-              <span class="fea-telem-name">Максимальный прогиб:</span>
-              <strong class="fea-telem-val" id="feaDeflectionVal">0.21 мм</strong>
-              <span class="fea-telem-sub">Допуск ГОСТ: до 2.0 мм</span>
-            </div>
-            <div class="fea-telemetry-card">
-              <span class="fea-telem-name">Пиковое напряжение:</span>
-              <strong class="fea-telem-val" id="feaStressVal">14.8 МПа</strong>
-              <span class="fea-telem-sub">Предел дуба: 85.0 МПа</span>
-            </div>
-            <div class="fea-telemetry-card">
-              <span class="fea-telem-name">Запас прочности:</span>
-              <strong class="fea-telem-val highlight-green" id="feaSafetyVal">5.7x (Авиационный)</strong>
-              <span class="fea-telem-sub">Коэффициент запаса K</span>
-            </div>
-            <div class="fea-telemetry-card">
-              <span class="fea-telem-name">Гашение вибрации:</span>
-              <strong class="fea-telem-val" id="feaDampingVal">0.14 с</strong>
-              <span class="fea-telem-sub">Пробка 2 мм гасит 92% волны</span>
-            </div>
-          </div>
+          <!-- Tab 3: Exploded View Blueprint Schematics -->
+          <div class="lab-hub-panel" id="labTabBlueprint" role="tabpanel" aria-labelledby="labTabBtnBlueprint" style="display:none;">
+            <div class="production-blueprint-container" id="productionExplodedView">
+              <div class="fea-lab-header" style="margin-bottom:16px;">
+                <div class="fea-lab-title-group">
+                  <span class="section-kicker kicker-dark" style="color:var(--primary);">08.3.3 // ИНЖЕНЕРНЫЙ ЧЕРТЁЖ И ВЗРЫВ-СХЕМА</span>
+                  <h3 class="fea-lab-title">Взрыв-схема компонентов Focus Station</h3>
+                  <p class="fea-lab-subtitle">
+                    Интерактивные хотспоты раскрывают устройство каждого узла: от вакуумной сушки древесины до прессованных резьбовых муфт и пробки.
+                  </p>
+                </div>
+              </div>
 
-          <div class="fea-disclaimer-note">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="fea-disclaimer-icon"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-            <span>*Инженерный расчёт напряжений методом конечных элементов (МКЭ / FEA). Серийные образцы Focus Station прошли физические стендовые испытания статической нагрузкой до 50 кг без остаточной деформации (стендовый протокол GeekNook Lab). Расчёт носит информационно-демонстрационный характер.</span>
+              <div class="blueprint-canvas-box">
+                <div class="blueprint-grid-bg"></div>
+                <div class="blueprint-watermark">GEEKNOOK // EXPLODED SCHEMATIC REV.4 // ISO-9241</div>
+                
+                <div class="blueprint-graphic-wrap">
+                  <img src="images/tild6138-3463-4138-b133-323262633039__2.jpg" alt="Focus Station Exploded View" class="blueprint-base-img" loading="lazy" decoding="async" />
+                  
+                  <div class="blueprint-hotspot" style="top: 24%; left: 35%;" data-hotspot="wood">
+                    <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали массива дуба">
+                      <span class="hotspot-pulse"></span>
+                      <span class="hotspot-core">1</span>
+                    </button>
+                    <div class="hotspot-popover">
+                      <div class="hotspot-title">Массив кавказского дуба 22 мм</div>
+                      <div class="hotspot-desc">Селективная вакуумная сушка до влажности 8%. Глубокая шелковистая текстура, пропитка натуральным маслом Osmo. Не деформируется со временем.</div>
+                    </div>
+                  </div>
+
+                  <div class="blueprint-hotspot" style="top: 38%; left: 62%;" data-hotspot="ttrack">
+                    <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали системы T-Track">
+                      <span class="hotspot-pulse"></span>
+                      <span class="hotspot-core">2</span>
+                    </button>
+                    <div class="hotspot-popover">
+                      <div class="hotspot-title">Фрезерованный паз T-Track 45°</div>
+                      <div class="hotspot-desc">Патентованная геометрия профиля для безинструментальной фиксации держателей ноутбука, наушников и подвесных полок.</div>
+                    </div>
+                  </div>
+
+                  <div class="blueprint-hotspot" style="top: 66%; left: 24%;" data-hotspot="steel">
+                    <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали стальных опор">
+                      <span class="hotspot-pulse"></span>
+                      <span class="hotspot-core">3</span>
+                    </button>
+                    <div class="hotspot-popover">
+                      <div class="hotspot-title">Опоры из стали Д16Т толщиной 3 мм</div>
+                      <div class="hotspot-desc">Конструкционный сплав с матовым порошковым полимерным напылением. Выдерживает вертикальную нагрузку свыше 60 кг.</div>
+                    </div>
+                  </div>
+
+                  <div class="blueprint-hotspot" style="top: 75%; left: 74%;" data-hotspot="screws">
+                    <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали крепежа">
+                      <span class="hotspot-pulse"></span>
+                      <span class="hotspot-core">4</span>
+                    </button>
+                    <div class="hotspot-popover">
+                      <div class="hotspot-title">Каленые винты класса прочности 8.8</div>
+                      <div class="hotspot-desc">Резьбовые стальные муфты M5, впрессованные в массив. Позволяют многократно собирать и разбирать подставку без повреждения дерева.</div>
+                    </div>
+                  </div>
+
+                  <div class="blueprint-hotspot" style="top: 84%; left: 45%;" data-hotspot="cork">
+                    <button type="button" class="hotspot-pin" onclick="window.geekNookApp.toggleHotspot(this)" aria-label="Детали пробковых демпферов">
+                      <span class="hotspot-pulse"></span>
+                      <span class="hotspot-core">5</span>
+                    </button>
+                    <div class="hotspot-popover">
+                      <div class="hotspot-title">Виброгасящая португальская пробка 2 мм</div>
+                      <div class="hotspot-desc">Акустическая развязка со столешницей. Исключает дребезжание колонок и надежно защищает полировку дорогого стола от царапин.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="blueprint-specs-table">
+                <div class="spec-cell">
+                  <span class="spec-code">MAT-01</span>
+                  <strong>Кавказский дуб / Орех</strong>
+                  <span>Плотность 720 кг/м³</span>
+                </div>
+                <div class="spec-cell">
+                  <span class="spec-code">CNC-02</span>
+                  <strong>5-осевая ЧПУ фрезеровка</strong>
+                  <span>Допуск ±0.15 мм</span>
+                </div>
+                <div class="spec-cell">
+                  <span class="spec-code">ISO-03</span>
+                  <strong>Стандарт эргономики</strong>
+                  <span>ISO 9241-5:1998</span>
+                </div>
+                <div class="spec-cell">
+                  <span class="spec-code">WAR-04</span>
+                  <strong>Гарантия производителя</strong>
+                  <span>24 месяца сервиса</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- ==========================================================================
-       8. РАБОЧИЕ МЕСТА НАШИХ КЛИЕНТОВ (Surface BG #f4f4f4, 6 in row)
-       ========================================================================== -->
-  <section class="section-surface" id="setups">
-    <div class="container">
-      <div class="block-header">
-        <div class="block-header-left">
-          <span class="section-kicker">06 // РЕАЛЬНЫЕ СЕТАПЫ</span>
-          <h2 class="block-title">РАБОЧИЕ МЕСТА НАШИХ КЛИЕНТОВ</h2>
-        </div>
-      </div>
-
-      <div class="client-setups-row" id="clientSetupsRow"></div>
     </div>
   </section>
 
@@ -2490,7 +2532,7 @@
     <div class="container">
       <div class="block-header">
         <div class="block-header-left">
-          <span class="section-kicker">07 // МАТЕРИАЛЫ И ДЕТАЛИ</span>
+          <span class="section-kicker">09 // МАТЕРИАЛЫ И ДЕТАЛИ</span>
           <h2 class="block-title">ГАЛЕРЕЯ</h2>
         </div>
       </div>
@@ -2506,7 +2548,7 @@
     <div class="container">
       <div class="block-header">
         <div class="block-header-left">
-          <span class="section-kicker">08 // ЭРГОНОМИКА И ОРГАНИЗАЦИЯ</span>
+          <span class="section-kicker">10 // ЭРГОНОМИКА И ОРГАНИЗАЦИЯ</span>
           <h2 class="block-title">ЖУРНАЛ GEEK NOOK</h2>
         </div>
       </div>
@@ -3951,32 +3993,6 @@
     </button>
   </div>
 
-  <!-- Floating Mobile Cart Pill (Bottom Thumb Zone) -->
-  <aside class="floating-mobile-cart" id="floatingMobileCart" style="display:none;" aria-label="Быстрый переход в корзину">
-    <button type="button" class="btn-floating-mobile-cart" onclick="window.geekNookApp.openCartDrawer()" aria-label="Открыть корзину">
-      <div class="fmc-left">
-        <span class="fmc-icon">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-          </svg>
-          <span class="fmc-count" id="fmcCount">0</span>
-        </span>
-        <div class="fmc-info">
-          <span class="fmc-label">Корзина</span>
-          <span class="fmc-total" id="fmcTotal">0 ₽</span>
-        </div>
-      </div>
-      <div class="fmc-right">
-        <span class="fmc-cta">Оформить</span>
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <line x1="5" y1="12" x2="19" y2="12"></line>
-          <polyline points="12 5 19 12 12 19"></polyline>
-        </svg>
-      </div>
-    </button>
-  </aside>
 
   <!-- Cookie Consent Banner (152-ФЗ) -->
   <aside id="cookieBanner" class="cookie-consent-banner" aria-label="Уведомление об использовании файлов cookie" role="region">
@@ -3995,6 +4011,27 @@
     <div class="cookie-consent-actions">
       <button class="btn-cookie-accept" onclick="window.geekNookApp.acceptCookies()">Принять и продолжить</button>
       <a href="https://geeknook.ru/legal#privacy" class="btn-cookie-details" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Подробнее</a>
+    </div>
+  </aside>
+
+  <!-- Persistent Mobile Sticky Buy Bar (≤ 768px, appears past hero) -->
+  <aside class="mobile-sticky-buy-bar" id="mobileStickyBuyBar" aria-label="Быстрый заказ">
+    <div class="sticky-bar-container">
+      <div class="sticky-bar-info">
+        <span class="sticky-bar-title" id="stickyBarTitle">Focus Station 22 мм</span>
+        <div class="sticky-bar-meta">
+          <span class="sticky-bar-price" id="stickyBarPrice">от 18 990 ₽</span>
+          <span class="sticky-bar-badge" id="stickyBarBadge">Дуб & Д16Т</span>
+        </div>
+      </div>
+      <button type="button" class="btn-sticky-buy" id="btnStickyBuy" onclick="window.geekNookApp.handleStickyBuyAction()" aria-label="Действие покупки">
+        <svg class="sticky-btn-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <path d="M16 10a4 4 0 0 1-8 0"></path>
+        </svg>
+        <span id="stickyBtnText">В каталог</span>
+      </button>
     </div>
   </aside>
 

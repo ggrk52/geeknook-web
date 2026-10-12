@@ -1022,21 +1022,92 @@
       drawerTgBtn.style.pointerEvents = isCartEmpty ? 'none' : 'auto';
     }
 
-    // Sync Floating Mobile Cart Pill (Thumb Zone CRO)
-    const fmc = document.getElementById('floatingMobileCart');
-    if (fmc) {
-      if (totalCount > 0) {
-        fmc.style.display = 'block';
-        document.body.classList.add('has-floating-cart');
-        const fmcCount = document.getElementById('fmcCount');
-        const fmcTotal = document.getElementById('fmcTotal');
-        if (fmcCount) fmcCount.textContent = totalCount;
-        if (fmcTotal) fmcTotal.textContent = formatPrice(grandTotal);
+    // Sync Persistent Mobile Sticky Buy Bar (≤ 768px CRO Smart Bar)
+    updateStickyBuyBarUI();
+  };
+
+  const updateStickyBuyBarUI = () => {
+    const titleEl = document.getElementById('stickyBarTitle');
+    const priceEl = document.getElementById('stickyBarPrice');
+    const badgeEl = document.getElementById('stickyBarBadge');
+    const btnTextEl = document.getElementById('stickyBtnText');
+    if (!titleEl || !priceEl || !btnTextEl) return;
+
+    const totalCount = state.cart.reduce((sum, i) => sum + (parseInt(i.quantity, 10) || 0), 0);
+    const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
+    const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
+    const discountAmount = Math.round(subtotal * (discountPercent / 100));
+    const isFreeShipping = (subtotal - discountAmount) >= 7000;
+    const shippingCost = isFreeShipping ? 0 : (subtotal > 0 ? 490 : 0);
+    const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
+
+    if (totalCount > 0) {
+      const itemWord = totalCount === 1 ? 'товар' : (totalCount < 5 ? 'товара' : 'товаров');
+      titleEl.textContent = `В корзине ${totalCount} ${itemWord}`;
+      priceEl.textContent = formatPrice(grandTotal);
+      if (badgeEl) badgeEl.textContent = `Скидка ${discountPercent}%`;
+      btnTextEl.textContent = 'Оформить';
+    } else {
+      titleEl.textContent = 'Focus Station 22 мм';
+      priceEl.textContent = 'от 18 990 ₽';
+      if (badgeEl) badgeEl.textContent = 'Дуб & Д16Т';
+      btnTextEl.textContent = 'В каталог';
+    }
+  };
+
+  const handleStickyBuyAction = () => {
+    soundEngine.play('click');
+    const totalCount = state.cart.reduce((sum, i) => sum + (parseInt(i.quantity, 10) || 0), 0);
+    if (totalCount > 0) {
+      openCartDrawer();
+    } else {
+      const el = document.getElementById('boards');
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth' });
       } else {
-        fmc.style.display = 'none';
-        document.body.classList.remove('has-floating-cart');
+        window.location.hash = '#boards';
       }
     }
+  };
+
+  const initMobileStickyBuyBar = () => {
+    const bar = document.getElementById('mobileStickyBuyBar');
+    if (!bar) return;
+
+    let ticking = false;
+    const checkScroll = () => {
+      if (window.innerWidth > 768) {
+        bar.classList.remove('visible');
+        document.body.classList.remove('has-sticky-buy-bar');
+        return;
+      }
+      const hero = document.getElementById('hero');
+      const heroBottom = hero ? hero.getBoundingClientRect().bottom : -1;
+      const shouldShow = (heroBottom < 100) || (window.scrollY > 350);
+
+      if (shouldShow) {
+        bar.classList.add('visible');
+        document.body.classList.add('has-sticky-buy-bar');
+      } else {
+        bar.classList.remove('visible');
+        document.body.classList.remove('has-sticky-buy-bar');
+      }
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          checkScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    checkScroll();
+    updateStickyBuyBarUI();
   };
 
   const selectBundleMatVariant = (matId) => {
@@ -7019,6 +7090,54 @@
     showToast('⚡ Импульс: проверка упругости оплетки и неодимовых магнитов');
   };
 
+  // --- 2.1 GEEKNOOK ENGINEERING LAB HUB TAB CONTROLLER ---
+  let activeLabTab = 'fea'; // 'fea' | 'cables' | 'blueprint'
+
+  const switchLabTab = (tabId) => {
+    if (!['fea', 'cables', 'blueprint'].includes(tabId)) return;
+    activeLabTab = tabId;
+    soundEngine.play('click');
+
+    const btnFea = document.getElementById('labTabBtnFea');
+    const btnCables = document.getElementById('labTabBtnCables');
+    const btnBlueprint = document.getElementById('labTabBtnBlueprint');
+
+    if (btnFea) {
+      btnFea.classList.toggle('active', tabId === 'fea');
+      btnFea.setAttribute('aria-selected', tabId === 'fea' ? 'true' : 'false');
+    }
+    if (btnCables) {
+      btnCables.classList.toggle('active', tabId === 'cables');
+      btnCables.setAttribute('aria-selected', tabId === 'cables' ? 'true' : 'false');
+    }
+    if (btnBlueprint) {
+      btnBlueprint.classList.toggle('active', tabId === 'blueprint');
+      btnBlueprint.setAttribute('aria-selected', tabId === 'blueprint' ? 'true' : 'false');
+    }
+
+    const panelFea = document.getElementById('labTabFea');
+    const panelCables = document.getElementById('labTabCables');
+    const panelBlueprint = document.getElementById('labTabBlueprint');
+
+    if (panelFea) panelFea.style.display = tabId === 'fea' ? 'block' : 'none';
+    if (panelCables) panelCables.style.display = tabId === 'cables' ? 'block' : 'none';
+    if (panelBlueprint) panelBlueprint.style.display = tabId === 'blueprint' ? 'block' : 'none';
+
+    if (tabId === 'fea') {
+      renderFeaCanvas();
+    } else if (tabId === 'cables') {
+      if (!cableState.isInitialized) {
+        initCableSimulator();
+      }
+      window.dispatchEvent(new Event('resize'));
+      if (!cableState.animFrame) {
+        cableState.animFrame = requestAnimationFrame(() => {
+          updateCableMetrics();
+        });
+      }
+    }
+  };
+
   // --- ERGONOMICS POSTURE CALCULATOR (ISO 9241-5) ---
   const ergoState = {
     heightCm: 178,
@@ -8422,6 +8541,7 @@
     renderJournal();
     renderFAQ();
     updateCartUI();
+    initMobileStickyBuyBar();
     initScrollReveals();
     initAnatomyScroll();
     initNumberCounters();
@@ -8887,6 +9007,10 @@
     runFeaShockTest,
     initFeaLab,
     initCableSimulator,
+    switchLabTab,
+    initMobileStickyBuyBar,
+    updateStickyBuyBarUI,
+    handleStickyBuyAction,
     cableState,
     setCableMode,
     shakeCables,
