@@ -8319,11 +8319,12 @@ body.t706__body_cartwinshowed {
 .support-widget-wrap {
   position: fixed;
   bottom: 28px;
-  right: 28px;
+  right: 96px;
   z-index: 500;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  transition: bottom 0.25s ease, right 0.25s ease;
 }
 
 .btn-support-trigger {
@@ -8364,6 +8365,7 @@ body.t706__body_cartwinshowed {
 
 .support-widget-dropdown {
   width: 300px;
+  max-width: calc(100vw - 32px);
   background: #141416;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 16px;
@@ -8489,14 +8491,72 @@ body.t706__body_cartwinshowed {
 @media (max-width: 768px) {
   .support-widget-wrap {
     bottom: 20px;
-    right: 20px;
-    transition: bottom 0.25s ease;
+    right: 84px;
+    transition: bottom 0.25s ease, right 0.25s ease;
   }
 
   body.has-floating-cart .support-widget-wrap,
   body.has-sticky-buy-bar .support-widget-wrap {
     bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
   }
+
+  body.has-sticky-buy-bar .t706__carticon {
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px)) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .support-widget-dropdown {
+    width: calc(100vw - 32px);
+    max-width: 300px;
+    position: fixed;
+    right: 16px;
+    bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+[data-theme="light"] .btn-support-trigger {
+  background: #ffffff;
+  color: #0f172a;
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] .btn-support-trigger:hover {
+  background: #f8fafc;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
+[data-theme="light"] .support-widget-dropdown {
+  background: #ffffff;
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+}
+
+[data-theme="light"] .support-dropdown-header {
+  background: #f8fafc;
+  border-bottom-color: rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .support-header-name {
+  color: #0f172a;
+}
+
+[data-theme="light"] .support-link-item {
+  color: #0f172a;
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .support-link-item:hover {
+  background: #f1f5f9;
+}
+
+[data-theme="light"] .support-link-text strong {
+  color: #0f172a;
+}
+
+[data-theme="light"] .support-link-text span {
+  color: #64748b;
 }
 
 /* ==========================================================================

@@ -45,12 +45,14 @@
     if (t706Icon) {
       if (count > 0) {
         t706Icon.classList.add('t706__carticon_showed');
+        document.body.classList.add('has-tilda-cart');
         t706Icon.style.display = 'block';
         t706Icon.style.opacity = '1';
         t706Icon.style.visibility = 'visible';
         t706Icon.style.pointerEvents = 'auto';
       } else {
         t706Icon.classList.remove('t706__carticon_showed');
+        document.body.classList.remove('has-tilda-cart');
         t706Icon.style.display = 'none';
         t706Icon.style.opacity = '0';
         t706Icon.style.visibility = 'hidden';
