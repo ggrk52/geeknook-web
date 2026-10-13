@@ -197,6 +197,8 @@
           a.setAttribute('href', '/');
         } else if (href && href.startsWith('index.html#')) {
           a.setAttribute('href', '/' + href.substring(10));
+        } else if (href === 'b2b.html' || href === './b2b.html') {
+          a.setAttribute('href', '/b2b');
         } else if (href && (href.startsWith('docs/') || href.startsWith('./docs/'))) {
           a.setAttribute('href', resolveAssetUrl(href));
           a.setAttribute('target', '_blank');
