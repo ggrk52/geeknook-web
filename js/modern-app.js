@@ -7263,18 +7263,13 @@
 
   const downloadCadAsset = (filename) => {
     soundEngine.play('click');
-    const dummyBlob = new Blob([
-      `GEEKNOOK ENGINEERING ASSET: ${filename}\nDate: ${new Date().toISOString()}\nCAD Standard: ISO-9241 / STEP AP214 / PBR glTF\nManufacturer: GEEK NOOK (Moscow, Russia)\nWebsite: https://geeknook.ru`
-    ], { type: 'text/plain' });
-    const url = URL.createObjectURL(dummyBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showToast(`Файл «${filename}» загружен!`, 'success');
+    const reqTypeSelect = document.getElementById('b2bRequestType');
+    if (reqTypeSelect) reqTypeSelect.value = 'cad_library';
+    const emailInput = document.getElementById('b2bEmail') || document.getElementById('b2bLandingEmail');
+    if (emailInput) {
+      emailInput.focus();
+    }
+    showToast(`Запрос CAD «${filename}»: укажите рабочий email студии — мы вышлем архив с текстурами и условиями агентской программы.`, 'info');
   };
 
   // --- B2B OFFICE PACK CONFIGURATOR & OFFICIAL PROPOSAL (FEATURE 4) ---
@@ -7350,13 +7345,13 @@
     const pricing = calculateB2bPricing();
     const tiers = (GEEKNOOK_DATA.b2b && GEEKNOOK_DATA.b2b.tiers) ? GEEKNOOK_DATA.b2b.tiers : [];
 
-    const badge = document.getElementById('b2bWorkplacesCountBadge');
+    const badge = document.getElementById('b2bWorkplacesCountBadge') || document.getElementById('b2bPlacesCount');
     if (badge) badge.textContent = `${pricing.places} ${getPlacesPlural(pricing.places)}`;
-    const slider = document.getElementById('b2bWorkplacesSlider');
+    const slider = document.getElementById('b2bWorkplacesSlider') || document.getElementById('b2bSliderInput');
     if (slider && Number(slider.value) !== pricing.places) slider.value = pricing.places;
 
-    document.querySelectorAll('#b2bQuickChipsRow .b2b-quick-chip').forEach(btn => {
-      const count = Number(btn.getAttribute('data-count'));
+    document.querySelectorAll('#b2bQuickChipsRow .b2b-quick-chip, .b2b-quick-chips-row .b2b-quick-chip').forEach(btn => {
+      const count = Number(btn.getAttribute('data-count') || btn.getAttribute('data-places'));
       btn.classList.toggle('active', count === pricing.places);
     });
 
@@ -7389,7 +7384,7 @@
       brandingCost.style.color = pricing.places >= 25 ? '#10b981' : 'var(--primary)';
     }
 
-    const subtotalEl = document.getElementById('b2bSubtotalVal');
+    const subtotalEl = document.getElementById('b2bSubtotalVal') || document.getElementById('b2bRetailTotal');
     if (subtotalEl) subtotalEl.textContent = formatPrice(pricing.retailSubtotal);
 
     const discPercEl = document.getElementById('b2bDiscountPercentVal');
@@ -7398,12 +7393,12 @@
     const discAmtEl = document.getElementById('b2bDiscountAmountVal');
     if (discAmtEl) discAmtEl.textContent = `-${formatPrice(pricing.discountAmount)}`;
 
-    const totalEl = document.getElementById('b2bTotalAmountVal');
+    const totalEl = document.getElementById('b2bTotalAmountVal') || document.getElementById('b2bGrandTotal');
     if (totalEl) totalEl.textContent = formatPrice(pricing.grandTotal);
 
     const savingsBadge = document.getElementById('b2bSavingsBadge');
     if (savingsBadge) {
-      savingsBadge.textContent = `✓ Экономия бюджета: ${formatPrice(pricing.totalSavings)}`;
+      savingsBadge.textContent = `-${pricing.discountPercent}% • Экономия ${formatPrice(pricing.totalSavings)}`;
     }
   };
 
@@ -7418,6 +7413,7 @@
     soundEngine.play('click');
     renderB2bCalculatorUI();
   };
+  const setB2bWorkplaces = setB2bWorkplacesPreset;
 
   const selectB2bTier = (tierId) => {
     b2bCalcState.selectedTierId = tierId;
@@ -7689,6 +7685,17 @@
     if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackB2bLead === 'function') {
       window.geekNookAnalytics.trackB2bLead(company, email, `${pricing.places} мест, сумма ${pricing.grandTotal}`);
     }
+
+    if (email || (company && company !== 'ООО «Корпорация»')) {
+      submitB2bLeadData({
+        company: company || 'Клиент B2B (Генерация КП)',
+        email: email || '',
+        workplaces: pricing.places,
+        package_tier: pricing.tier.name,
+        request_type: 'kp_calculation',
+        comment: `Сформировано КП № ${kpNumber} на сумму ${pricing.grandTotal} руб.`
+      }).catch(() => {});
+    }
   };
 
   const printB2bKp = () => {
@@ -7704,19 +7711,97 @@
     showToast('Спецификация КП скопирована в буфер обмена!', 'success');
   };
 
-  const handleB2bSubmit = (e) => {
-    e.preventDefault();
-    soundEngine.play('cart');
-    const company = document.getElementById('b2bCompany')?.value.trim() || 'Компания';
-    const email = document.getElementById('b2bEmail')?.value.trim() || '';
-    const workplaces = b2bCalcState.workplaces;
-
-    if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackB2bLead === 'function') {
-      window.geekNookAnalytics.trackB2bLead(company, email, `${workplaces} мест`);
+  const submitB2bLeadData = async (payload) => {
+    try {
+      const response = await fetch('/api/b2b-lead.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(payload)
+      });
+      if (response.ok) {
+        const json = await response.json();
+        return json;
+      }
+    } catch (err) {
+      console.warn('API lead dispatch error, saving locally fallback:', err);
     }
 
-    closeModal('cadLibraryModal');
-    showToast(`Запрос для «${escapeHTML(company)}» принят! Мы свяжемся с вами в течение 15 минут.`, 'success');
+    try {
+      const queue = JSON.parse(localStorage.getItem('geeknook_b2b_leads') || '[]');
+      queue.push({ ...payload, timestamp: new Date().toISOString() });
+      localStorage.setItem('geeknook_b2b_leads', JSON.stringify(queue));
+    } catch (_) {}
+
+    return { success: true, fallback: true };
+  };
+
+  const handleB2bSubmit = async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    soundEngine.play('cart');
+
+    const form = e?.target || document.getElementById('b2bLeadForm');
+    const submitBtn = form?.querySelector('button[type="submit"]') || document.getElementById('b2bSubmitBtn');
+    const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
+
+    const company = document.getElementById('b2bCompany')?.value.trim() || document.getElementById('b2bLandingCompany')?.value.trim() || 'Компания';
+    const inn = document.getElementById('b2bInn')?.value.trim() || document.getElementById('b2bLandingInn')?.value.trim() || '';
+    const contactName = document.getElementById('b2bContactName')?.value.trim() || document.getElementById('b2bLandingContact')?.value.trim() || '';
+    const email = document.getElementById('b2bEmail')?.value.trim() || document.getElementById('b2bLandingEmail')?.value.trim() || '';
+    const phone = document.getElementById('b2bPhone')?.value.trim() || document.getElementById('b2bLandingPhone')?.value.trim() || '';
+    const workplaces = b2bCalcState.workplaces || document.getElementById('b2bLandingPlaces')?.value || 15;
+    const requestType = document.getElementById('b2bRequestType')?.value || 'test_drive';
+    const comment = document.getElementById('b2bComment')?.value?.trim() || '';
+
+    if (!company) {
+      showToast('Пожалуйста, укажите название компании', 'warning');
+      return;
+    }
+    if (!email && !phone) {
+      showToast('Укажите корпоративный email или телефон для связи', 'warning');
+      return;
+    }
+
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span>Отправка заявки...</span>';
+    }
+
+    const payload = {
+      company,
+      inn,
+      contact_name: contactName,
+      email,
+      phone,
+      workplaces,
+      package_tier: b2bCalcState.selectedTierId || 'growth',
+      request_type: requestType,
+      comment
+    };
+
+    try {
+      await submitB2bLeadData(payload);
+
+      if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackB2bLead === 'function') {
+        window.geekNookAnalytics.trackB2bLead(company, email, `${workplaces} мест, ${requestType}`);
+      }
+
+      closeModal('cadLibraryModal');
+      showToast(`✓ Заявка для «${escapeHTML(company)}» успешно принята! Мы свяжемся с вами в течение 10 минут.`, 'success');
+
+      if (form && typeof form.reset === 'function') {
+        form.reset();
+      }
+    } catch (err) {
+      showToast('✓ Заявка зафиксирована! Наш менеджер свяжется с вами.', 'success');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+      }
+    }
   };
 
   // --- COMMAND PALETTE (Cmd+K / Ctrl+K) ---
@@ -7818,11 +7903,19 @@
       {
         id: 'action-b2b',
         category: 'B2B & Опт',
-        title: 'B2B Конфигуратор & Официальное КП (PDF)',
-        sub: 'Оснащение офисов 5–100+ мест, скидки до 25%, закрывающие документы',
-        badge: 'B2B -25%',
+        title: 'B2B Оснащение IT-офисов & Тест-драйв',
+        sub: 'Оснащение офисов 5–100+ мест, скидки до 20%, бесплатный тест-драйв 14 дней',
+        badge: 'B2B -20%',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path></svg>',
-        action: () => { closeCommandPalette(); openCadModal(); }
+        action: () => {
+          closeCommandPalette();
+          if (window.location.pathname.endsWith('b2b.html')) {
+            const el = document.getElementById('calculator');
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+          } else {
+            window.location.href = 'b2b.html';
+          }
+        }
       },
       {
         id: 'action-cad',
@@ -8993,6 +9086,7 @@
     renderB2bCalculatorUI,
     updateB2bWorkplaces,
     setB2bWorkplacesPreset,
+    setB2bWorkplaces,
     selectB2bTier,
     toggleB2bAddon,
     generateB2bKp,

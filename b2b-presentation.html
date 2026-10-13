@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GeekNook // B2B Corporate Presentation</title>
+  <link rel="icon" href="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" type="image/png" />
+  <style>
+    :root {
+      --bg: #090c12;
+      --card-bg: #121824;
+      --border: rgba(255, 255, 255, 0.1);
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --primary: #2b70f0;
+      --accent: #d97706;
+      --success: #10b981;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { background: var(--bg); color: var(--text); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; overflow-x: hidden; }
+    
+    .deck-container {
+      width: 100%;
+      max-width: 1100px;
+      aspect-ratio: 16 / 9;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: clamp(24px, 4vw, 48px);
+      overflow: hidden;
+    }
+
+    .slide-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 16px; margin-bottom: 24px; }
+    .slide-logo { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1rem; letter-spacing: 0.05em; color: var(--primary); }
+    .slide-num { font-size: 0.8125rem; color: var(--muted); font-family: monospace; }
+    .slide-title { font-size: clamp(1.4rem, 2.8vw, 2.2rem); font-weight: 800; line-height: 1.2; margin-bottom: 12px; }
+    .slide-subtitle { font-size: clamp(0.9rem, 1.4vw, 1.15rem); color: var(--muted); line-height: 1.6; max-width: 860px; margin-bottom: 24px; }
+    
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+    .card { background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+    .card-title { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 8px; }
+    .card-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.5; }
+    .price-tag { font-size: 1.25rem; font-weight: 800; color: var(--primary); margin: 6px 0; font-family: monospace; }
+
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; background: rgba(43, 112, 240, 0.15); color: var(--primary); margin-bottom: 8px; }
+    .badge-amber { background: rgba(217, 119, 6, 0.15); color: var(--accent); }
+    .badge-green { background: rgba(16, 185, 129, 0.15); color: var(--success); }
+
+    .slide-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 16px; margin-top: auto; font-size: 0.78rem; color: var(--muted); }
+
+    .deck-nav { display: flex; gap: 12px; align-items: center; margin-top: 20px; }
+    .btn-nav { background: rgba(255, 255, 255, 0.08); border: 1px solid var(--border); color: #fff; padding: 10px 18px; border-radius: 8px; cursor: pointer; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-nav:hover { background: rgba(255, 255, 255, 0.16); }
+    .btn-nav.primary { background: var(--primary); border-color: var(--primary); }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .deck-nav { display: none; }
+      .deck-container { box-shadow: none; border: none; aspect-ratio: auto; page-break-after: always; width: 100vw; height: 100vh; padding: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container" id="slideContainer">
+    <!-- Slide content injected by JS -->
+  </div>
+
+  <div class="deck-nav">
+    <button class="btn-nav" onclick="prevSlide()">← Назад</button>
+    <span id="navCounter" style="font-size:0.875rem;color:var(--muted);min-width:60px;text-align:center;">1 / 8</span>
+    <button class="btn-nav" onclick="nextSlide()">Вперед →</button>
+    <a href="docs/GeekNook_B2B_Presentation.pdf" target="_blank" class="btn-nav primary" style="text-decoration:none;">Скачать PDF</a>
+    <a href="b2b.html" class="btn-nav" style="text-decoration:none;">На страницу B2B</a>
+  </div>
+
+  <script>
+    const slidesData = [
+      {
+        num: "01 / 08",
+        badge: "Workplace Solutions",
+        title: "GEEK NOOK // B2B",
+        subtitle: "Инженерные рабочие пространства для продуктовых IT-команд. Модульные рабочие места из кавказского дуба, американского ореха и стали с T-Track шиной.",
+        content: `
+          <div class="grid-4" style="margin-top:20px;">
+            <div class="card"><div class="badge badge-amber">Тест-драйв</div><div class="card-title">14 дней бесплатно</div><div class="card-desc">Привозим 1 комплект в офис для испытания в бою</div></div>
+            <div class="card"><div class="badge badge-green">Скидки</div><div class="card-title">до -20% за объем</div><div class="card-desc">Оптовые сетки от 5 рабочих мест</div></div>
+            <div class="card"><div class="badge">Бухгалтерия</div><div class="card-title">ЭДО & УПД</div><div class="card-desc">Диадок и СБИС, официальный безналичный расчет</div></div>
+            <div class="card"><div class="badge">Качество</div><div class="card-title">12 мес. гарантия</div><div class="card-desc">Замена элементов по рекламации за наш счет</div></div>
+          </div>
+        `,
+        footer: "ООО «ГИК НУК» • Москва, 2026 • https://geeknook.ru/b2b"
+      },
+      {
+        num: "02 / 08",
+        badge: "Проблема бизнеса",
+        title: "RTO (Return to Office) & Здоровье инженеров",
+        subtitle: "Почему ведущие разработчики сопротивляются выходу в офис и как эргономика решает вопрос удержания кадров.",
+        content: `
+          <div class="grid-3" style="margin-top:20px;">
+            <div class="card">
+              <div class="card-title">1. Конкуренция с домом</div>
+              <div class="card-desc">Разработчик дома настроил удобный стол с подставкой и мониторами. Голый офисный стол вызывает фрустрацию и желание вернуться на удаленку.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">2. Синдром «текстовой шеи»</div>
+              <div class="card-desc">Низкий экран ноутбука вынуждает опускать голову на 45°. Это создает нагрузку в 22 кг на шейный отдел и вызывает головные боли к концу дня.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">3. Визуальный хаос</div>
+              <div class="card-desc">Сотни кабелей и сетевых фильтров под столами портят вид опенспейса и нарушают требования пожарной безопасности бизнес-центров класса А.</div>
+            </div>
+          </div>
+        `,
+        footer: "Стандарт ISO 9241-5 • Снижение нагрузки на шею на 40%"
+      },
+      {
+        num: "03 / 08",
+        badge: "Продуктовое решение",
+        title: "Модульная экосистема Focus Station",
+        subtitle: "Единая платформа для организации мониторов, ноутбуков и аксессуаров из массива дерева и металла.",
+        content: `
+          <div class="grid-3" style="margin-top:20px;">
+            <div class="card">
+              <div class="card-title">Натуральный массив дерева</div>
+              <div class="card-desc">Кавказский дуб и американский орех толщиной 22 мм. Шелковистое покрытие натуральным немецким маслом Osmo.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Рельса T-Track (Д16Т)</div>
+              <div class="card-desc">Авиационный алюминий. Быстрая смена положений кронштейна для ноутбука, держателя смартфона и наушников за 1 секунду.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Скрытый кабель-трей</div>
+              <div class="card-desc">Стальной лоток под столешницей убирает сетевой фильтр и провода. Стол остается чистым и эстетичным на зум-созвонах.</div>
+            </div>
+          </div>
+        `,
+        footer: "Собственное производство в Москве • До 80 кг распределенной нагрузки"
+      },
+      {
+        num: "04 / 08",
+        badge: "Эргономика и здоровье",
+        title: "Эргономический стандарт ISO 9241-5",
+        subtitle: "Инженерный расчет углов обзора и выравнивание высоты экранов для продуктивной 8-часовой работы.",
+        content: `
+          <div class="grid-3" style="margin-top:20px;">
+            <div class="card">
+              <div class="card-title">Подъем на 90 мм</div>
+              <div class="card-desc">Верхняя треть монитора находится строго на уровне глаз. Снижает компрессию межпозвоночных дисков шеи на 40%.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Единый горизонт</div>
+              <div class="card-desc">Экран ноутбука на кронштейне выравнивается по высоте с основным 27–34" монитором. Глаза не перефокусируются по высоте.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Освобождение 40% стола</div>
+              <div class="card-desc">Под полку убирается клавиатура, графический планшет и мышь, создавая чистую зону для бумаг и заметок.</div>
+            </div>
+          </div>
+        `,
+        footer: "Сертификация и соответствие нормам рабочего места"
+      },
+      {
+        num: "05 / 08",
+        badge: "Пакеты оснащения",
+        title: "Корпоративные пакеты и оптовые скидки",
+        subtitle: "Прозрачное ценообразование со скидками от объема для команд любого масштаба.",
+        content: `
+          <div class="grid-4" style="margin-top:20px;">
+            <div class="card">
+              <div class="badge badge-amber">Скидка 10%</div>
+              <div class="card-title">Startup Pack</div>
+              <div class="price-tag">22 048 ₽ / место</div>
+              <div class="card-desc">5–10 мест: Focus Station 85 дуб + держатель ноутбука.</div>
+            </div>
+            <div class="card">
+              <div class="badge badge-green">Скидка 15% (Хит)</div>
+              <div class="card-title">Growth Team</div>
+              <div class="price-tag">25 497 ₽ / место</div>
+              <div class="card-desc">11–25 мест: Focus Station + ноутбук + подвес наушников.</div>
+            </div>
+            <div class="card">
+              <div class="badge">Скидка 20%</div>
+              <div class="card-title">Enterprise Pro</div>
+              <div class="price-tag">33 196 ₽ / место</div>
+              <div class="card-desc">26–50+ мест: Focus Station 116 орех + кожаный коврик + кабель-трей.</div>
+            </div>
+            <div class="card">
+              <div class="badge">Индивидуально</div>
+              <div class="card-title">Custom Project</div>
+              <div class="price-tag">до -25%</div>
+              <div class="card-desc">От 50 мест: интеграция под проект архитектора, брендирование.</div>
+            </div>
+          </div>
+        `,
+        footer: "Оплата по безналичному расчету • УПД без НДС (УСН) / с НДС 20% через партнера"
+      },
+      {
+        num: "06 / 08",
+        badge: "Брендинг",
+        title: "Корпоративная кастомизация и айдентика",
+        subtitle: "Подчеркните статус компании с помощью индивидуального брендирования каждого рабочего места.",
+        content: `
+          <div class="grid-3" style="margin-top:20px;">
+            <div class="card">
+              <div class="card-title">Лазерная гравировка логотипа</div>
+              <div class="card-desc">Анодированный металлический шильдик с логотипом компании на торце рельсы T-Track (+1 200 ₽, бесплатно от 25 мест).</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Блинтовое тиснение</div>
+              <div class="card-desc">Глубокое горячее тиснение корпоративной символики на кожаных или войлочных ковриках под клавиатуру.</div>
+            </div>
+            <div class="card">
+              <div class="card-title">Подбор колеровки дерева</div>
+              <div class="card-desc">Тонировка массива дуба натуральными маслами под цвет офисной мебели и брендбука вашей компании.</div>
+            </div>
+          </div>
+        `,
+        footer: "Фирменный стиль для кабинетов фаундеров и открытых опенспейсов"
+      },
+      {
+        num: "07 / 08",
+        badge: "Оффер-локомотив",
+        title: "Программа «Офисный тест-драйв на 14 дней»",
+        subtitle: "Без рисков и финансовых обязательств: оцените качество до подписания крупного договора.",
+        content: `
+          <div class="grid-4" style="margin-top:20px;">
+            <div class="card">
+              <div class="badge">Шаг 1</div>
+              <div class="card-title">Заявка за 1 мин</div>
+              <div class="card-desc">Указываете компанию и адрес офиса в Москве.</div>
+            </div>
+            <div class="card">
+              <div class="badge">Шаг 2</div>
+              <div class="card-title">Доставка Demo Box</div>
+              <div class="card-desc">Курьер привозит полностью собранный сетап в презентабельном кофре.</div>
+            </div>
+            <div class="card">
+              <div class="badge">Шаг 3</div>
+              <div class="card-title">14 дней теста</div>
+              <div class="card-desc">Ваш ведущий разработчик или тимлид работает за ним 2 недели.</div>
+            </div>
+            <div class="card">
+              <div class="badge badge-green">Шаг 4</div>
+              <div class="card-title">Решение</div>
+              <div class="card-desc">Понравилось — выкупаете образец и заказываете партию. Не подошло — забираем.</div>
+            </div>
+          </div>
+        `,
+        footer: "В ротации 2 тестовых комплекта Demo Box • Бронь по заявке"
+      },
+      {
+        num: "08 / 08",
+        badge: "Контакты",
+        title: "Свяжитесь с корпоративным отделом",
+        subtitle: "Закажите бесплатный тест-драйв или запросите официальное КП с расчетом спецификации.",
+        content: `
+          <div class="grid-2" style="margin-top:20px;">
+            <div class="card">
+              <div class="card-title">Прямые контакты</div>
+              <p style="margin:8px 0;font-size:0.95rem;">📧 Email: <a href="mailto:b2b@geeknook.ru" style="color:var(--primary);text-decoration:none;">b2b@geeknook.ru</a></p>
+              <p style="margin:8px 0;font-size:0.95rem;">📞 Телефон: <a href="tel:+74951204805" style="color:var(--primary);text-decoration:none;">+7 (495) 120-48-05</a></p>
+              <p style="margin:8px 0;font-size:0.95rem;">💬 Telegram: <a href="https://t.me/geeknook" target="_blank" style="color:var(--primary);text-decoration:none;">@geeknook</a></p>
+              <p style="margin:8px 0;font-size:0.95rem;">🌐 Страница B2B: <a href="b2b.html" style="color:var(--primary);text-decoration:none;">https://geeknook.ru/b2b</a></p>
+            </div>
+            <div class="card">
+              <div class="card-title">Реквизиты поставщика</div>
+              <p style="font-size:0.85rem;color:var(--muted);line-height:1.6;">
+                ООО «ГИК НУК»<br>
+                ИНН 9723239478 • ОГРН 1247700620265<br>
+                Юр. адрес: 115088, г. Москва, ул. Петра Романова, д. 7<br>
+                ЭДО: Диадок (СКБ Контур) или СБИС<br>
+                Сроки производства: 5–16 рабочих дней
+              </p>
+            </div>
+          </div>
+        `,
+        footer: "GeekNook © 2026 • Инженерная точность на вашем столе"
+      }
+    ];
+
+    let currentSlide = 0;
+
+    function renderSlide(idx) {
+      const s = slidesData[idx];
+      const container = document.getElementById('slideContainer');
+      container.innerHTML = `
+        <div>
+          <div class="slide-header">
+            <div class="slide-logo">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+              <span>GEEK NOOK // B2B</span>
+            </div>
+            <div class="slide-num">${s.num}</div>
+          </div>
+          <div class="badge">${s.badge}</div>
+          <h1 class="slide-title">${s.title}</h1>
+          <p class="slide-subtitle">${s.subtitle}</p>
+          ${s.content}
+        </div>
+        <div class="slide-footer">
+          <span>${s.footer}</span>
+          <span>Нажмите ← / → для навигации</span>
+        </div>
+      `;
+      document.getElementById('navCounter').textContent = `${idx + 1} / ${slidesData.length}`;
+    }
+
+    function nextSlide() {
+      if (currentSlide < slidesData.length - 1) {
+        currentSlide++;
+        renderSlide(currentSlide);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        renderSlide(currentSlide);
+      }
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    });
+
+    renderSlide(0);
+  </script>
+</body>
+</html>

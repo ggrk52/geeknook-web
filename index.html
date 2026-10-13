@@ -341,7 +341,7 @@
           <li><a href="#accessories">Аксессуары</a></li>
           <li><a href="#mats">Коврики</a></li>
           <li><a href="#bundles">Комплекты</a></li>
-          <li><a href="javascript:void(0)" onclick="window.geekNookApp.openCadModal()">B2B Офис</a></li>
+          <li><a href="b2b.html">B2B Офис</a></li>
           <li><a href="#advantages">Преимущества</a></li>
           <li><a href="#production">Производство</a></li>
           <li><a href="#journal">Журнал</a></li>
@@ -2699,16 +2699,20 @@
           </div>
           <h3 class="retail-title">Оснащение рабочих мест для команд</h3>
           <p class="retail-desc">
-            Комплексное оборудование столов для продуктовых IT-команд, дизайн-студий и архитекторов. Специальные оптовые условия, оплата по безналичному расчету с НДС 20% и брендирование под ключ.
+            Комплексное оборудование столов для продуктовых IT-команд, дизайн-студий и архитекторов. Специальные оптовые условия, оплата по безналичному расчету (УПД без НДС / поставка с НДС 20% через аккредитованного партнера) и бесплатный тест-драйв в офис на 14 дней.
           </p>
           <ul class="retail-features">
-            <li>Оптовые скидки от 5 рабочих мест</li>
+            <li>Бесплатный офисный тест-драйв на 14 дней</li>
+            <li>Оптовые скидки от 5 рабочих мест (до -20%)</li>
             <li>Гравировка логотипа вашей компании</li>
-            <li>ЭДО и закрывающие документы</li>
+            <li>ЭДО (Диадок / СБИС) и закрывающие документы</li>
           </ul>
-          <div class="retail-action">
-            <button type="button" class="btn-retail-b2b" onclick="window.geekNookApp.openCadModal()">
-              <span>Запросить коммерческое предложение</span>
+          <div class="retail-action" style="display:flex;gap:10px;flex-wrap:wrap;">
+            <a href="b2b.html" class="btn-retail-b2b" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">
+              <span>B2B Решения и Тест-драйв</span>
+            </a>
+            <button type="button" class="btn-retail-b2b" onclick="window.geekNookApp.openCadModal()" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);">
+              <span>Калькулятор КП</span>
             </button>
           </div>
         </div>
@@ -3824,6 +3828,11 @@
                   <label for="b2bEmail" class="checkout-field-label">Корпоративный Email *</label>
                   <input type="email" id="b2bEmail" class="checkout-input" placeholder="procurement@company.ru" required />
                 </div>
+              </div>
+
+              <div class="checkout-field-group" style="margin-bottom:0;">
+                <label for="b2bPhone" class="checkout-field-label">Телефон / Telegram для быстрой связи</label>
+                <input type="tel" id="b2bPhone" class="checkout-input" placeholder="+7 (999) 000-00-00 или @username" />
               </div>
 
               <div class="b2b-actions-cluster" style="margin-top:6px;">

@@ -12486,3 +12486,324 @@ textarea.input-error {
   }
 }
 
+/* ==========================================================================
+   B2B CORPORATE LANDING PAGE STYLES (geeknook.ru/b2b)
+   ========================================================================== */
+.b2b-landing-hero {
+  position: relative;
+  padding: 140px 0 80px 0;
+  background: radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.12) 0%, transparent 60%),
+              linear-gradient(180deg, #0a0d14 0%, #0f141f 100%);
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+}
+
+[data-theme="light"] .b2b-landing-hero {
+  background: radial-gradient(circle at 50% 20%, rgba(37, 99, 235, 0.08) 0%, transparent 60%),
+              linear-gradient(180deg, #f8fafc 0%, #edf2f7 100%);
+}
+
+.b2b-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
+.b2b-breadcrumbs a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.b2b-breadcrumbs a:hover {
+  color: var(--primary);
+}
+
+.b2b-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(37, 99, 235, 0.12);
+  border: 1px solid rgba(37, 99, 235, 0.3);
+  border-radius: var(--radius-full);
+  color: var(--primary-light, #60a5fa);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 20px;
+}
+
+.b2b-hero-title {
+  font-size: clamp(2rem, 4.5vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--text-main);
+  max-width: 900px;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+
+.b2b-hero-subtitle {
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 780px;
+  margin-bottom: 36px;
+}
+
+.b2b-hero-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-bottom: 48px;
+}
+
+.b2b-hero-kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding-top: 32px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 840px) {
+  .b2b-hero-kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .b2b-hero-kpi-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+.b2b-kpi-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  transition: transform var(--transition-fast);
+}
+
+[data-theme="light"] .b2b-kpi-item {
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.b2b-kpi-value {
+  font-family: var(--font-mono, monospace);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary, #2b70f0);
+  margin-bottom: 4px;
+}
+
+.b2b-kpi-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.b2b-kpi-sub {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+/* Test Drive Feature Section */
+.b2b-test-drive-section {
+  padding: 80px 0;
+  background: var(--surface-bg, #0b0e14);
+}
+
+[data-theme="light"] .b2b-test-drive-section {
+  background: #ffffff;
+}
+
+.b2b-test-drive-box {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.1) 0%, rgba(217, 119, 6, 0.06) 100%),
+              var(--surface-card, #141923);
+  border: 2px solid rgba(37, 99, 235, 0.35);
+  border-radius: var(--radius-lg, 16px);
+  padding: clamp(24px, 4vw, 44px);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="light"] .b2b-test-drive-box {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(217, 119, 6, 0.04) 100%),
+              #ffffff;
+  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+}
+
+.b2b-test-drive-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #d97706;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  margin-bottom: 16px;
+}
+
+.b2b-steps-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin: 36px 0 28px 0;
+}
+
+@media (max-width: 900px) {
+  .b2b-steps-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .b2b-steps-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.b2b-step-item {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  position: relative;
+}
+
+[data-theme="light"] .b2b-step-item {
+  background: #f8fafc;
+}
+
+.b2b-step-num {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--primary, #2b70f0);
+  color: #ffffff;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.875rem;
+  margin-bottom: 12px;
+}
+
+.b2b-step-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 8px;
+}
+
+.b2b-step-desc {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* RTO Ergonomics Grid */
+.b2b-rto-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 40px;
+}
+
+@media (max-width: 860px) {
+  .b2b-rto-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.b2b-rto-card {
+  background: var(--surface-card, #141923);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md, 12px);
+  padding: 28px;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+[data-theme="light"] .b2b-rto-card {
+  background: #ffffff;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.04);
+}
+
+.b2b-rto-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-4px);
+}
+
+.b2b-rto-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--primary, #2b70f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.b2b-rto-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 10px;
+}
+
+.b2b-rto-desc {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+/* CAD & Architect Section */
+.b2b-cad-banner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, rgba(37, 99, 235, 0.08) 100%),
+              var(--surface-card, #141923);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: var(--radius-lg, 16px);
+  padding: clamp(24px, 4vw, 40px);
+  margin: 40px 0;
+}
+
+[data-theme="light"] .b2b-cad-banner {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(37, 99, 235, 0.04) 100%),
+              #ffffff;
+}
+
+/* Landing Lead Form Cluster */
+.b2b-form-card {
+  background: var(--surface-card, #141923);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg, 16px);
+  padding: clamp(24px, 4vw, 40px);
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.25);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+[data-theme="light"] .b2b-form-card {
+  background: #ffffff;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.06);
+}
+
+

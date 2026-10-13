@@ -35,11 +35,13 @@ scratch/
 docs/internal/
 
 # Chat export tools & artifacts
-generate_chat_export.js
-GEEKNOOK_*
+/GEEKNOOK_*
+!docs/GeekNook_B2B_Presentation.pdf
 
 # API Credentials & Local Config
 api/cdek-config.php
+api/b2b-config.php
+api/leads.log
 *cdek_token_cache*.json
 .env
 .env.*
