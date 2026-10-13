@@ -12803,4 +12803,29 @@ textarea.input-error {
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.06);
 }
 
+/* ==========================================================================
+   TILDA B2B HEADLESS INTEGRATION: HIDE BACKGROUND FORM BLOCK
+   Visually hides Tilda native form block (#rec4749392701, t678, t674, etc.)
+   so the page remains 100% pure dark luxury design, while keeping the form
+   100% active in the DOM so it sends Telegram notifications seamlessly.
+   ========================================================================== */
+#rec4749392701,
+.r.t-rec[data-record-type="678"],
+.r.t-rec[data-record-type="674"],
+.r.t-rec[data-record-type="301"],
+.t-records > .r.t-rec:not(:has(#geeknook-mount-point)):not(.t706) {
+  position: absolute !important;
+  left: -9999px !important;
+  top: -9999px !important;
+  width: 1px !important;
+  height: 1px !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  z-index: -9999 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
 

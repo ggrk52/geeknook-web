@@ -7782,35 +7782,93 @@
       console.warn('API lead dispatch error, attempting direct Telegram dispatch fallback:', err);
     }
 
-    // 1. Tilda Native Cloud Processor (European server delivery, immune to RKN blocks)
+    // 1. Tilda Native Form Bridge (Triggers Tilda's internal processor & Telegram notification)
     try {
-      const typeLabels = {
-        test_drive: '🚗 Заказ бесплатного офисного тест-драйва (14 дней)',
-        kp_calculation: '📄 Запрос официального коммерческого предложения (КП)',
-        cad_library: '📐 Запрос 3D CAD-библиотеки для архитектора',
-        general: '💼 Консультация по нестандартному сетапу'
-      };
-      const tildaParams = new URLSearchParams();
-      tildaParams.append('formspec', 'a24fc1076223e950c36c528810075109');
-      tildaParams.append('formservices[]', '7bce39650a4791b61ef10c20fc3a9555');
-      tildaParams.append('formservices[]', '5d572d18170fc7163b4768baf37a42e6');
-      tildaParams.append('formservices[]', 'ed5c454181069fb9139663f95f08d02a');
-      tildaParams.append('tildaspec-formname', 'B2B Lead (Focus Station)');
-      tildaParams.append('Name', payload.contact_name || 'Не указано');
-      tildaParams.append('Company', payload.company || 'Не указано');
-      tildaParams.append('Email', payload.email || '');
-      tildaParams.append('Phone', payload.phone || '');
-      tildaParams.append('Comment', `[${typeLabels[payload.request_type] || payload.request_type}] Мест: ${payload.workplaces}. Пакет: ${payload.package_tier}.${payload.inn ? ' ИНН: ' + payload.inn + '.' : ''} ${payload.comment || ''}`);
+      const tildaForms = document.querySelectorAll('form.t-form, .t-form form, form[name^="form"]');
+      let tildaForm = null;
+      const mount = document.getElementById('geeknook-mount-point');
+      for (let i = 0; i < tildaForms.length; i++) {
+        if (!mount || !mount.contains(tildaForms[i])) {
+          tildaForm = tildaForms[i];
+          break;
+        }
+      }
 
-      fetch('https://forms.tildacdn.com/procces/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
-        body: tildaParams.toString(),
-        mode: 'no-cors'
-      }).catch(function(e) { console.warn('Tilda fetch:', e); });
-      console.log('[GeekNook B2B] Dispatched lead via Tilda cloud processor');
-    } catch (tildaErr) {
-      console.warn('Tilda processor error:', tildaErr);
+      if (tildaForm) {
+        let cleanName = (payload.contact_name || payload.company || 'Представитель').replace(/[^a-zA-Zа-яА-ЯёЁ\s\-]/g, '').trim();
+        if (!cleanName || cleanName.length < 2) cleanName = 'Представитель компании';
+        let cleanEmail = (payload.email && payload.email.includes('@')) ? payload.email : 'b2b-lead@geeknook.ru';
+        let cleanPhone = payload.phone || '+7 (999) 000-00-00';
+
+        const typeLabels = {
+          test_drive: '🚗 Заказ бесплатного тест-драйва (14 дней)',
+          kp_calculation: '📄 Расчет официального счета / КП',
+          cad_library: '📐 Запрос 3D CAD-библиотеки для архитектора',
+          general: '💼 Консультация по нестандартному сетапу'
+        };
+
+        const details = [
+          `[B2B Заявка: ${typeLabels[payload.request_type] || payload.request_type}]`,
+          payload.company ? `Компания: ${payload.company}` : '',
+          payload.inn ? `ИНН: ${payload.inn}` : '',
+          payload.contact_name ? `Контакт: ${payload.contact_name}` : '',
+          payload.email ? `Email: ${payload.email}` : '',
+          payload.phone ? `Телефон: ${payload.phone}` : '',
+          `Рабочих мест: ${payload.workplaces}`,
+          payload.package_tier ? `Пакет: ${payload.package_tier}` : '',
+          payload.comment ? `Пожелания: ${payload.comment}` : ''
+        ].filter(Boolean).join('\n');
+
+        const inpEmail = tildaForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
+        const inpName = tildaForm.querySelector('input[name="Name"], input[name="name"]');
+        const inpCompany = tildaForm.querySelector('input[name="Company"], input[name="company"]');
+        const inpPhone = tildaForm.querySelector('input[type="tel"], input[name="Phone"], input[name="phone"]');
+        const inpText = tildaForm.querySelector('textarea, input[name="Comments"], input[name="comments"], input[name="Comment"], input[name="comment"]');
+
+        if (inpName) {
+          inpName.value = cleanName;
+          try { inpName.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpName.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+        if (inpEmail) {
+          inpEmail.value = cleanEmail;
+          try { inpEmail.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+        if (inpPhone) {
+          inpPhone.value = cleanPhone;
+          try { inpPhone.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpPhone.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+        if (inpCompany && payload.company) {
+          inpCompany.value = payload.company;
+          try { inpCompany.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpCompany.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+        if (inpText) {
+          inpText.value = details;
+          try { inpText.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpText.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+
+        tildaForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper').forEach(el => { el.style.display = 'none'; });
+        tildaForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
+
+        const submitBtn = tildaForm.querySelector('button[type="submit"], .t-submit');
+        if (submitBtn) {
+          try { submitBtn.click(); } catch(err) { console.warn('Tilda submit error:', err); }
+        }
+        if (window.jQuery) {
+          try { window.jQuery(tildaForm).trigger('submit'); } catch(_) {}
+        }
+        try {
+          const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
+          tildaForm.dispatchEvent(submitEvt);
+        } catch(_) {}
+        console.log('[GeekNook B2B] Bridged lead into native Tilda form');
+      }
+    } catch (tildaBridgeErr) {
+      console.warn('Tilda form bridge error:', tildaBridgeErr);
     }
 
     // 2. Direct Telegram Bot Dispatch (where network allows)

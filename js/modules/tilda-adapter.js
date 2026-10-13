@@ -780,28 +780,37 @@
       }
     };
 
-    // --- 8. ENHANCEMENT: handleB2bSubmit (Execute native handler + forward to Tilda CRM if present) ---
-    window.geekNookApp.handleB2bSubmit = function(e) {
-      // 1. Always execute native lead dispatch (validates fields, sends to Telegram & logs)
-      if (typeof nativeHandleB2bSubmit === 'function') {
-        nativeHandleB2bSubmit(e);
-      }
+    // --- 8. ENHANCEMENT: handleB2bSubmit (Bridge directly to native Tilda form for Telegram notifications) ---
+    function hideBackgroundTildaBlocks() {
+      const mount = document.getElementById('geeknook-mount-point');
+      if (!mount) return;
+      document.querySelectorAll('.r.t-rec').forEach(rec => {
+        if (!rec.contains(mount) && !rec.classList.contains('t706')) {
+          rec.style.cssText = 'position:absolute !important; left:-9999px !important; top:-9999px !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; overflow:hidden !important; z-index:-9999 !important; margin:0 !important; padding:0 !important;';
+        }
+      });
+    }
+    hideBackgroundTildaBlocks();
+    setInterval(hideBackgroundTildaBlocks, 300);
 
-      // 2. Also forward to native Tilda Form if present on page (for Tilda CRM / Lead pipeline)
-      const company = document.getElementById('b2bLandingCompany')?.value || document.getElementById('b2bCompany')?.value || '';
-      const inn = document.getElementById('b2bLandingInn')?.value || document.getElementById('b2bInn')?.value || '';
-      const contact = document.getElementById('b2bLandingContact')?.value || document.getElementById('b2bContactName')?.value || '';
-      const email = document.getElementById('b2bLandingEmail')?.value || document.getElementById('b2bEmail')?.value || '';
-      const phone = document.getElementById('b2bLandingPhone')?.value || document.getElementById('b2bPhone')?.value || '';
-      const workplaces = document.getElementById('b2bLandingPlaces')?.value || document.getElementById('b2bWorkplaces')?.value || '15';
+    window.geekNookApp.handleB2bSubmit = async function(e) {
+      if (e && e.preventDefault) e.preventDefault();
+
+      // 1. CAPTURE ALL VALUES FIRST BEFORE ANY FORM RESETS HAPPEN!
+      const company = (document.getElementById('b2bLandingCompany')?.value || document.getElementById('b2bCompany')?.value || '').trim();
+      const inn = (document.getElementById('b2bLandingInn')?.value || document.getElementById('b2bInn')?.value || '').trim();
+      const contact = (document.getElementById('b2bLandingContact')?.value || document.getElementById('b2bContactName')?.value || '').trim();
+      const email = (document.getElementById('b2bLandingEmail')?.value || document.getElementById('b2bEmail')?.value || '').trim();
+      const phone = (document.getElementById('b2bLandingPhone')?.value || document.getElementById('b2bPhone')?.value || '').trim();
+      const workplaces = (document.getElementById('b2bLandingPlaces')?.value || document.getElementById('b2bWorkplaces')?.value || '15').trim();
       const requestType = document.getElementById('b2bRequestType')?.value || 'test_drive';
-      const comment = document.getElementById('b2bComment')?.value || '';
+      const comment = (document.getElementById('b2bComment')?.value || '').trim();
 
-      // Find native Tilda form outside our custom mount point
+      // 2. DISPATCH TO BACKGROUND TILDA FORM (Sends to Telegram Bot)
       const tildaForms = document.querySelectorAll('form.t-form, .t-form form, form[name^="form"]');
       let tildaForm = null;
+      const mount = document.getElementById('geeknook-mount-point');
       for (let i = 0; i < tildaForms.length; i++) {
-        const mount = document.getElementById('geeknook-mount-point');
         if (!mount || !mount.contains(tildaForms[i])) {
           tildaForm = tildaForms[i];
           break;
@@ -809,53 +818,60 @@
       }
 
       if (tildaForm) {
+        // Tilda rule="name" strictly validates letters and spaces (no digits, colons, or brackets)
+        let cleanName = (contact || company || 'Представитель').replace(/[^a-zA-Zа-яА-ЯёЁ\s\-]/g, '').trim();
+        if (!cleanName || cleanName.length < 2) {
+          cleanName = 'Представитель компании';
+        }
+
+        let cleanEmail = (email && email.includes('@')) ? email : 'b2b-lead@geeknook.ru';
+        let cleanPhone = phone || '+7 (999) 000-00-00';
+
+        const typeNames = {
+          test_drive: '🚗 Заказ бесплатного тест-драйва (14 дней)',
+          kp_calculation: '📄 Расчет официального счета / КП',
+          cad_library: '📐 Запрос 3D CAD-библиотеки для архитектора',
+          general: '💼 Консультация по нестандартному сетапу'
+        };
+
+        const textContent = [
+          `[B2B Заявка: ${typeNames[requestType] || requestType}]`,
+          company ? `Компания: ${company}` : '',
+          inn ? `ИНН: ${inn}` : '',
+          contact ? `Контакт: ${contact}` : '',
+          email ? `Email: ${email}` : '',
+          phone ? `Телефон: ${phone}` : '',
+          `Рабочих мест: ${workplaces}`,
+          comment ? `Пожелания: ${comment}` : ''
+        ].filter(Boolean).join('\n');
+
         const inpEmail = tildaForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
         const inpName = tildaForm.querySelector('input[name="Name"], input[name="name"]');
-        const inpCompany = tildaForm.querySelector('input[name="Company"], input[name="company"], input[name*="компан" i], input[name*="орган" i]');
+        const inpCompany = tildaForm.querySelector('input[name="Company"], input[name="company"]');
         const inpPhone = tildaForm.querySelector('input[type="tel"], input[name="Phone"], input[name="phone"]');
-        const inpText = tildaForm.querySelector('textarea, input[name="Comment"], input[name="comment"], input[name="Text"], input[name="text"]');
-
-        const companyTag = company ? ` [${company}${inn ? ', ИНН: ' + inn : ''}]` : '';
-        const fullContactName = contact ? `${contact}${companyTag}` : (company || 'B2B Клиент');
+        const inpText = tildaForm.querySelector('textarea, input[name="Comments"], input[name="comments"], input[name="Comment"], input[name="comment"], input[name="Text"], input[name="text"]');
 
         if (inpName) {
-          inpName.value = inpCompany ? (contact || company) : fullContactName;
+          inpName.value = cleanName;
           try { inpName.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
           try { inpName.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+        if (inpEmail) {
+          inpEmail.value = cleanEmail;
+          try { inpEmail.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+        if (inpPhone) {
+          inpPhone.value = cleanPhone;
+          try { inpPhone.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpPhone.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
         }
         if (inpCompany && company) {
           inpCompany.value = company;
           try { inpCompany.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
           try { inpCompany.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
         }
-        if (inpEmail && email) {
-          inpEmail.value = email;
-          try { inpEmail.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-        if (inpPhone && phone) {
-          inpPhone.value = phone;
-          try { inpPhone.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpPhone.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
         if (inpText) {
-          const typeNames = {
-            test_drive: 'Заказ бесплатного тест-драйва (14 дней)',
-            kp_calculation: 'Расчет официального счета / КП',
-            cad_library: 'Запрос 3D CAD-библиотеки для архитектора',
-            general: 'Консультация по сетапам'
-          };
-          const textContent = [
-            `[B2B Заявка: ${typeNames[requestType] || requestType}]`,
-            company ? `Компания: ${company}` : '',
-            inn ? `ИНН: ${inn}` : '',
-            contact ? `Контакт: ${contact}` : '',
-            phone ? `Телефон: ${phone}` : '',
-            email ? `Email: ${email}` : '',
-            `Рабочих мест: ${workplaces}`,
-            comment ? `Пожелания: ${comment}` : ''
-          ].filter(Boolean).join('\n');
-
           inpText.value = textContent;
           try { inpText.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
           try { inpText.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
@@ -865,19 +881,30 @@
         tildaForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper').forEach(el => { el.style.display = 'none'; });
         tildaForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
 
+        // Trigger Tilda submit
         const submitBtn = tildaForm.querySelector('button[type="submit"], .t-submit');
         if (submitBtn) {
           try {
             submitBtn.click();
-            console.log('[GeekNook B2B] Triggered native Tilda form submission for Telegram!');
+            console.log('[GeekNook B2B] Triggered native Tilda submitBtn.click() successfully!');
           } catch(err) {
-            console.warn('[GeekNook B2B] Native Tilda form submit click error:', err);
+            console.warn('[GeekNook B2B] Native Tilda submitBtn error:', err);
           }
+        }
+        if (window.jQuery) {
+          try {
+            window.jQuery(tildaForm).trigger('submit');
+          } catch(_) {}
         }
         try {
           const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
           tildaForm.dispatchEvent(submitEvt);
         } catch(_) {}
+      }
+
+      // 3. EXECUTE NATIVE LEAD HANDLER (feedback, sounds, analytics, storage)
+      if (typeof nativeHandleB2bSubmit === 'function') {
+        nativeHandleB2bSubmit(e);
       }
     };
 

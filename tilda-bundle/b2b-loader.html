@@ -80,8 +80,12 @@
     z-index: 999999 !important;
   }
 
-  /* Visually hide native background Tilda sync form (BF301/T674) while keeping it 100% active in DOM for Telegram */
-  .r.t-rec:not(:has(#geeknook-mount-point)):not(.t706) {
+  /* Visually hide native background Tilda sync form (BF301/T674/T678) while keeping it 100% active in DOM for Telegram */
+  #rec4749392701,
+  .r.t-rec[data-record-type="678"],
+  .r.t-rec[data-record-type="674"],
+  .r.t-rec[data-record-type="301"],
+  .t-records > .r.t-rec:not(:has(#geeknook-mount-point)):not(.t706) {
     position: absolute !important;
     left: -9999px !important;
     top: -9999px !important;
@@ -91,6 +95,9 @@
     pointer-events: none !important;
     overflow: hidden !important;
     clip: rect(0, 0, 0, 0) !important;
+    z-index: -9999 !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 </style>
 
