@@ -4832,22 +4832,16 @@
     const video = document.querySelector('.hero-video-bg');
     if (!video) return;
 
-    // Zero-lag mobile LCP & data-saver protection
-    const isMobileViewport = window.innerWidth <= 768;
-    const isDataSaver = Boolean(navigator.connection && (navigator.connection.saveData || navigator.connection.effectiveType === '2g' || navigator.connection.effectiveType === '3g'));
-    const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (isMobileViewport || isDataSaver || prefersReducedMotion) {
-      // Keep crisp high-res poster; do not download or decode 20MB WebM stream on mobile
-      return;
-    }
 
     // 1. Mandatory attributes for iOS / Safari / Chrome autoplay policies
     video.muted = true;
     video.defaultMuted = true;
+    video.autoplay = true;
+    video.loop = true;
     video.setAttribute('muted', '');
     video.setAttribute('playsinline', '');
     video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('autoplay', '');
 
     // 2. Resolve CDN URL if running in Tilda / headless environment
     const source = video.querySelector('source');

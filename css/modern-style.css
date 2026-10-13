@@ -7836,9 +7836,6 @@ textarea:focus-visible {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
-  .hero-video-bg {
-    display: none !important;
-  }
   .hero-antigravity-canvas,
   .cable-interactive-canvas {
     opacity: 0.3 !important;

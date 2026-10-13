@@ -217,11 +217,19 @@
       if (heroVid) {
         heroVid.muted = true;
         heroVid.defaultMuted = true;
+        heroVid.setAttribute('muted', '');
+        heroVid.setAttribute('playsinline', '');
+        heroVid.setAttribute('webkit-playsinline', 'true');
+        heroVid.setAttribute('autoplay', '');
+        heroVid.loop = true;
+        const videoUrl = resolveAssetUrl('images/vide3931-3032-4530-a435-623531616661_______-converted.webm');
         const vSrc = heroVid.querySelector('source');
-        if (vSrc && !heroVid.src) {
-          heroVid.src = vSrc.src;
-        }
-        try { heroVid.load(); } catch (e) {}
+        if (vSrc) vSrc.src = videoUrl;
+        heroVid.src = videoUrl;
+        try {
+          heroVid.load();
+          heroVid.play().catch(() => {});
+        } catch (e) {}
       }
 
       // Setup real-time MutationObserver to fix any dynamically injected images
