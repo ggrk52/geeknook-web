@@ -1,0 +1,52 @@
+<!-- ==========================================================================
+     GEEK NOOK — Dedicated B2B Presentation Deck Loader for Tilda (Block T123)
+     Allows hosting https://geeknook.ru/b2b-presentation or https://geeknook.ru/presentation
+     Fetches and mounts the official 16:9 interactive Pitch Deck from GitHub CDN
+     ========================================================================== -->
+
+<div id="geeknook-presentation-root">
+  <div id="gn-pres-loading" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#090b0e;color:#2b70f0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999999;font-family:sans-serif;">
+    <div style="width:40px;height:40px;border:3px solid #1e2430;border-top-color:#2b70f0;border-radius:50%;animation:gnSpin 0.8s linear infinite;"></div>
+    <div style="margin-top:16px;font-size:13px;letter-spacing:0.1em;color:#94a3b8;">GEEK NOOK // B2B ПРЕЗЕНТАЦИЯ 16:9...</div>
+  </div>
+</div>
+
+<style>
+  @keyframes gnSpin { to { transform: rotate(360deg); } }
+  html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #090b0e !important;
+    overflow: hidden !important;
+  }
+  .r:has(#geeknook-presentation-root),
+  .t123:has(#geeknook-presentation-root),
+  .t-container_100:has(#geeknook-presentation-root),
+  .t-col_100:has(#geeknook-presentation-root) {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+</style>
+
+<script>
+(async function() {
+  'use strict';
+  const CDN_BASE = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
+  try {
+    const res = await fetch(CDN_BASE + 'b2b-presentation.html?v=' + Date.now());
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    let html = await res.text();
+    if (!html.includes('<base ')) {
+      html = html.replace('<head>', '<head><base href="' + CDN_BASE + '">');
+    }
+    document.open();
+    document.write(html);
+    document.close();
+  } catch(err) {
+    console.warn('[GeekNook Presentation] Direct rewrite failed, redirecting to CDN:', err);
+    window.location.replace(CDN_BASE + 'b2b-presentation.html');
+  }
+})();
+</script>

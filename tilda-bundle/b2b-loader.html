@@ -173,6 +173,7 @@
       // Pre-rewrite relative assets to CDN
       htmlText = htmlText.replace(/(src|poster|data-src)=["'](images\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${BASE_URL}${path}"`);
       htmlText = htmlText.replace(/href=["']docs\/([^"']+)["']/gi, (m, file) => `href="${BASE_URL}docs/${file}"`);
+      htmlText = htmlText.replace(/href=["']b2b-presentation\.html["']/gi, () => `href="${BASE_URL}b2b-presentation.html"`);
 
       const parser = new DOMParser();
       const doc = parser.parseFromString(htmlText, 'text/html');
@@ -199,6 +200,10 @@
           a.setAttribute('href', '/' + href.substring(10));
         } else if (href === 'b2b.html' || href === './b2b.html') {
           a.setAttribute('href', '/b2b');
+        } else if (href === 'b2b-presentation.html' || href === './b2b-presentation.html') {
+          a.setAttribute('href', resolveAssetUrl('b2b-presentation.html'));
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener');
         } else if (href && (href.startsWith('docs/') || href.startsWith('./docs/'))) {
           a.setAttribute('href', resolveAssetUrl(href));
           a.setAttribute('target', '_blank');
