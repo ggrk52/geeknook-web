@@ -79,6 +79,19 @@
   .t706__carticon {
     z-index: 999999 !important;
   }
+
+  /* Visually hide native background Tilda sync form (BF301/T674) while keeping it 100% active in DOM for Telegram */
+  .r.t-rec:not(:has(#geeknook-mount-point)):not(.t706) {
+    position: absolute !important;
+    left: -9999px !important;
+    top: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+  }
 </style>
 
 <script>
@@ -252,7 +265,20 @@
         document.querySelectorAll('img').forEach(fixAnyImage);
       }, 100);
 
-      // 6. Smoothly remove Preloader
+      // 6. Visually hide any background Tilda blocks (BF301 / T674)
+      const hideBackgroundBlocks = () => {
+        const mount = document.getElementById('geeknook-mount-point');
+        if (!mount) return;
+        document.querySelectorAll('.r.t-rec').forEach(rec => {
+          if (!rec.contains(mount) && !rec.classList.contains('t706')) {
+            rec.style.cssText = 'position:absolute !important; left:-9999px !important; top:-9999px !important; width:1px !important; height:1px !important; opacity:0 !important; pointer-events:none !important; overflow:hidden !important;';
+          }
+        });
+      };
+      hideBackgroundBlocks();
+      setInterval(hideBackgroundBlocks, 1000);
+
+      // 7. Smoothly remove Preloader
       const loader = document.getElementById('gn-b2b-loader');
       if (loader) {
         loader.style.opacity = '0';
