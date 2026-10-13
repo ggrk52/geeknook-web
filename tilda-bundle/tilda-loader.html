@@ -92,8 +92,17 @@
   const BASE_URL = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
   window.GEEKNOOK_CDN_URL = BASE_URL;
 
-  // Cache-busting timestamp to prevent browser & Fastly CDN from serving stale scripts
-  const BUILD_TS = Date.now();
+  // Performance: fixed version enables instant browser caching across visits
+  const BUILD_VER = '2.9.2';
+
+  // DNS & TLS Preconnect to GitHub Pages CDN
+  try {
+    const preconnect = document.createElement('link');
+    preconnect.rel = 'preconnect';
+    preconnect.href = 'https://ggrk52.github.io';
+    preconnect.crossOrigin = 'anonymous';
+    document.head.appendChild(preconnect);
+  } catch(_) {}
 
   // Helper: fix any image element or URL string to point to GitHub Pages CDN
   function resolveAssetUrl(url) {
@@ -159,20 +168,40 @@
 
   async function mountGeekNook() {
     try {
-      // 1. Load Fonts & Main Stylesheet
-      await loadAsset('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap');
-      await loadAsset('css', BASE_URL + 'css/modern-style.css?v=' + BUILD_TS);
+      // Preload all critical JS scripts in parallel over HTTP/2 right away
+      const jsAssets = [
+        BASE_URL + 'js/products-data.js?v=' + BUILD_VER,
+        BASE_URL + 'js/modules/analytics.js?v=' + BUILD_VER,
+        BASE_URL + 'js/modules/cdek-picker.js?v=' + BUILD_VER,
+        BASE_URL + 'js/modern-app.js?v=' + BUILD_VER,
+        BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_VER
+      ];
+      jsAssets.forEach(src => {
+        try {
+          const pre = document.createElement('link');
+          pre.rel = 'preload';
+          pre.as = 'script';
+          pre.href = src;
+          document.head.appendChild(pre);
+        } catch(_) {}
+      });
 
-      // 2. Fetch HTML template and rewrite static relative paths to CDN
-      const htmlRes = await fetch(BASE_URL + 'index.html?v=' + BUILD_TS);
-      let htmlText = await htmlRes.text();
+      // 1. Fetch Fonts, Main Stylesheet & HTML template concurrently
+      const [, , htmlText] = await Promise.all([
+        loadAsset('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap'),
+        loadAsset('css', BASE_URL + 'css/modern-style.css?v=' + BUILD_VER),
+        fetch(BASE_URL + 'index.html?v=' + BUILD_VER).then(r => {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.text();
+        })
+      ]);
 
       // Pre-rewrite relative images in HTML before DOM parsing
-      htmlText = htmlText.replace(/(src|poster|data-src)=["'](images\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${BASE_URL}${path}"`);
-      htmlText = htmlText.replace(/openLightbox\(['"](images\/[^'"]+)['"]/gi, (m, path) => `openLightbox('${BASE_URL}${path}'`);
+      let cleanHtml = htmlText.replace(/(src|poster|data-src)=["'](images\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${BASE_URL}${path}"`);
+      cleanHtml = cleanHtml.replace(/openLightbox\(['"](images\/[^'"]+)['"]/gi, (m, path) => `openLightbox('${BASE_URL}${path}'`);
 
       const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlText, 'text/html');
+      const doc = parser.parseFromString(cleanHtml, 'text/html');
 
       // Double-check any remaining elements in parsed tree
       doc.querySelectorAll('img, video, source').forEach(el => {
@@ -265,12 +294,10 @@
       }, 250);
       setTimeout(() => clearInterval(sweepInterval), 6000);
 
-      // 3. Sequential Scripts Loading with Cache-Busting (Three.js and CDEK catalog lazy-load on demand)
-      await loadAsset('js', BASE_URL + 'js/products-data.js?v=' + BUILD_TS);
-      await loadAsset('js', BASE_URL + 'js/modules/analytics.js?v=' + BUILD_TS);
-      await loadAsset('js', BASE_URL + 'js/modules/cdek-picker.js?v=' + BUILD_TS);
-      await loadAsset('js', BASE_URL + 'js/modern-app.js?v=' + BUILD_TS);
-      await loadAsset('js', BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_TS);
+      // 2. Load Application Scripts in dependency order (already prefetched in parallel!)
+      for (const src of jsAssets) {
+        await loadAsset('js', src);
+      }
 
       // Force initial application render in case DOMContentLoaded already fired
       if (window.geekNookApp && typeof window.geekNookApp.init === 'function') {

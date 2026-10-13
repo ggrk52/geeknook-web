@@ -111,8 +111,17 @@
   const BASE_URL = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
   window.GEEKNOOK_CDN_URL = BASE_URL;
 
-  // Cache-busting timestamp
-  const BUILD_TS = Date.now();
+  // Performance: fixed version enables instant browser caching across visits
+  const BUILD_VER = '2.9.2';
+
+  // DNS & TLS Preconnect to GitHub Pages CDN
+  try {
+    const preconnect = document.createElement('link');
+    preconnect.rel = 'preconnect';
+    preconnect.href = 'https://ggrk52.github.io';
+    preconnect.crossOrigin = 'anonymous';
+    document.head.appendChild(preconnect);
+  } catch(_) {}
 
   function resolveAssetUrl(url) {
     if (!url || typeof url !== 'string') return url;
@@ -181,22 +190,40 @@
         document.documentElement.setAttribute('data-theme', 'dark');
       }
 
-      // 1. Load Fonts & Main Stylesheet
-      await loadAsset('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap');
-      await loadAsset('css', BASE_URL + 'css/modern-style.css?v=' + BUILD_TS);
+      // Preload all JS modules in parallel over HTTP/2 right away
+      const jsAssets = [
+        BASE_URL + 'js/products-data.js?v=' + BUILD_VER,
+        BASE_URL + 'js/modules/analytics.js?v=' + BUILD_VER,
+        BASE_URL + 'js/modern-app.js?v=' + BUILD_VER,
+        BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_VER
+      ];
+      jsAssets.forEach(src => {
+        try {
+          const pre = document.createElement('link');
+          pre.rel = 'preload';
+          pre.as = 'script';
+          pre.href = src;
+          document.head.appendChild(pre);
+        } catch(_) {}
+      });
 
-      // 2. Fetch B2B HTML template
-      const htmlRes = await fetch(BASE_URL + 'b2b.html?v=' + BUILD_TS);
-      if (!htmlRes.ok) throw new Error('HTTP ' + htmlRes.status);
-      let htmlText = await htmlRes.text();
+      // 1. Fetch Fonts, Main CSS & HTML template concurrently
+      const [, , htmlText] = await Promise.all([
+        loadAsset('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap'),
+        loadAsset('css', BASE_URL + 'css/modern-style.css?v=' + BUILD_VER),
+        fetch(BASE_URL + 'b2b.html?v=' + BUILD_VER).then(r => {
+          if (!r.ok) throw new Error('HTTP ' + r.status);
+          return r.text();
+        })
+      ]);
 
       // Pre-rewrite relative assets to CDN
-      htmlText = htmlText.replace(/(src|poster|data-src)=["'](images\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${BASE_URL}${path}"`);
-      htmlText = htmlText.replace(/href=["']docs\/([^"']+)["']/gi, (m, file) => `href="${BASE_URL}docs/${file}"`);
-      htmlText = htmlText.replace(/href=["']b2b-presentation\.html["']/gi, () => `href="${BASE_URL}b2b-presentation.html"`);
+      let cleanHtml = htmlText.replace(/(src|poster|data-src)=["'](images\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${BASE_URL}${path}"`);
+      cleanHtml = cleanHtml.replace(/href=["']docs\/([^"']+)["']/gi, (m, file) => `href="${BASE_URL}docs/${file}"`);
+      cleanHtml = cleanHtml.replace(/href=["']b2b-presentation\.html["']/gi, () => `href="${BASE_URL}b2b-presentation.html"`);
 
       const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlText, 'text/html');
+      const doc = parser.parseFromString(cleanHtml, 'text/html');
 
       // Update page metadata on Tilda
       if (doc.title) document.title = doc.title;
@@ -256,13 +283,12 @@
       });
       observer.observe(document.body, { childList: true, subtree: true });
 
-      // 3. Load Application Scripts
-      await loadAsset('js', BASE_URL + 'js/products-data.js?v=' + BUILD_TS);
-      await loadAsset('js', BASE_URL + 'js/modules/analytics.js?v=' + BUILD_TS);
-      await loadAsset('js', BASE_URL + 'js/modern-app.js?v=' + BUILD_TS);
-      await loadAsset('js', BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_TS);
+      // 2. Load Application Scripts in dependency order (already prefetched in parallel!)
+      for (const src of jsAssets) {
+        await loadAsset('js', src);
+      }
 
-      // 4. Initialize B2B Application State
+      // 3. Initialize B2B Application State
       if (window.geekNookApp && typeof window.geekNookApp.init === 'function') {
         window.geekNookApp.init();
       }
