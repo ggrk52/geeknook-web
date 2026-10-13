@@ -5909,9 +5909,23 @@
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
+      const parentEl = canvas.parentElement || document.getElementById('cableCanvasBox');
+      const parentW = parentEl ? parentEl.clientWidth : 0;
+      const parentH = parentEl ? parentEl.clientHeight : 0;
+
       if (rect.width > 0 && rect.height > 0) {
         width = rect.width;
         height = rect.height;
+      } else if (parentW > 0) {
+        width = parentW;
+        height = parentH > 0 ? parentH : Math.round(Math.min(580, Math.max(340, width * 0.48)));
+      } else {
+        const container = document.querySelector('#labTabCables .cable-physics-card') || document.querySelector('.container');
+        const contW = container ? container.clientWidth : 0;
+        if (contW > 0) {
+          width = contW;
+          height = Math.round(Math.min(580, Math.max(340, width * 0.48)));
+        }
       }
       dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
@@ -6989,7 +7003,7 @@
         ctx.fillText(hc.spec, hp.x, hp.y - 12);
       }
 
-      if (!isCableVisible) {
+      if (!isCableVisible && activeLabTab !== 'cables') {
         cableState.animFrame = null;
         return;
       }
@@ -7000,12 +7014,21 @@
     if ('IntersectionObserver' in window) {
       const cableObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          isCableVisible = entry.isIntersecting && entry.intersectionRatio > 0;
-          if (isCableVisible) {
-            if (!cableState.animFrame) {
-              cableState.animFrame = requestAnimationFrame(stepPhysics);
+          const inView = entry.isIntersecting && entry.intersectionRatio > 0;
+          if (activeLabTab === 'cables') {
+            isCableVisible = inView;
+            if (inView) {
+              if (!cableState.animFrame) {
+                cableState.animFrame = requestAnimationFrame(stepPhysics);
+              }
+            } else {
+              if (cableState.animFrame) {
+                cancelAnimationFrame(cableState.animFrame);
+                cableState.animFrame = null;
+              }
             }
           } else {
+            isCableVisible = false;
             if (cableState.animFrame) {
               cancelAnimationFrame(cableState.animFrame);
               cableState.animFrame = null;
@@ -7016,7 +7039,30 @@
       cableObserver.observe(canvas.parentElement || canvas);
     }
 
-    cableState.animFrame = requestAnimationFrame(stepPhysics);
+    cableState.startAnimation = () => {
+      isCableVisible = true;
+      if (cableState.animFrame) {
+        cancelAnimationFrame(cableState.animFrame);
+        cableState.animFrame = null;
+      }
+      resize();
+      buildCables();
+      cableState.animFrame = requestAnimationFrame(stepPhysics);
+      updateCableMetrics();
+    };
+
+    cableState.stopAnimation = () => {
+      if (cableState.animFrame) {
+        cancelAnimationFrame(cableState.animFrame);
+        cableState.animFrame = null;
+      }
+    };
+
+    if (activeLabTab === 'cables') {
+      cableState.startAnimation();
+    } else {
+      cableState.animFrame = null;
+    }
     updateCableMetrics();
   };
 
@@ -7118,16 +7164,29 @@
     if (panelBlueprint) panelBlueprint.style.display = tabId === 'blueprint' ? 'block' : 'none';
 
     if (tabId === 'fea') {
-      renderFeaCanvas();
+      if (typeof cableState.stopAnimation === 'function') {
+        cableState.stopAnimation();
+      }
+      requestAnimationFrame(() => {
+        renderFeaCanvas();
+      });
     } else if (tabId === 'cables') {
       if (!cableState.isInitialized) {
         initCableSimulator();
       }
-      window.dispatchEvent(new Event('resize'));
-      if (!cableState.animFrame) {
-        cableState.animFrame = requestAnimationFrame(() => {
-          updateCableMetrics();
-        });
+      requestAnimationFrame(() => {
+        if (typeof cableState.startAnimation === 'function') {
+          cableState.startAnimation();
+        }
+      });
+      setTimeout(() => {
+        if (activeLabTab === 'cables' && typeof cableState.startAnimation === 'function' && !cableState.animFrame) {
+          cableState.startAnimation();
+        }
+      }, 60);
+    } else if (tabId === 'blueprint') {
+      if (typeof cableState.stopAnimation === 'function') {
+        cableState.stopAnimation();
       }
     }
   };
@@ -7929,6 +7988,7 @@
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 18h8"></path><path d="M3 22h18"></path><path d="M14 22a7 7 0 1 0-14 0"></path></svg>',
         action: () => {
           closeCommandPalette();
+          switchLabTab('blueprint');
           const el = document.getElementById('production');
           if (el) el.scrollIntoView({ behavior: 'smooth' });
           switchProductionTab('blueprint');
@@ -7943,6 +8003,7 @@
         icon: '⚙️',
         action: () => {
           closeCommandPalette();
+          switchLabTab('fea');
           const el = document.getElementById('production');
           if (el) el.scrollIntoView({ behavior: 'smooth' });
           switchProductionTab('stress');
@@ -7957,6 +8018,7 @@
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4a2 2 0 0 0-4 0v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4z"></path></svg>',
         action: () => {
           closeCommandPalette();
+          switchLabTab('cables');
           const el = document.getElementById('cableSimulatorCard');
           if (el) el.scrollIntoView({ behavior: 'smooth' });
         }
