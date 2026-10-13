@@ -7782,7 +7782,38 @@
       console.warn('API lead dispatch error, attempting direct Telegram dispatch fallback:', err);
     }
 
-    // Direct Telegram Dispatch Fallback (for static hosting, GitHub Pages, or Tilda)
+    // 1. Tilda Native Cloud Processor (European server delivery, immune to RKN blocks)
+    try {
+      const typeLabels = {
+        test_drive: '🚗 Заказ бесплатного офисного тест-драйва (14 дней)',
+        kp_calculation: '📄 Запрос официального коммерческого предложения (КП)',
+        cad_library: '📐 Запрос 3D CAD-библиотеки для архитектора',
+        general: '💼 Консультация по нестандартному сетапу'
+      };
+      const tildaParams = new URLSearchParams();
+      tildaParams.append('formspec', 'a24fc1076223e950c36c528810075109');
+      tildaParams.append('formservices[]', '7bce39650a4791b61ef10c20fc3a9555');
+      tildaParams.append('formservices[]', '5d572d18170fc7163b4768baf37a42e6');
+      tildaParams.append('formservices[]', 'ed5c454181069fb9139663f95f08d02a');
+      tildaParams.append('tildaspec-formname', 'B2B Lead (Focus Station)');
+      tildaParams.append('Name', payload.contact_name || 'Не указано');
+      tildaParams.append('Company', payload.company || 'Не указано');
+      tildaParams.append('Email', payload.email || '');
+      tildaParams.append('Phone', payload.phone || '');
+      tildaParams.append('Comment', `[${typeLabels[payload.request_type] || payload.request_type}] Мест: ${payload.workplaces}. Пакет: ${payload.package_tier}.${payload.inn ? ' ИНН: ' + payload.inn + '.' : ''} ${payload.comment || ''}`);
+
+      fetch('https://forms.tildacdn.com/procces/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' },
+        body: tildaParams.toString(),
+        mode: 'no-cors'
+      }).catch(function(e) { console.warn('Tilda fetch:', e); });
+      console.log('[GeekNook B2B] Dispatched lead via Tilda cloud processor');
+    } catch (tildaErr) {
+      console.warn('Tilda processor error:', tildaErr);
+    }
+
+    // 2. Direct Telegram Bot Dispatch (where network allows)
     try {
       const tgBotToken = '8925465504:AAHKTQUxaQdNePXOFcsnPgcBRpnnMXG44FU';
       const tgChatId = '841456475';
@@ -7808,7 +7839,7 @@
         '⏰ ' + new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' (МСК)'
       ].filter(Boolean).join('\n');
 
-      await fetch(`https://api.telegram.org/bot${tgBotToken}/sendMessage`, {
+      fetch(`https://api.telegram.org/bot${tgBotToken}/sendMessage`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -7816,6 +7847,8 @@
           text: text,
           parse_mode: 'Markdown'
         })
+      }).catch(function(err) {
+        console.warn('Direct TG fetch error:', err);
       });
     } catch (tgErr) {
       console.warn('Direct Telegram dispatch fallback error:', tgErr);
