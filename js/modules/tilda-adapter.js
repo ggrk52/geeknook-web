@@ -792,21 +792,43 @@
       const requestType = document.getElementById('b2bRequestType')?.value || 'test_drive';
       const comment = document.getElementById('b2bComment')?.value || '';
 
-      const tildaForm = document.querySelector('.t-form, form[name^="form"]');
+      // Find native Tilda form outside our custom mount point
+      const tildaForms = document.querySelectorAll('form.t-form, .t-form form, form[name^="form"]');
+      let tildaForm = null;
+      for (let i = 0; i < tildaForms.length; i++) {
+        const mount = document.getElementById('geeknook-mount-point');
+        if (!mount || !mount.contains(tildaForms[i])) {
+          tildaForm = tildaForms[i];
+          break;
+        }
+      }
+
       if (tildaForm) {
+        const contact = document.getElementById('b2bLandingContact')?.value || document.getElementById('b2bContactName')?.value || '';
         const inpEmail = tildaForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
-        const inpCompany = tildaForm.querySelector('input[name="Company"], input[name="company"], input[name="Name"]');
+        const inpName = tildaForm.querySelector('input[name="Name"], input[name="name"]');
+        const inpCompany = tildaForm.querySelector('input[name="Company"], input[name="company"]');
         const inpPhone = tildaForm.querySelector('input[type="tel"], input[name="Phone"], input[name="phone"]');
         const inpText = tildaForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
 
         if (inpEmail && email) inpEmail.value = email;
+        if (inpName && contact) inpName.value = contact;
         if (inpCompany && company) inpCompany.value = company;
+        if (!inpCompany && !inpName && company) {
+          const fallbackName = tildaForm.querySelector('input[name="Name"], input[name="name"]');
+          if (fallbackName) fallbackName.value = `${contact} (${company})`;
+        }
         if (inpPhone && phone) inpPhone.value = phone;
-        if (inpText) inpText.value = `[B2B ${requestType}] ${workplaces} мест. ${comment}`;
+        if (inpText) inpText.value = `[B2B ${requestType}] Компания: ${company}. Мест: ${workplaces}. ${comment}`;
 
         const submitBtn = tildaForm.querySelector('button[type="submit"], .t-submit');
         if (submitBtn) {
-          try { submitBtn.click(); } catch(err) {}
+          try {
+            submitBtn.click();
+            console.log('[GeekNook B2B] Triggered native Tilda form submission for Telegram!');
+          } catch(err) {
+            console.warn('[GeekNook B2B] Native Tilda form submit error:', err);
+          }
         }
       }
     };
