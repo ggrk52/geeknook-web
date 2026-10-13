@@ -967,11 +967,13 @@
 
         bundleWrap.innerHTML = `
           <div class="cart-bundle-upsell-card">
-            <div class="cart-bundle-badge">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              <span>Комплект // Скидка 15%</span>
+            <div class="cart-bundle-header">
+              <div class="cart-bundle-badge">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                <span>Комплект // Скидка 15%</span>
+              </div>
+              <div class="cart-bundle-title">Кожаный коврик Desk Mat к полке</div>
             </div>
-            <div class="cart-bundle-title">Добавьте кожаный коврик Desk Mat</div>
             <div class="cart-bundle-desc">Премиальный акустический фетр и силиконовый грип защищают столешницу от царапин и завершают сетап Focus Station.</div>
             <div class="cart-bundle-content">
               <img class="cart-bundle-thumb" src="${toAssetUrl(curMat.img)}" alt="${curMat.name}" />
