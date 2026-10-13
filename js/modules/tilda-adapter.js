@@ -89,6 +89,7 @@
     const nativeAddConfiguredBundleToCart = window.geekNookApp.addConfiguredBundleToCart;
     const nativeHandleCheckoutSubmit = window.geekNookApp.handleCheckoutSubmit;
     const nativeHandleQuickBuySubmit = window.geekNookApp.handleQuickBuySubmit;
+    const nativeHandleB2bSubmit = window.geekNookApp.handleB2bSubmit;
 
     const cdnBase = window.GEEKNOOK_CDN_URL || 'https://ggrk52.github.io/geeknook-web/';
 
@@ -776,65 +777,37 @@
       }
     };
 
-    // --- 8. OVERRIDE: handleB2bSubmit (Tilda CRM & Lead Generation) ---
+    // --- 8. ENHANCEMENT: handleB2bSubmit (Execute native handler + forward to Tilda CRM if present) ---
     window.geekNookApp.handleB2bSubmit = function(e) {
-      if (e && e.preventDefault) e.preventDefault();
-      
-      const company = document.getElementById('b2bCompany')?.value || 'Не указано';
-      const email = document.getElementById('b2bEmail')?.value || '';
-      const count = document.getElementById('b2bWorkplaces')?.value || '5-10';
+      // 1. Always execute native lead dispatch (validates fields, sends to Telegram & logs)
+      if (typeof nativeHandleB2bSubmit === 'function') {
+        nativeHandleB2bSubmit(e);
+      }
 
-      const utmParams = (window.geekNookAnalytics && typeof window.geekNookAnalytics.getUtmParams === 'function')
-        ? window.geekNookAnalytics.getUtmParams()
-        : {};
-      const utmEntries = Object.entries(utmParams).filter(([k]) => k.startsWith('utm_') || k === 'yclid' || k === '_openstat' || k === 'gclid');
-      const utmStr = utmEntries.length > 0 ? ` | UTM: ${utmEntries.map(([k, v]) => `${k}=${v}`).join(', ')}` : '';
+      // 2. Also forward to native Tilda Form if present on page (for Tilda CRM / Lead pipeline)
+      const company = document.getElementById('b2bLandingCompany')?.value || document.getElementById('b2bCompany')?.value || '';
+      const email = document.getElementById('b2bLandingEmail')?.value || document.getElementById('b2bEmail')?.value || '';
+      const phone = document.getElementById('b2bLandingPhone')?.value || document.getElementById('b2bPhone')?.value || '';
+      const workplaces = document.getElementById('b2bLandingPlaces')?.value || document.getElementById('b2bWorkplaces')?.value || '15';
+      const requestType = document.getElementById('b2bRequestType')?.value || 'test_drive';
+      const comment = document.getElementById('b2bComment')?.value || '';
 
-      // Check for native hidden Tilda form on page (e.g. BF301)
       const tildaForm = document.querySelector('.t-form, form[name^="form"]');
       if (tildaForm) {
         const inpEmail = tildaForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
         const inpCompany = tildaForm.querySelector('input[name="Company"], input[name="company"], input[name="Name"]');
+        const inpPhone = tildaForm.querySelector('input[type="tel"], input[name="Phone"], input[name="phone"]');
         const inpText = tildaForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
 
-        if (inpEmail) inpEmail.value = email;
-        if (inpCompany) inpCompany.value = company;
-        if (inpText) inpText.value = `Запрос КП на ${count} рабочих мест${utmStr}`;
+        if (inpEmail && email) inpEmail.value = email;
+        if (inpCompany && company) inpCompany.value = company;
+        if (inpPhone && phone) inpPhone.value = phone;
+        if (inpText) inpText.value = `[B2B ${requestType}] ${workplaces} мест. ${comment}`;
 
-        // Attach UTM parameters as hidden inputs
-        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', '_openstat', 'gclid'].forEach(key => {
-          if (utmParams[key]) {
-            let utmInp = tildaForm.querySelector(`input[name="${key}"]`);
-            if (!utmInp) {
-              utmInp = document.createElement('input');
-              utmInp.type = 'hidden';
-              utmInp.name = key;
-              tildaForm.appendChild(utmInp);
-            }
-            utmInp.value = utmParams[key];
-          }
-        });
-
-        // Trigger Tilda submit
         const submitBtn = tildaForm.querySelector('button[type="submit"], .t-submit');
         if (submitBtn) {
           try { submitBtn.click(); } catch(err) {}
         }
-      }
-
-      // Track B2B Lead Goal
-      if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackB2bLead === 'function') {
-        window.geekNookAnalytics.trackB2bLead(company, email, count);
-      }
-
-      if (typeof window.geekNookApp.closeModal === 'function') {
-        window.geekNookApp.closeModal('cadLibraryModal');
-      }
-
-      if (typeof window.geekNookApp.showToast === 'function') {
-        window.geekNookApp.showToast(`Запрос для «${company}» передан в Tilda CRM! КП отправлено на email.`, 'success');
-      } else {
-        alert(`Запрос для «${company}» принят! Мы свяжемся с вами по адресу ${email}`);
       }
     };
 
