@@ -875,7 +875,7 @@ textarea:focus-visible {
 
 .product-img-box {
   background: #f8fafc;
-  height: 220px;
+  height: 230px;
   border-radius: var(--radius-md);
   overflow: hidden;
   display: flex;
@@ -884,14 +884,16 @@ textarea:focus-visible {
   margin-bottom: 16px;
   cursor: pointer;
   position: relative;
-  border: 1px solid rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.04);
   transform: translateZ(10px);
+  padding: 10px;
 }
 
 .product-img-box img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   transition: transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1738,12 +1740,17 @@ textarea:focus-visible {
   overflow: hidden;
   background: #f8fafc;
   margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .quick-gallery-main img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 14px;
 }
 
 .quick-gallery-thumbs {
@@ -1755,9 +1762,12 @@ textarea:focus-visible {
   width: 64px;
   height: 64px;
   border-radius: var(--radius-sm);
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 4px;
+  background: #f8fafc;
   cursor: pointer;
-  opacity: 0.6;
+  opacity: 0.7;
   border: 2px solid transparent;
   transition: all var(--transition-fast);
 }
@@ -2380,8 +2390,11 @@ textarea:focus-visible {
   width: 76px;
   height: 76px;
   border-radius: var(--radius-sm);
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 4px;
   background: #f1f5f9;
+  flex-shrink: 0;
 }
 
 .cart-item-info {
@@ -2839,6 +2852,13 @@ textarea:focus-visible {
   .quick-gallery-main {
     height: 280px;
   }
+  .product-img-box {
+    height: 210px;
+    padding: 8px;
+  }
+  .product-img-box .card-img-hover {
+    padding: 8px;
+  }
   .configurator-callout-box {
     flex-direction: column;
     align-items: flex-start;
@@ -3064,6 +3084,13 @@ textarea:focus-visible {
   .quick-gallery-main {
     height: 220px;
   }
+  .product-img-box {
+    height: 190px;
+    padding: 6px;
+  }
+  .product-img-box .card-img-hover {
+    padding: 6px;
+  }
   .quick-thumb {
     width: 52px;
     height: 52px;
@@ -3267,7 +3294,8 @@ textarea:focus-visible {
 .product-img-box .card-img-main {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
 }
 
@@ -3277,7 +3305,9 @@ textarea:focus-visible {
   left: 0;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 10px;
   opacity: 0;
   transform: scale(1.01);
   transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
@@ -3624,7 +3654,8 @@ textarea:focus-visible {
   position: relative;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
   transition: opacity 0.4s ease, transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
   z-index: 1;
 }
@@ -3919,8 +3950,12 @@ textarea:focus-visible {
   width: 56px;
   height: 56px;
   border-radius: 6px;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 2px;
+  background: #f8fafc;
   border: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .quick-buy-prod-title {
@@ -4110,8 +4145,12 @@ textarea:focus-visible {
   width: 80px;
   height: 80px;
   border-radius: 8px;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 4px;
+  background: #f8fafc;
   border: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
 .quiz-result-addons-list {
@@ -5057,6 +5096,23 @@ textarea:focus-visible {
   background: #0c1017;
 }
 
+[data-theme="dark"] .quick-thumb {
+  background: #141a23;
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .cart-item-thumb {
+  background: #141a23;
+}
+
+[data-theme="dark"] .quick-buy-prod-img {
+  background: #141a23;
+}
+
+[data-theme="dark"] .quiz-result-shelf-img {
+  background: #141a23;
+}
+
 /* ==========================================================================
    24. GEEKNOOK PRO SUITE (Sound, Bundles, Before/After, Exploded View, Engraving, Ergo, CAD)
    ========================================================================== */
@@ -5138,7 +5194,9 @@ textarea:focus-visible {
 .bundle-card-img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 12px;
   transition: transform 0.5s ease;
 }
 
@@ -9655,6 +9713,13 @@ textarea.input-error {
 }
 
 @media (max-width: 360px) {
+  .product-img-box {
+    height: 175px;
+    padding: 4px;
+  }
+  .product-img-box .card-img-hover {
+    padding: 4px;
+  }
   .cookie-consent-actions {
     flex-direction: column;
     gap: 8px;
@@ -9905,7 +9970,9 @@ textarea.input-error {
   width: 64px;
   height: 64px;
   border-radius: var(--radius-md);
-  object-fit: cover;
+  object-fit: contain;
+  object-position: center;
+  padding: 4px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   flex-shrink: 0;
   background: #1e293b;

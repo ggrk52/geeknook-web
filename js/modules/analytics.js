@@ -573,7 +573,7 @@
       barEl.setAttribute('aria-label', 'Быстрый переход к Focus Station');
       barEl.innerHTML = `
         <div class="gn-journal-cta-left">
-          <img src="../images/tild3763-3337-4662-b233-616531316364__3.jpg" alt="Focus Station" class="gn-journal-cta-thumb" />
+          <img src="../images/tild6138-3463-4138-b133-323262633039__2.jpg" alt="Focus Station" class="gn-journal-cta-thumb" />
           <div class="gn-journal-cta-info">
             <span class="gn-journal-cta-title">Настольная станция Focus Station</span>
             <span class="gn-journal-cta-subtitle">Массив дуба и американского ореха • от 14 990 ₽</span>
