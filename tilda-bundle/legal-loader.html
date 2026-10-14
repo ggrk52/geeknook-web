@@ -38,7 +38,9 @@
   try {
     const res = await fetch(CDN_BASE + 'legal.html?v=' + Date.now());
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    const html = await res.text();
+    let html = await res.text();
+    html = html.replace(/(href|src)=["']((?:docs|images)\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${CDN_BASE}${path}"`);
+    html = html.replace(/href=["']favicon\.ico["']/gi, `href="${CDN_BASE}favicon.ico"`);
     document.open();
     document.write(html);
     document.close();

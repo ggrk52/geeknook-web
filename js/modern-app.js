@@ -5414,6 +5414,15 @@
   };
 
   let feaAnimationReq = null;
+  let cachedFeaWidth = 0;
+  let feaObserver = null;
+  let isFeaVisible = true;
+
+  const updateFeaDimensions = () => {
+    const canvas = document.getElementById('feaStressCanvas');
+    if (!canvas) return;
+    cachedFeaWidth = canvas.clientWidth || canvas.parentElement?.clientWidth || 900;
+  };
 
   const renderFeaCanvas = () => {
     const canvas = document.getElementById('feaStressCanvas');
@@ -5421,9 +5430,11 @@
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    const rect = canvas.getBoundingClientRect();
+    if (!cachedFeaWidth) {
+      cachedFeaWidth = canvas.clientWidth || 900;
+    }
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const w = rect.width || 900;
+    const w = cachedFeaWidth;
     const h = 260;
     if (canvas.width !== Math.round(w * dpr) || canvas.height !== Math.round(h * dpr)) {
       canvas.width = Math.round(w * dpr);
@@ -5674,7 +5685,12 @@
     ctx.fillText('Время: 0.14 с', oscX + oscW - 10, oscY + oscH - 4);
 
     if (feaState.isShockTesting) {
-      feaAnimationReq = requestAnimationFrame(renderFeaCanvas);
+      if (isFeaVisible && activeLabTab === 'fea') {
+        feaAnimationReq = requestAnimationFrame(renderFeaCanvas);
+      } else {
+        feaState.isShockTesting = false;
+        feaAnimationReq = null;
+      }
     }
   };
 
@@ -5730,6 +5746,27 @@
   };
 
   const initFeaLab = () => {
+    updateFeaDimensions();
+    window.addEventListener('resize', () => {
+      updateFeaDimensions();
+      renderFeaCanvas();
+    }, { passive: true });
+
+    const canvas = document.getElementById('feaStressCanvas');
+    if (canvas && 'IntersectionObserver' in window && !feaObserver) {
+      feaObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          isFeaVisible = entry.isIntersecting && entry.intersectionRatio > 0;
+          if (!isFeaVisible && feaAnimationReq) {
+            cancelAnimationFrame(feaAnimationReq);
+            feaAnimationReq = null;
+            feaState.isShockTesting = false;
+          }
+        });
+      }, { threshold: [0, 0.05] });
+      feaObserver.observe(canvas.parentElement || canvas);
+    }
+
     updateFeaWeight(feaState.weightKg);
   };
 
@@ -7169,26 +7206,34 @@
       if (typeof cableState.stopAnimation === 'function') {
         cableState.stopAnimation();
       }
+      updateFeaDimensions();
       requestAnimationFrame(() => {
         renderFeaCanvas();
       });
-    } else if (tabId === 'cables') {
-      if (!cableState.isInitialized) {
-        initCableSimulator();
+    } else {
+      if (feaAnimationReq) {
+        cancelAnimationFrame(feaAnimationReq);
+        feaAnimationReq = null;
+        feaState.isShockTesting = false;
       }
-      requestAnimationFrame(() => {
-        if (typeof cableState.startAnimation === 'function') {
-          cableState.startAnimation();
+      if (tabId === 'cables') {
+        if (!cableState.isInitialized) {
+          initCableSimulator();
         }
-      });
-      setTimeout(() => {
-        if (activeLabTab === 'cables' && typeof cableState.startAnimation === 'function' && !cableState.animFrame) {
-          cableState.startAnimation();
+        requestAnimationFrame(() => {
+          if (typeof cableState.startAnimation === 'function') {
+            cableState.startAnimation();
+          }
+        });
+        setTimeout(() => {
+          if (activeLabTab === 'cables' && typeof cableState.startAnimation === 'function' && !cableState.animFrame) {
+            cableState.startAnimation();
+          }
+        }, 60);
+      } else if (tabId === 'blueprint') {
+        if (typeof cableState.stopAnimation === 'function') {
+          cableState.stopAnimation();
         }
-      }, 60);
-    } else if (tabId === 'blueprint') {
-      if (typeof cableState.stopAnimation === 'function') {
-        cableState.stopAnimation();
       }
     }
   };
@@ -7931,7 +7976,7 @@
     const submitBtn = form?.querySelector('button[type="submit"]') || document.getElementById('b2bSubmitBtn');
     const originalBtnHtml = submitBtn ? submitBtn.innerHTML : '';
 
-    const company = document.getElementById('b2bCompany')?.value.trim() || document.getElementById('b2bLandingCompany')?.value.trim() || 'Компания';
+    const company = document.getElementById('b2bCompany')?.value.trim() || document.getElementById('b2bLandingCompany')?.value.trim() || '';
     const inn = document.getElementById('b2bInn')?.value.trim() || document.getElementById('b2bLandingInn')?.value.trim() || '';
     const contactName = document.getElementById('b2bContactName')?.value.trim() || document.getElementById('b2bLandingContact')?.value.trim() || '';
     const email = document.getElementById('b2bEmail')?.value.trim() || document.getElementById('b2bLandingEmail')?.value.trim() || '';
@@ -7955,7 +8000,7 @@
     }
 
     const payload = {
-      company,
+      company: company || 'Компания',
       inn,
       contact_name: contactName,
       email,
@@ -9184,6 +9229,8 @@
 
   // Public API
   window.geekNookApp = {
+    showToast,
+    dismissToasts,
     jumpToAnatomyStep,
     stepAnatomySlide,
     init,

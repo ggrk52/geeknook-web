@@ -411,7 +411,7 @@
        2. HERO (900-1000px, 100vh, Video/Image Background, Dark Overlay)
        ========================================================================== -->
   <section class="hero-section" id="hero">
-    <video class="hero-video-bg" src="images/vide3931-3032-4530-a435-623531616661_______-converted.webm" autoplay loop muted playsinline webkit-playsinline="true" preload="auto" poster="images/tild3763-3337-4662-b233-616531316364__3.jpg">
+    <video class="hero-video-bg" src="images/vide3931-3032-4530-a435-623531616661_______-converted.webm" autoplay loop muted playsinline webkit-playsinline="true" preload="metadata" poster="images/tild3763-3337-4662-b233-616531316364__3.jpg">
       <source src="images/vide3931-3032-4530-a435-623531616661_______-converted.webm" type="video/webm" />
     </video>
     <div class="hero-overlay"></div>
@@ -611,7 +611,7 @@
                 </div>
               </div>
               <div class="anatomy-card-actions">
-                <a href="#fea" class="anatomy-card-btn">
+                <a href="#labTabFea" class="anatomy-card-btn" onclick="if(window.geekNookApp && window.geekNookApp.switchLabTab) window.geekNookApp.switchLabTab('fea');">
                   <span>Проверить в FEA-симуляторе</span>
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </a>
@@ -2207,6 +2207,7 @@
         <div class="lab-hub-panels">
           <!-- Tab 1: FEA Stress Test & Materials Lab -->
           <div class="lab-hub-panel active" id="labTabFea" role="tabpanel" aria-labelledby="labTabBtnFea">
+            <div id="fea" style="position:relative;top:-80px;height:0;overflow:hidden;"></div>
             <div class="fea-lab-card" id="productionStressView">
               <div class="fea-lab-header">
                 <div class="fea-lab-title-group">

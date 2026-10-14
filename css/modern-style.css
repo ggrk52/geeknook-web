@@ -2461,6 +2461,13 @@ textarea:focus-visible {
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
+  position: relative;
+}
+
+.qty-btn::before {
+  content: '';
+  position: absolute;
+  inset: -5px;
 }
 
 .qty-btn:hover {
