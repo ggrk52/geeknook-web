@@ -972,7 +972,7 @@
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
                 <span>Комплект // Скидка 15%</span>
               </div>
-              <div class="cart-bundle-title">Коврик Desk Mat к полке</div>
+              <div class="cart-bundle-title">Кожаный коврик Desk Mat к полке</div>
             </div>
             <div class="cart-bundle-desc">Премиальный акустический фетр и силиконовый грип защищают столешницу от царапин и завершают сетап Focus Station.</div>
             <div class="cart-bundle-content">
@@ -1531,7 +1531,7 @@
     ` : '';
 
     return `
-      <div class="product-item-card reveal-card" id="${p.id}" style="--stagger-delay: ${(idx % 4) * 0.08}s;" data-product-id="${p.id}">
+      <div class="product-item-card reveal-card" style="--stagger-delay: ${(idx % 4) * 0.08}s;" id="product-${p.id}" data-product-id="${p.id}">
         <div class="card-spotlight"></div>
         <div class="product-img-box" onclick="window.geekNookApp.openQuickView('${p.id}')">
           ${badgeHtml}
@@ -1551,11 +1551,13 @@
           </div>
         </div>
         <div class="card-meta-tag">${materialTag}${p.options && p.options.lengths ? ' • 2 размера: 85 и 116 см' : ''}</div>
-        <h4 class="product-card-title"><a href="#${p.id}" onclick="window.geekNookApp.openQuickView('${p.id}'); return false;">${escapeHTML(p.title)}</a></h4>
+        ${p.catalogUrl
+          ? `<h4 class="product-card-title"><a href="${escapeHTML(p.catalogUrl)}" style="color:inherit;text-decoration:none">${escapeHTML(p.title)}</a></h4>`
+          : `<h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('${p.id}')">${escapeHTML(p.title)}</h4>`}
         <div class="product-card-sub">${p.subtitle || p.shortDescr || ''}</div>
         <div class="product-card-price">
           <div class="price-primary-row">
-            <span class="price-current">${p.options && p.options.lengths ? `от ${formatPrice(p.price)}` : (p.options && p.options.sizes ? `от ${formatPrice(p.price)}` : formatPrice(p.price))}</span>
+            <span class="price-current">${p.options && p.options.lengths ? `от ${formatPrice(p.price)}` : formatPrice(p.price)}</span>
             ${oldPriceHtml}
           </div>
           <div class="card-discount-pill" title="Автоматическая скидка 20% при заказе">
@@ -1564,15 +1566,39 @@
           </div>
         </div>
         <div class="card-actions-row">
-          <a href="#${p.id}" class="btn-card-details" onclick="window.geekNookApp.openQuickView('${p.id}'); return false;">
+          <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('${p.id}')">
             <span>Подробнее</span>
-          </a>
+          </button>
           <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           </button>
         </div>
       </div>
     `;
+  };
+
+  // Only verified article identities/dimensions are described. No fabricated
+  // ratings, availability or offers; existing discount calculations stay intact.
+  const renderCatalogStructuredData = () => {
+    const products = [...GEEKNOOK_DATA.boards, ...GEEKNOOK_DATA.accessories, ...GEEKNOOK_DATA.mats];
+    const graph = products.flatMap(p => (p.catalogVariants || []).map(v => ({
+      '@type': 'Product',
+      '@id': `https://geeknook.ru/#article-${v.article}`,
+      name: `${p.title}${v.option ? ' · ' + v.option : ''}`,
+      sku: v.article,
+      brand: { '@type': 'Brand', name: 'GEEK NOOK' },
+      url: p.catalogUrl || `https://geeknook.ru/#product-${p.id}`,
+      image: toAssetUrl((p.images || [])[0] || p.image || ''),
+      additionalProperty: [{ '@type': 'PropertyValue', name: 'Габариты', value: v.dimensions.join(' × ') + ' см' }]
+    })));
+    let element = document.getElementById('gn-catalog-structured-data');
+    if (!element) {
+      element = document.createElement('script');
+      element.id = 'gn-catalog-structured-data';
+      element.type = 'application/ld+json';
+      document.head.appendChild(element);
+    }
+    element.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
   };
 
   // --- CATALOG RENDERERS ---
@@ -1877,7 +1903,15 @@
       `;
     }
 
-    const specsHtml = Object.entries(product.specs || {}).map(([k, v]) => `
+    const defaultOption = (product.options?.lengths || product.options?.sizes || [])[0];
+    const verifiedDefault = product.catalogVariants?.find(v => v.option === defaultOption) || product.catalogVariants?.[0];
+    const verifiedRows = verifiedDefault ? `
+      <tr><td>Артикул</td><td class="qv-verified-article">${escapeHTML(verifiedDefault.article)}</td></tr>
+      <tr><td>Габариты</td><td class="qv-verified-dimensions">${verifiedDefault.dimensions.join(' × ')} см</td></tr>
+    ` : '';
+    const specsHtml = verifiedRows + Object.entries(product.specs || {})
+      .filter(([k]) => !verifiedDefault || (!k.startsWith('Артикул') && !['Габариты', 'Размер'].includes(k)))
+      .map(([k, v]) => `
       <tr data-spec-key="${k}">
         <td>${k}</td>
         <td class="spec-val-cell">${v}</td>
@@ -1959,6 +1993,12 @@
           if (oldEl) {
             oldEl.textContent = (product.optionOldPrices && product.optionOldPrices[val]) ? formatPrice(product.optionOldPrices[val]) : '';
           }
+        }
+
+        const verifiedVariant = product.catalogVariants?.find(v => v.option === val);
+        if (verifiedVariant) {
+          content.querySelector('.qv-verified-article').textContent = verifiedVariant.article;
+          content.querySelector('.qv-verified-dimensions').textContent = verifiedVariant.dimensions.join(' × ') + ' см';
         }
 
         // Dynamic dimensions update in specs table
@@ -4834,15 +4874,6 @@
     const video = document.querySelector('.hero-video-bg');
     if (!video) return;
 
-    // Check for mobile or slow connection
-    const isMobile = window.innerWidth < 768 || ('connection' in navigator && (navigator.connection.saveData || navigator.connection.effectiveType === '2g' || navigator.connection.effectiveType === '3g'));
-
-    // On mobile devices, keep crisp preloaded poster image to guarantee sub-second LCP
-    if (isMobile) {
-      video.removeAttribute('autoplay');
-      video.preload = 'none';
-      return;
-    }
 
     // 1. Mandatory attributes for iOS / Safari / Chrome autoplay policies
     video.muted = true;
@@ -4867,40 +4898,34 @@
       }
     }
 
-    const startPlay = () => {
-      try {
-        video.load();
-      } catch (e) {}
+    // 3. Force resource selection algorithm (fixes innerHTML dynamic mount issue)
+    try {
+      video.load();
+    } catch (e) {}
 
-      const tryPlay = () => {
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            const unlockPlay = () => {
-              video.play().catch(() => {});
-              ['click', 'touchstart', 'scroll', 'keydown', 'pointerdown'].forEach(ev => {
-                window.removeEventListener(ev, unlockPlay);
-              });
-            };
+    // 4. Robust autoplay with unlock handlers on any user interaction
+    const tryPlay = () => {
+      const playPromise = video.play();
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {
+          const startPlay = () => {
+            video.play().catch(() => {});
             ['click', 'touchstart', 'scroll', 'keydown', 'pointerdown'].forEach(ev => {
-              window.addEventListener(ev, unlockPlay, { once: true, passive: true });
+              window.removeEventListener(ev, startPlay);
             });
+          };
+          ['click', 'touchstart', 'scroll', 'keydown', 'pointerdown'].forEach(ev => {
+            window.addEventListener(ev, startPlay, { once: true, passive: true });
           });
-        }
-      };
-
-      if (video.readyState >= 2) {
-        tryPlay();
-      } else {
-        video.addEventListener('canplay', tryPlay, { once: true });
-        tryPlay();
+        });
       }
     };
 
-    if (document.readyState === 'complete') {
-      setTimeout(startPlay, 100);
+    if (video.readyState >= 2) {
+      tryPlay();
     } else {
-      window.addEventListener('load', () => setTimeout(startPlay, 100), { once: true });
+      video.addEventListener('canplay', tryPlay, { once: true });
+      tryPlay();
     }
   };
 
@@ -5979,13 +6004,8 @@
         if (contW > 0) {
           width = contW;
           height = Math.round(Math.min(580, Math.max(340, width * 0.48)));
-        } else {
-          width = 1200;
-          height = 540;
         }
       }
-      width = Math.max(320, Math.round(width));
-      height = Math.max(340, Math.round(height));
       dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       if (canvas.width !== Math.round(width * dpr) || canvas.height !== Math.round(height * dpr)) {
         canvas.width = Math.round(width * dpr);
@@ -7062,7 +7082,7 @@
         ctx.fillText(hc.spec, hp.x, hp.y - 12);
       }
 
-      if (!isCableVisible || activeLabTab !== 'cables') {
+      if (!isCableVisible && activeLabTab !== 'cables') {
         cableState.animFrame = null;
         return;
       }
@@ -8876,6 +8896,7 @@
     renderBoards();
     renderAccessories();
     renderMats();
+    renderCatalogStructuredData();
     renderBundles();
     initBeforeAfterSlider();
     initCardTiltInteraction();
@@ -8898,7 +8919,7 @@
     initProduction3DStudio();
     renderB2bCalculatorUI();
     if ('IntersectionObserver' in window) {
-      const configSec = document.getElementById('configurator') || document.getElementById('configuratorModal') || document.getElementById('prod3dViewport');
+      const configSec = document.getElementById('configurator');
       if (configSec) {
         const obs = new IntersectionObserver((entries, o) => {
           entries.forEach(entry => {
@@ -8908,28 +8929,10 @@
             }
           });
         }, { rootMargin: '600px 0px' });
+        obs.observe(configSec);
       }
     }
     parseUrlConfig();
-
-    // Deep linking for products via URL hash (#product-id) or ?product= query param
-    const checkProductDeepLink = () => {
-      const rawHash = window.location.hash ? window.location.hash.substring(1) : '';
-      const queryProd = new URLSearchParams(window.location.search).get('product');
-      const allP = (GEEKNOOK_DATA && GEEKNOOK_DATA.allProducts) ? GEEKNOOK_DATA.allProducts : [];
-      const targetProdId = queryProd || (rawHash && allP.some(p => p.id === rawHash) ? rawHash : null);
-      if (targetProdId) {
-        setTimeout(() => {
-          const cardEl = document.getElementById(targetProdId);
-          if (cardEl) {
-            cardEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-          openQuickView(targetProdId);
-        }, 250);
-      }
-    };
-    checkProductDeepLink();
-    window.addEventListener('hashchange', checkProductDeepLink);
 
     // 4. Global ESC key listener to close all active modals & drawers seamlessly
     window.addEventListener('keydown', (e) => {
@@ -9337,7 +9340,6 @@
     setTheme,
     resetThemeToSystem,
     getTheme,
-    showToast,
     toggleSound,
     soundEngine,
     renderBundles,
