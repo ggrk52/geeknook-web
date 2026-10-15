@@ -2159,6 +2159,412 @@ E-mail:</p>`
   ]
 };
 
+// Catalogue reference verified against the user-supplied price list, 2026-10-15.
+// Internal warehouse SKUs and barcodes are retained; article is a separate identifier.
+const VERIFIED_CATALOGUE = {
+  "focus-station-walnut": {
+    "title": "Focus Station Walnut",
+    "url": "https://geeknook.ru/tproduct/777379134633-focus-station-walnut",
+    "variants": [
+      {
+        "article": "202404201",
+        "option": "85 см",
+        "rrp": 19999,
+        "dimensions": [
+          85.0,
+          9.0,
+          23.0
+        ],
+        "name": "Monitor Stand GEEK NOOK Focus Station 85x9x23 cm, Walnut"
+      },
+      {
+        "article": "202404202",
+        "option": "116 см",
+        "rrp": 24999,
+        "dimensions": [
+          116.0,
+          9.0,
+          23.0
+        ],
+        "name": "Monitor Stand GEEK NOOK Focus Station 116x9x23 cm, Walnut"
+      }
+    ]
+  },
+  "focus-station-oak": {
+    "title": "Focus Station Oak",
+    "url": "https://geeknook.ru/tproduct/502058338873-focus-station-oak",
+    "variants": [
+      {
+        "article": "2024042003",
+        "option": "85 см",
+        "rrp": 19999,
+        "dimensions": [
+          85.0,
+          9.0,
+          23.0
+        ],
+        "name": "Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Oak"
+      },
+      {
+        "article": "2024042004",
+        "option": "116 см",
+        "rrp": 24999,
+        "dimensions": [
+          116.0,
+          9.0,
+          23.0
+        ],
+        "name": "Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Oak"
+      }
+    ]
+  },
+  "focus-station-black": {
+    "title": "Focus Station Black",
+    "url": "https://geeknook.ru/tproduct/251091866813-focus-station-black",
+    "variants": [
+      {
+        "article": "202404205",
+        "option": "85 см",
+        "rrp": 19999,
+        "dimensions": [
+          85.0,
+          9.0,
+          23.0
+        ],
+        "name": "Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Black"
+      },
+      {
+        "article": "2024042006",
+        "option": "116 см",
+        "rrp": 24999,
+        "dimensions": [
+          116.0,
+          9.0,
+          23.0
+        ],
+        "name": "Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Black"
+      }
+    ]
+  },
+  "laptop-closed": {
+    "title": "Laptop Stand Closed",
+    "url": "https://geeknook.ru/tproduct/586776083813-laptop-stand-closed",
+    "variants": [
+      {
+        "article": "202404203",
+        "option": null,
+        "rrp": 4999,
+        "dimensions": [
+          18.8,
+          8.4,
+          13.9
+        ],
+        "name": "Laptop Closed GEEK NOOK Bracket 18.8x8.4x13.9 cm, Black"
+      }
+    ]
+  },
+  "laptop-open": {
+    "title": "Laptop Stand Open",
+    "url": "https://geeknook.ru/tproduct/195475220803-laptop-stand-open",
+    "variants": [
+      {
+        "article": "202404204",
+        "option": null,
+        "rrp": 4999,
+        "dimensions": [
+          28.2,
+          14.8,
+          21.2
+        ],
+        "name": "Laptop Open GEEK NOOK Bracket 28.2 x 14.8 x 21.2 cm, Black"
+      }
+    ]
+  },
+  "cable-organizer": {
+    "title": "Cable Organizer Power Strip",
+    "url": "https://geeknook.ru/tproduct/878756064603-cable-organizer",
+    "variants": [
+      {
+        "article": "202404206",
+        "option": null,
+        "rrp": 4999,
+        "dimensions": [
+          35.0,
+          7.6,
+          10.6
+        ],
+        "name": "Cable Manager Bracket GEEK NOOK Power Strip 35x7.6x10.6 cm, Black"
+      }
+    ]
+  },
+  "headphone-stand": {
+    "title": "Headphone Stand",
+    "url": "https://geeknook.ru/tproduct/803895958133-headphone-stand",
+    "variants": [
+      {
+        "article": "202404207",
+        "option": null,
+        "rrp": 2999,
+        "dimensions": [
+          28.6,
+          3.7,
+          10.6
+        ],
+        "name": "Headphones Stand GEEK NOOK 28.6 x 3.7 x 10.6 cm, Black"
+      }
+    ]
+  },
+  "phone-dock": {
+    "title": "Phone Dock",
+    "url": "https://geeknook.ru/tproduct/317276387523-phone-dock",
+    "variants": [
+      {
+        "article": "202404208",
+        "option": null,
+        "rrp": 2999,
+        "dimensions": [
+          14.6,
+          4.0,
+          6.1
+        ],
+        "name": "Phone Stand GEEK NOOK  14.6x4x6.1 cm, Black"
+      }
+    ]
+  },
+  "gamepad-stand": {
+    "title": "Gamepad Stand",
+    "url": "https://geeknook.ru/tproduct/695845925373-gamepad-stand",
+    "variants": [
+      {
+        "article": "202404210",
+        "option": null,
+        "rrp": 2999,
+        "dimensions": [
+          19.1,
+          6.0,
+          8.0
+        ],
+        "name": "Gamepad Stand GEEK NOOK XBOX 19.1x6x8 cm, Black"
+      }
+    ]
+  },
+  "cable-organizer-mini": {
+    "title": "Cable Manager Mini",
+    "url": null,
+    "variants": [
+      {
+        "article": "202404213",
+        "option": null,
+        "rrp": 1999,
+        "dimensions": [
+          4.0,
+          2.7,
+          5.0
+        ],
+        "name": "Cable Manager GEEK NOOK Mini 4x2.7x5 cm, Black"
+      }
+    ]
+  },
+  "shelf-45": {
+    "title": "Bracket Shelf 45",
+    "url": null,
+    "variants": [
+      {
+        "article": "202404214",
+        "option": null,
+        "rrp": 6999,
+        "dimensions": [
+          45.0,
+          3.7,
+          23.6
+        ],
+        "name": "Bracket Shelf GEEK NOOK  45x3.7x23.6 cm, Black"
+      }
+    ]
+  },
+  "mac-shelf": {
+    "title": "Mac Studio / Mini Shelf",
+    "url": "https://geeknook.ru/tproduct/955199156513-mac-studio-mini-shelf",
+    "variants": [
+      {
+        "article": "202404217",
+        "option": null,
+        "rrp": 4999,
+        "dimensions": [
+          20.0,
+          6.7,
+          20.0
+        ],
+        "name": "Bracket shelf GEEK NOOK for MAC MINI 20x6.7x20 cm, Black"
+      }
+    ]
+  },
+  "u-shelf": {
+    "title": "U-Shelf",
+    "url": "https://geeknook.ru/tproduct/207545635063-u-shelf",
+    "variants": [
+      {
+        "article": "202404219",
+        "option": null,
+        "rrp": 4999,
+        "dimensions": [
+          20.0,
+          4.7,
+          20.0
+        ],
+        "name": "Bracket shelf universal GEEK NOOK U-Shelf 20x4.7x20 cm, Black"
+      }
+    ]
+  },
+  "switch-stand": {
+    "title": "Switch Console Stand",
+    "url": null,
+    "variants": [
+      {
+        "article": "202404218",
+        "option": null,
+        "rrp": 4999,
+        "dimensions": [
+          20.0,
+          7.6,
+          17.4
+        ],
+        "name": "Stand Bracket GEEK NOOK for Nintendo Switch Console 20x7.6x17.4 cm, Black"
+      }
+    ]
+  },
+  "desk-mat-xl": {
+    "title": "Desk Mat XL",
+    "url": "https://geeknook.ru/tproduct/323112815413-desk-mat-xl",
+    "variants": [
+      {
+        "article": "20240400",
+        "option": "80 × 40 см",
+        "rrp": 1499,
+        "dimensions": [
+          80.0,
+          40.0
+        ],
+        "name": "Mouse pad GEEK NOOK 80*40CM Black Felt"
+      },
+      {
+        "article": "20240402",
+        "option": "100 × 50 см",
+        "rrp": 2499,
+        "dimensions": [
+          100.0,
+          50.0
+        ],
+        "name": "Mouse pad GEEK NOOK 100*50CM Black Felt"
+      },
+      {
+        "article": "20240403",
+        "option": "120 × 60 см",
+        "rrp": 2999,
+        "dimensions": [
+          120.0,
+          60.0
+        ],
+        "name": "Mouse pad GEEK NOOK 120*60CM Black Felt"
+      }
+    ]
+  },
+  "desk-mat-dark": {
+    "title": "Desk Mat Dark",
+    "url": "https://geeknook.ru/tproduct/155502869193-desk-mat-dark",
+    "variants": [
+      {
+        "article": "20240404",
+        "option": "80 × 40 см",
+        "rrp": 1499,
+        "dimensions": [
+          80.0,
+          40.0
+        ],
+        "name": "Mouse pad GEEK NOOK 80*40CM Dark Gray Felt"
+      },
+      {
+        "article": "20240406",
+        "option": "100 × 50 см",
+        "rrp": 2499,
+        "dimensions": [
+          100.0,
+          50.0
+        ],
+        "name": "Mouse pad GEEK NOOK 100*50CM Dark Gray Felt"
+      },
+      {
+        "article": "20240407",
+        "option": "120 × 60 см",
+        "rrp": 2999,
+        "dimensions": [
+          120.0,
+          60.0
+        ],
+        "name": "Mouse pad GEEK NOOK 120*60CM Dark Gray Felt"
+      }
+    ]
+  },
+  "desk-mat-light": {
+    "title": "Desk Mat Light",
+    "url": "https://geeknook.ru/tproduct/335154421423-desk-mat-light",
+    "variants": [
+      {
+        "article": "20240408",
+        "option": "80 × 40 см",
+        "rrp": 1499,
+        "dimensions": [
+          80.0,
+          40.0
+        ],
+        "name": "Mouse pad GEEK NOOK 80*40CM Light Gray Felt"
+      },
+      {
+        "article": "20240410",
+        "option": "100 × 50 см",
+        "rrp": 2499,
+        "dimensions": [
+          100.0,
+          50.0
+        ],
+        "name": "Mouse pad GEEK NOOK 100*50CM Light Gray Felt"
+      },
+      {
+        "article": "20240411",
+        "option": "120 × 60 см",
+        "rrp": 2999,
+        "dimensions": [
+          120.0,
+          60.0
+        ],
+        "name": "Mouse pad GEEK NOOK 120*60CM Light Gray Felt"
+      }
+    ]
+  }
+};
+for (const p of [...GEEKNOOK_DATA.boards, ...GEEKNOOK_DATA.accessories, ...GEEKNOOK_DATA.mats]) {
+  const reference = VERIFIED_CATALOGUE[p.id];
+  if (!reference) continue;
+  p.catalogUrl = reference.url;
+  p.catalogVariants = reference.variants;
+  for (const variant of reference.variants) {
+    const dimensions = variant.dimensions.map(n => String(n).replace('.', ',')).join(' × ') + ' см';
+    if (variant.option && p.skus && p.skus[variant.option]) {
+      const sku = p.skus[variant.option];
+      sku.part = variant.article;
+      sku.price = variant.rrp;
+      sku.dimensions = dimensions;
+      if (p.optionPrices) p.optionPrices[variant.option] = variant.rrp;
+    } else if (!variant.option) {
+      p.part = variant.article;
+      p.price = variant.rrp;
+      p.specs['Габариты'] = dimensions;
+    }
+  }
+}
+// The black felt range is identified by articles, not by its model label XL.
+GEEKNOOK_DATA.mats.find(p => p.id === 'desk-mat-xl').specs['Цвет'] = 'Чёрный';
+
 // Flatten all products for fast ID lookup across cart, quick view, etc.
 // Include legacy aliases (focus-station-900, focus-board-600, focus-station-1200) for seamless backwards compatibility
 const legacyAliases = [

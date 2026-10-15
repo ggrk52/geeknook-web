@@ -187,10 +187,10 @@
       }
 
       let finalName = p.title;
-      if (p.category === 'boards' || hasRealVariants) {
+      if (p.category === 'boards') {
         let woodRu = 'Орех';
         if (p.title.includes('Oak') || p.id.includes('oak')) woodRu = 'Дуб';
-        else if (p.title.includes('Black') || p.id.includes('black')) woodRu = 'Черный ясень';
+        else if (p.title.includes('Black') || p.id.includes('black')) woodRu = 'Чёрный';
         finalName = `Focus Station ${opt} (${woodRu})`;
       }
 

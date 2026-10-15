@@ -1532,6 +1532,7 @@
 
     return `
       <div class="product-item-card reveal-card" id="${p.id}" style="--stagger-delay: ${(idx % 4) * 0.08}s;" data-product-id="${p.id}">
+
         <div class="card-spotlight"></div>
         <div class="product-img-box" onclick="window.geekNookApp.openQuickView('${p.id}')">
           ${badgeHtml}
@@ -1551,7 +1552,10 @@
           </div>
         </div>
         <div class="card-meta-tag">${materialTag}${p.options && p.options.lengths ? ' • 2 размера: 85 и 116 см' : ''}</div>
-        <h4 class="product-card-title"><a href="#${p.id}" onclick="window.geekNookApp.openQuickView('${p.id}'); return false;">${escapeHTML(p.title)}</a></h4>
+        ${p.catalogUrl
+          ? `<h4 class="product-card-title"><a href="${escapeHTML(p.catalogUrl)}" style="color:inherit;text-decoration:none">${escapeHTML(p.title)}</a></h4>`
+          : `<h4 class="product-card-title"><a href="#${p.id}" onclick="window.geekNookApp.openQuickView('${p.id}'); return false;">${escapeHTML(p.title)}</a></h4>`}
+
         <div class="product-card-sub">${p.subtitle || p.shortDescr || ''}</div>
         <div class="product-card-price">
           <div class="price-primary-row">
@@ -1573,6 +1577,30 @@
         </div>
       </div>
     `;
+  };
+
+  // Only verified article identities/dimensions are described. No fabricated
+  // ratings, availability or offers; existing discount calculations stay intact.
+  const renderCatalogStructuredData = () => {
+    const products = [...GEEKNOOK_DATA.boards, ...GEEKNOOK_DATA.accessories, ...GEEKNOOK_DATA.mats];
+    const graph = products.flatMap(p => (p.catalogVariants || []).map(v => ({
+      '@type': 'Product',
+      '@id': `https://geeknook.ru/#article-${v.article}`,
+      name: `${p.title}${v.option ? ' · ' + v.option : ''}`,
+      sku: v.article,
+      brand: { '@type': 'Brand', name: 'GEEK NOOK' },
+      url: p.catalogUrl || `https://geeknook.ru/#${p.id}`,
+      image: toAssetUrl((p.images || [])[0] || p.image || ''),
+      additionalProperty: [{ '@type': 'PropertyValue', name: 'Габариты', value: v.dimensions.join(' × ') + ' см' }]
+    })));
+    let element = document.getElementById('gn-catalog-structured-data');
+    if (!element) {
+      element = document.createElement('script');
+      element.id = 'gn-catalog-structured-data';
+      element.type = 'application/ld+json';
+      document.head.appendChild(element);
+    }
+    element.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
   };
 
   // --- CATALOG RENDERERS ---
@@ -1877,7 +1905,15 @@
       `;
     }
 
-    const specsHtml = Object.entries(product.specs || {}).map(([k, v]) => `
+    const defaultOption = (product.options?.lengths || product.options?.sizes || [])[0];
+    const verifiedDefault = product.catalogVariants?.find(v => v.option === defaultOption) || product.catalogVariants?.[0];
+    const verifiedRows = verifiedDefault ? `
+      <tr><td>Артикул</td><td class="qv-verified-article">${escapeHTML(verifiedDefault.article)}</td></tr>
+      <tr><td>Габариты</td><td class="qv-verified-dimensions">${verifiedDefault.dimensions.join(' × ')} см</td></tr>
+    ` : '';
+    const specsHtml = verifiedRows + Object.entries(product.specs || {})
+      .filter(([k]) => !verifiedDefault || (!k.startsWith('Артикул') && !['Габариты', 'Размер'].includes(k)))
+      .map(([k, v]) => `
       <tr data-spec-key="${k}">
         <td>${k}</td>
         <td class="spec-val-cell">${v}</td>
@@ -1959,6 +1995,12 @@
           if (oldEl) {
             oldEl.textContent = (product.optionOldPrices && product.optionOldPrices[val]) ? formatPrice(product.optionOldPrices[val]) : '';
           }
+        }
+
+        const verifiedVariant = product.catalogVariants?.find(v => v.option === val);
+        if (verifiedVariant) {
+          content.querySelector('.qv-verified-article').textContent = verifiedVariant.article;
+          content.querySelector('.qv-verified-dimensions').textContent = verifiedVariant.dimensions.join(' × ') + ' см';
         }
 
         // Dynamic dimensions update in specs table
@@ -8876,6 +8918,7 @@
     renderBoards();
     renderAccessories();
     renderMats();
+    renderCatalogStructuredData();
     renderBundles();
     initBeforeAfterSlider();
     initCardTiltInteraction();
