@@ -93,7 +93,7 @@
   window.GEEKNOOK_CDN_URL = BASE_URL;
 
   // Performance: fixed version enables instant browser caching across visits
-  const BUILD_VER = '2.9.4';
+  const BUILD_VER = '2.9.5';
 
   // DNS & TLS Preconnect to GitHub Pages CDN
   try {
@@ -112,6 +112,14 @@
     return BASE_URL.endsWith('/') ? BASE_URL + clean : BASE_URL + '/' + clean;
   }
   window.getGeekNookAssetUrl = resolveAssetUrl;
+
+  // The template head is not imported into Tilda. Discover its hero poster early.
+  const heroPoster = document.createElement('link');
+  heroPoster.rel = 'preload';
+  heroPoster.as = 'image';
+  heroPoster.href = resolveAssetUrl('images/tild6165-6131-4832-b030-623064313136__15.jpg');
+  heroPoster.setAttribute('fetchpriority', 'high');
+  document.head.appendChild(heroPoster);
 
   function fixAnyImage(img) {
     if (!img) return;
@@ -245,25 +253,8 @@
         mountPoint.appendChild(child);
       });
 
-      // Ensure hero video triggers load() after dynamic append
-      const heroVid = mountPoint.querySelector('.hero-video-bg');
-      if (heroVid) {
-        heroVid.muted = true;
-        heroVid.defaultMuted = true;
-        heroVid.setAttribute('muted', '');
-        heroVid.setAttribute('playsinline', '');
-        heroVid.setAttribute('webkit-playsinline', 'true');
-        heroVid.setAttribute('autoplay', '');
-        heroVid.loop = true;
-        const videoUrl = resolveAssetUrl('images/vide3931-3032-4530-a435-623531616661_______-converted.webm');
-        const vSrc = heroVid.querySelector('source');
-        if (vSrc) vSrc.src = videoUrl;
-        heroVid.src = videoUrl;
-        try {
-          heroVid.load();
-          heroVid.play().catch(() => {});
-        } catch (e) {}
-      }
+      // modern-app owns video playback, including its mobile/save-data guard.
+      // Starting it here would download the full movie before that guard runs.
 
       // Setup real-time MutationObserver to fix any dynamically injected images
       const observer = new MutationObserver(mutations => {
