@@ -3226,13 +3226,7 @@ textarea:focus-visible {
 
 /* Hero Entrance Sequence */
 .hero-title {
-  /* Keep the heading visible from its first paint; retain the entrance motion. */
-  animation: heroTitleSlide 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
-}
-
-@keyframes heroTitleSlide {
-  from { transform: translateY(32px); }
-  to { transform: translateY(0); }
+  animation: heroFadeUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
 }
 
 .hero-subtitle {
