@@ -61,8 +61,11 @@
     })();
   </script>
 
+  <!-- Preload Critical LCP Hero Image -->
+  <link rel="preload" as="image" href="images/tild6165-6131-4832-b030-623064313136__15.jpg" fetchpriority="high" />
+
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/modern-style.css?v=2.6" />
+  <link rel="stylesheet" href="css/modern-style.min.css?v=2.9.4" />
 </head>
 <body>
   <!-- Structured data stays with the imported body in the Tilda loader. -->
@@ -199,7 +202,7 @@
        2. HERO (900-1000px, 100vh, Video/Image Background, Dark Overlay)
        ========================================================================== -->
   <section class="hero-section" id="hero">
-    <video class="hero-video-bg" src="images/vide3931-3032-4530-a435-623531616661_______-converted.webm" autoplay loop muted playsinline webkit-playsinline="true" preload="metadata" poster="images/tild6165-6131-4832-b030-623064313136__15.jpg">
+    <video class="hero-video-bg" loop muted playsinline webkit-playsinline="true" preload="none" poster="images/tild6165-6131-4832-b030-623064313136__15.jpg">
       <source src="images/vide3931-3032-4530-a435-623531616661_______-converted.webm" type="video/webm" />
     </video>
     <div class="hero-overlay"></div>
@@ -545,7 +548,7 @@
 
       <div class="products-row-grid" id="boardsGrid">
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0s;" data-product-id="focus-station-walnut">
+        <div class="product-item-card reveal-card" id="focus-station-walnut" style="--stagger-delay: 0s;" data-product-id="focus-station-walnut">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('focus-station-walnut')">
             
@@ -583,7 +586,7 @@
             <circle cx="170" cy="75" r="7" fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
             <text x="170" y="78" fill="#ffffff" font-size="8" text-anchor="middle">1</text>
           </g>
-          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('Сплав Д16Т: анодированные опоры, нагрузка до 70 кг')">
+          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('Сплав Д16Т: анодированные опоры, нагрузка до 60 кг')">
             <circle cx="50" cy="115" r="7" fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
             <text x="50" y="118" fill="#ffffff" font-size="8" text-anchor="middle">2</text>
           </g>
@@ -597,7 +600,7 @@
           </g>
         </svg>
         <div class="xray-footer-bar">
-          <span class="xray-footer-tip">1: Дуб 22 мм • 2: Д16Т • 3: T-Track • 4: Пробка</span>
+          <span class="xray-footer-tip">1: Орех 22 мм • 2: Д16Т • 3: T-Track • 4: Пробка</span>
           <button type="button" class="xray-3d-link" onclick="window.geekNookApp.openConfigurator();">3D Студия →</button>
         </div>
       </div>
@@ -613,8 +616,8 @@
               </button>
             </div>
           </div>
-          <div class="card-meta-tag">Натуральный американский орех • 2 размера: 85 и 116 см</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('focus-station-walnut')">Focus Station Walnut</h4>
+          <div class="card-meta-tag">Натуральный американский орех, анодированная сталь • 2 размера: 85 и 116 см</div>
+          <h4 class="product-card-title"><a href="#focus-station-walnut" onclick="window.geekNookApp.openQuickView('focus-station-walnut'); return false;">Focus Station Walnut</a></h4>
           <div class="product-card-sub">Благородный американский орех • 85 см и 116 см</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -627,16 +630,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('focus-station-walnut')">
+            <a href="#focus-station-walnut" class="btn-card-details" onclick="window.geekNookApp.openQuickView('focus-station-walnut'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'focus-station-walnut'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Focus Station Walnut» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.08s;" data-product-id="focus-station-oak">
+        <div class="product-item-card reveal-card" id="focus-station-oak" style="--stagger-delay: 0.08s;" data-product-id="focus-station-oak">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('focus-station-oak')">
             
@@ -674,7 +677,7 @@
             <circle cx="170" cy="75" r="7" fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
             <text x="170" y="78" fill="#ffffff" font-size="8" text-anchor="middle">1</text>
           </g>
-          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('Сплав Д16Т: анодированные опоры, нагрузка до 70 кг')">
+          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('Сплав Д16Т: анодированные опоры, нагрузка до 60 кг')">
             <circle cx="50" cy="115" r="7" fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
             <text x="50" y="118" fill="#ffffff" font-size="8" text-anchor="middle">2</text>
           </g>
@@ -704,8 +707,8 @@
               </button>
             </div>
           </div>
-          <div class="card-meta-tag">Натуральный массив и шпон дуба • 2 размера: 85 и 116 см</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('focus-station-oak')">Focus Station Oak</h4>
+          <div class="card-meta-tag">Натуральный массив и шпон дуба, матовая сталь • 2 размера: 85 и 116 см</div>
+          <h4 class="product-card-title"><a href="#focus-station-oak" onclick="window.geekNookApp.openQuickView('focus-station-oak'); return false;">Focus Station Oak</a></h4>
           <div class="product-card-sub">Натуральный дуб • 85 см и 116 см</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -718,16 +721,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('focus-station-oak')">
+            <a href="#focus-station-oak" class="btn-card-details" onclick="window.geekNookApp.openQuickView('focus-station-oak'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'focus-station-oak'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Focus Station Oak» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.16s;" data-product-id="focus-station-black">
+        <div class="product-item-card reveal-card" id="focus-station-black" style="--stagger-delay: 0.16s;" data-product-id="focus-station-black">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('focus-station-black')">
             
@@ -765,7 +768,7 @@
             <circle cx="170" cy="75" r="7" fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
             <text x="170" y="78" fill="#ffffff" font-size="8" text-anchor="middle">1</text>
           </g>
-          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('Сплав Д16Т: анодированные опоры, нагрузка до 70 кг')">
+          <g class="xray-node-pin" onclick="window.geekNookApp.showToast('Сплав Д16Т: анодированные опоры, нагрузка до 60 кг')">
             <circle cx="50" cy="115" r="7" fill="#2563eb" stroke="#60a5fa" stroke-width="1.5"/>
             <text x="50" y="118" fill="#ffffff" font-size="8" text-anchor="middle">2</text>
           </g>
@@ -795,8 +798,8 @@
               </button>
             </div>
           </div>
-          <div class="card-meta-tag">Натуральное чёрное дерево • 2 размера: 85 и 116 см</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('focus-station-black')">Focus Station Black</h4>
+          <div class="card-meta-tag">Натуральное чёрное дерево (ясень), анодированная сталь • 2 размера: 85 и 116 см</div>
+          <h4 class="product-card-title"><a href="#focus-station-black" onclick="window.geekNookApp.openQuickView('focus-station-black'); return false;">Focus Station Black</a></h4>
           <div class="product-card-sub">Чёрное дерево • 85 см и 116 см</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -809,9 +812,9 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('focus-station-black')">
+            <a href="#focus-station-black" class="btn-card-details" onclick="window.geekNookApp.openQuickView('focus-station-black'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'focus-station-black'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Focus Station Black» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
@@ -853,7 +856,7 @@
 
       <div class="products-row-grid" id="accessoriesGrid">
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0s;" data-product-id="headphone-stand">
+        <div class="product-item-card reveal-card" id="headphone-stand" style="--stagger-delay: 0s;" data-product-id="headphone-stand">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('headphone-stand')">
             
@@ -873,7 +876,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('headphone-stand')">Headphone Stand</h4>
+          <h4 class="product-card-title"><a href="#headphone-stand" onclick="window.geekNookApp.openQuickView('headphone-stand'); return false;">Headphone Stand</a></h4>
           <div class="product-card-sub">Подставка для наушников</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -886,16 +889,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('headphone-stand')">
+            <a href="#headphone-stand" class="btn-card-details" onclick="window.geekNookApp.openQuickView('headphone-stand'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'headphone-stand'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Headphone Stand» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.08s;" data-product-id="gamepad-stand">
+        <div class="product-item-card reveal-card" id="gamepad-stand" style="--stagger-delay: 0.08s;" data-product-id="gamepad-stand">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('gamepad-stand')">
             
@@ -915,7 +918,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Анодированная сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('gamepad-stand')">Gamepad Stand</h4>
+          <h4 class="product-card-title"><a href="#gamepad-stand" onclick="window.geekNookApp.openQuickView('gamepad-stand'); return false;">Gamepad Stand</a></h4>
           <div class="product-card-sub">Подставка для геймпада</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -928,16 +931,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('gamepad-stand')">
+            <a href="#gamepad-stand" class="btn-card-details" onclick="window.geekNookApp.openQuickView('gamepad-stand'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'gamepad-stand'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Gamepad Stand» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.16s;" data-product-id="phone-dock">
+        <div class="product-item-card reveal-card" id="phone-dock" style="--stagger-delay: 0.16s;" data-product-id="phone-dock">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('phone-dock')">
             
@@ -957,7 +960,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('phone-dock')">Phone Dock</h4>
+          <h4 class="product-card-title"><a href="#phone-dock" onclick="window.geekNookApp.openQuickView('phone-dock'); return false;">Phone Dock</a></h4>
           <div class="product-card-sub">Док-станция для телефона</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -970,16 +973,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('phone-dock')">
+            <a href="#phone-dock" class="btn-card-details" onclick="window.geekNookApp.openQuickView('phone-dock'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'phone-dock'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Phone Dock» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.24s;" data-product-id="cable-organizer">
+        <div class="product-item-card reveal-card" id="cable-organizer" style="--stagger-delay: 0.24s;" data-product-id="cable-organizer">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('cable-organizer')">
             
@@ -999,7 +1002,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Конструкционная сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('cable-organizer')">Cable Organizer Power Strip</h4>
+          <h4 class="product-card-title"><a href="#cable-organizer" onclick="window.geekNookApp.openQuickView('cable-organizer'); return false;">Cable Organizer Power Strip</a></h4>
           <div class="product-card-sub">Органайзер для сетевого фильтра</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1012,16 +1015,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('cable-organizer')">
+            <a href="#cable-organizer" class="btn-card-details" onclick="window.geekNookApp.openQuickView('cable-organizer'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'cable-organizer'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Cable Organizer Power Strip» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0s;" data-product-id="laptop-open">
+        <div class="product-item-card reveal-card" id="laptop-open" style="--stagger-delay: 0s;" data-product-id="laptop-open">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('laptop-open')">
             
@@ -1041,7 +1044,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Легированная сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('laptop-open')">Laptop Stand Open</h4>
+          <h4 class="product-card-title"><a href="#laptop-open" onclick="window.geekNookApp.openQuickView('laptop-open'); return false;">Laptop Stand Open</a></h4>
           <div class="product-card-sub">Держатель ноутбука (открытый экран)</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1054,16 +1057,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('laptop-open')">
+            <a href="#laptop-open" class="btn-card-details" onclick="window.geekNookApp.openQuickView('laptop-open'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'laptop-open'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Laptop Stand Open» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.08s;" data-product-id="laptop-closed">
+        <div class="product-item-card reveal-card" id="laptop-closed" style="--stagger-delay: 0.08s;" data-product-id="laptop-closed">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('laptop-closed')">
             
@@ -1083,7 +1086,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Легированная сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('laptop-closed')">Laptop Stand Closed</h4>
+          <h4 class="product-card-title"><a href="#laptop-closed" onclick="window.geekNookApp.openQuickView('laptop-closed'); return false;">Laptop Stand Closed</a></h4>
           <div class="product-card-sub">Вертикальный держатель ноутбука</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1096,16 +1099,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('laptop-closed')">
+            <a href="#laptop-closed" class="btn-card-details" onclick="window.geekNookApp.openQuickView('laptop-closed'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'laptop-closed'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Laptop Stand Closed» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.16s;" data-product-id="mac-shelf">
+        <div class="product-item-card reveal-card" id="mac-shelf" style="--stagger-delay: 0.16s;" data-product-id="mac-shelf">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('mac-shelf')">
             
@@ -1125,7 +1128,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Сталь с вентиляционной перфорацией</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('mac-shelf')">Mac Studio / Mini Shelf</h4>
+          <h4 class="product-card-title"><a href="#mac-shelf" onclick="window.geekNookApp.openQuickView('mac-shelf'); return false;">Mac Studio / Mini Shelf</a></h4>
           <div class="product-card-sub">Подвесная полка под системный блок</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1138,16 +1141,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('mac-shelf')">
+            <a href="#mac-shelf" class="btn-card-details" onclick="window.geekNookApp.openQuickView('mac-shelf'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'mac-shelf'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Mac Studio / Mini Shelf» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.24s;" data-product-id="u-shelf">
+        <div class="product-item-card reveal-card" id="u-shelf" style="--stagger-delay: 0.24s;" data-product-id="u-shelf">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('u-shelf')">
             
@@ -1168,7 +1171,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Высокопрочная сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('u-shelf')">U-Shelf</h4>
+          <h4 class="product-card-title"><a href="#u-shelf" onclick="window.geekNookApp.openQuickView('u-shelf'); return false;">U-Shelf</a></h4>
           <div class="product-card-sub">Подвесная полка</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1181,16 +1184,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('u-shelf')">
+            <a href="#u-shelf" class="btn-card-details" onclick="window.geekNookApp.openQuickView('u-shelf'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'u-shelf'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «U-Shelf» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0s;" data-product-id="shelf-45">
+        <div class="product-item-card reveal-card" id="shelf-45" style="--stagger-delay: 0s;" data-product-id="shelf-45">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('shelf-45')">
             
@@ -1211,7 +1214,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Конструкционная сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('shelf-45')">Bracket Shelf 45</h4>
+          <h4 class="product-card-title"><a href="#shelf-45" onclick="window.geekNookApp.openQuickView('shelf-45'); return false;">Bracket Shelf 45</a></h4>
           <div class="product-card-sub">Подвесная полка 45 см</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1224,16 +1227,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('shelf-45')">
+            <a href="#shelf-45" class="btn-card-details" onclick="window.geekNookApp.openQuickView('shelf-45'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'shelf-45'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Bracket Shelf 45» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.08s;" data-product-id="switch-stand">
+        <div class="product-item-card reveal-card" id="switch-stand" style="--stagger-delay: 0.08s;" data-product-id="switch-stand">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('switch-stand')">
             
@@ -1254,7 +1257,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Анодированная сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('switch-stand')">Switch Console Stand</h4>
+          <h4 class="product-card-title"><a href="#switch-stand" onclick="window.geekNookApp.openQuickView('switch-stand'); return false;">Switch Console Stand</a></h4>
           <div class="product-card-sub">Кронштейн для Nintendo Switch</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1267,16 +1270,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('switch-stand')">
+            <a href="#switch-stand" class="btn-card-details" onclick="window.geekNookApp.openQuickView('switch-stand'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'switch-stand'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Switch Console Stand» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.16s;" data-product-id="cable-organizer-mini">
+        <div class="product-item-card reveal-card" id="cable-organizer-mini" style="--stagger-delay: 0.16s;" data-product-id="cable-organizer-mini">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('cable-organizer-mini')">
             
@@ -1296,7 +1299,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Анодированная сталь</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('cable-organizer-mini')">Cable Manager Mini</h4>
+          <h4 class="product-card-title"><a href="#cable-organizer-mini" onclick="window.geekNookApp.openQuickView('cable-organizer-mini'); return false;">Cable Manager Mini</a></h4>
           <div class="product-card-sub">Компактный держатель кабелей</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1309,9 +1312,9 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('cable-organizer-mini')">
+            <a href="#cable-organizer-mini" class="btn-card-details" onclick="window.geekNookApp.openQuickView('cable-organizer-mini'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'cable-organizer-mini'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Cable Manager Mini» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
@@ -1336,7 +1339,7 @@
 
       <div class="products-row-grid" id="matsGrid">
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0s;" data-product-id="desk-mat-light">
+        <div class="product-item-card reveal-card" id="desk-mat-light" style="--stagger-delay: 0s;" data-product-id="desk-mat-light">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('desk-mat-light')">
             
@@ -1356,11 +1359,11 @@
             </div>
           </div>
           <div class="card-meta-tag">Натуральный войлок 4 мм</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('desk-mat-light')">Desk Mat Light</h4>
+          <h4 class="product-card-title"><a href="#desk-mat-light" onclick="window.geekNookApp.openQuickView('desk-mat-light'); return false;">Desk Mat Light</a></h4>
           <div class="product-card-sub">Коврик для рабочего стола светлый</div>
           <div class="product-card-price">
             <div class="price-primary-row">
-              <span class="price-current">1 499 ₽</span>
+              <span class="price-current">от 1 499 ₽</span>
               <span class="price-old">1 999 ₽</span>
             </div>
             <div class="card-discount-pill" title="Автоматическая скидка 20% при заказе">
@@ -1369,16 +1372,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('desk-mat-light')">
+            <a href="#desk-mat-light" class="btn-card-details" onclick="window.geekNookApp.openQuickView('desk-mat-light'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'desk-mat-light'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Desk Mat Light» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.08s;" data-product-id="desk-mat-dark">
+        <div class="product-item-card reveal-card" id="desk-mat-dark" style="--stagger-delay: 0.08s;" data-product-id="desk-mat-dark">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('desk-mat-dark')">
             
@@ -1398,11 +1401,11 @@
             </div>
           </div>
           <div class="card-meta-tag">Акустический шерстяной фетр</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('desk-mat-dark')">Desk Mat Dark</h4>
+          <h4 class="product-card-title"><a href="#desk-mat-dark" onclick="window.geekNookApp.openQuickView('desk-mat-dark'); return false;">Desk Mat Dark</a></h4>
           <div class="product-card-sub">Коврик для рабочего стола тёмный</div>
           <div class="product-card-price">
             <div class="price-primary-row">
-              <span class="price-current">1 499 ₽</span>
+              <span class="price-current">от 1 499 ₽</span>
               <span class="price-old">1 999 ₽</span>
             </div>
             <div class="card-discount-pill" title="Автоматическая скидка 20% при заказе">
@@ -1411,16 +1414,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('desk-mat-dark')">
+            <a href="#desk-mat-dark" class="btn-card-details" onclick="window.geekNookApp.openQuickView('desk-mat-dark'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'desk-mat-dark'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Desk Mat Dark» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.16s;" data-product-id="desk-mat-xl">
+        <div class="product-item-card reveal-card" id="desk-mat-xl" style="--stagger-delay: 0.16s;" data-product-id="desk-mat-xl">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('desk-mat-xl')">
             
@@ -1440,7 +1443,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Плотный войлок 4 мм</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('desk-mat-xl')">Desk Mat XL</h4>
+          <h4 class="product-card-title"><a href="#desk-mat-xl" onclick="window.geekNookApp.openQuickView('desk-mat-xl'); return false;">Desk Mat XL</a></h4>
           <div class="product-card-sub">Увеличенный коврик 120×60 см</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1453,16 +1456,16 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('desk-mat-xl')">
+            <a href="#desk-mat-xl" class="btn-card-details" onclick="window.geekNookApp.openQuickView('desk-mat-xl'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'desk-mat-xl'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Desk Mat XL» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>
         </div>
 
-        <div class="product-item-card reveal-card" style="--stagger-delay: 0.24s;" data-product-id="desk-mat-double">
+        <div class="product-item-card reveal-card" id="desk-mat-double" style="--stagger-delay: 0.24s;" data-product-id="desk-mat-double">
           <div class="card-spotlight"></div>
           <div class="product-img-box" onclick="window.geekNookApp.openQuickView('desk-mat-double')">
             
@@ -1482,7 +1485,7 @@
             </div>
           </div>
           <div class="card-meta-tag">Комбинация шерстяного фетра и экокожи премиум-класса</div>
-          <h4 class="product-card-title" onclick="window.geekNookApp.openQuickView('desk-mat-double')">Desk Mat Double</h4>
+          <h4 class="product-card-title"><a href="#desk-mat-double" onclick="window.geekNookApp.openQuickView('desk-mat-double'); return false;">Desk Mat Double</a></h4>
           <div class="product-card-sub">Двусторонний коврик (фетр + экокожа)</div>
           <div class="product-card-price">
             <div class="price-primary-row">
@@ -1495,9 +1498,9 @@
             </div>
           </div>
           <div class="card-actions-row">
-            <button class="btn-card-details" onclick="window.geekNookApp.openQuickView('desk-mat-double')">
+            <a href="#desk-mat-double" class="btn-card-details" onclick="window.geekNookApp.openQuickView('desk-mat-double'); return false;">
               <span>Подробнее</span>
-            </button>
+            </a>
             <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'desk-mat-double'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Desk Mat Double» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
@@ -2742,8 +2745,10 @@
         <span class="promo-banner-text">Автоматическая скидка на весь заказ применена!</span>
       </div>
 
-      <div class="cart-items-list" id="cartItemsList"></div>
-      <div id="cartBundleUpsellWrap"></div>
+      <div class="cart-scrollable-body" id="cartScrollableBody">
+        <div class="cart-items-list" id="cartItemsList"></div>
+        <div id="cartBundleUpsellWrap"></div>
+      </div>
 
       <div class="cart-footer">
         <div class="promo-box" id="cartPromoBox">
@@ -3843,7 +3848,7 @@
   <script defer src="js/products-data.js"></script>
   <script defer src="js/modules/analytics.js"></script>
   <script defer src="js/modules/cdek-picker.js"></script>
-  <script defer src="js/modern-app.js?v=2.8"></script>
+  <script defer src="js/modern-app.min.js?v=2.9.4"></script>
   <script defer src="js/modules/tilda-adapter.js?v=2.8"></script>
 </body>
 </html>

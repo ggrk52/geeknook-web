@@ -230,6 +230,10 @@
         } else if (href && (href === 'b2b.html' || href === './b2b.html' || href === '/b2b' || href.startsWith('b2b.html#') || href.startsWith('/b2b#'))) {
           const hash = href.includes('#') ? href.substring(href.indexOf('#')) : '';
           a.setAttribute('href', '/b2b' + hash);
+        } else if (href && (href === 'b2b-presentation.html' || href === './b2b-presentation.html' || href === '/b2b-presentation.html')) {
+          a.setAttribute('href', BASE_URL + 'b2b-presentation.html');
+          a.setAttribute('target', '_blank');
+          a.setAttribute('rel', 'noopener');
         }
       });
 

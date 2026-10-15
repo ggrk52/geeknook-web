@@ -45,7 +45,7 @@
     document.close();
   } catch(err) {
     console.warn('[GeekNook Journal] Direct rewrite failed, redirecting to CDN:', err);
-    window.location.replace(CDN_BASE + 'journal.html');
+    window.location.replace(CDN_BASE + 'journal.html' + window.location.search);
   }
 })();
 </script>

@@ -14,11 +14,45 @@
   <meta property="og:url" content="https://geeknook.ru/b2b" />
   <meta property="og:image" content="https://static.tildacdn.com/tild6138-3463-4138-b133-323262633039/2.jpg" />
 
+  <!-- Schema.org Structured Data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": "https://geeknook.ru/b2b#webpage",
+        "url": "https://geeknook.ru/b2b",
+        "name": "GeekNook B2B // Корпоративное оснащение IT-офисов и эргономичные рабочие места",
+        "description": "Оснащение офисов IT-команд, дизайн-студий и опенспейсов модульными сетапами Focus Station из массива кавказского дуба, ореха и авиационного алюминия Д16Т. Бесплатный тест-драйв в офис на 14 дней, скидки до 20%, ЭДО.",
+        "inLanguage": "ru-RU"
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://geeknook.ru/#organization",
+        "name": "ООО «ГИК НУК»",
+        "alternateName": "GEEK NOOK",
+        "url": "https://geeknook.ru/",
+        "logo": "https://geeknook.ru/images/tild6164-6364-4661-b835-636430386562__logo_oo.png",
+        "telephone": "+7-495-120-48-05",
+        "email": "b2b@geeknook.ru",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "ул. Петра Романова, дом 7, стр. 1, помещение 20/5",
+          "addressLocality": "Москва",
+          "postalCode": "115193",
+          "addressCountry": "RU"
+        }
+      }
+    ]
+  }
+  </script>
+
   <!-- Icons -->
   <link rel="icon" href="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" type="image/png" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/modern-style.css?v=2.8" />
+  <link rel="stylesheet" href="css/modern-style.min.css?v=2.9.4" />
 </head>
 <body class="b2b-page">
   <!-- Structured data stays with the imported body in the Tilda loader. -->
@@ -479,7 +513,7 @@
       <!-- Legal Requisites Box -->
       <div style="max-width:800px;margin:32px auto 0 auto;padding:20px;background:rgba(255,255,255,0.02);border:1px solid var(--border);border-radius:12px;font-size:0.8125rem;color:var(--text-muted);line-height:1.6;">
         <strong style="color:var(--text-main);display:block;margin-bottom:4px;">Юридические реквизиты поставщика:</strong>
-        ООО «ГИК НУК» • ИНН 9723239478 • ОГРН 1247700620265 • Юр. адрес: 115088, г. Москва, ул. Петра Романова, д. 7, помещ. 2/1.<br>
+        ООО «ГИК НУК» • ИНН 9723239478 • КПП 772301001 • ОГРН 1247700620265 • Юр. адрес: 115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5.<br>
         Электронный документооборот: Диадок (АО «ПФ «СКБ Контур») или СБИС. Поставка без НДС (УСН) / поставка с НДС 20% через аккредитованного партнера.
       </div>
     </div>
@@ -507,7 +541,7 @@
           <div class="footer-links-col">
             <h4 class="footer-col-title">Корпоративный отдел</h4>
             <a href="mailto:b2b@geeknook.ru">b2b@geeknook.ru</a>
-            <a href="tel:+79998887766">+7 (495) 120-48-05</a>
+            <a href="tel:+74951204805">+7 (495) 120-48-05</a>
             <a href="https://t.me/geeknook" target="_blank" rel="noopener">Telegram @geeknook</a>
             <span style="font-size:0.75rem;color:var(--text-muted);">Пн-Пт: 10:00 - 19:00 МСК</span>
           </div>
@@ -517,6 +551,8 @@
         <div class="footer-copyright">© 2026 ООО «ГИК НУК». Все права защищены.</div>
         <div class="footer-legal-links">
           <a href="index.html">На главную</a>
+          <a href="legal.html">Правовой центр и реквизиты</a>
+          <a href="legal.html#privacy">Конфиденциальность (152-ФЗ)</a>
         </div>
       </div>
     </div>
@@ -558,7 +594,7 @@
   <!-- Scripts -->
   <script defer src="js/products-data.js"></script>
   <script defer src="js/modules/analytics.js"></script>
-  <script defer src="js/modern-app.js?v=2.8"></script>
+  <script defer src="js/modern-app.min.js?v=2.9.4"></script>
   <script defer src="js/modules/tilda-adapter.js?v=2.8"></script>
 </body>
 </html>
