@@ -1924,6 +1924,7 @@ const GEEKNOOK_DATA = {
 115193, г. Москва, ул. Петра Романова, д. 7, стр. 1, помещение 20/5</p>
 <p><strong>Электронная почта:</strong> <a href="mailto:info@geeknook.ru">info@geeknook.ru</a></p>
 <p><strong>Сайт:</strong> <a href="https://geeknook.ru" target="_blank">https://geeknook.ru</a></p>
+<p><strong>Телефон:</strong> <a href="tel:+79670251030">+7 (967) 025-10-30</a></p>
 <h4 class="legal-h4"><strong>5. Заключительные положения</strong></h4>
 <p>Актуальная редакция настоящих документов размещается на сайте geeknook.ru.</p>
 <p>Оператор вправе актуализировать документы в связи с изменением законодательства, развитием сайта, интернет-магазина, товаров, сервисов и процессов обработки персональных данных.</p>
@@ -2017,12 +2018,12 @@ const GEEKNOOK_DATA = {
 <h5 class="legal-h5"><strong>10.6.</strong> Актуальная редакция настоящих Условий постоянно доступна на Сайте.</h5>
 <h4 class="legal-h4"><strong>11. Контактная информация</strong></h4>
 <p>По вопросам, связанным с использованием Сайта, Пользователь может обратиться к Владельцу сайта:</p>
-<p><strong>ООО «ГИК НУК»</strong>
-ИНН: 9723239478
-ОГРН: 1247700620265
-Юридический адрес: 115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5
-Сайт: geeknook.ru
-E-mail:</p>`
+<p><strong>ООО «ГИК НУК»</strong><br>
+ИНН: 9723239478 | КПП: 772301001 | ОГРН: 1247700620265<br>
+Юридический адрес: 115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5<br>
+Сайт: <a href="https://geeknook.ru" target="_blank" style="color:#d4af37;">https://geeknook.ru</a><br>
+E-mail: <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a><br>
+Телефон: <a href="tel:+79670251030" style="color:#d4af37;">+7 (967) 025-10-30</a></p>`
     },
     requisites: {
       title: "Реквизиты продавца",
@@ -2037,6 +2038,7 @@ E-mail:</p>`
     <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Юридический адрес:</strong> 115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5</div>
     <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Официальный сайт:</strong> <a href="https://geeknook.ru" target="_blank" style="color:#d4af37;">https://geeknook.ru</a></div>
     <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Электронная почта:</strong> <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a></div>
+    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Контактный телефон:</strong> <a href="tel:+79670251030" style="color:#d4af37;">+7 (967) 025-10-30</a></div>
     <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Telegram-поддержка:</strong> <a href="https://t.me/geeknook" target="_blank" style="color:#d4af37;">@geeknook</a></div>
   </div>
 </div>
