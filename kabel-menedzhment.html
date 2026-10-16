@@ -1540,14 +1540,14 @@
         </div>
       </section>
 
-      <!-- 360° Stealth Cable Physics Simulator -->
+      <!-- Stealth Cable Physics Simulator -->
       <section class="cable-physics-card" id="cableSimulatorCard">
         <div class="cable-card-header">
           <div class="cable-header-text">
-            <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stat-blue);">08.3 // СИМУЛЯТОР РАБОЧЕГО СТОЛА // 360° STEALTH CABLE MANAGEMENT</span>
+            <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stat-blue);">ИНЖЕНЕРНЫЙ СИМУЛЯТОР // КАБЕЛЬ-МЕНЕДЖМЕНТ GEEKNOOK</span>
             <h3 class="cable-card-title">Интерактивный сетап: Как GeekNook побеждает хаос проводов</h3>
             <p class="cable-card-subtitle">
-              Взгляните на реальный рабочий стол с монитором 5K, MacBook и гаджетами. В режиме «Хаос» провода свисают со стола и путаются под руками. Активируйте <strong>GeekNook Stealth</strong> — магнитный Т-паз подставки Focus Station мгновенно уложит все кабели в скрытый лоток, а в режиме «Рентген» вы увидите распределение потоков энергии и данных изнутри.
+              Взгляните на рабочий сетап с монитором, ноутбуком и гаджетами. В режиме «Хаос» провода свободно свисают со стола и путаются под руками. Активируйте <strong>GeekNook Stealth</strong> — подвесной лоток и магнитные фиксаторы укладывают все кабели и адаптеры в невидимый контур под столешницу, а в режиме «Рентген» видна внутренняя трассировка питания 220V и шины Thunderbolt 4.
             </p>
           </div>
           <div class="cable-controls-group">
@@ -1604,7 +1604,7 @@
           </div>
           <div class="cable-status-pill magnetic" id="cableStatusPill">
             <span class="cable-status-indicator"></span>
-            <span id="cableStatusText">T-Track замок: 4 канала зафиксированы</span>
+            <span id="cableStatusText">Stealth-лоток: все 4 кабельных канала зафиксированы</span>
           </div>
         </div>
 
@@ -1616,34 +1616,34 @@
               <span class="cable-metric-val" id="cableMetricNoise">0%</span>
               <span class="cable-metric-badge badge-good" id="cableMetricNoiseBadge">Идеальный Дзен</span>
             </div>
-            <div class="cable-metric-desc" id="cableMetricNoiseDesc">Все провода скрыты под полкой в алюминиевом профиле Т-паза</div>
+            <div class="cable-metric-desc" id="cableMetricNoiseDesc">Все силовые адаптеры и кабели убраны в подвесной стальной лоток под столом</div>
           </div>
 
           <div class="cable-metric-card">
-            <div class="cable-metric-title">Полезная площадь стола</div>
+            <div class="cable-metric-title">Свободная площадь стола</div>
             <div class="cable-metric-value-row">
-              <span class="cable-metric-val" id="cableMetricSpace">+40%</span>
-              <span class="cable-metric-badge badge-good" id="cableMetricSpaceBadge">Клавиатура спрятана</span>
+              <span class="cable-metric-val" id="cableMetricSpace">100%</span>
+              <span class="cable-metric-badge badge-good" id="cableMetricSpaceBadge">Чистый стол</span>
             </div>
-            <div class="cable-metric-desc" id="cableMetricSpaceDesc">Клавиатура и мышь легко убираются в нишу под подставку (90 мм)</div>
+            <div class="cable-metric-desc" id="cableMetricSpaceDesc">Блоки питания, розетки и мотки проводов полностью убраны с поверхности столешницы</div>
           </div>
 
           <div class="cable-metric-card">
-            <div class="cable-metric-title">Скрыто кабелей</div>
+            <div class="cable-metric-title">Скрыто кабелей и блоков</div>
             <div class="cable-metric-value-row">
               <span class="cable-metric-val" id="cableMetricHidden">4 из 4</span>
               <span class="cable-metric-badge badge-good" id="cableMetricHiddenBadge">100% Stealth</span>
             </div>
-            <div class="cable-metric-desc" id="cableMetricHiddenDesc">Thunderbolt 4, 8K DisplayPort, MagSafe 140W и питание 220V</div>
+            <div class="cable-metric-desc" id="cableMetricHiddenDesc">Thunderbolt 4, DisplayPort, MagSafe 140W и силовой ввод 220V уложены в лоток</div>
           </div>
 
           <div class="cable-metric-card">
-            <div class="cable-metric-title">Магнитная фиксация T-Track</div>
+            <div class="cable-metric-title">Магнитная фиксация N52</div>
             <div class="cable-metric-value-row">
               <span class="cable-metric-val" id="cableMetricHold">4× N52</span>
               <span class="cable-metric-badge badge-tech" id="cableMetricHoldBadge">1.2 кг на отрыв</span>
             </div>
-            <div class="cable-metric-desc" id="cableMetricHoldDesc">Неодимовые фиксаторы удерживают даже массивные оплетенные корды</div>
+            <div class="cable-metric-desc" id="cableMetricHoldDesc">Неодимовые фиксаторы удерживают массивные плетеные корды без скотча и клея</div>
           </div>
         </div>
 
@@ -2957,11 +2957,11 @@
       }
 
       if (mode === 'magnetic') {
-        if (statusText) statusText.textContent = 'T-Track замок: 4 канала зафиксированы';
-        showToast('GeekNook Stealth: Все кабели уложены в скрытый желоб');
+        if (statusText) statusText.textContent = 'Stealth-лоток: все 4 канала зафиксированы';
+        showToast('GeekNook Stealth: Все кабели уложены в скрытый лоток');
       } else if (mode === 'xray') {
-        if (statusText) statusText.textContent = 'Рентген лотка: Разделение шин 220V и данных';
-        showToast('Инженерный Рентген: внутренняя архитектура Т-паза');
+        if (statusText) statusText.textContent = 'Рентген лотка: разделение шин 220V и данных';
+        showToast('Инженерный Рентген: внутренняя укладка проводов в лотке');
       } else {
         if (statusText) statusText.textContent = 'Свободное провисание (Хаос на столе)';
         showToast('Режим без GeekNook: хаос проводов на рабочей поверхности');
@@ -3040,7 +3040,7 @@
 
         if (spaceEl) { spaceEl.textContent = '−25%'; spaceEl.style.color = '#ef4444'; }
         if (spaceBadge) {
-          spaceBadge.textContent = 'Потеря места';
+          spaceBadge.textContent = 'Загромождено';
           spaceBadge.className = 'cable-metric-badge badge-bad';
         }
         if (spaceDesc) spaceDesc.textContent = 'Блоки питания и кабели лежат на рабочей поверхности';
@@ -3062,14 +3062,14 @@
           noiseBadge.textContent = 'Идеальный Дзен';
           noiseBadge.className = 'cable-metric-badge badge-good';
         }
-        if (noiseDesc) noiseDesc.textContent = 'Все провода скрыты под полкой в алюминиевом профиле Т-паза';
+        if (noiseDesc) noiseDesc.textContent = 'Все силовые адаптеры и кабели убраны в подвесной стальной лоток под столом';
 
-        if (spaceEl) { spaceEl.textContent = '+40%'; spaceEl.style.color = '#10b981'; }
+        if (spaceEl) { spaceEl.textContent = '100%'; spaceEl.style.color = '#10b981'; }
         if (spaceBadge) {
-          spaceBadge.textContent = 'Клавиатура спрятана';
+          spaceBadge.textContent = 'Чистый стол';
           spaceBadge.className = 'cable-metric-badge badge-good';
         }
-        if (spaceDesc) spaceDesc.textContent = 'Клавиатура и мышь легко убираются в нишу под подставку (90 мм)';
+        if (spaceDesc) spaceDesc.textContent = 'Блоки питания, розетки и мотки проводов полностью убраны с поверхности столешницы';
 
         if (hiddenEl) { hiddenEl.textContent = activeDevs + ' из ' + activeDevs; hiddenEl.style.color = '#10b981'; }
         if (hiddenBadge) {
