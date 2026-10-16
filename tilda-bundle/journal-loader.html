@@ -2,6 +2,7 @@
      GEEK NOOK — Dedicated Journal Loader for Tilda (Block T123)
      Allows hosting https://geeknook.ru/journal directly on Tilda
      Fetches and mounts all 218 articles seamlessly from GitHub Pages CDN
+     Supports direct server-side pre-rendered delivery for crawlers & browsers
      ========================================================================== -->
 
 <div id="geeknook-journal-root">
@@ -34,15 +35,44 @@
 (async function() {
   'use strict';
   const CDN_BASE = 'https://ggrk52.github.io/geeknook-web/';
+  
+  function rewriteAssets(html) {
+    // Rewrite relative assets to CDN absolute URLs
+    html = html.replace(/(href|src)=["']((?:js|css|images|docs)\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${CDN_BASE}${path}"`);
+    html = html.replace(/(href|src)=["']\.\.\/((?:js|css|images|docs)\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${CDN_BASE}${path}"`);
+    html = html.replace(/href=["'](?:\.\.\/)?favicon\.ico["']/gi, `href="${CDN_BASE}favicon.ico"`);
+    return html;
+  }
+
+  function renderPage(html) {
+    document.open();
+    document.write(rewriteAssets(html));
+    document.close();
+  }
+
   try {
+    const params = new URLSearchParams(window.location.search);
+    const slug = params.get('article');
+    
+    // If an article slug is in URL (?article=slug), fetch static article directly
+    if (slug && /^[a-z0-9-]+$/.test(slug)) {
+      try {
+        const articleRes = await fetch(CDN_BASE + 'journal/' + slug + '.html?v=' + Date.now());
+        if (articleRes.ok) {
+          const articleHtml = await articleRes.text();
+          renderPage(articleHtml);
+          return;
+        }
+      } catch (e) {
+        console.warn('[GeekNook Journal] Direct article fetch failed, falling back to shell:', e);
+      }
+    }
+
+    // Default: fetch main journal shell with 218 articles catalogue
     const res = await fetch(CDN_BASE + 'journal.html?v=' + Date.now());
     if (!res.ok) throw new Error('HTTP ' + res.status);
-    let html = await res.text();
-    html = html.replace(/(href|src)=["']((?:js|images|docs)\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${CDN_BASE}${path}"`);
-    html = html.replace(/href=["']favicon\.ico["']/gi, `href="${CDN_BASE}favicon.ico"`);
-    document.open();
-    document.write(html);
-    document.close();
+    const html = await res.text();
+    renderPage(html);
   } catch(err) {
     console.warn('[GeekNook Journal] Direct rewrite failed, redirecting to CDN:', err);
     window.location.replace(CDN_BASE + 'journal.html' + window.location.search);
