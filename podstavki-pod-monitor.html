@@ -8,6 +8,7 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://geeknook.ru/podstavki-pod-monitor">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" href="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" type="image/png">
 
   <!-- Open Graph -->
   <meta property="og:type" content="website">
@@ -28,6 +29,16 @@
   {
     "@context": "https://schema.org",
     "@graph": [
+      {
+        "@type": "Organization",
+        "@id": "https://geeknook.ru/#organization",
+        "name": "GEEK NOOK",
+        "legalName": "ООО «ГИК НУК»",
+        "url": "https://geeknook.ru/",
+        "logo": "https://geeknook.ru/images/tild6164-6364-4661-b835-636430386562__logo_oo.png",
+        "telephone": "+7-967-025-10-30",
+        "email": "info@geeknook.ru"
+      },
       {
         "@type": "CollectionPage",
         "@id": "https://geeknook.ru/podstavki-pod-monitor#webpage",
@@ -237,6 +248,18 @@
       letter-spacing: 0.05em;
       color: #fff;
       min-height: 44px;
+      text-decoration: none;
+      transition: opacity 0.2s ease;
+    }
+    .brand-link:hover {
+      opacity: 0.85;
+      color: #fff;
+    }
+    .brand-link img {
+      height: 32px;
+      width: auto;
+      display: block;
+      object-fit: contain;
     }
     .header-nav {
       display: flex;
@@ -923,10 +946,7 @@
   <header class="site-header">
     <div class="header-container">
       <a href="https://geeknook.ru/" class="brand-link" aria-label="GeekNook Главная">
-        <svg width="24" height="24" viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="6" fill="#2b70f0"/>
-          <path d="M8 10h16M8 16h16M8 22h10" stroke="#0c0c0e" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
+        <img src="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" alt="GeekNook" width="32" height="32" loading="eager">
         <span>GEEK NOOK</span>
       </a>
       <nav class="header-nav" aria-label="Основное меню">
@@ -1325,7 +1345,10 @@
     <div class="container">
       <div class="footer-content">
         <div class="footer-col">
-          <h5>GEEK NOOK</h5>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+            <img src="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" alt="GeekNook" width="30" height="30" style="display:block;object-fit:contain;">
+            <span style="font-weight:900;letter-spacing:0.05em;color:#fff;font-size:1.15rem;font-family:var(--font-display);">GEEK NOOK</span>
+          </div>
           <p>Инженерия и эстетика рабочего пространства. Премиальные настольные подставки, органайзеры и коврики из массива дуба и ореха.</p>
           <p style="margin-top:12px;font-size:0.8rem;color:#64748b;">Производство и разработка: г. Москва</p>
         </div>

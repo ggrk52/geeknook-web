@@ -9,6 +9,7 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://geeknook.ru/journal?article=organizatsiya-rabochego-mesta-na-stole-dlya-gibridnoy-raboty-noutbuk-m">
   <link rel="icon" type="image/x-icon" href="../favicon.ico">
+  <link rel="icon" href="../images/tild6164-6364-4661-b835-636430386562__logo_oo.png" type="image/png">
   
   <!-- Open Graph -->
   <meta property="og:type" content="article">
@@ -33,7 +34,7 @@
       "name": "GeekNook",
       "logo": {
         "@type": "ImageObject",
-        "url": "https://geeknook.ru/favicon.ico"
+        "url": "https://geeknook.ru/images/tild6164-6364-4661-b835-636430386562__logo_oo.png"
       }
     },
     "mainEntityOfPage": "https://geeknook.ru/journal?article=organizatsiya-rabochego-mesta-na-stole-dlya-gibridnoy-raboty-noutbuk-m"
@@ -104,6 +105,12 @@
       align-items: center;
       justify-content: space-between;
       gap: 16px;
+    }
+    .brand-link img {
+      height: 28px;
+      width: auto;
+      display: block;
+      object-fit: contain;
     }
     .brand-link {
       display: flex;
@@ -401,12 +408,9 @@
 
   <header class="article-header">
     <div class="header-container">
-      <a href="https://geeknook.ru/" class="brand-link">
-        <svg width="22" height="22" viewBox="0 0 32 32" fill="none">
-          <rect width="32" height="32" rx="6" fill="#2b70f0"/>
-          <path d="M8 10h16M8 16h16M8 22h10" stroke="#0c0c0e" stroke-width="2.5" stroke-linecap="round"/>
-        </svg>
-        GEEK NOOK
+      <a href="https://geeknook.ru/" class="brand-link" aria-label="GeekNook Главная">
+        <img src="../images/tild6164-6364-4661-b835-636430386562__logo_oo.png" alt="GeekNook" width="28" height="28" style="display:block;object-fit:contain;">
+        <span>GEEK NOOK</span>
       </a>
       <div class="nav-actions">
         <a href="https://geeknook.ru/journal" class="back-btn">
@@ -516,8 +520,12 @@
     </div>
 
     <footer class="site-footer">
-      <p>© 2026 ООО «ГИК НУК» (ИНН 9723239478). Все права защищены.</p>
-      <p style="margin-top:6px;"><a href="https://geeknook.ru/">На главную</a> • <a href="https://geeknook.ru/journal">Все статьи Журнала</a> • <a href="https://geeknook.ru/legal">Правовой центр</a></p>
+      <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:12px;">
+        <img src="../images/tild6164-6364-4661-b835-636430386562__logo_oo.png" alt="GeekNook" width="24" height="24" style="display:block;object-fit:contain;">
+        <span style="font-weight:900;letter-spacing:0.05em;color:#fff;font-size:1rem;">GEEK NOOK</span>
+      </div>
+      <p>© 2026 ООО «ГИК НУК» (ИНН 9723239478, ОГРН 1247700620265). Все права защищены.</p>
+      <p style="margin-top:6px;"><a href="https://geeknook.ru/">На главную</a> • <a href="https://geeknook.ru/podstavki-pod-monitor">Подставки под монитор</a> • <a href="https://geeknook.ru/journal">Все статьи Журнала</a> • <a href="https://geeknook.ru/legal">Правовой центр</a></p>
     </footer>
   </main>
 
