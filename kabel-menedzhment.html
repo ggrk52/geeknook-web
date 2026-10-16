@@ -2576,13 +2576,14 @@
         ctx.beginPath(); ctx.arc(wallX + 6, wallY, 3, 0, Math.PI * 2); ctx.fill();
 
         if (isChaos) {
+          const brickX = Math.max(width * 0.26, 320);
           ctx.fillStyle = '#0f172a';
-          ctx.fillRect(width * 0.16, height - 34, 46, 22);
+          ctx.fillRect(brickX, height - 34, 46, 22);
           ctx.strokeStyle = '#334155';
-          ctx.strokeRect(width * 0.16, height - 34, 46, 22);
+          ctx.strokeRect(brickX, height - 34, 46, 22);
           ctx.fillStyle = '#94a3b8';
           ctx.font = 'bold 7px monospace';
-          ctx.fillText('140W BRICK', width * 0.16 + 4, height - 20);
+          ctx.fillText('140W BRICK', brickX + 4, height - 20);
         }
 
         // 5. Cables
@@ -2851,31 +2852,44 @@
           if (spark.life <= 0) cableState.snapSparks.splice(i, 1);
         }
 
-        // 10. Badges on Canvas
+        // 10. Badges on Canvas (Auto-measured width with padding so text NEVER overflows)
+        const drawCanvasBadge = (text, bgColor, strokeColor, textColor = '#ffffff') => {
+          ctx.save();
+          ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
+          const textMetrics = ctx.measureText(text);
+          const textW = textMetrics.width;
+          const padX = 14;
+          const bw = Math.round(textW + padX * 2);
+          const bh = 26;
+          const bx = width * 0.50;
+          const by = height * 0.86;
+
+          ctx.fillStyle = bgColor;
+          ctx.strokeStyle = strokeColor;
+          ctx.lineWidth = 1;
+
+          ctx.beginPath();
+          if (ctx.roundRect) {
+            ctx.roundRect(bx - bw / 2, by - bh / 2, bw, bh, 6);
+          } else {
+            ctx.rect(bx - bw / 2, by - bh / 2, bw, bh);
+          }
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = textColor;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillText(text, bx, by);
+          ctx.restore();
+        };
+
         if (isChaos) {
-          ctx.save();
-          ctx.fillStyle = 'rgba(239, 68, 68, 0.9)';
-          const bw = isMobile ? 220 : 170;
-          const bx = width * 0.50;
-          const by = height * 0.86;
-          ctx.fillRect(bx - bw / 2, by - 12, bw, 24);
-          ctx.font = 'bold 10px system-ui, sans-serif';
-          ctx.fillStyle = '#ffffff';
-          ctx.textAlign = 'center';
-          ctx.fillText('⚠️ Хаос: кабели свисают со стола', bx, by + 4);
-          ctx.restore();
-        } else if (!isXray) {
-          ctx.save();
-          ctx.fillStyle = 'rgba(16, 185, 129, 0.88)';
-          const bw = isMobile ? 240 : 210;
-          const bx = width * 0.50;
-          const by = height * 0.86;
-          ctx.fillRect(bx - bw / 2, by - 12, bw, 24);
-          ctx.font = 'bold 10px system-ui, sans-serif';
-          ctx.fillStyle = '#ffffff';
-          ctx.textAlign = 'center';
-          ctx.fillText('✓ Дзен: 100% кабелей спрятаны в лоток', bx, by + 4);
-          ctx.restore();
+          drawCanvasBadge('⚠️ Хаос: кабели свисают со стола', 'rgba(239, 68, 68, 0.92)', 'rgba(254, 202, 202, 0.7)');
+        } else if (isXray) {
+          drawCanvasBadge('⚡ Рентген: внутренняя укладка шины 220V и данных', 'rgba(2, 132, 199, 0.92)', 'rgba(56, 189, 248, 0.7)');
+        } else {
+          drawCanvasBadge('✓ Дзен: 100% кабелей спрятаны в лоток', 'rgba(16, 185, 129, 0.92)', 'rgba(167, 243, 208, 0.7)');
         }
 
         if (isCableVisible) {

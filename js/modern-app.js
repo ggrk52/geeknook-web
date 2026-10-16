@@ -7003,8 +7003,10 @@
         // Red warnings in Chaos mode
         const drawWarning = (wx, wy, text) => {
           ctx.save();
+          ctx.font = 'bold 9px system-ui, sans-serif';
+          const textW = ctx.measureText(text).width;
+          const bw = Math.round(textW + 22);
           ctx.fillStyle = 'rgba(239, 68, 68, 0.9)';
-          const bw = isMobile ? 220 : 150;
           ctx.beginPath();
           ctx.roundRect ? ctx.roundRect(wx - bw / 2, wy - 12, bw, 24, 12) : ctx.rect(wx - bw / 2, wy - 12, bw, 24);
           ctx.fill();
@@ -7012,7 +7014,6 @@
           ctx.lineWidth = 1;
           ctx.stroke();
 
-          ctx.font = 'bold 9px system-ui, sans-serif';
           ctx.fillStyle = '#ffffff';
           ctx.textAlign = 'center';
           ctx.fillText(text, wx, wy + 4);
@@ -7029,8 +7030,10 @@
         // Green Zen Success Badges in Stealth mode
         const drawZen = (zx, zy, text) => {
           ctx.save();
+          ctx.font = 'bold 9px system-ui, sans-serif';
+          const textW = ctx.measureText(text).width;
+          const bw = Math.round(textW + 22);
           ctx.fillStyle = 'rgba(16, 185, 129, 0.88)';
-          const bw = isMobile ? 220 : 160;
           ctx.beginPath();
           ctx.roundRect ? ctx.roundRect(zx - bw / 2, zy - 11, bw, 22, 11) : ctx.rect(zx - bw / 2, zy - 11, bw, 22);
           ctx.fill();
@@ -7038,7 +7041,6 @@
           ctx.lineWidth = 1;
           ctx.stroke();
 
-          ctx.font = 'bold 9px system-ui, sans-serif';
           ctx.fillStyle = '#ffffff';
           ctx.textAlign = 'center';
           ctx.fillText(text, zx, zy + 4);
