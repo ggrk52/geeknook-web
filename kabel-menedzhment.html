@@ -800,6 +800,57 @@
       box-shadow: 0 0 10px #818cf8;
     }
 
+    .cable-mode-callout {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 18px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+      pointer-events: none;
+      z-index: 10;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .cable-mode-callout.chaos {
+      background: rgba(220, 38, 38, 0.92);
+      color: #ffffff;
+      border: 1px solid rgba(254, 202, 202, 0.5);
+    }
+
+    .cable-mode-callout.stealth {
+      background: rgba(16, 185, 129, 0.92);
+      color: #ffffff;
+      border: 1px solid rgba(167, 243, 208, 0.5);
+    }
+
+    .cable-mode-callout.xray {
+      background: rgba(2, 132, 199, 0.92);
+      color: #ffffff;
+      border: 1px solid rgba(56, 189, 248, 0.5);
+    }
+
+    @media (max-width: 640px) {
+      .cable-canvas-hint {
+        display: none;
+      }
+      .cable-mode-callout {
+        bottom: 10px;
+        font-size: 0.725rem;
+        padding: 5px 12px;
+      }
+    }
+
     /* Telemetry Grid */
     .cable-desk-metrics-grid {
       display: grid;
@@ -1605,6 +1656,10 @@
           <div class="cable-status-pill magnetic" id="cableStatusPill">
             <span class="cable-status-indicator"></span>
             <span id="cableStatusText">Stealth-лоток: все 4 кабельных канала зафиксированы</span>
+          </div>
+          <div class="cable-mode-callout stealth" id="cableModeCallout">
+            <span class="callout-icon">✓</span>
+            <span class="callout-text" id="cableCalloutText">Дзен: 100% кабелей спрятаны в лоток</span>
           </div>
         </div>
 
@@ -2852,45 +2907,7 @@
           if (spark.life <= 0) cableState.snapSparks.splice(i, 1);
         }
 
-        // 10. Badges on Canvas (Auto-measured width with padding so text NEVER overflows)
-        const drawCanvasBadge = (text, bgColor, strokeColor, textColor = '#ffffff') => {
-          ctx.save();
-          ctx.font = 'bold 11px system-ui, -apple-system, sans-serif';
-          const textMetrics = ctx.measureText(text);
-          const textW = textMetrics.width;
-          const padX = 14;
-          const bw = Math.round(textW + padX * 2);
-          const bh = 26;
-          const bx = width * 0.50;
-          const by = height * 0.86;
-
-          ctx.fillStyle = bgColor;
-          ctx.strokeStyle = strokeColor;
-          ctx.lineWidth = 1;
-
-          ctx.beginPath();
-          if (ctx.roundRect) {
-            ctx.roundRect(bx - bw / 2, by - bh / 2, bw, bh, 6);
-          } else {
-            ctx.rect(bx - bw / 2, by - bh / 2, bw, bh);
-          }
-          ctx.fill();
-          ctx.stroke();
-
-          ctx.fillStyle = textColor;
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.fillText(text, bx, by);
-          ctx.restore();
-        };
-
-        if (isChaos) {
-          drawCanvasBadge('⚠️ Хаос: кабели свисают со стола', 'rgba(239, 68, 68, 0.92)', 'rgba(254, 202, 202, 0.7)');
-        } else if (isXray) {
-          drawCanvasBadge('⚡ Рентген: внутренняя укладка шины 220V и данных', 'rgba(2, 132, 199, 0.92)', 'rgba(56, 189, 248, 0.7)');
-        } else {
-          drawCanvasBadge('✓ Дзен: 100% кабелей спрятаны в лоток', 'rgba(16, 185, 129, 0.92)', 'rgba(167, 243, 208, 0.7)');
-        }
+        // Badges are rendered via crisp HTML/CSS overlay (.cable-mode-callout) to ensure zero text overflow across all devices
 
         if (isCableVisible) {
           cableState.animFrame = requestAnimationFrame(stepPhysics);
@@ -2970,14 +2987,33 @@
         if (mode === 'xray') statusPill.classList.add('xray');
       }
 
+      const callout = document.getElementById('cableModeCallout');
+      const calloutText = document.getElementById('cableCalloutText');
+      const calloutIcon = callout ? callout.querySelector('.callout-icon') : null;
+
       if (mode === 'magnetic') {
         if (statusText) statusText.textContent = 'Stealth-лоток: все 4 канала зафиксированы';
+        if (callout && calloutText) {
+          callout.className = 'cable-mode-callout stealth';
+          if (calloutIcon) calloutIcon.textContent = '✓';
+          calloutText.textContent = 'Дзен: 100% кабелей спрятаны в лоток';
+        }
         showToast('GeekNook Stealth: Все кабели уложены в скрытый лоток');
       } else if (mode === 'xray') {
         if (statusText) statusText.textContent = 'Рентген лотка: разделение шин 220V и данных';
+        if (callout && calloutText) {
+          callout.className = 'cable-mode-callout xray';
+          if (calloutIcon) calloutIcon.textContent = '⚡';
+          calloutText.textContent = 'Рентген: разделение шин 220V и данных';
+        }
         showToast('Инженерный Рентген: внутренняя укладка проводов в лотке');
       } else {
         if (statusText) statusText.textContent = 'Свободное провисание (Хаос на столе)';
+        if (callout && calloutText) {
+          callout.className = 'cable-mode-callout chaos';
+          if (calloutIcon) calloutIcon.textContent = '⚠️';
+          calloutText.textContent = 'Хаос: кабели свисают со стола';
+        }
         showToast('Режим без GeekNook: хаос проводов на рабочей поверхности');
       }
 
