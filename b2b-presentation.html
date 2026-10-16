@@ -61,6 +61,27 @@
     .btn-nav:hover { background: rgba(255, 255, 255, 0.16); }
     .btn-nav.primary { background: var(--primary); border-color: var(--primary); }
 
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .deck-container {
+        aspect-ratio: auto;
+        min-height: auto;
+        padding: 20px 16px;
+      }
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+      .deck-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .btn-nav {
+        padding: 8px 12px;
+        font-size: 0.8125rem;
+      }
+    }
+
     @media print {
       body { background: #fff; color: #000; padding: 0; }
       .deck-nav { display: none; }

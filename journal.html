@@ -193,6 +193,29 @@
       box-shadow: 0 6px 20px rgba(43, 112, 240, 0.4);
       text-decoration: none;
     }
+    .journal-header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-shrink: 0;
+    }
+    @media (max-width: 768px) {
+      .journal-category-btn {
+        display: none !important;
+      }
+    }
+    @media (max-width: 420px) {
+      .header-container {
+        padding: 10px 14px;
+      }
+      .brand-link span {
+        font-size: 1rem;
+      }
+      .btn-to-shop {
+        padding: 8px 12px;
+        font-size: 0.8125rem;
+      }
+    }
     .journal-hero {
       max-width: 1200px;
       margin: 0 auto;
@@ -809,14 +832,14 @@
         <img src="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" alt="GeekNook" width="32" height="32" loading="eager">
         <span>GEEK NOOK</span>
       </a>
-      <div style="display:flex;gap:10px;align-items:center;">
-        <a href="https://geeknook.ru/podstavki-pod-monitor" class="btn-to-shop" style="background:rgba(43,112,240,0.12);border:1px solid rgba(43,112,240,0.3);color:#38bdf8;">
+      <div class="journal-header-actions">
+        <a href="https://geeknook.ru/podstavki-pod-monitor" class="btn-to-shop journal-category-btn" style="background:rgba(43,112,240,0.12);border:1px solid rgba(43,112,240,0.3);color:#38bdf8;">
           <span>Подставки</span>
         </a>
-        <a href="https://geeknook.ru/kovriki-dlya-stola" class="btn-to-shop" style="background:rgba(156,163,175,0.12);border:1px solid rgba(156,163,175,0.3);color:#e2e8f0;">
+        <a href="https://geeknook.ru/kovriki-dlya-stola" class="btn-to-shop journal-category-btn" style="background:rgba(156,163,175,0.12);border:1px solid rgba(156,163,175,0.3);color:#e2e8f0;">
           <span>Коврики</span>
         </a>
-        <a href="https://geeknook.ru/kabel-menedzhment" class="btn-to-shop" style="background:rgba(203,168,112,0.12);border:1px solid rgba(203,168,112,0.3);color:#cba870;">
+        <a href="https://geeknook.ru/kabel-menedzhment" class="btn-to-shop journal-category-btn" style="background:rgba(203,168,112,0.12);border:1px solid rgba(203,168,112,0.3);color:#cba870;">
           <span>Кабели</span>
         </a>
         <a href="https://geeknook.ru/" class="btn-to-shop">

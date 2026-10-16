@@ -315,6 +315,7 @@ textarea:focus-visible {
   align-items: center;
   gap: clamp(6px, 0.8vw, 12px);
   flex-shrink: 0;
+  min-width: max-content;
 }
 
 .nav-icon-btn {
@@ -2771,9 +2772,12 @@ textarea:focus-visible {
   .btn-header-catalog {
     display: none !important;
   }
+  .nav-links {
+    gap: 12px;
+  }
 }
 
-@media (max-width: 1240px) {
+@media (max-width: 1280px) {
   .cmd-k-kbd {
     display: none !important;
   }
@@ -2781,11 +2785,15 @@ textarea:focus-visible {
     padding: 7px 9px;
   }
   .nav-links {
-    gap: 12px;
+    gap: clamp(6px, 0.9vw, 10px);
+  }
+  .nav-links a {
+    font-size: 0.8125rem;
+    padding: 6px 5px;
   }
 }
 
-@media (max-width: 1140px) {
+@media (max-width: 1180px) {
   .nav-links {
     display: none !important;
   }

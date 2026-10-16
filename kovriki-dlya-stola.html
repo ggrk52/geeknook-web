@@ -1029,12 +1029,20 @@
       opacity: 1;
     }
 
+    @media (max-width: 860px) {
+      .header-nav { display: none !important; }
+    }
     @media (max-width: 768px) {
-      .header-nav { display: none; }
       .footer-content { grid-template-columns: 1fr; gap: 24px; }
       .product-grid { grid-template-columns: 1fr; }
       .compare-grid { grid-template-columns: 1fr; }
       .hero-features-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 420px) {
+      .header-container { padding: 10px 14px; }
+      .brand-link span { font-size: 1rem; }
+      .btn-header-cart span { display: none; }
+      .btn-header-cart { padding: 8px 12px; }
     }
   </style>
 </head>
