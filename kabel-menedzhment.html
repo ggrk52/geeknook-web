@@ -208,28 +208,30 @@
   }
   </script>
 
-  <!-- Google Fonts -->
+  <!-- Google Fonts Preconnect -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Onest:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   <style>
     :root {
-      --bg-dark: #0b0d11;
-      --bg-surface: #12161f;
-      --bg-surface-elevated: #181d28;
-      --border-subtle: rgba(255, 255, 255, 0.08);
-      --border-strong: rgba(255, 255, 255, 0.16);
-      --accent-gold: #cba870;
-      --accent-gold-hover: #dfbc84;
-      --accent-blue: #38bdf8;
-      --accent-green: #10b981;
-      --text-main: #f8fafc;
+      --bg: #0b0d11;
+      --card-bg: #12161f;
+      --card-border: rgba(255, 255, 255, 0.08);
+      --card-hover-border: rgba(43, 112, 240, 0.4);
+      --text: #f0f0f3;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
+      --primary: #2b70f0;
+      --primary-hover: #1b5ed6;
+      --primary-glow: rgba(43, 112, 240, 0.28);
+      --primary-surface: rgba(43, 112, 240, 0.1);
+      --stat-blue: #38bdf8;
+      --accent-green: #10b981;
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 20px;
+      --radius-full: 9999px;
       --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-body: 'Onest', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
@@ -244,8 +246,8 @@
 
     html {
       scroll-behavior: smooth;
-      background: var(--bg-dark);
-      color: var(--text-main);
+      background: var(--bg);
+      color: var(--text);
       font-family: var(--font-body);
       overflow-x: hidden;
       width: 100%;
@@ -256,11 +258,12 @@
       min-height: 100vh;
       overflow-x: hidden;
       line-height: 1.6;
-      background-color: var(--bg-dark);
+      background-color: var(--bg);
       background-image: 
-        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(203, 168, 112, 0.08), transparent 70%),
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(43, 112, 240, 0.08), transparent 70%),
         radial-gradient(ellipse 60% 40% at 85% 30%, rgba(56, 189, 248, 0.04), transparent 60%);
       background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
     }
 
     a {
@@ -302,7 +305,7 @@
       background: rgba(11, 13, 17, 0.88);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--card-border);
       transition: var(--transition);
     }
 
@@ -332,11 +335,11 @@
       font-weight: 700;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--accent-gold);
-      background: rgba(203, 168, 112, 0.12);
+      color: var(--stat-blue);
+      background: var(--primary-surface);
       padding: 3px 8px;
       border-radius: 4px;
-      border: 1px solid rgba(203, 168, 112, 0.25);
+      border: 1px solid rgba(43, 112, 240, 0.25);
     }
 
     .header-nav {
@@ -357,11 +360,11 @@
     }
 
     .nav-link:hover, .nav-link.active {
-      color: var(--text-main);
+      color: var(--text);
     }
 
     .nav-link.active {
-      color: var(--accent-gold);
+      color: var(--primary);
       font-weight: 600;
     }
 
@@ -384,7 +387,7 @@
     }
 
     .header-phone:hover {
-      color: var(--text-main);
+      color: var(--text);
     }
 
     .btn-header-cart {
@@ -392,9 +395,9 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-strong);
-      color: var(--text-main);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
       padding: 0 16px;
       height: 44px;
       border-radius: var(--radius-sm);
@@ -405,15 +408,15 @@
 
     .btn-header-cart:hover {
       background: rgba(255, 255, 255, 0.08);
-      border-color: var(--accent-gold);
+      border-color: var(--primary);
     }
 
     .cart-badge {
-      background: var(--accent-gold);
-      color: #000;
+      background: var(--primary);
+      color: #fff;
       font-size: 11px;
       font-weight: 800;
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 10px;
     }
 
@@ -440,16 +443,16 @@
     }
 
     .breadcrumbs a:hover {
-      color: var(--accent-gold);
+      color: var(--primary);
     }
 
     .breadcrumbs-sep {
-      color: var(--border-strong);
+      color: var(--card-border);
     }
 
     /* Category Hero */
     .cat-hero {
-      padding: 20px 0 48px;
+      padding: 20px 0 44px;
       text-align: center;
       position: relative;
     }
@@ -462,11 +465,11 @@
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--accent-blue);
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.25);
+      color: var(--stat-blue);
+      background: var(--primary-surface);
+      border: 1px solid rgba(43, 112, 240, 0.3);
       padding: 6px 14px;
-      border-radius: 20px;
+      border-radius: var(--radius-full);
       margin-bottom: 20px;
     }
 
@@ -498,8 +501,8 @@
     }
 
     .feat-pill {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-md);
       padding: 14px 18px;
       display: flex;
@@ -507,144 +510,400 @@
       gap: 12px;
       font-size: 14px;
       font-weight: 500;
-      color: var(--text-main);
+      color: var(--text);
       text-align: left;
+      transition: var(--transition);
+    }
+
+    .feat-pill:hover {
+      border-color: var(--card-hover-border);
     }
 
     .feat-pill svg {
       flex-shrink: 0;
-      color: var(--accent-gold);
+      color: var(--primary);
     }
 
-    /* Physics Simulator Block */
-    .sim-section {
-      padding: 24px 0 60px;
-    }
-
-    .sim-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-strong);
+    /* 360° Stealth Cable Physics Simulator */
+    .cable-physics-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-lg);
-      padding: 28px;
+      padding: 32px 28px;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+      margin-bottom: 48px;
     }
 
-    .sim-header {
+    @media (max-width: 600px) {
+      .cable-physics-card {
+        padding: 20px 14px;
+      }
+    }
+
+    .cable-card-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
+      align-items: flex-start;
+      gap: 20px;
       margin-bottom: 20px;
-    }
-
-    .sim-title {
-      font-family: var(--font-display);
-      font-size: 20px;
-      font-weight: 700;
-      color: #fff;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .sim-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
       flex-wrap: wrap;
     }
 
-    .sim-btn {
+    .cable-header-text {
+      max-width: 640px;
+    }
+
+    .cable-card-title {
+      font-family: var(--font-display);
+      font-size: 1.55rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 6px 0 8px;
+      color: #ffffff;
+    }
+
+    .cable-card-subtitle {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+      margin: 0;
+    }
+
+    .cable-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cable-mode-switcher {
+      display: inline-flex;
+      background: #090c12;
+      padding: 4px;
+      border-radius: var(--radius-full);
+      border: 1px solid var(--card-border);
+      gap: 4px;
+    }
+
+    @media (max-width: 600px) {
+      .cable-mode-switcher {
+        display: grid;
+        grid-template-columns: 1fr;
+        width: 100%;
+        border-radius: var(--radius-md);
+      }
+    }
+
+    .cable-mode-btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle);
-      color: var(--text-muted);
-      padding: 8px 16px;
-      border-radius: var(--radius-sm);
-      font-size: 13px;
-      font-weight: 600;
+      gap: 6px;
+      background: none;
+      border: none;
+      padding: 8px 18px;
       min-height: 44px;
+      box-sizing: border-box;
+      border-radius: var(--radius-full);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
       transition: var(--transition);
     }
 
-    .sim-btn:hover {
-      color: var(--text-main);
-      border-color: var(--border-strong);
+    @media (max-width: 600px) {
+      .cable-mode-btn {
+        width: 100%;
+        justify-content: center;
+        border-radius: var(--radius-sm);
+      }
     }
 
-    .sim-btn.active {
-      background: rgba(203, 168, 112, 0.15);
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
+    .cable-mode-btn:hover {
+      color: #ffffff;
     }
 
-    .sim-canvas-box {
-      width: 100%;
-      height: 320px;
-      background: #080a0e;
-      border: 1px solid var(--border-subtle);
+    .cable-mode-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 2px 10px rgba(43, 112, 240, 0.4);
+    }
+
+    .cable-mode-btn#cableModeMagneticBtn.active {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .cable-mode-btn#cableModeXrayBtn.active {
+      background: #3b82f6;
+      color: #ffffff;
+    }
+
+    .btn-cable-shake {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #090c12;
+      border: 1px solid var(--card-border);
+      padding: 8px 16px;
+      min-height: 44px;
+      border-radius: var(--radius-full);
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-cable-shake:hover {
+      border-color: var(--primary);
+      color: var(--stat-blue);
+      transform: translateY(-1px);
+    }
+
+    @media (max-width: 600px) {
+      .btn-cable-shake {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    /* Devices Bar */
+    .cable-devices-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 16px;
+      padding: 10px 16px;
+      background: #090c12;
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-md);
-      position: relative;
-      overflow: hidden;
-      touch-action: none;
+      flex-wrap: wrap;
     }
 
-    .sim-canvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    .sim-canvas-hint {
-      position: absolute;
-      bottom: 12px;
-      left: 14px;
-      font-size: 12px;
-      font-family: var(--font-mono);
-      color: var(--text-dim);
-      pointer-events: none;
+    .cable-devices-label {
+      font-size: 0.825rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-right: 4px;
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .sim-metrics-grid {
+    .cable-device-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 14px;
+      min-height: 44px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-full);
+      font-size: 0.825rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .cable-device-pill:hover {
+      border-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .cable-device-pill.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(43, 112, 240, 0.3);
+    }
+
+    /* Canvas Box */
+    .cable-canvas-box {
+      background: radial-gradient(circle at 50% 25%, #151b26 0%, #090c12 100%);
+      border-radius: var(--radius-md);
+      position: relative;
+      overflow: hidden;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 24px 48px -18px rgba(0, 0, 0, 0.6);
+    }
+
+    .cable-canvas-box:active {
+      cursor: grabbing;
+    }
+
+    .cable-canvas {
+      width: 100%;
+      height: clamp(380px, 50vh, 540px);
+      display: block;
+    }
+
+    .cable-canvas-hint {
+      position: absolute;
+      bottom: 14px;
+      left: 16px;
+      background: rgba(15, 23, 42, 0.94);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: #cbd5e1;
+      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cable-status-pill {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      background: rgba(15, 23, 42, 0.94);
+      padding: 6px 14px;
+      border-radius: var(--radius-full);
+      font-size: 0.775rem;
+      font-weight: 600;
+      color: #cbd5e1;
+      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition);
+    }
+
+    .cable-status-indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #f59e0b;
+      box-shadow: 0 0 8px #f59e0b;
+      transition: var(--transition);
+    }
+
+    .cable-status-pill.magnetic .cable-status-indicator {
+      background: #38bdf8;
+      box-shadow: 0 0 10px #38bdf8;
+    }
+
+    .cable-status-pill.xray .cable-status-indicator {
+      background: #818cf8;
+      box-shadow: 0 0 10px #818cf8;
+    }
+
+    /* Telemetry Grid */
+    .cable-desk-metrics-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 14px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
       margin-top: 20px;
     }
 
-    .sim-metric-card {
-      background: var(--bg-surface-elevated);
-      border: 1px solid var(--border-subtle);
+    @media (max-width: 900px) {
+      .cable-desk-metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .cable-desk-metrics-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .cable-metric-card {
+      background: #090c12;
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-sm);
-      padding: 14px;
+      padding: 16px;
     }
 
-    .sim-metric-label {
-      font-size: 11px;
-      font-family: var(--font-mono);
+    .cable-metric-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-muted);
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-dim);
-      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
     }
 
-    .sim-metric-val {
+    .cable-metric-value-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+
+    .cable-metric-val {
       font-family: var(--font-display);
-      font-size: 20px;
+      font-size: 1.6rem;
       font-weight: 800;
       color: var(--accent-green);
     }
 
-    .sim-metric-desc {
-      font-size: 12px;
+    .cable-metric-badge {
+      font-size: 0.725rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: var(--radius-full);
+      text-transform: uppercase;
+    }
+
+    .badge-good {
+      background: rgba(16, 185, 129, 0.15);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .badge-bad {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .badge-tech {
+      background: var(--primary-surface);
+      color: var(--stat-blue);
+      border: 1px solid rgba(43, 112, 240, 0.3);
+    }
+
+    .cable-metric-desc {
+      font-size: 0.825rem;
+      color: var(--text-dim);
+      line-height: 1.45;
+    }
+
+    /* Cable Legend */
+    .cable-legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--card-border);
+      font-size: 0.825rem;
       color: var(--text-muted);
-      margin-top: 2px;
+    }
+
+    .cable-legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cable-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
     }
 
     /* Filter Bar */
@@ -666,9 +925,9 @@
       flex-shrink: 0;
       min-height: 44px;
       padding: 0 20px;
-      border-radius: 30px;
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-full);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       color: var(--text-muted);
       font-size: 13px;
       font-weight: 600;
@@ -679,15 +938,16 @@
     }
 
     .filter-btn:hover {
-      color: var(--text-main);
-      border-color: var(--border-strong);
+      color: var(--text);
+      border-color: var(--card-hover-border);
     }
 
     .filter-btn.active {
-      background: var(--accent-gold);
-      color: #0b0d11;
-      border-color: var(--accent-gold);
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
       font-weight: 700;
+      box-shadow: 0 4px 14px rgba(43, 112, 240, 0.35);
     }
 
     /* Product Cards Grid */
@@ -705,8 +965,8 @@
     }
 
     .product-card {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-md);
       overflow: hidden;
       display: flex;
@@ -716,7 +976,7 @@
     }
 
     .product-card:hover {
-      border-color: var(--accent-gold);
+      border-color: var(--card-hover-border);
       transform: translateY(-4px);
       box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
     }
@@ -747,13 +1007,13 @@
       position: absolute;
       top: 12px;
       left: 12px;
-      background: rgba(11, 13, 17, 0.85);
-      border: 1px solid var(--border-strong);
+      background: rgba(11, 13, 17, 0.88);
+      border: 1px solid rgba(43, 112, 240, 0.4);
       font-size: 11px;
       font-weight: 700;
       letter-spacing: 0.05em;
       text-transform: uppercase;
-      color: var(--accent-gold);
+      color: var(--stat-blue);
       padding: 4px 10px;
       border-radius: 6px;
       z-index: 2;
@@ -791,7 +1051,7 @@
 
     .card-material {
       font-size: 12px;
-      color: var(--accent-gold);
+      color: var(--stat-blue);
       font-weight: 600;
       margin-bottom: 10px;
       letter-spacing: 0.02em;
@@ -810,7 +1070,7 @@
       font-size: 12px;
       color: var(--text-dim);
       margin-bottom: 18px;
-      border-top: 1px solid var(--border-subtle);
+      border-top: 1px solid var(--card-border);
       padding-top: 12px;
       display: flex;
       flex-direction: column;
@@ -834,7 +1094,7 @@
       justify-content: space-between;
       margin-bottom: 14px;
       padding-top: 12px;
-      border-top: 1px solid var(--border-subtle);
+      border-top: 1px solid var(--card-border);
     }
 
     .price-main {
@@ -859,8 +1119,8 @@
 
     .btn-card-buy {
       min-height: 46px;
-      background: var(--accent-gold);
-      color: #0b0d11;
+      background: var(--primary);
+      color: #ffffff;
       font-size: 14px;
       font-weight: 700;
       border-radius: var(--radius-sm);
@@ -873,16 +1133,17 @@
     }
 
     .btn-card-buy:hover {
-      background: var(--accent-gold-hover);
+      background: var(--primary-hover);
+      box-shadow: 0 4px 16px var(--primary-glow);
       transform: translateY(-2px);
     }
 
     /* Comparison Section */
     .compare-section {
       padding: 60px 0;
-      background: var(--bg-surface);
-      border-top: 1px solid var(--border-subtle);
-      border-bottom: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      border-bottom: 1px solid var(--card-border);
     }
 
     .compare-header {
@@ -902,9 +1163,9 @@
     .compare-table-wrap {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
-      border: 1px solid var(--border-strong);
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-md);
-      background: var(--bg-dark);
+      background: var(--bg);
     }
 
     .compare-table {
@@ -916,11 +1177,11 @@
 
     .compare-table th, .compare-table td {
       padding: 16px 20px;
-      border-bottom: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--card-border);
     }
 
     .compare-table th {
-      background: var(--bg-surface-elevated);
+      background: #090c12;
       font-family: var(--font-display);
       font-weight: 700;
       color: #fff;
@@ -932,7 +1193,7 @@
     }
 
     .compare-table td.brand-col {
-      background: rgba(203, 168, 112, 0.05);
+      background: var(--primary-surface);
       color: #fff;
       font-weight: 600;
     }
@@ -968,15 +1229,15 @@
     }
 
     .faq-item {
-      background: var(--bg-surface);
-      border: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-sm);
       overflow: hidden;
       transition: var(--transition);
     }
 
     .faq-item.active {
-      border-color: var(--accent-gold);
+      border-color: var(--primary);
     }
 
     .faq-q {
@@ -1002,7 +1263,7 @@
       align-items: center;
       justify-content: center;
       transition: transform 0.25s ease;
-      color: var(--accent-gold);
+      color: var(--primary);
     }
 
     .faq-item.active .faq-icon {
@@ -1024,8 +1285,8 @@
     /* Journal Articles Carousel */
     .journal-section {
       padding: 50px 0 70px;
-      background: var(--bg-surface);
-      border-top: 1px solid var(--border-subtle);
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
     }
 
     .journal-header {
@@ -1045,12 +1306,17 @@
     }
 
     .journal-header a {
-      color: var(--accent-gold);
+      color: var(--stat-blue);
       font-size: 14px;
       font-weight: 600;
       min-height: 44px;
       display: inline-flex;
       align-items: center;
+      transition: var(--transition);
+    }
+
+    .journal-header a:hover {
+      color: #ffffff;
     }
 
     .articles-grid {
@@ -1060,8 +1326,8 @@
     }
 
     .article-card {
-      background: var(--bg-dark);
-      border: 1px solid var(--border-subtle);
+      background: var(--bg);
+      border: 1px solid var(--card-border);
       border-radius: var(--radius-sm);
       padding: 20px;
       display: flex;
@@ -1071,14 +1337,14 @@
     }
 
     .article-card:hover {
-      border-color: var(--accent-gold);
+      border-color: var(--primary);
       transform: translateY(-2px);
     }
 
     .article-tag {
       font-size: 11px;
       font-family: var(--font-mono);
-      color: var(--accent-blue);
+      color: var(--stat-blue);
       text-transform: uppercase;
       margin-bottom: 8px;
     }
@@ -1095,7 +1361,7 @@
 
     .article-link {
       font-size: 13px;
-      color: var(--accent-gold);
+      color: var(--primary);
       font-weight: 600;
       display: inline-flex;
       align-items: center;
@@ -1105,7 +1371,7 @@
     /* Footer */
     .site-footer {
       background: #07090c;
-      border-top: 1px solid var(--border-subtle);
+      border-top: 1px solid var(--card-border);
       padding: 60px 0 40px;
       color: var(--text-muted);
       font-size: 13px;
@@ -1155,11 +1421,11 @@
     }
 
     .footer-links a:hover {
-      color: var(--accent-gold);
+      color: var(--primary);
     }
 
     .footer-bottom {
-      border-top: 1px solid var(--border-subtle);
+      border-top: 1px solid var(--card-border);
       padding-top: 24px;
       display: flex;
       justify-content: space-between;
@@ -1175,8 +1441,8 @@
       position: fixed;
       bottom: 24px;
       right: 24px;
-      background: #1e2430;
-      border: 1px solid var(--accent-gold);
+      background: #151b26;
+      border: 1px solid var(--primary);
       color: #fff;
       padding: 14px 20px;
       border-radius: var(--radius-sm);
@@ -1274,57 +1540,129 @@
         </div>
       </section>
 
-      <!-- Physics Cable Simulator Interactive Demo -->
-      <section class="sim-section" id="simulator">
-        <div class="sim-card">
-          <div class="sim-header">
-            <div class="sim-title">
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4a2 2 0 0 0-4 0v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4z"/></svg>
-              <span>Интерактивный симулятор: физика укладки проводов</span>
+      <!-- 360° Stealth Cable Physics Simulator -->
+      <section class="cable-physics-card" id="cableSimulatorCard">
+        <div class="cable-card-header">
+          <div class="cable-header-text">
+            <span style="font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--stat-blue);">08.3 // СИМУЛЯТОР РАБОЧЕГО СТОЛА // 360° STEALTH CABLE MANAGEMENT</span>
+            <h3 class="cable-card-title">Интерактивный сетап: Как GeekNook побеждает хаос проводов</h3>
+            <p class="cable-card-subtitle">
+              Взгляните на реальный рабочий стол с монитором 5K, MacBook и гаджетами. В режиме «Хаос» провода свисают со стола и путаются под руками. Активируйте <strong>GeekNook Stealth</strong> — магнитный Т-паз подставки Focus Station мгновенно уложит все кабели в скрытый лоток, а в режиме «Рентген» вы увидите распределение потоков энергии и данных изнутри.
+            </p>
+          </div>
+          <div class="cable-controls-group">
+            <div class="cable-mode-switcher">
+              <button type="button" class="cable-mode-btn" id="cableModeChaosBtn" onclick="setCableMode('chaos')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.7 7.7a2.5 2.5 0 1 1 1.8 4.3H2"></path><path d="M9.6 4.6A2 2 0 1 1 11 8H2"></path><path d="M12.6 19.4A2 2 0 1 0 14 16H2"></path></svg>
+                <span>Без GeekNook (Хаос)</span>
+              </button>
+              <button type="button" class="cable-mode-btn active" id="cableModeMagneticBtn" onclick="setCableMode('magnetic')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a8 8 0 0 1 16 0v4a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2v-4a2 2 0 0 0-4 0v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-4z"></path></svg>
+                <span>GeekNook Stealth (Дзен)</span>
+              </button>
+              <button type="button" class="cable-mode-btn" id="cableModeXrayBtn" onclick="setCableMode('xray')">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                <span>Рентген лотка (X-Ray)</span>
+              </button>
             </div>
-            <div class="sim-controls">
-              <button type="button" class="sim-btn active" id="btnModeGeekNook" onclick="setSimMode('clean')">
-                <span>С системой GeekNook</span>
-              </button>
-              <button type="button" class="sim-btn" id="btnModeChaos" onclick="setSimMode('chaos')">
-                <span>Без органайзера (Хаос)</span>
-              </button>
-              <button type="button" class="sim-btn" onclick="shakeSimulator()">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
-                <span>Импульс</span>
-              </button>
+            <button type="button" class="btn-cable-shake" onclick="shakeCables()" title="Встряхнуть кабели и проверить упругость">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+              <span>Магнитный импульс</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Connected Devices Bar -->
+        <div class="cable-devices-bar">
+          <span class="cable-devices-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22v-5"></path><path d="M9 8V2"></path><path d="M15 8V2"></path><path d="M18 8v5a6 6 0 0 1-12 0V8z"></path></svg>
+            Устройства на столе:
+          </span>
+          <button type="button" class="cable-device-pill active" id="devToggleMonitor" onclick="toggleCableDevice('monitor')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+            <span>Studio Display 5K</span>
+          </button>
+          <button type="button" class="cable-device-pill active" id="devToggleMacbook" onclick="toggleCableDevice('macbook')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"></rect><line x1="2" y1="20" x2="22" y2="20"></line></svg>
+            <span>MacBook Pro M3</span>
+          </button>
+          <button type="button" class="cable-device-pill active" id="devToggleIPhone" onclick="toggleCableDevice('iphone')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect><line x1="12" y1="18" x2="12.01" y2="18"></line></svg>
+            <span>iPhone MagSafe Stand</span>
+          </button>
+          <button type="button" class="cable-device-pill active" id="devToggleScreenbar" onclick="toggleCableDevice('screenbar')">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"></line><line x1="12" y1="6" x2="12" y2="14"></line><circle cx="12" cy="17" r="3"></circle></svg>
+            <span>Лампа ScreenBar</span>
+          </button>
+        </div>
+
+        <div class="cable-canvas-box" id="cableCanvasBox">
+          <canvas id="cablePhysicsCanvas" width="1200" height="540" class="cable-canvas"></canvas>
+          <div class="cable-canvas-hint">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"></path><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"></path><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"></path></svg>
+            <span>Тяните кабель пальцем или курсором • Магниты N52</span>
+          </div>
+          <div class="cable-status-pill magnetic" id="cableStatusPill">
+            <span class="cable-status-indicator"></span>
+            <span id="cableStatusText">T-Track замок: 4 канала зафиксированы</span>
+          </div>
+        </div>
+
+        <!-- Live Desk Health Telemetry Grid -->
+        <div class="cable-desk-metrics-grid" id="cableMetricsGrid">
+          <div class="cable-metric-card">
+            <div class="cable-metric-title">Визуальный шум на столе</div>
+            <div class="cable-metric-value-row">
+              <span class="cable-metric-val" id="cableMetricNoise">0%</span>
+              <span class="cable-metric-badge badge-good" id="cableMetricNoiseBadge">Идеальный Дзен</span>
             </div>
+            <div class="cable-metric-desc" id="cableMetricNoiseDesc">Все провода скрыты под полкой в алюминиевом профиле Т-паза</div>
           </div>
 
-          <div class="sim-canvas-box" id="simCanvasBox">
-            <canvas id="cableCanvas" class="sim-canvas" width="1180" height="320"></canvas>
-            <div class="sim-canvas-hint">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/></svg>
-              <span>Тяните кабель курсором или пальцем • Физика натяжения Verlet</span>
+          <div class="cable-metric-card">
+            <div class="cable-metric-title">Полезная площадь стола</div>
+            <div class="cable-metric-value-row">
+              <span class="cable-metric-val" id="cableMetricSpace">+40%</span>
+              <span class="cable-metric-badge badge-good" id="cableMetricSpaceBadge">Клавиатура спрятана</span>
             </div>
+            <div class="cable-metric-desc" id="cableMetricSpaceDesc">Клавиатура и мышь легко убираются в нишу под подставку (90 мм)</div>
           </div>
 
-          <div class="sim-metrics-grid">
-            <div class="sim-metric-card">
-              <div class="sim-metric-label">Визуальный шум на столе</div>
-              <div class="sim-metric-val" id="metricNoise">0%</div>
-              <div class="sim-metric-desc">Все провода убраны в лоток под столешницей</div>
+          <div class="cable-metric-card">
+            <div class="cable-metric-title">Скрыто кабелей</div>
+            <div class="cable-metric-value-row">
+              <span class="cable-metric-val" id="cableMetricHidden">4 из 4</span>
+              <span class="cable-metric-badge badge-good" id="cableMetricHiddenBadge">100% Stealth</span>
             </div>
-            <div class="sim-metric-card">
-              <div class="sim-metric-label">Полезная площадь стола</div>
-              <div class="sim-metric-val" id="metricSpace">+100%</div>
-              <div class="sim-metric-desc">Сетевой фильтр и адаптеры больше не лежат на столе</div>
+            <div class="cable-metric-desc" id="cableMetricHiddenDesc">Thunderbolt 4, 8K DisplayPort, MagSafe 140W и питание 220V</div>
+          </div>
+
+          <div class="cable-metric-card">
+            <div class="cable-metric-title">Магнитная фиксация T-Track</div>
+            <div class="cable-metric-value-row">
+              <span class="cable-metric-val" id="cableMetricHold">4× N52</span>
+              <span class="cable-metric-badge badge-tech" id="cableMetricHoldBadge">1.2 кг на отрыв</span>
             </div>
-            <div class="sim-metric-card">
-              <div class="sim-metric-label">Надежность фиксации</div>
-              <div class="sim-metric-val" id="metricHold">N52 Неодим</div>
-              <div class="sim-metric-desc">Магнитные замки удерживают тяжелые оплетенные корды</div>
-            </div>
-            <div class="sim-metric-card">
-              <div class="sim-metric-label">Охлаждение адаптеров</div>
-              <div class="sim-metric-val" id="metricTemp">34°C</div>
-              <div class="sim-metric-desc">Сквозная перфорация отводит тепло на 100%</div>
-            </div>
+            <div class="cable-metric-desc" id="cableMetricHoldDesc">Неодимовые фиксаторы удерживают даже массивные оплетенные корды</div>
+          </div>
+        </div>
+
+        <div class="cable-legend-row">
+          <div class="cable-legend-item">
+            <span class="cable-dot" style="background:#38bdf8;box-shadow:0 0 8px #38bdf8;"></span>
+            <span>Thunderbolt 4 (40 Gbps // 100W PD)</span>
+          </div>
+          <div class="cable-legend-item">
+            <span class="cable-dot" style="background:#fbbf24;box-shadow:0 0 8px #fbbf24;"></span>
+            <span>DisplayPort 2.1 (5K Retina // 120Hz)</span>
+          </div>
+          <div class="cable-legend-item">
+            <span class="cable-dot" style="background:#10b981;box-shadow:0 0 8px #10b981;"></span>
+            <span>MagSafe 3 Fast Charge (140W)</span>
+          </div>
+          <div class="cable-legend-item">
+            <span class="cable-dot" style="background:#f97316;box-shadow:0 0 8px #f97316;"></span>
+            <span>AC Mains Power 220V (Скрытый блок питания)</span>
           </div>
         </div>
       </section>
@@ -1492,7 +1830,7 @@
             <thead>
               <tr>
                 <th>Параметр</th>
-                <th style="color: var(--accent-gold);">Система GeekNook</th>
+                <th style="color: var(--stat-blue);">Система GeekNook</th>
                 <th style="color: var(--text-dim);">Пластиковые стяжки и дешевые лотки</th>
               </tr>
             </thead>
@@ -1769,335 +2107,982 @@
       }
     }
 
-    // --- Physics Cable Simulator ---
-    let simMode = 'clean'; // 'clean' | 'chaos'
-    let animId = null;
-    let isDragging = false;
-    let dragCableIndex = -1;
-    let dragPointIndex = -1;
-    let mousePos = { x: 0, y: 0 };
-    let canvasRect = null;
+    // =========================================================================
+    // 360° STEALTH CABLE MANAGEMENT SIMULATOR ENGINE (Verlet Physics + X-Ray)
+    // =========================================================================
+    const cableState = {
+      mode: 'magnetic', // 'magnetic' | 'chaos' | 'xray'
+      devices: {
+        monitor: true,
+        macbook: true,
+        iphone: true,
+        screenbar: true
+      },
+      stealthProgress: 1.0,
+      xrayProgress: 0.0,
+      keyboardProgress: 1.0,
+      simTick: 0,
+      mousePos: { x: 0, y: 0 },
+      draggedPoint: null,
+      draggedCable: null,
+      hoveredCable: null,
+      hoveredPoint: null,
+      snapSparks: [],
+      cables: [],
+      animFrame: null,
+      isInitialized: false
+    };
 
-    const cables = [
+    const cableConfigs = [
       {
-        name: 'Thunderbolt 4',
-        color: '#38bdf8',
-        points: [],
-        segments: 18,
-        length: 260
+        id: 'tb4',
+        device: 'macbook',
+        name: 'Thunderbolt 4 Pro (MacBook M3)',
+        color: '#334155',
+        weaveColor: '#64748b',
+        sheenColor: 'rgba(56, 189, 248, 0.6)',
+        photonColor: '#38bdf8',
+        width: 6.5,
+        ledColor: '#38bdf8',
+        spec: '40 Gbps // 100W PD // Оплетка Kevlar // Ø6.5mm',
+        segs: 26,
+        getChaosTargets: (w, h, sX, sW, sY) => {
+          const isMob = w < 640;
+          const sc = isMob ? Math.max(0.55, Math.min(0.85, w / 520)) : 1.0;
+          const mbW = (isMob ? 85 : 100) * sc;
+          const mbX = isMob ? (sX - mbW - 8) : (sX - 85);
+          const p0 = { x: mbX + mbW - 2, y: h * (isMob ? 0.54 : 0.62) };
+          const pEnd = { x: w * 0.44, y: sY + 16 };
+          return [p0, { x: sX + 10, y: h * 0.72 }, { x: w * 0.35, y: h * 0.80 }, { x: w * 0.40, y: h * 0.68 }, pEnd];
+        },
+        getStealthTargets: (w, h, sX, sW, sY) => {
+          const isMob = w < 640;
+          const sc = isMob ? Math.max(0.55, Math.min(0.85, w / 520)) : 1.0;
+          const mbW = (isMob ? 85 : 100) * sc;
+          const mbX = isMob ? (sX - mbW - 8) : (sX - 85);
+          const p0 = { x: mbX + mbW - 2, y: h * (isMob ? 0.54 : 0.62) };
+          const p1 = { x: sX - 6, y: sY + 18 };
+          const pEnd = { x: sX + sW * 0.22, y: sY + 16 };
+          return [p0, p1, pEnd];
+        }
       },
       {
-        name: 'DisplayPort 8K',
-        color: '#fbbf24',
-        points: [],
-        segments: 18,
-        length: 280
+        id: 'display',
+        device: 'monitor',
+        name: 'DisplayPort 2.1 (Studio Display 5K)',
+        color: '#0f172a',
+        weaveColor: '#1e293b',
+        sheenColor: 'rgba(251, 191, 36, 0.6)',
+        photonColor: '#fbbf24',
+        width: 7.0,
+        ledColor: '#fbbf24',
+        spec: '5K Retina @ 120Hz // 80 Gbps // Экранирован // Ø7.0mm',
+        segs: 24,
+        getChaosTargets: (w, h, sX, sW, sY) => {
+          const p0 = { x: w * 0.50, y: sY - 40 };
+          const pEnd = { x: w * 0.48, y: sY + 36 };
+          return [p0, { x: w * 0.53, y: sY + 12 }, { x: w * 0.55, y: h * 0.66 }, { x: w * 0.51, y: h * 0.68 }, pEnd];
+        },
+        getStealthTargets: (w, h, sX, sW, sY) => {
+          const p0 = { x: w * 0.50, y: sY - 40 };
+          const pEnd = { x: w * 0.50, y: sY + 16 };
+          return [p0, pEnd];
+        }
       },
       {
-        name: 'MagSafe 140W',
-        color: '#10b981',
-        points: [],
-        segments: 18,
-        length: 290
+        id: 'magsafe',
+        device: 'iphone',
+        name: 'MagSafe 3 Fast Charge (iPhone Stand)',
+        color: '#e2e8f0',
+        weaveColor: '#cbd5e1',
+        sheenColor: 'rgba(16, 185, 129, 0.7)',
+        photonColor: '#10b981',
+        width: 4.8,
+        ledColor: '#10b981',
+        spec: '140W Qi2 Fast Charge // Силикон // Ø4.8mm',
+        segs: 24,
+        getChaosTargets: (w, h, sX, sW, sY) => {
+          const isMob = w < 640;
+          const sc = isMob ? Math.max(0.55, Math.min(0.85, w / 520)) : 1.0;
+          const phW = 32 * sc;
+          const phX = isMob ? (sX + sW + 8 + phW / 2) : (sX + sW + 45);
+          const p0 = { x: phX, y: h * (isMob ? 0.54 : 0.64) };
+          const pEnd = { x: sX + sW * 0.78, y: sY + 16 };
+          return [p0, { x: sX + sW + 6, y: h * 0.74 }, { x: sX + sW - 15, y: h * 0.78 }, { x: sX + sW - 30, y: h * 0.65 }, pEnd];
+        },
+        getStealthTargets: (w, h, sX, sW, sY) => {
+          const isMob = w < 640;
+          const sc = isMob ? Math.max(0.55, Math.min(0.85, w / 520)) : 1.0;
+          const phW = 32 * sc;
+          const phX = isMob ? (sX + sW + 8 + phW / 2) : (sX + sW + 45);
+          const p0 = { x: phX, y: h * (isMob ? 0.54 : 0.64) };
+          const p1 = { x: sX + sW + 6, y: sY + 18 };
+          const pEnd = { x: sX + sW * 0.78, y: sY + 16 };
+          return [p0, p1, pEnd];
+        }
       },
       {
-        name: 'Power 220V',
-        color: '#f97316',
-        points: [],
-        segments: 18,
-        length: 310
+        id: 'power',
+        device: 'monitor',
+        name: 'AC Mains 220V (Блок питания)',
+        color: '#18181b',
+        weaveColor: '#27272a',
+        sheenColor: 'rgba(249, 115, 22, 0.5)',
+        photonColor: '#f97316',
+        width: 8.5,
+        ledColor: '#f97316',
+        spec: '220V 16A Заземление // Скрытый лоток-ложемент // Ø8.5mm',
+        segs: 28,
+        getChaosTargets: (w, h, sX, sW, sY) => {
+          const p0 = { x: w * 0.08, y: h - 25 };
+          const pEnd = { x: w * 0.38, y: sY + 16 };
+          return [p0, { x: w * 0.16, y: h - 45 }, { x: w * 0.22, y: h * 0.70 }, { x: w * 0.30, y: sY + 35 }, pEnd];
+        },
+        getStealthTargets: (w, h, sX, sW, sY) => {
+          const p0 = { x: w * 0.08, y: h - 25 };
+          const p1 = { x: sX + 24, y: h * 0.58 };
+          const pEnd = { x: sX + sW * 0.38, y: sY + 16 };
+          return [p0, p1, pEnd];
+        }
       }
     ];
 
+    let width = 1200;
+    let height = 540;
+    let dpr = 1;
+    let cachedCanvasRect = null;
+
     function initSimulator() {
-      const canvas = document.getElementById('cableCanvas');
-      if (!canvas) return;
+      const canvas = document.getElementById('cablePhysicsCanvas');
+      if (!canvas || cableState.isInitialized) return;
+      cableState.isInitialized = true;
+
       const ctx = canvas.getContext('2d');
+      if (!ctx) return;
 
       function resize() {
-        const box = document.getElementById('simCanvasBox');
+        const box = document.getElementById('cableCanvasBox');
         if (!box) return;
-        canvas.width = box.clientWidth;
-        canvas.height = box.clientHeight;
-        canvasRect = canvas.getBoundingClientRect();
-        resetCables();
+        const rect = box.getBoundingClientRect();
+        width = Math.max(320, Math.round(rect.width || box.clientWidth || 1200));
+        height = Math.max(360, Math.round(rect.height || box.clientHeight || 540));
+        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        cachedCanvasRect = null;
+        buildCables();
       }
 
-      window.addEventListener('resize', () => {
-        resize();
-      }, { passive: true });
-
+      window.addEventListener('resize', resize, { passive: true });
       resize();
 
-      // Mouse and Touch Interaction
+      function getPos(e) {
+        if (!cachedCanvasRect) cachedCanvasRect = canvas.getBoundingClientRect();
+        const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        return {
+          x: clientX - cachedCanvasRect.left,
+          y: clientY - cachedCanvasRect.top
+        };
+      }
+
       canvas.addEventListener('mousedown', (e) => {
-        canvasRect = canvas.getBoundingClientRect();
-        mousePos.x = e.clientX - canvasRect.left;
-        mousePos.y = e.clientY - canvasRect.top;
-        findDragPoint();
+        cachedCanvasRect = canvas.getBoundingClientRect();
+        const pos = getPos(e);
+        cableState.mousePos = pos;
+        let closest = null;
+        let closestCable = null;
+        let minDist = 40;
+
+        cableState.cables.forEach(c => {
+          if (!cableState.devices[c.device]) return;
+          c.points.forEach(p => {
+            if (p.pinned) return;
+            const d = Math.hypot(p.x - pos.x, p.y - pos.y);
+            if (d < minDist) {
+              minDist = d;
+              closest = p;
+              closestCable = c;
+            }
+          });
+        });
+
+        cableState.draggedPoint = closest;
+        cableState.draggedCable = closestCable;
       });
 
       window.addEventListener('mousemove', (e) => {
-        if (!isDragging || !canvasRect) return;
-        mousePos.x = e.clientX - canvasRect.left;
-        mousePos.y = e.clientY - canvasRect.top;
+        const pos = getPos(e);
+        cableState.mousePos = pos;
+
+        let hovered = null;
+        let hoveredPt = null;
+        let minHovDist = 32;
+
+        cableState.cables.forEach(c => {
+          if (!cableState.devices[c.device]) return;
+          c.points.forEach(p => {
+            const d = Math.hypot(p.x - pos.x, p.y - pos.y);
+            if (d < minHovDist) {
+              minHovDist = d;
+              hovered = c;
+              hoveredPt = p;
+            }
+          });
+        });
+
+        cableState.hoveredCable = hovered;
+        cableState.hoveredPoint = hoveredPt;
       }, { passive: true });
 
       window.addEventListener('mouseup', () => {
-        isDragging = false;
-        dragCableIndex = -1;
+        if (cableState.draggedPoint && cableState.draggedCable) {
+          const shelfY = height * 0.42;
+          if (cableState.mode !== 'chaos' && Math.abs(cableState.draggedPoint.y - (shelfY + 18)) < 60) {
+            for (let s = 0; s < 8; s++) {
+              cableState.snapSparks.push({
+                x: cableState.draggedPoint.x,
+                y: cableState.draggedPoint.y,
+                vx: (Math.random() - 0.5) * 6,
+                vy: (Math.random() - 0.5) * 6,
+                life: 1.0,
+                color: '#38bdf8'
+              });
+            }
+            showToast(cableState.draggedCable.name + ' зафиксирован в Т-пазе N52');
+          }
+        }
+        cableState.draggedPoint = null;
+        cableState.draggedCable = null;
       });
 
       canvas.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 0) {
-          canvasRect = canvas.getBoundingClientRect();
-          mousePos.x = e.touches[0].clientX - canvasRect.left;
-          mousePos.y = e.touches[0].clientY - canvasRect.top;
-          findDragPoint();
-          if (isDragging) e.preventDefault();
-        }
+        cachedCanvasRect = canvas.getBoundingClientRect();
+        const pos = getPos(e);
+        cableState.mousePos = pos;
+        let closest = null;
+        let closestCable = null;
+        let minDist = 48;
+
+        cableState.cables.forEach(c => {
+          if (!cableState.devices[c.device]) return;
+          c.points.forEach(p => {
+            if (p.pinned) return;
+            const d = Math.hypot(p.x - pos.x, p.y - pos.y);
+            if (d < minDist) {
+              minDist = d;
+              closest = p;
+              closestCable = c;
+            }
+          });
+        });
+
+        cableState.draggedPoint = closest;
+        cableState.draggedCable = closestCable;
+      }, { passive: true });
+
+      window.addEventListener('touchmove', (e) => {
+        if (!cableState.draggedPoint) return;
+        if (e.cancelable) e.preventDefault();
+        cableState.mousePos = getPos(e);
       }, { passive: false });
 
-      canvas.addEventListener('touchmove', (e) => {
-        if (isDragging && e.touches.length > 0 && canvasRect) {
-          mousePos.x = e.touches[0].clientX - canvasRect.left;
-          mousePos.y = e.touches[0].clientY - canvasRect.top;
-          e.preventDefault();
-        }
-      }, { passive: false });
-
-      canvas.addEventListener('touchend', () => {
-        isDragging = false;
-        dragCableIndex = -1;
+      window.addEventListener('touchend', () => {
+        cableState.draggedPoint = null;
+        cableState.draggedCable = null;
       });
 
-      // Pause loop with IntersectionObserver
+      let isCableVisible = true;
       if ('IntersectionObserver' in window) {
         const obs = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              if (!animId) loop();
-            } else {
-              if (animId) {
-                cancelAnimationFrame(animId);
-                animId = null;
-              }
+            isCableVisible = entry.isIntersecting;
+            if (isCableVisible && !cableState.animFrame) {
+              cableState.animFrame = requestAnimationFrame(stepPhysics);
+            } else if (!isCableVisible && cableState.animFrame) {
+              cancelAnimationFrame(cableState.animFrame);
+              cableState.animFrame = null;
             }
           });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.05 });
         obs.observe(canvas);
-      } else {
-        loop();
       }
 
-      function loop() {
-        updatePhysics();
-        draw(ctx, canvas);
-        animId = requestAnimationFrame(loop);
-      }
-    }
+      function stepPhysics() {
+        cableState.simTick++;
+        const isChaos = cableState.mode === 'chaos';
+        const isXray = cableState.mode === 'xray';
 
-    function resetCables() {
-      const canvas = document.getElementById('cableCanvas');
-      if (!canvas) return;
-      const w = canvas.width;
-      const h = canvas.height;
+        const targetStealth = isChaos ? 0 : 1;
+        cableState.stealthProgress += (targetStealth - cableState.stealthProgress) * 0.12;
 
-      cables.forEach((c, cIdx) => {
-        c.points = [];
-        const startX = w * 0.15 + cIdx * 40;
-        const startY = 40;
-        const endX = w * 0.85 - cIdx * 35;
-        const endY = h - 50;
+        const targetXray = isXray ? 1 : 0;
+        cableState.xrayProgress += (targetXray - cableState.xrayProgress) * 0.12;
 
-        for (let i = 0; i <= c.segments; i++) {
-          const t = i / c.segments;
-          const px = startX + (endX - startX) * t;
-          let py = startY + (endY - startY) * t;
-          if (simMode === 'clean') {
-            // Channel routing
-            const channelY = 120 + cIdx * 10;
-            if (t > 0.2 && t < 0.8) {
-              py = channelY;
+        const targetKeyboard = isChaos ? 0 : 1;
+        cableState.keyboardProgress += (targetKeyboard - cableState.keyboardProgress) * 0.08;
+
+        const isMobile = width < 640;
+        const uiScale = isMobile ? Math.max(0.55, Math.min(0.85, width / 520)) : 1.0;
+        const shelfW = isMobile ? Math.min(width * 0.58, 300) : Math.min(Math.max(width * 0.60, 480), 760);
+        const shelfX = (width - shelfW) / 2;
+        const shelfY = height * 0.42;
+
+        // Physics update
+        cableState.cables.forEach(cable => {
+          if (!cableState.devices[cable.device]) return;
+
+          const chaosTargets = cable.getChaosTargets(width, height, shelfX, shelfW, shelfY);
+          const stealthTargets = cable.getStealthTargets(width, height, shelfX, shelfW, shelfY);
+          const n = cable.points.length - 1;
+
+          cable.points.forEach((p, idx) => {
+            if (p === cableState.draggedPoint) {
+              p.x = cableState.mousePos.x;
+              p.y = cableState.mousePos.y;
+              p.oldX = p.x;
+              p.oldY = p.y;
+              return;
             }
-          } else {
-            // Chaos sagging
-            py += Math.sin(t * Math.PI) * 110 + cIdx * 15;
-          }
-          c.points.push({
-            x: px,
-            y: py,
-            oldX: px,
-            oldY: py,
-            pinned: i === 0 || i === c.segments
+
+            const t = idx / n;
+            const cIdx = t * (chaosTargets.length - 1);
+            const ci0 = Math.floor(cIdx);
+            const ci1 = Math.min(ci0 + 1, chaosTargets.length - 1);
+            const cFrac = cIdx - ci0;
+            const cx = chaosTargets[ci0].x + (chaosTargets[ci1].x - chaosTargets[ci0].x) * cFrac;
+            const cy = chaosTargets[ci0].y + (chaosTargets[ci1].y - chaosTargets[ci0].y) * cFrac;
+
+            const sIdx = t * (stealthTargets.length - 1);
+            const si0 = Math.floor(sIdx);
+            const si1 = Math.min(si0 + 1, stealthTargets.length - 1);
+            const sFrac = sIdx - si0;
+            const sx = stealthTargets[si0].x + (stealthTargets[si1].x - stealthTargets[si0].x) * sFrac;
+            const sy = stealthTargets[si0].y + (stealthTargets[si1].y - stealthTargets[si0].y) * sFrac;
+
+            const tx = cx + (sx - cx) * cableState.stealthProgress;
+            const ty = cy + (sy - cy) * cableState.stealthProgress;
+
+            if (isChaos) {
+              let vx = (p.x - p.oldX) * 0.96;
+              let vy = (p.y - p.oldY) * 0.96;
+              p.oldX = p.x;
+              p.oldY = p.y;
+              p.x += vx + (tx - p.x) * 0.08;
+              p.y += vy + (ty - p.y) * 0.08 + 0.15;
+            } else {
+              p.x += (tx - p.x) * 0.18;
+              p.y += (ty - p.y) * 0.18;
+              p.oldX = p.x;
+              p.oldY = p.y;
+            }
           });
-        }
-      });
-    }
 
-    function findDragPoint() {
-      let minDist = 36;
-      cables.forEach((c, cIdx) => {
-        c.points.forEach((p, pIdx) => {
-          const dx = p.x - mousePos.x;
-          const dy = p.y - mousePos.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < minDist) {
-            minDist = dist;
-            isDragging = true;
-            dragCableIndex = cIdx;
-            dragPointIndex = pIdx;
-          }
-        });
-      });
-    }
-
-    function updatePhysics() {
-      const gravity = simMode === 'clean' ? 0.08 : 0.42;
-
-      cables.forEach((c, cIdx) => {
-        // Verlet step
-        c.points.forEach((p, pIdx) => {
-          if (p.pinned) return;
-
-          if (isDragging && dragCableIndex === cIdx && dragPointIndex === pIdx) {
-            p.x = mousePos.x;
-            p.y = mousePos.y;
-            return;
-          }
-
-          const vx = (p.x - p.oldX) * 0.96;
-          const vy = (p.y - p.oldY) * 0.96;
-          p.oldX = p.x;
-          p.oldY = p.y;
-          p.x += vx;
-          p.y += vy + gravity;
-
-          // In clean mode, magnet pull into channel
-          if (simMode === 'clean') {
-            const targetY = 120 + cIdx * 8;
-            const diff = targetY - p.y;
-            p.y += diff * 0.06;
+          if (isChaos) {
+            for (let iter = 0; iter < 2; iter++) {
+              cable.constraints.forEach(c => {
+                const dx = c.p2.x - c.p1.x;
+                const dy = c.p2.y - c.p1.y;
+                const curDist = Math.hypot(dx, dy) || 1;
+                const delta = (curDist - c.length) / curDist;
+                if (!c.p1.pinned && c.p1 !== cableState.draggedPoint) {
+                  c.p1.x += dx * 0.4 * delta;
+                  c.p1.y += dy * 0.4 * delta;
+                }
+                if (!c.p2.pinned && c.p2 !== cableState.draggedPoint) {
+                  c.p2.x -= dx * 0.4 * delta;
+                  c.p2.y -= dy * 0.4 * delta;
+                }
+              });
+            }
           }
         });
 
-        // Constraint relaxation
-        const segLen = c.length / c.segments;
-        for (let iter = 0; iter < 4; iter++) {
-          for (let i = 0; i < c.points.length - 1; i++) {
-            const p1 = c.points[i];
-            const p2 = c.points[i + 1];
-            const dx = p2.x - p1.x;
-            const dy = p2.y - p1.y;
-            const dist = Math.sqrt(dx * dx + dy * dy) || 0.001;
-            const diff = (dist - segLen) / dist;
+        // Render scene
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.scale(dpr, dpr);
+        ctx.clearRect(0, 0, width, height);
 
-            if (!p1.pinned) {
-              p1.x += dx * 0.5 * diff;
-              p1.y += dy * 0.5 * diff;
-            }
-            if (!p2.pinned) {
-              p2.x -= dx * 0.5 * diff;
-              p2.y -= dy * 0.5 * diff;
-            }
-          }
+        // 1. Studio Backdrop
+        const wallGrad = ctx.createLinearGradient(0, 0, 0, height);
+        wallGrad.addColorStop(0, '#0c1017');
+        wallGrad.addColorStop(0.45, '#131822');
+        wallGrad.addColorStop(1, '#090d14');
+        ctx.fillStyle = wallGrad;
+        ctx.fillRect(0, 0, width, height);
+
+        // Grid
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.025)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < width; x += 32) {
+          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, height); ctx.stroke();
         }
-      });
-    }
+        for (let y = 0; y < height; y += 32) {
+          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(width, y); ctx.stroke();
+        }
 
-    function draw(ctx, canvas) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw Desk and Cable Tray Guide
-      const w = canvas.width;
-      const h = canvas.height;
-
-      // Desk tabletop outline
-      ctx.fillStyle = '#161b24';
-      ctx.fillRect(w * 0.08, 20, w * 0.84, 16);
-
-      // GeekNook Under-Desk Tray
-      if (simMode === 'clean') {
-        ctx.fillStyle = 'rgba(203, 168, 112, 0.08)';
-        ctx.strokeStyle = '#cba870';
-        ctx.lineWidth = 1.5;
-        ctx.beginPath();
-        ctx.roundRect(w * 0.22, 105, w * 0.56, 45, 6);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.fillStyle = '#cba870';
-        ctx.font = '11px JetBrains Mono, monospace';
-        ctx.fillText('GEEKNOOK CABLE TRAY // PERFORATED STEEL', w * 0.24, 132);
-
-        // Magnets N52
-        ctx.fillStyle = '#38bdf8';
-        for (let m = 0; m < 4; m++) {
+        // ScreenBar light
+        if (cableState.devices.screenbar) {
+          const lightGrad = ctx.createRadialGradient(width * 0.50, height * 0.16, 20, width * 0.50, height * 0.55, 340);
+          lightGrad.addColorStop(0, 'rgba(254, 243, 199, 0.12)');
+          lightGrad.addColorStop(0.5, 'rgba(254, 243, 199, 0.04)');
+          lightGrad.addColorStop(1, 'rgba(254, 243, 199, 0)');
+          ctx.fillStyle = lightGrad;
           ctx.beginPath();
-          ctx.arc(w * 0.28 + m * (w * 0.14), 105, 4, 0, Math.PI * 2);
+          ctx.moveTo(width * 0.50 - 90, height * 0.18);
+          ctx.lineTo(width * 0.50 + 90, height * 0.18);
+          ctx.lineTo(width * 0.50 + 320, height * 0.85);
+          ctx.lineTo(width * 0.50 - 320, height * 0.85);
+          ctx.closePath();
           ctx.fill();
         }
-      }
 
-      // Draw Cables
-      cables.forEach(c => {
-        ctx.beginPath();
-        ctx.strokeStyle = c.color;
-        ctx.lineWidth = simMode === 'clean' ? 4 : 3;
-        ctx.lineCap = 'round';
-        ctx.lineJoin = 'round';
+        // 2. Tabletop
+        const tableY = height * 0.44;
+        const deskBottom = height - 20;
+        const deskGrad = ctx.createLinearGradient(0, tableY, 0, deskBottom);
+        deskGrad.addColorStop(0, '#1c2430');
+        deskGrad.addColorStop(0.3, '#222c3b');
+        deskGrad.addColorStop(0.85, '#161c27');
+        deskGrad.addColorStop(1, '#0e1219');
+        ctx.fillStyle = deskGrad;
+        ctx.fillRect(0, tableY, width, deskBottom - tableY);
 
-        ctx.moveTo(c.points[0].x, c.points[0].y);
-        for (let i = 1; i < c.points.length; i++) {
-          ctx.lineTo(c.points[i].x, c.points[i].y);
+        ctx.fillStyle = '#0a0d13';
+        ctx.fillRect(0, deskBottom, width, 20);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)';
+        ctx.beginPath(); ctx.moveTo(0, deskBottom); ctx.lineTo(width, deskBottom); ctx.stroke();
+
+        // 3. Desk Mat
+        const matW = Math.min(width * 0.72, 840);
+        const matX = (width - matW) / 2;
+        const matY = tableY + 35;
+        const matH = deskBottom - matY - 14;
+
+        ctx.fillStyle = '#171c26';
+        if (ctx.roundRect) {
+          ctx.beginPath(); ctx.roundRect(matX, matY, matW, matH, 8); ctx.fill();
+        } else {
+          ctx.fillRect(matX, matY, matW, matH);
         }
-        ctx.stroke();
 
-        // Cable anchor dots
-        ctx.fillStyle = '#ffffff';
-        ctx.beginPath();
-        ctx.arc(c.points[0].x, c.points[0].y, 4, 0, Math.PI * 2);
-        ctx.arc(c.points[c.points.length - 1].x, c.points[c.points.length - 1].y, 4, 0, Math.PI * 2);
-        ctx.fill();
-      });
-    }
+        // 4. Outlet
+        const wallX = width * 0.08;
+        const wallY = height - 28;
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(wallX - 16, wallY - 12, 32, 24);
+        ctx.fillStyle = '#0f172a';
+        ctx.beginPath(); ctx.arc(wallX - 6, wallY, 3, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(wallX + 6, wallY, 3, 0, Math.PI * 2); ctx.fill();
 
-    function setSimMode(mode) {
-      simMode = mode;
-      document.getElementById('btnModeGeekNook').classList.toggle('active', mode === 'clean');
-      document.getElementById('btnModeChaos').classList.toggle('active', mode === 'chaos');
+        if (isChaos) {
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(width * 0.16, height - 34, 46, 22);
+          ctx.strokeStyle = '#334155';
+          ctx.strokeRect(width * 0.16, height - 34, 46, 22);
+          ctx.fillStyle = '#94a3b8';
+          ctx.font = 'bold 7px monospace';
+          ctx.fillText('140W BRICK', width * 0.16 + 4, height - 20);
+        }
 
-      const metricNoise = document.getElementById('metricNoise');
-      const metricSpace = document.getElementById('metricSpace');
-      const metricHold = document.getElementById('metricHold');
-      const metricTemp = document.getElementById('metricTemp');
+        // 5. Cables
+        cableState.cables.forEach(cable => {
+          if (!cableState.devices[cable.device]) return;
+          const pts = cable.points;
+          if (pts.length < 2) return;
 
-      if (mode === 'clean') {
-        metricNoise.textContent = '0%';
-        metricNoise.style.color = '#10b981';
-        metricSpace.textContent = '+100%';
-        metricHold.textContent = 'N52 Неодим';
-        metricTemp.textContent = '34°C';
-      } else {
-        metricNoise.textContent = '85%';
-        metricNoise.style.color = '#ef4444';
-        metricSpace.textContent = '−35%';
-        metricHold.textContent = 'Провисание';
-        metricTemp.textContent = '62°C (Пластик)';
+          // Shadow
+          ctx.beginPath();
+          ctx.moveTo(pts[0].x, pts[0].y + 4);
+          for (let i = 1; i < pts.length; i++) {
+            const xc = (pts[i].x + pts[i - 1].x) / 2;
+            const yc = (pts[i].y + pts[i - 1].y) / 2 + 4;
+            ctx.quadraticCurveTo(pts[i - 1].x, pts[i - 1].y + 4, xc, yc);
+          }
+          ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y + 4);
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
+          ctx.lineWidth = cable.width + 2;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+
+          // Body
+          ctx.beginPath();
+          ctx.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length; i++) {
+            const xc = (pts[i].x + pts[i - 1].x) / 2;
+            const yc = (pts[i].y + pts[i - 1].y) / 2;
+            ctx.quadraticCurveTo(pts[i - 1].x, pts[i - 1].y, xc, yc);
+          }
+          ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+          ctx.strokeStyle = cable.color;
+          ctx.lineWidth = cable.width;
+          ctx.lineCap = 'round';
+          ctx.stroke();
+
+          // Weave
+          ctx.save();
+          ctx.setLineDash([4, 4]);
+          ctx.beginPath();
+          ctx.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length; i++) {
+            const xc = (pts[i].x + pts[i - 1].x) / 2;
+            const yc = (pts[i].y + pts[i - 1].y) / 2;
+            ctx.quadraticCurveTo(pts[i - 1].x, pts[i - 1].y, xc, yc);
+          }
+          ctx.lineTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+          ctx.strokeStyle = cable.weaveColor;
+          ctx.lineWidth = cable.width * 0.45;
+          ctx.stroke();
+          ctx.restore();
+
+          // X-Ray Photons
+          if (cableState.xrayProgress > 0.05) {
+            ctx.save();
+            ctx.globalAlpha = cableState.xrayProgress;
+            const pulseSpeed = cable.id === 'tb4' ? 0.08 : 0.05;
+            const pPhase = (cableState.simTick * pulseSpeed) % 1;
+            for (let k = 0; k < 3; k++) {
+              const frac = (pPhase + k * 0.33) % 1;
+              const ptIdx = frac * (pts.length - 1);
+              const p0 = pts[Math.floor(ptIdx)];
+              const p1 = pts[Math.min(Math.floor(ptIdx) + 1, pts.length - 1)];
+              const sub = ptIdx - Math.floor(ptIdx);
+              const px = p0.x + (p1.x - p0.x) * sub;
+              const py = p0.y + (p1.y - p0.y) * sub;
+
+              const glow = ctx.createRadialGradient(px, py, 1, px, py, 10);
+              glow.addColorStop(0, cable.photonColor);
+              glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+              ctx.fillStyle = glow;
+              ctx.beginPath(); ctx.arc(px, py, 10, 0, Math.PI * 2); ctx.fill();
+
+              ctx.fillStyle = '#ffffff';
+              ctx.beginPath(); ctx.arc(px, py, 2.5, 0, Math.PI * 2); ctx.fill();
+            }
+            ctx.restore();
+          }
+
+          // Plugs
+          const drawPlug = (pt) => {
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(pt.x - 6, pt.y - 6, 12, 12);
+            ctx.strokeStyle = '#94a3b8';
+            ctx.strokeRect(pt.x - 6, pt.y - 6, 12, 12);
+            ctx.fillStyle = cable.ledColor;
+            ctx.beginPath(); ctx.arc(pt.x, pt.y, 2, 0, Math.PI * 2); ctx.fill();
+          };
+          drawPlug(pts[0]);
+          drawPlug(pts[pts.length - 1]);
+        });
+
+        // 6. Sliding Keyboard & Mouse
+        const kbW = 150 * uiScale;
+        const kbH = 48 * uiScale;
+        const kbTuckedY = shelfY + 12;
+        const kbOutY = tableY + 95 * uiScale;
+        const kbY = kbOutY + (kbTuckedY - kbOutY) * cableState.keyboardProgress;
+        const kbX = width * 0.44;
+
+        ctx.fillStyle = '#111620';
+        ctx.fillRect(kbX - kbW / 2, kbY, kbW, kbH);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        ctx.strokeRect(kbX - kbW / 2, kbY, kbW, kbH);
+
+        // Keycaps
+        ctx.fillStyle = '#1e293b';
+        const kCols = isMobile ? 8 : 12;
+        for (let r = 0; r < 3; r++) {
+          for (let c = 0; c < kCols; c++) {
+            const kx = kbX - kbW / 2 + 6 * uiScale + c * (kbW / (kCols + 0.5));
+            const ky = kbY + 5 * uiScale + r * (kbH / 3.8);
+            ctx.fillRect(kx, ky, 8 * uiScale, 7 * uiScale);
+          }
+        }
+
+        // Mouse
+        const mouseX = isMobile ? kbX + kbW / 2 + 18 : kbX + kbW / 2 + 45;
+        const mouseY = kbY + 4;
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(mouseX - 10 * uiScale, mouseY, 20 * uiScale, 32 * uiScale);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.strokeRect(mouseX - 10 * uiScale, mouseY, 20 * uiScale, 32 * uiScale);
+
+        // 7. Focus Station Shelf (Solid Oak & Aluminum D16T)
+        const shelfThickness = 18;
+        const legW = 24;
+        const legH = 34;
+        const leftLegX = shelfX + 24;
+        const rightLegX = shelfX + shelfW - 24 - legW;
+
+        // Legs
+        ctx.fillStyle = '#334155';
+        ctx.fillRect(leftLegX, shelfY + shelfThickness, legW, legH);
+        ctx.fillRect(rightLegX, shelfY + shelfThickness, legW, legH);
+        ctx.fillStyle = '#b45309'; // Cork pad
+        ctx.fillRect(leftLegX, shelfY + shelfThickness + legH - 4, legW, 4);
+        ctx.fillRect(rightLegX, shelfY + shelfThickness + legH - 4, legW, 4);
+
+        // T-Track Aluminum Guide Rail
+        const railH = 14;
+        const railY = shelfY + shelfThickness;
+        const railX = shelfX + 50;
+        const railW = shelfW - 100;
+        ctx.fillStyle = '#1e293b';
+        ctx.fillRect(railX, railY, railW, railH);
+        ctx.strokeStyle = cableState.xrayProgress > 0 ? '#38bdf8' : 'rgba(255, 255, 255, 0.15)';
+        ctx.strokeRect(railX, railY, railW, railH);
+
+        // N52 Magnets
+        const slotRels = [0.22, 0.44, 0.62, 0.78];
+        slotRels.forEach(rel => {
+          const sx = shelfX + shelfW * rel;
+          ctx.fillStyle = cableState.mode === 'chaos' ? '#334155' : '#0284c7';
+          ctx.fillRect(sx - 12, railY + 1, 24, railH - 2);
+          if (cableState.mode !== 'chaos') {
+            ctx.fillStyle = '#38bdf8';
+            ctx.beginPath(); ctx.arc(sx, railY + railH / 2, 2.5, 0, Math.PI * 2); ctx.fill();
+          }
+        });
+
+        // Shelf Plank
+        if (cableState.xrayProgress > 0.02) {
+          ctx.fillStyle = `rgba(15, 23, 42, ${1 - cableState.xrayProgress * 0.75})`;
+          ctx.strokeStyle = `rgba(56, 189, 248, ${0.4 + cableState.xrayProgress * 0.6})`;
+          ctx.lineWidth = 1.5;
+        } else {
+          const oakGrad = ctx.createLinearGradient(shelfX, shelfY, shelfX, shelfY + shelfThickness);
+          oakGrad.addColorStop(0, '#e5be82');
+          oakGrad.addColorStop(0.3, '#d4a359');
+          oakGrad.addColorStop(0.7, '#c69248');
+          oakGrad.addColorStop(1, '#a6722e');
+          ctx.fillStyle = oakGrad;
+          ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
+          ctx.lineWidth = 1;
+        }
+        ctx.fillRect(shelfX, shelfY, shelfW, shelfThickness);
+        ctx.strokeRect(shelfX, shelfY, shelfW, shelfThickness);
+
+        // 8. Devices
+        // A. Monitor
+        if (cableState.devices.monitor) {
+          const monW = 200 * uiScale;
+          const monH = 125 * uiScale;
+          const monX = width * 0.50 - monW / 2;
+          const monY = shelfY - monH - 16 * uiScale;
+
+          // Pedestal
+          ctx.fillStyle = '#475569';
+          ctx.fillRect(width * 0.50 - 14 * uiScale, shelfY - 16 * uiScale, 28 * uiScale, 16 * uiScale);
+          ctx.fillStyle = '#64748b';
+          ctx.fillRect(width * 0.50 - 28 * uiScale, shelfY - 4, 56 * uiScale, 4);
+
+          // Monitor Body
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(monX, monY, monW, monH);
+          ctx.strokeStyle = '#334155';
+          ctx.strokeRect(monX, monY, monW, monH);
+
+          // Wallpaper
+          const screenGrad = ctx.createLinearGradient(monX, monY, monX + monW, monY + monH);
+          screenGrad.addColorStop(0, '#1e1b4b');
+          screenGrad.addColorStop(0.5, '#4338ca');
+          screenGrad.addColorStop(0.85, '#06b6d4');
+          screenGrad.addColorStop(1, '#f43f5e');
+          ctx.fillStyle = screenGrad;
+          ctx.fillRect(monX + 5, monY + 5, monW - 10, monH - 12);
+
+          // ScreenBar
+          if (cableState.devices.screenbar) {
+            ctx.fillStyle = '#1e293b';
+            ctx.fillRect(width * 0.50 - 50 * uiScale, monY - 6 * uiScale, 100 * uiScale, 5 * uiScale);
+            ctx.strokeStyle = 'rgba(254, 243, 199, 0.6)';
+            ctx.strokeRect(width * 0.50 - 50 * uiScale, monY - 6 * uiScale, 100 * uiScale, 5 * uiScale);
+          }
+        }
+
+        // B. MacBook Pro
+        if (cableState.devices.macbook) {
+          const mbW = (isMobile ? 85 : 100) * uiScale;
+          const mbH = (isMobile ? 56 : 70) * uiScale;
+          const mbX = isMobile ? (shelfX - mbW - 8) : (shelfX - 85);
+          const mbY = height * (isMobile ? 0.50 : 0.56);
+
+          ctx.fillStyle = '#334155';
+          ctx.fillRect(mbX, mbY + 36 * uiScale, mbW, 12 * uiScale);
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(mbX + 4, mbY, mbW - 8, 36 * uiScale);
+
+          const mbGrad = ctx.createLinearGradient(mbX, mbY, mbX + mbW, mbY + 36 * uiScale);
+          mbGrad.addColorStop(0, '#0f766e');
+          mbGrad.addColorStop(1, '#0284c7');
+          ctx.fillStyle = mbGrad;
+          ctx.fillRect(mbX + 6, mbY + 3, mbW - 12, 30 * uiScale);
+        }
+
+        // C. iPhone
+        if (cableState.devices.iphone) {
+          const phW = 30 * uiScale;
+          const phH = 46 * uiScale;
+          const phX = isMobile ? (shelfX + shelfW + 8 + phW / 2) : (shelfX + shelfW + 45);
+          const phY = height * (isMobile ? 0.48 : 0.54);
+
+          ctx.fillStyle = '#475569';
+          ctx.fillRect(phX - 3, phY + 32 * uiScale, 6, 22 * uiScale);
+          ctx.fillStyle = '#0f172a';
+          ctx.fillRect(phX - phW / 2, phY, phW, phH);
+          ctx.strokeStyle = '#38bdf8';
+          ctx.strokeRect(phX - phW / 2, phY, phW, phH);
+          ctx.fillStyle = '#10b981';
+          ctx.font = 'bold 8px system-ui';
+          ctx.textAlign = 'center';
+          ctx.fillText('⚡ 100%', phX, phY + phH * 0.55);
+        }
+
+        // 9. Sparks
+        for (let i = cableState.snapSparks.length - 1; i >= 0; i--) {
+          const spark = cableState.snapSparks[i];
+          spark.x += spark.vx;
+          spark.y += spark.vy;
+          spark.life -= 0.04;
+          ctx.fillStyle = spark.color;
+          ctx.beginPath();
+          ctx.arc(spark.x, spark.y, Math.max(spark.life * 3, 0.5), 0, Math.PI * 2);
+          ctx.fill();
+          if (spark.life <= 0) cableState.snapSparks.splice(i, 1);
+        }
+
+        // 10. Badges on Canvas
+        if (isChaos) {
+          ctx.save();
+          ctx.fillStyle = 'rgba(239, 68, 68, 0.9)';
+          const bw = isMobile ? 220 : 170;
+          const bx = width * 0.50;
+          const by = height * 0.86;
+          ctx.fillRect(bx - bw / 2, by - 12, bw, 24);
+          ctx.font = 'bold 10px system-ui, sans-serif';
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.fillText('⚠️ Хаос: кабели свисают со стола', bx, by + 4);
+          ctx.restore();
+        } else if (!isXray) {
+          ctx.save();
+          ctx.fillStyle = 'rgba(16, 185, 129, 0.88)';
+          const bw = isMobile ? 240 : 210;
+          const bx = width * 0.50;
+          const by = height * 0.86;
+          ctx.fillRect(bx - bw / 2, by - 12, bw, 24);
+          ctx.font = 'bold 10px system-ui, sans-serif';
+          ctx.fillStyle = '#ffffff';
+          ctx.textAlign = 'center';
+          ctx.fillText('✓ Дзен: 100% кабелей спрятаны в лоток', bx, by + 4);
+          ctx.restore();
+        }
+
+        if (isCableVisible) {
+          cableState.animFrame = requestAnimationFrame(stepPhysics);
+        } else {
+          cableState.animFrame = null;
+        }
       }
 
-      resetCables();
+      function buildCables() {
+        const isMobile = width < 640;
+        const shelfW = isMobile ? Math.min(width * 0.58, 300) : Math.min(Math.max(width * 0.60, 480), 760);
+        const shelfX = (width - shelfW) / 2;
+        const shelfY = height * 0.42;
+
+        cableState.cables = cableConfigs.map(cfg => {
+          const isChaos = cableState.mode === 'chaos';
+          const rawPoints = isChaos
+            ? cfg.getChaosTargets(width, height, shelfX, shelfW, shelfY)
+            : cfg.getStealthTargets(width, height, shelfX, shelfW, shelfY);
+
+          const points = [];
+          const n = cfg.segs;
+          for (let i = 0; i <= n; i++) {
+            const t = i / n;
+            const idx = t * (rawPoints.length - 1);
+            const i0 = Math.floor(idx);
+            const i1 = Math.min(i0 + 1, rawPoints.length - 1);
+            const frac = idx - i0;
+
+            const px = rawPoints[i0].x + (rawPoints[i1].x - rawPoints[i0].x) * frac;
+            const py = rawPoints[i0].y + (rawPoints[i1].y - rawPoints[i0].y) * frac;
+
+            points.push({
+              x: px,
+              y: py,
+              oldX: px,
+              oldY: py,
+              targetX: px,
+              targetY: py,
+              pinned: i === 0 || i === n
+            });
+          }
+
+          const constraints = [];
+          for (let i = 0; i < n; i++) {
+            const p1 = points[i];
+            const p2 = points[i + 1];
+            const len = Math.hypot(p2.x - p1.x, p2.y - p1.y);
+            constraints.push({ p1, p2, length: len });
+          }
+
+          return { ...cfg, points, constraints };
+        });
+      }
+
+      cableState.animFrame = requestAnimationFrame(stepPhysics);
+      updateCableMetrics();
     }
 
-    function shakeSimulator() {
-      cables.forEach(c => {
+    function setCableMode(mode) {
+      cableState.mode = mode;
+
+      const chaosBtn = document.getElementById('cableModeChaosBtn');
+      const magneticBtn = document.getElementById('cableModeMagneticBtn');
+      const xrayBtn = document.getElementById('cableModeXrayBtn');
+
+      if (chaosBtn) chaosBtn.classList.toggle('active', mode === 'chaos');
+      if (magneticBtn) magneticBtn.classList.toggle('active', mode === 'magnetic');
+      if (xrayBtn) xrayBtn.classList.toggle('active', mode === 'xray');
+
+      const statusPill = document.getElementById('cableStatusPill');
+      const statusText = document.getElementById('cableStatusText');
+
+      if (statusPill) {
+        statusPill.classList.remove('magnetic', 'xray');
+        if (mode === 'magnetic') statusPill.classList.add('magnetic');
+        if (mode === 'xray') statusPill.classList.add('xray');
+      }
+
+      if (mode === 'magnetic') {
+        if (statusText) statusText.textContent = 'T-Track замок: 4 канала зафиксированы';
+        showToast('GeekNook Stealth: Все кабели уложены в скрытый желоб');
+      } else if (mode === 'xray') {
+        if (statusText) statusText.textContent = 'Рентген лотка: Разделение шин 220V и данных';
+        showToast('Инженерный Рентген: внутренняя архитектура Т-паза');
+      } else {
+        if (statusText) statusText.textContent = 'Свободное провисание (Хаос на столе)';
+        showToast('Режим без GeekNook: хаос проводов на рабочей поверхности');
+      }
+
+      updateCableMetrics();
+    }
+
+    function toggleCableDevice(device) {
+      cableState.devices[device] = !cableState.devices[device];
+      const pillMap = {
+        monitor: 'devToggleMonitor',
+        macbook: 'devToggleMacbook',
+        iphone: 'devToggleIPhone',
+        screenbar: 'devToggleScreenbar'
+      };
+      const pill = document.getElementById(pillMap[device]);
+      if (pill) {
+        pill.classList.toggle('active', cableState.devices[device]);
+      }
+      updateCableMetrics();
+    }
+
+    function shakeCables() {
+      cableState.cables.forEach(c => {
         c.points.forEach(p => {
           if (!p.pinned) {
-            p.x += (Math.random() - 0.5) * 50;
-            p.y += (Math.random() - 0.5) * 40;
+            p.x += (Math.random() - 0.5) * 60;
+            p.y += (Math.random() - 0.5) * 50;
           }
         });
       });
+      if (cableState.cables.length > 0) {
+        const p = cableState.cables[0].points[10];
+        if (p) {
+          for (let i = 0; i < 10; i++) {
+            cableState.snapSparks.push({
+              x: p.x + (Math.random() - 0.5) * 40,
+              y: p.y + (Math.random() - 0.5) * 30,
+              vx: (Math.random() - 0.5) * 6,
+              vy: (Math.random() - 0.5) * 6,
+              life: 1.0,
+              color: '#38bdf8'
+            });
+          }
+        }
+      }
+      showToast('⚡ Импульс: проверка упругости оплетки и неодимовых магнитов');
+    }
+
+    function updateCableMetrics() {
+      const isChaos = cableState.mode === 'chaos';
+      const activeDevs = Object.keys(cableState.devices).filter(k => cableState.devices[k]).length;
+
+      const noiseEl = document.getElementById('cableMetricNoise');
+      const noiseBadge = document.getElementById('cableMetricNoiseBadge');
+      const noiseDesc = document.getElementById('cableMetricNoiseDesc');
+
+      const spaceEl = document.getElementById('cableMetricSpace');
+      const spaceBadge = document.getElementById('cableMetricSpaceBadge');
+      const spaceDesc = document.getElementById('cableMetricSpaceDesc');
+
+      const hiddenEl = document.getElementById('cableMetricHidden');
+      const hiddenBadge = document.getElementById('cableMetricHiddenBadge');
+
+      const holdEl = document.getElementById('cableMetricHold');
+      const holdBadge = document.getElementById('cableMetricHoldBadge');
+
+      if (isChaos) {
+        if (noiseEl) { noiseEl.textContent = '85%'; noiseEl.style.color = '#ef4444'; }
+        if (noiseBadge) {
+          noiseBadge.textContent = 'Визуальный хаос';
+          noiseBadge.className = 'cable-metric-badge badge-bad';
+        }
+        if (noiseDesc) noiseDesc.textContent = 'Провода свисают со стола, мешают мыши и собирают пыль';
+
+        if (spaceEl) { spaceEl.textContent = '−25%'; spaceEl.style.color = '#ef4444'; }
+        if (spaceBadge) {
+          spaceBadge.textContent = 'Потеря места';
+          spaceBadge.className = 'cable-metric-badge badge-bad';
+        }
+        if (spaceDesc) spaceDesc.textContent = 'Блоки питания и кабели лежат на рабочей поверхности';
+
+        if (hiddenEl) { hiddenEl.textContent = '0 из ' + activeDevs; hiddenEl.style.color = '#ef4444'; }
+        if (hiddenBadge) {
+          hiddenBadge.textContent = 'Открыты';
+          hiddenBadge.className = 'cable-metric-badge badge-bad';
+        }
+
+        if (holdEl) { holdEl.textContent = '0 Н'; holdEl.style.color = '#ef4444'; }
+        if (holdBadge) {
+          holdBadge.textContent = 'Провисание';
+          holdBadge.className = 'cable-metric-badge badge-bad';
+        }
+      } else {
+        if (noiseEl) { noiseEl.textContent = '0%'; noiseEl.style.color = '#10b981'; }
+        if (noiseBadge) {
+          noiseBadge.textContent = 'Идеальный Дзен';
+          noiseBadge.className = 'cable-metric-badge badge-good';
+        }
+        if (noiseDesc) noiseDesc.textContent = 'Все провода скрыты под полкой в алюминиевом профиле Т-паза';
+
+        if (spaceEl) { spaceEl.textContent = '+40%'; spaceEl.style.color = '#10b981'; }
+        if (spaceBadge) {
+          spaceBadge.textContent = 'Клавиатура спрятана';
+          spaceBadge.className = 'cable-metric-badge badge-good';
+        }
+        if (spaceDesc) spaceDesc.textContent = 'Клавиатура и мышь легко убираются в нишу под подставку (90 мм)';
+
+        if (hiddenEl) { hiddenEl.textContent = activeDevs + ' из ' + activeDevs; hiddenEl.style.color = '#10b981'; }
+        if (hiddenBadge) {
+          hiddenBadge.textContent = '100% Stealth';
+          hiddenBadge.className = 'cable-metric-badge badge-good';
+        }
+
+        if (holdEl) { holdEl.textContent = activeDevs + '× N52'; holdEl.style.color = '#38bdf8'; }
+        if (holdBadge) {
+          holdBadge.textContent = '1.2 кг на отрыв';
+          holdBadge.className = 'cable-metric-badge badge-tech';
+        }
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
