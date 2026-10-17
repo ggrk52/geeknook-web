@@ -1573,10 +1573,17 @@
             <span class="discount-pill-text">${p.options && p.options.lengths ? 'при заказе: от ' : 'при заказе: '}${formatPrice(Math.round(p.price * 0.8))}</span>
           </div>
         </div>
+        <div class="card-stock-indicator in-stock">
+          <span class="stock-pulse-dot"></span>
+          <span class="stock-text">В наличии в Москве • Отгрузка завтра</span>
+        </div>
         <div class="card-actions-row">
           <a href="#${p.id}" class="btn-card-details" onclick="window.geekNookApp.openQuickView('${p.id}'); return false;">
             <span>Подробнее</span>
           </a>
+          <button type="button" class="btn-card-one-click" onclick="window.geekNookApp.openQuickBuy('${p.id}'); event.stopPropagation();" title="Быстрый заказ в 1 клик">
+            <span>В 1 клик</span>
+          </button>
           <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           </button>
@@ -1944,7 +1951,12 @@
             ${product.category === 'boards' ? 'Флагманская доска' : (product.category === 'accessories' ? 'Модуль T-Track' : 'Аксессуар')}
           </div>
           <h2 style="font-family:var(--font-display);font-size:1.85rem;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;">${product.title}</h2>
-          <div style="font-size:0.9375rem;color:var(--text-muted);margin-bottom:18px;">${product.subtitle || ''}</div>
+          <div style="font-size:0.9375rem;color:var(--text-muted);margin-bottom:12px;">${product.subtitle || ''}</div>
+
+          <div class="qv-live-stock-badge">
+            <span class="stock-pulse-dot"></span>
+            <span>В наличии на складе в Москве • Отгрузка завтра</span>
+          </div>
 
           <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:20px;flex-wrap:wrap;">
             <span id="qvPriceCurrent" style="font-family:var(--font-mono);font-size:1.85rem;font-weight:800;letter-spacing:-0.02em;color:var(--text-main);">${formatPrice(product.price)}</span>
@@ -1969,6 +1981,25 @@
             <button class="btn-secondary" onclick="window.geekNookApp.openQuickBuy('${product.id}')" style="flex:1;min-width:140px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;">
               Купить в 1 клик
             </button>
+          </div>
+
+          <div class="qv-trust-badges">
+            <div class="qv-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+              <span>СДЭК 1–2 дня</span>
+            </div>
+            <div class="qv-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+              <span>Гарантия 12 месяцев</span>
+            </div>
+            <div class="qv-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
+              <span>Оплата при осмотре</span>
+            </div>
+            <div class="qv-trust-item">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
+              <span>Тест-драйв 14 дней</span>
+            </div>
           </div>
         </div>
       </div>
