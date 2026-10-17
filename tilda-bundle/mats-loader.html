@@ -35,7 +35,7 @@
   'use strict';
   const CDN_BASE = 'https://ggrk52.github.io/geeknook-web/';
   try {
-    const res = await fetch(CDN_BASE + 'kovriki-dlya-stola.html?v=' + Date.now());
+    const res = await fetch(CDN_BASE + 'kovriki-dlya-stola.html?v=' + Date.now() + '_' + Math.random().toString(36).slice(2), { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     let html = await res.text();
     html = html.replace(/(href|src)=["']((?:js|css|images|docs)\/[^"']+)["']/gi, (m, attr, path) => `${attr}="${CDN_BASE}${path}"`);

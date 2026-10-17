@@ -8868,6 +8868,25 @@
       console.warn('[Defensive] Handled unhandled Promise rejection:', event.reason);
     });
 
+    // 2.0. Header Navigation Sanitizer (cache-safe protection)
+    // Ensures desktop header nav-links never contains legacy/overflowing items even with cached HTML
+    const sanitizeHeaderNav = () => {
+      const headerNavLinks = document.querySelectorAll('.site-header .nav-links li');
+      headerNavLinks.forEach(li => {
+        const a = li.querySelector('a');
+        if (a) {
+          const href = a.getAttribute('href');
+          if (href === '#accessories' || href === '#bundles' || href === '#advantages' || href === '#production') {
+            li.remove();
+          }
+        }
+      });
+    };
+    sanitizeHeaderNav();
+    // Also re-run after short delays in case of asynchronous Tilda DOM replacement
+    setTimeout(sanitizeHeaderNav, 100);
+    setTimeout(sanitizeHeaderNav, 500);
+
     // 2.1. Global Navigation Guard for Headless Tilda deployment:
     // Intercepts any relative links to journal.html, legal.html or journal/ articles so they never 404 on Tilda
     document.addEventListener('click', (e) => {

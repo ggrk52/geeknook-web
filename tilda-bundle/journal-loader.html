@@ -57,7 +57,7 @@
     // If an article slug is in URL (?article=slug), fetch static article directly
     if (slug && /^[a-z0-9-]+$/.test(slug)) {
       try {
-        const articleRes = await fetch(CDN_BASE + 'journal/' + slug + '.html?v=' + Date.now());
+        const articleRes = await fetch(CDN_BASE + 'journal/' + slug + '.html?v=' + Date.now() + '_' + Math.random().toString(36).slice(2), { cache: 'no-store' });
         if (articleRes.ok) {
           const articleHtml = await articleRes.text();
           renderPage(articleHtml);
@@ -69,7 +69,7 @@
     }
 
     // Default: fetch main journal shell with 218 articles catalogue
-    const res = await fetch(CDN_BASE + 'journal.html?v=' + Date.now());
+    const res = await fetch(CDN_BASE + 'journal.html?v=' + Date.now() + '_' + Math.random().toString(36).slice(2), { cache: 'no-store' });
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const html = await res.text();
     renderPage(html);

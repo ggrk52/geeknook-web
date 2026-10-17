@@ -286,6 +286,18 @@ textarea:focus-visible {
   flex-shrink: 0;
 }
 
+/* Cache-safe protection: enforce exactly 7 primary items even with stale cached HTML */
+.site-header .nav-links li:has(a[href="#accessories"]),
+.site-header .nav-links li:has(a[href="#bundles"]),
+.site-header .nav-links li:has(a[href="#advantages"]),
+.site-header .nav-links li:has(a[href="#production"]),
+.site-header .nav-links a[href="#accessories"],
+.site-header .nav-links a[href="#bundles"],
+.site-header .nav-links a[href="#advantages"],
+.site-header .nav-links a[href="#production"] {
+  display: none !important;
+}
+
 .nav-links a {
   font-size: clamp(0.8125rem, 0.88vw, 0.9375rem);
   font-weight: 500;
