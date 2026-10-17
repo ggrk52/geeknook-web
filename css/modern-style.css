@@ -442,6 +442,51 @@ textarea:focus-visible {
   transform: translateY(-1px);
 }
 
+.b2b-header-nav-link {
+  font-family: var(--font-main);
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.b2b-header-nav-link:hover {
+  color: var(--primary);
+  background: var(--surface);
+}
+
+.b2b-header-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
+  color: #ffffff !important;
+  font-family: var(--font-display);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 14px var(--primary-glow);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.b2b-header-cta-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px var(--primary-glow);
+}
+
+@media (max-width: 480px) {
+  .b2b-header-cta-btn {
+    padding: 6px 12px;
+    font-size: 0.78rem;
+  }
+}
+
 .mobile-menu-btn {
   display: none;
   font-size: 1.5rem;
@@ -1718,17 +1763,21 @@ textarea:focus-visible {
 }
 
 .modal-card {
-  background: #ffffff;
+  background: var(--surface-card);
   color: var(--text-main);
   border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
   width: 100%;
   max-width: 960px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
   box-shadow: var(--shadow-lg);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   transform: scale(0.96);
   transition: transform var(--transition-normal);
+  box-sizing: border-box;
 }
 
 .modal-backdrop.active .modal-card {
@@ -1744,18 +1793,27 @@ textarea:focus-visible {
   height: 44px;
   min-width: 44px;
   min-height: 44px;
-  border-radius: 50%;
+  border-radius: var(--radius-sm);
   background: var(--surface);
+  border: 1px solid var(--border);
   color: var(--text-main);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background var(--transition-fast), transform var(--transition-fast);
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast), transform var(--transition-fast);
+  padding: 0;
 }
 
-.btn-close-modal:hover {
-  background: #e5e5e5;
+.btn-close-modal:hover,
+.btn-close-modal:active {
+  background: var(--surface-card);
+  border-color: var(--primary);
+  color: var(--primary);
+  transform: scale(0.96);
 }
 
 /* Quick View Inner Grid */
@@ -1770,11 +1828,13 @@ textarea:focus-visible {
   height: 380px;
   border-radius: var(--radius-md);
   overflow: hidden;
-  background: #f8fafc;
+  background: var(--surface);
+  border: 1px solid var(--border);
   margin-bottom: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
 }
 
 .quick-gallery-main img {
@@ -1797,16 +1857,17 @@ textarea:focus-visible {
   object-fit: contain;
   object-position: center;
   padding: 4px;
-  background: #f8fafc;
+  background: var(--surface);
+  border: 1px solid var(--border);
   cursor: pointer;
   opacity: 0.7;
-  border: 2px solid transparent;
   transition: all var(--transition-fast);
 }
 
 .quick-thumb.active, .quick-thumb:hover {
   opacity: 1;
   border-color: var(--primary);
+  background: var(--surface-card);
 }
 
 .specs-table {
@@ -2709,13 +2770,17 @@ textarea:focus-visible {
   max-width: 460px;
   box-sizing: border-box;
   overflow-x: hidden;
-  background: #ffffff;
+  background: var(--drawer-bg);
   color: var(--text-main);
-  box-shadow: -8px 0 32px rgba(0, 0, 0, 0.15);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
   transform: translateX(100%);
   transition: transform var(--transition-normal);
+  border-left: 1px solid var(--border);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  z-index: 10001;
 }
 
 .cart-drawer-overlay.active .cart-drawer {
@@ -2723,17 +2788,25 @@ textarea:focus-visible {
 }
 
 .cart-header {
-  padding: 24px;
+  padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border);
+  background: var(--surface-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  flex-shrink: 0;
+  box-sizing: border-box;
+  min-height: 56px;
 }
 
 .cart-header h3 {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 1.35rem;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
 }
 
 .btn-clear-cart {
@@ -2984,10 +3057,13 @@ textarea:focus-visible {
 
 .cart-footer {
   flex-shrink: 0;
-  padding: 18px 24px calc(20px + env(safe-area-inset-bottom, 0px));
-  background: var(--surface);
+  padding: 16px 20px calc(20px + env(safe-area-inset-bottom, 0px));
+  background: var(--surface-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-top: 1px solid var(--border);
   box-sizing: border-box;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.04);
 }
 
 .promo-row {
@@ -3000,20 +3076,21 @@ textarea:focus-visible {
   flex-grow: 1;
   min-width: 0;
   box-sizing: border-box;
-  background: #ffffff;
-  border: 1px solid var(--border);
+  background: var(--surface-input);
+  border: 1px solid var(--border-input);
+  color: var(--text-main);
   border-radius: var(--radius-sm);
   padding: 10px 14px;
   font-size: 0.875rem;
-  font-family: var(--font-body);
-  transition: border-color 0.2s, box-shadow 0.2s;
+  font-family: var(--font-main);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
   min-height: 44px;
 }
 
 .promo-input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(43, 112, 240, 0.15);
+  box-shadow: 0 0 0 3px var(--primary-surface);
 }
 
 .btn-apply-promo {
@@ -3563,7 +3640,7 @@ textarea:focus-visible {
 
   /* Cart Drawer on Phones */
   .cart-drawer {
-    max-width: 100%;
+    max-width: min(460px, calc(100vw - 20px));
   }
   .cart-header {
     padding: 18px 18px;
@@ -4533,26 +4610,28 @@ textarea:focus-visible {
 }
 
 .quiz-option-card {
-  border: 2px solid var(--border);
+  border: 1px solid var(--border);
   border-radius: var(--radius-md);
   padding: 18px 16px;
   cursor: pointer;
   transition: all var(--transition-fast);
-  background: #ffffff;
+  background: var(--surface);
   text-align: left;
   display: flex;
   flex-direction: column;
 }
 
 .quiz-option-card:hover {
-  border-color: rgba(37, 99, 235, 0.5);
+  border-color: var(--primary);
+  background: var(--surface-card);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .quiz-option-card.selected {
   border-color: var(--primary);
-  background: rgba(37, 99, 235, 0.04);
+  background: var(--primary-surface);
+  box-shadow: 0 0 0 1px var(--primary);
 }
 
 .quiz-option-card.selected .quiz-opt-icon {
@@ -4938,9 +5017,10 @@ textarea:focus-visible {
    21. SETUP MATCHER MODAL
    ========================================================================== */
 .setup-matcher-card {
-  background: #ffffff;
+  background: var(--surface-card);
   color: var(--text-main);
   border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
   padding: 36px !important;
 }
 
@@ -4966,7 +5046,8 @@ textarea:focus-visible {
 }
 
 .matcher-chip {
-  padding: 7px 14px;
+  padding: 8px 14px;
+  min-height: 40px;
   border-radius: var(--radius-sm);
   background: var(--surface);
   border: 1px solid var(--border);
@@ -4975,18 +5056,22 @@ textarea:focus-visible {
   color: var(--text-muted);
   cursor: pointer;
   transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .matcher-chip:hover {
-  background: #ffffff;
-  border-color: var(--text-muted);
+  background: var(--surface-card);
+  border-color: var(--primary);
   color: var(--text-main);
 }
 
 .matcher-chip.active {
-  background: var(--text-main);
+  background: var(--primary);
   color: #ffffff;
-  border-color: var(--text-main);
+  border-color: var(--primary);
+  box-shadow: 0 4px 14px var(--primary-glow);
 }
 
 .matcher-visualizer-box {
@@ -5348,30 +5433,49 @@ textarea:focus-visible {
 }
 
 [data-theme="dark"] .btn-close-modal {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.1);
   color: #f8fafc;
 }
 
-[data-theme="dark"] .btn-close-modal:hover {
-  background: rgba(255, 255, 255, 0.18);
+[data-theme="dark"] .btn-close-modal:hover,
+[data-theme="dark"] .btn-close-modal:active {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: var(--primary);
+  color: #60a5fa;
+  transform: scale(0.96);
 }
 
 /* Slide-over Cart Drawer in Dark Theme */
 [data-theme="dark"] .cart-drawer {
-  background: var(--drawer-bg);
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: -8px 0 36px rgba(0, 0, 0, 0.7);
+  background: rgba(13, 17, 24, 0.96);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #f8fafc;
+  box-shadow: -15px 0 50px rgba(0, 0, 0, 0.7);
 }
 
-[data-theme="dark"] .cart-header,
-[data-theme="dark"] .shipping-progress-wrap,
-[data-theme="dark"] .cart-item-row {
+[data-theme="dark"] .cart-header {
+  background: rgba(18, 24, 34, 0.9);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
-[data-theme="dark"] .shipping-progress-wrap,
+[data-theme="dark"] .shipping-progress-wrap {
+  background: rgba(18, 24, 34, 0.6);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .cart-item-row {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .cart-item-row:hover {
+  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+}
+
 [data-theme="dark"] .cart-footer {
-  background: #0b0e14;
+  background: rgba(13, 17, 24, 0.98);
   border-color: rgba(255, 255, 255, 0.08);
 }
 
@@ -7087,7 +7191,7 @@ textarea:focus-visible {
 }
 
 .fea-lab-card {
-  background: #ffffff;
+  background: var(--surface-card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   padding: 32px 28px;
