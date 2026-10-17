@@ -2608,122 +2608,263 @@
        MODALS & DRAWERS: MOBILE NAV, CART, QUICK VIEW, CONFIGURATOR, CHECKOUT, SUCCESS, LIGHTBOX, ARTICLE
        ========================================================================== -->
 
-  <!-- Slide-over Mobile Navigation Drawer -->
+  <!-- Slide-over Mobile Navigation Drawer (Glassmorphic Engineering Edition) -->
   <div class="mobile-nav-overlay" id="mobileNavOverlay" onclick="if(event.target===this) window.geekNookApp.closeMobileNav()">
-    <div class="mobile-nav-drawer">
+    <div class="mobile-nav-drawer" role="dialog" aria-modal="true" aria-label="Мобильное меню навигации">
+      <!-- 1. Header: Brand Logo, Tactile Sound FX Toggle & Close -->
       <div class="mobile-nav-header">
         <a href="#hero" class="brand-logo" onclick="window.geekNookApp.closeMobileNav()">
           <img src="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" alt="GeekNook" />
           <span>GEEK NOOK</span>
         </a>
-        <button class="btn-close-modal" style="position:static;" onclick="window.geekNookApp.closeMobileNav()" aria-label="Закрыть меню">✕</button>
+        <div class="mobile-header-actions">
+          <button class="mobile-icon-btn" id="mobileSoundToggleBtn" onclick="window.geekNookApp.toggleSound()" title="Тактильный звук (S)" aria-label="Переключить тактильный звук">
+            <svg class="sound-icon-on" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+            </svg>
+            <svg class="sound-icon-off" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+              <line x1="23" y1="9" x2="17" y2="15"></line>
+              <line x1="17" y1="9" x2="23" y2="15"></line>
+            </svg>
+          </button>
+          <button class="mobile-icon-btn mobile-close-btn" onclick="window.geekNookApp.closeMobileNav()" aria-label="Закрыть меню">✕</button>
+        </div>
       </div>
 
+      <!-- 2. Command Palette Quick Search Trigger (Direct Desktop Feature Access) -->
+      <div class="mobile-search-wrap">
+        <button class="mobile-nav-search-btn" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openCommandPalette();" aria-label="Быстрый поиск по каталогу и статьям">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <span class="mobile-search-placeholder">Поиск по каталогу и статьям...</span>
+          <span class="mobile-search-kbd">⌘K</span>
+        </button>
+      </div>
+
+      <!-- 3. Scrollable Content Body -->
       <div class="mobile-nav-body">
-        <nav class="mobile-nav-links">
-          <a href="#boards" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Каталог досок Focus Station</span>
-            <span class="mobile-nav-sub">Флагманские деревянные органайзеры</span>
-          </a>
-          <a href="#accessories" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Аксессуары T-Track</span>
-            <span class="mobile-nav-sub">Подставки, полки, держатели и лотки</span>
-          </a>
-          <a href="/kovriki-dlya-stola" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Коврики Desk Mat</span>
-            <span class="mobile-nav-sub">Натуральный войлок и экокожа</span>
-          </a>
-          <a href="/kabel-menedzhment" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Кабель-менеджмент</span>
-            <span class="mobile-nav-sub">Подвесные лотки и магнитные фиксаторы</span>
-          </a>
-          <a href="#bundles" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Готовые комплекты (-15%)</span>
-            <span class="mobile-nav-sub">Developer Pro, Creator Studio, Minimalist</span>
-          </a>
-          <a href="javascript:void(0)" class="mobile-nav-item mobile-nav-highlight" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openConfigurator();">
-            <div class="mobile-nav-badge">Интерактивный 3D-конструктор</div>
-            <span class="mobile-nav-title">Собрать свой сетап</span>
-            <span class="mobile-nav-sub">Кастомная доска, модули и гравировка</span>
-          </a>
-          <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openErgonomicsCalculator();" style="border: 1px dashed rgba(16,185,129,0.4); margin: 2px 0;">
-            <span class="mobile-nav-title" style="color:#10b981;">Калькулятор эргономики (ISO)</span>
-            <span class="mobile-nav-sub">Расчет высоты подставки под ваш рост</span>
-          </a>
-          <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openCadModal();" style="border: 1px dashed rgba(59,130,246,0.4); margin: 2px 0;">
-            <span class="mobile-nav-title" style="color:var(--primary);">B2B Конфигуратор & Опт (-25%)</span>
-            <span class="mobile-nav-sub">Оснащение офисов, расчет КП и CAD-модели</span>
-          </a>
-          <a href="javascript:void(0)" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openQuiz();">
-            <span class="mobile-nav-title">Подбор сетапа (Квиз)</span>
-            <span class="mobile-nav-sub">3 быстрых вопроса под ваши мониторы</span>
-          </a>
-          <a href="#advantages" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Преимущества</span>
-            <span class="mobile-nav-sub">Инженерия, материалы, патент</span>
-          </a>
-          <a href="#production" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Производство</span>
-            <span class="mobile-nav-sub">ЧПУ-фрезеровка и ручная отделка</span>
-          </a>
-          <a href="#retail" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Где купить & Партнеры</span>
-            <span class="mobile-nav-sub">re:Store, Технопарк, онлайн, B2B</span>
-          </a>
-          <a href="#setups" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Сетапы клиентов</span>
-            <span class="mobile-nav-sub">Фотографии и реальные отзывы</span>
-          </a>
-          <a href="#journal" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Журнал GeekNook</span>
-            <span class="mobile-nav-sub">Статьи об эргономике и организации</span>
-          </a>
-          <a href="#faq" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Вопросы и ответы (FAQ)</span>
-            <span class="mobile-nav-sub">Нагрузка, совместимость, доставка</span>
-          </a>
-          <a href="#footer" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
-            <span class="mobile-nav-title">Контакты и доставка</span>
-            <span class="mobile-nav-sub">СДЭК, гарантия, поддержка</span>
-          </a>
-        </nav>
 
-        <div class="mobile-nav-footer">
-          <div class="mobile-theme-row">
-            <div class="mobile-theme-label">
-              <span class="mobile-theme-icon-box">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-              </span>
-              <span class="mobile-theme-text">Тёмная тема</span>
+        <!-- Section 1: КАТАЛОГ ПРОДУКЦИИ -->
+        <div class="mobile-nav-section">
+          <div class="mobile-nav-section-title">
+            <span>01 // Каталог и продукты</span>
+          </div>
+          <nav class="mobile-nav-links">
+            <a href="/podstavki-pod-monitor" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              </div>
+              <div class="mobile-nav-item-content">
+                <div class="mobile-nav-title-row">
+                  <span class="mobile-nav-title">Подставки под монитор</span>
+                  <span class="mobile-nav-badge badge-blue">New</span>
+                </div>
+                <span class="mobile-nav-sub">Массив кавказского дуба и американского ореха</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+
+            <a href="#boards" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+              </div>
+              <div class="mobile-nav-item-content">
+                <div class="mobile-nav-title-row">
+                  <span class="mobile-nav-title">Доски Focus Station</span>
+                </div>
+                <span class="mobile-nav-sub">Флагманские органайзеры с T-Track шиной</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+
+            <a href="/kovriki-dlya-stola" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="3"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+              </div>
+              <div class="mobile-nav-item-content">
+                <div class="mobile-nav-title-row">
+                  <span class="mobile-nav-title">Коврики Desk Mat</span>
+                </div>
+                <span class="mobile-nav-sub">Натуральный плотный войлок и экокожа</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+
+            <a href="/kabel-menedzhment" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v6"/><path d="M12 18v4"/><path d="M4.93 4.93l4.24 4.24"/><path d="M14.83 14.83l4.24 4.24"/><circle cx="12" cy="12" r="4"/></svg>
+              </div>
+              <div class="mobile-nav-item-content">
+                <div class="mobile-nav-title-row">
+                  <span class="mobile-nav-title">Кабель-менеджмент</span>
+                  <span class="mobile-nav-badge badge-zen">Zen</span>
+                </div>
+                <span class="mobile-nav-sub">Подвесные лотки и магнитные фиксаторы N52</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+
+            <a href="#accessories" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+              <div class="mobile-nav-item-content">
+                <div class="mobile-nav-title-row">
+                  <span class="mobile-nav-title">Аксессуары T-Track</span>
+                </div>
+                <span class="mobile-nav-sub">Полки, держатели для наушников и телефонов</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+
+            <a href="#bundles" class="mobile-nav-item" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-icon">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+              </div>
+              <div class="mobile-nav-item-content">
+                <div class="mobile-nav-title-row">
+                  <span class="mobile-nav-title">Готовые комплекты</span>
+                  <span class="mobile-nav-badge badge-sale">-15%</span>
+                </div>
+                <span class="mobile-nav-sub">Developer Pro, Creator Studio, Minimalist</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+          </nav>
+        </div>
+
+        <!-- Section 2: ИНТЕРАКТИВНЫЕ ИНСТРУМЕНТЫ (Smart Lab) -->
+        <div class="mobile-nav-section">
+          <div class="mobile-nav-section-title">
+            <span>02 // Инженерные инструменты</span>
+          </div>
+          <div class="mobile-tools-grid">
+            <button type="button" class="mobile-tool-card" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openConfigurator();">
+              <div class="mobile-tool-header">
+                <span class="mobile-tool-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+                </span>
+                <span class="mobile-tool-tag">360°</span>
+              </div>
+              <div class="mobile-tool-title">3D-Конструктор</div>
+              <div class="mobile-tool-desc">Собрать сетап под заказ</div>
+            </button>
+
+            <button type="button" class="mobile-tool-card" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openErgonomicsCalculator();">
+              <div class="mobile-tool-header">
+                <span class="mobile-tool-icon" style="color:#10b981;">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </span>
+                <span class="mobile-tool-tag" style="color:#10b981;border-color:rgba(16,185,129,0.3);">ISO</span>
+              </div>
+              <div class="mobile-tool-title">Эргономика</div>
+              <div class="mobile-tool-desc">Расчет высоты по росту</div>
+            </button>
+          </div>
+
+          <a href="/b2b" class="mobile-b2b-banner" onclick="window.geekNookApp.closeMobileNav()">
+            <div class="mobile-b2b-banner-inner">
+              <div class="mobile-b2b-badge">Для IT-офисов и дизайнеров</div>
+              <div class="mobile-b2b-title">B2B Офис & КП в 1 клик</div>
+              <div class="mobile-b2b-desc">Тест-драйв на 14 дней • Опт до -20% • ЭДО и Диадок</div>
             </div>
-            <label class="theme-switch-control" for="mobileThemeCheckbox" aria-label="Включить тёмную тему">
-              <input type="checkbox" id="mobileThemeCheckbox" aria-label="Включить тёмную тему" onchange="window.geekNookApp.toggleTheme()" />
-              <span class="theme-switch-slider"></span>
-            </label>
-          </div>
+            <span class="mobile-b2b-arrow">→</span>
+          </a>
+        </div>
 
-          <button class="mobile-nav-cart-btn" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openCartDrawer();">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-              <line x1="3" y1="6" x2="21" y2="6"></line>
-              <path d="M16 10a4 4 0 0 1-8 0"></path>
-            </svg>
-            <span>Открыть корзину</span>
-            <span class="mobile-nav-cart-count" id="mobileNavCartCount">0</span>
-          </button>
-
-          <div class="mobile-nav-contacts">
-            <a href="https://t.me/GEEKNOOK_bot" target="_blank" rel="noopener noreferrer" class="mobile-contact-pill">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
-              <span>Telegram</span>
-            </a>
-            <a href="mailto:info@geeknook.ru" class="mobile-contact-pill">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              <span>info@geeknook.ru</span>
-            </a>
+        <!-- Section 3: БАЗА ЗНАНИЙ И О КОМПАНИИ -->
+        <div class="mobile-nav-section">
+          <div class="mobile-nav-section-title">
+            <span>03 // О бренде и знания</span>
           </div>
+          <nav class="mobile-nav-links secondary">
+            <a href="/journal" class="mobile-nav-item secondary" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-content">
+                <span class="mobile-nav-title">Журнал GeekNook</span>
+                <span class="mobile-nav-sub">218 практических статей об эргономике</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+            <a href="#advantages" class="mobile-nav-item secondary" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-content">
+                <span class="mobile-nav-title">Преимущества и патент</span>
+                <span class="mobile-nav-sub">Инженерная база, нагрузки и сертификаты</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+            <a href="#production" class="mobile-nav-item secondary" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-content">
+                <span class="mobile-nav-title">Производство в России</span>
+                <span class="mobile-nav-sub">ЧПУ фрезеровка, массив дуба и авиаль Д16Т</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+            <a href="#setups" class="mobile-nav-item secondary" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-content">
+                <span class="mobile-nav-title">Сетапы клиентов</span>
+                <span class="mobile-nav-sub">Реальные фото рабочих мест и отзывы</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+            <a href="#faq" class="mobile-nav-item secondary" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-content">
+                <span class="mobile-nav-title">Вопросы и ответы (FAQ)</span>
+                <span class="mobile-nav-sub">Доставка, сборка, гарантия 12 месяцев</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+            <a href="/legal" class="mobile-nav-item secondary" onclick="window.geekNookApp.closeMobileNav()">
+              <div class="mobile-nav-item-content">
+                <span class="mobile-nav-title">Правовой центр</span>
+                <span class="mobile-nav-sub">Оферта, политика и реквизиты ООО «ГИК НУК»</span>
+              </div>
+              <span class="mobile-nav-arrow">→</span>
+            </a>
+          </nav>
+        </div>
+
+      </div>
+
+      <!-- 4. Sticky Footer with Quick Actions -->
+      <div class="mobile-nav-footer">
+        <button class="mobile-nav-cart-btn" onclick="window.geekNookApp.closeMobileNav(); window.geekNookApp.openCartDrawer();">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <path d="M16 10a4 4 0 0 1-8 0"></path>
+          </svg>
+          <span>Открыть корзину</span>
+          <span class="mobile-nav-cart-count" id="mobileNavCartCount">0</span>
+        </button>
+
+        <div class="mobile-theme-row">
+          <div class="mobile-theme-label">
+            <span class="mobile-theme-icon-box">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+              </svg>
+            </span>
+            <span class="mobile-theme-text">Тёмная тема</span>
+          </div>
+          <label class="theme-switch-control" for="mobileThemeCheckbox" aria-label="Включить тёмную тему">
+            <input type="checkbox" id="mobileThemeCheckbox" aria-label="Включить тёмную тему" onchange="window.geekNookApp.toggleTheme()" />
+            <span class="theme-switch-slider"></span>
+          </label>
+        </div>
+
+        <div class="mobile-nav-contacts">
+          <a href="tel:+79670251030" class="mobile-contact-pill phone-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            <span>+7 (967) 025-10-30</span>
+          </a>
+          <a href="https://t.me/GEEKNOOK_bot" target="_blank" rel="noopener noreferrer" class="mobile-contact-pill tg-pill">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
+            <span>Telegram</span>
+          </a>
         </div>
       </div>
     </div>

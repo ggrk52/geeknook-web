@@ -480,23 +480,28 @@
     }
 
     updateButtonUI() {
-      const btn = document.getElementById('soundToggleBtn');
-      if (!btn) return;
-      if (this.enabled) {
-        btn.classList.remove('sound-muted');
-        btn.title = 'Тактильный звук включен (S)';
-        const iconOn = btn.querySelector('.sound-icon-on');
-        const iconOff = btn.querySelector('.sound-icon-off');
-        if (iconOn) iconOn.style.display = 'block';
-        if (iconOff) iconOff.style.display = 'none';
-      } else {
-        btn.classList.add('sound-muted');
-        btn.title = 'Тактильный звук выключен (S)';
-        const iconOn = btn.querySelector('.sound-icon-on');
-        const iconOff = btn.querySelector('.sound-icon-off');
-        if (iconOn) iconOn.style.display = 'none';
-        if (iconOff) iconOff.style.display = 'block';
-      }
+      const btns = [
+        document.getElementById('soundToggleBtn'),
+        document.getElementById('mobileSoundToggleBtn')
+      ].filter(Boolean);
+
+      btns.forEach(btn => {
+        if (this.enabled) {
+          btn.classList.remove('sound-muted');
+          btn.title = 'Тактильный звук включен (S)';
+          const iconOn = btn.querySelector('.sound-icon-on');
+          const iconOff = btn.querySelector('.sound-icon-off');
+          if (iconOn) iconOn.style.display = 'block';
+          if (iconOff) iconOff.style.display = 'none';
+        } else {
+          btn.classList.add('sound-muted');
+          btn.title = 'Тактильный звук выключен (S)';
+          const iconOn = btn.querySelector('.sound-icon-on');
+          const iconOff = btn.querySelector('.sound-icon-off');
+          if (iconOn) iconOn.style.display = 'none';
+          if (iconOff) iconOff.style.display = 'block';
+        }
+      });
     }
   }
 
@@ -1175,6 +1180,7 @@
     if (nav) {
       nav.classList.add('active');
       modalManager.syncOverflow();
+      soundEngine.updateButtonUI();
       const mobileCartBadge = document.getElementById('mobileNavCartCount');
       if (mobileCartBadge) {
         mobileCartBadge.textContent = state.cart.reduce((sum, i) => sum + (parseInt(i.quantity, 10) || 0), 0);
