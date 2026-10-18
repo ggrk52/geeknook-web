@@ -517,20 +517,44 @@
         const inpPvz = tildaCartForm.querySelector('input[name="Код ПВЗ СДЭК"], input[name*="ПВЗ"], input[name*="CDEK"], input[name*="cdek"], input[name="Address"], input[name="address"], textarea');
         const inpComment = tildaCartForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
 
-        if (inpName) inpName.value = name;
-        if (inpEmail) inpEmail.value = email;
-        if (inpPhone) inpPhone.value = phone;
+        if (inpName) {
+          inpName.value = name;
+          try { inpName.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpName.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+        if (inpEmail) {
+          inpEmail.value = email;
+          try { inpEmail.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+        if (inpPhone) {
+          inpPhone.value = phone;
+          try { inpPhone.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpPhone.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+          if (window.jQuery) {
+            try { window.jQuery(inpPhone).val(phone).trigger('change').trigger('input'); } catch(_) {}
+          }
+        }
 
         const pvzCode = pvz ? pvz.code : (address.match(/\[([A-Z0-9_-]+)\]/i)?.[1] || address);
         const pvzString = pvz ? `ПВЗ СДЭК: [${pvz.code}] ${pvz.address} (${pvz.city})` : address;
-        if (inpPvz) inpPvz.value = pvzCode;
+        if (inpPvz) {
+          inpPvz.value = pvzCode;
+          try { inpPvz.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpPvz.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
+
         const utmParams = (window.geekNookAnalytics && typeof window.geekNookAnalytics.getUtmParams === 'function')
           ? window.geekNookAnalytics.getUtmParams()
           : {};
         const utmEntries = Object.entries(utmParams).filter(([k]) => k.startsWith('utm_') || k === 'yclid' || k === '_openstat' || k === 'gclid');
         const utmStr = utmEntries.length > 0 ? ` | UTM: ${utmEntries.map(([k, v]) => `${k}=${v}`).join(', ')}` : '';
 
-        if (inpComment) inpComment.value = `${pvzString}. Доставка: СДЭК (ПВЗ). Оплата: при получении в ПВЗ. ${checkoutPromo ? 'Промокод: ' + checkoutPromo : ''}${utmStr}`;
+        if (inpComment) {
+          inpComment.value = `${pvzString}. Доставка: СДЭК (ПВЗ). Оплата: при получении в ПВЗ. ${checkoutPromo ? 'Промокод: ' + checkoutPromo : ''}${utmStr}`;
+          try { inpComment.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+          try { inpComment.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+        }
 
         // Attach UTM hidden inputs to Tilda form
         ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', '_openstat', 'gclid'].forEach(key => {
@@ -546,6 +570,13 @@
           }
         });
 
+        // Clean validation errors and set active cart window state
+        tildaCartForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper, .js-errorbox-all').forEach(el => { el.style.display = 'none'; });
+        tildaCartForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
+        document.body.classList.add('t706__body_cartwinshowed');
+        const cartWin = document.querySelector('.t706__cartwin');
+        if (cartWin) cartWin.classList.add('t706__cartwin_showed');
+
         // Trigger hidden Tilda submit (single dispatch)
         const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
         let submitted = false;
@@ -554,6 +585,9 @@
             submitBtn.click();
             submitted = true;
           } catch(err) {}
+        }
+        if (window.jQuery) {
+          try { window.jQuery(tildaCartForm).trigger('submit'); submitted = true; } catch(_) {}
         }
         if (!submitted) {
           try {
@@ -799,6 +833,8 @@
           }
           if (inpComment) {
             inpComment.value = `[Заказ в 1 клик] Товар: ${fullProdTitle}. Сумма: ${finalPrice} ₽. Телефон: ${formattedPhone}.${appliedPromo ? ' Промокод: ' + appliedPromo : ''}${utmStr}`;
+            try { inpComment.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+            try { inpComment.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
           }
 
           let paymentInput = tildaCartForm.querySelector('input.js-tilda-payment, input[name="tildapayment"]');
@@ -811,9 +847,26 @@
           }
           paymentInput.value = JSON.stringify(tildaPaymentData);
 
+          // Clean validation errors and set active cart window state
+          tildaCartForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper, .js-errorbox-all').forEach(el => { el.style.display = 'none'; });
+          tildaCartForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
+          document.body.classList.add('t706__body_cartwinshowed');
+          const cartWin = document.querySelector('.t706__cartwin');
+          if (cartWin) cartWin.classList.add('t706__cartwin_showed');
+
           const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
+          let qSubmitted = false;
           if (submitBtn) {
-            try { submitBtn.click(); } catch(_) {}
+            try { submitBtn.click(); qSubmitted = true; } catch(_) {}
+          }
+          if (window.jQuery) {
+            try { window.jQuery(tildaCartForm).trigger('submit'); qSubmitted = true; } catch(_) {}
+          }
+          if (!qSubmitted) {
+            try {
+              const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
+              tildaCartForm.dispatchEvent(submitEvt);
+            } catch(_) {}
           }
         } catch(domErr) {
           console.warn('[GeekNook 1-Click] DOM submit error:', domErr);
