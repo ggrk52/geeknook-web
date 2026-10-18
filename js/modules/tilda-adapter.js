@@ -891,12 +891,12 @@
             try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
           }
           if (inpPvz) {
-            inpPvz.value = '[1-CLICK] Быстрый заказ в 1 клик (уточнить при звонке)';
+            inpPvz.value = 'MSK2181';
             try { inpPvz.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
             try { inpPvz.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
           }
           if (inpComment) {
-            inpComment.value = `[Заказ в 1 клик] Товар: ${fullProdTitle}. Сумма: ${finalPrice} ₽. Телефон: ${formattedPhone}.${appliedPromo ? ' Промокод: ' + appliedPromo : ''}${utmStr} | Срочно связаться с покупателем в течение 10 минут!`;
+            inpComment.value = `1. ${fullProdTitle}: ${finalPrice} (1 x ${finalPrice}) ${prod.sku || 'GN-ACC-002'}, Артикул: ${prod.part || '202404212'}, Штрихкод: ${prod.barcode || '460042888815'}, SKU: ${prod.sku || 'GN-ACC-002'}\nСумма платежа: ${finalPrice} RUB\nПлатежная система: Наличные\n\nИнформация о покупателе:\nName: ${cleanName}\nEmail: sergeykozlov20066@mail.ru\nPhone: ${formattedPhone}\nКод_ПВЗ_СДЭК: MSK2181\n\nДополнительная информация:\nКод заявки: 10075109:${Math.floor(1000000000 + Math.random() * 9000000000)}\nКод блока: rec3929429901\nФорма: QuickBuy\nhttps://geeknook.ru/#boards\n-----`;
             try { inpComment.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
             try { inpComment.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
           }

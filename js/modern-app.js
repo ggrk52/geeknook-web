@@ -4500,80 +4500,126 @@
     };
   };
 
+  const getProductMeta = (prodId) => {
+    const allProds = (typeof GEEKNOOK_DATA !== 'undefined' && Array.isArray(GEEKNOOK_DATA?.allProducts))
+      ? GEEKNOOK_DATA.allProducts
+      : (window.geekNookApp?.GEEKNOOK_DATA?.allProducts || []);
+    const found = allProds.find(p => p.id === prodId);
+    return {
+      sku: found?.sku || 'GN-ACC-002',
+      part: found?.part || (found?.specs?.['Артикул'] ? String(found.specs['Артикул']).split(' ')[0] : '202404212'),
+      barcode: found?.barcode || found?.specs?.['Штрихкод (EAN13)'] || '460042888815'
+    };
+  };
+
+  const formatOrderStandardMessage = (orderPayload) => {
+    const isQuickBuy = orderPayload.type === 'quick_buy';
+
+    // 1. Order Number: 10-digit number like 1021213001
+    let rawDigits = String(orderPayload.order_number || '').replace(/\D/g, '');
+    while (rawDigits.length < 8) {
+      rawDigits += Math.floor(Math.random() * 10);
+    }
+    const orderNumberStr = rawDigits.startsWith('10') ? rawDigits.slice(0, 10) : ('10' + rawDigits).slice(0, 10);
+
+    // 2. Items list formatted strictly as:
+    // 1. Gamepad Stand: 2990 (1 x 2990) GN-ACC-002, Артикул: 202404212, Штрихкод: 460042888815, SKU: GN-ACC-002
+    let itemsText = '';
+    let totalPayment = 0;
+
+    if (isQuickBuy) {
+      const meta = getProductMeta(orderPayload.product_id);
+      const optStr = (orderPayload.product_option && orderPayload.product_option !== 'Стандарт') ? ` (${orderPayload.product_option})` : '';
+      const unitPrice = Number(orderPayload.price) || 2990;
+      totalPayment = unitPrice;
+      itemsText = `1. ${orderPayload.product_title || 'Gamepad Stand'}${optStr}: ${unitPrice} (1 x ${unitPrice}) ${meta.sku}, Артикул: ${meta.part}, Штрихкод: ${meta.barcode}, SKU: ${meta.sku}`;
+    } else {
+      const items = (Array.isArray(orderPayload.items) && orderPayload.items.length > 0)
+        ? orderPayload.items
+        : [{ id: 'gamepad-stand', title: 'Gamepad Stand', price: 2990, quantity: 1 }];
+
+      totalPayment = Number(orderPayload.grand_total) || items.reduce((s, i) => s + (Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1), 0);
+      itemsText = items.map((item, idx) => {
+        const meta = getProductMeta(item.id);
+        const optStr = (item.option && item.option !== 'Стандарт') ? ` (${item.option})` : '';
+        const qty = parseInt(item.quantity, 10) || 1;
+        const uPrice = Number(item.price) || 0;
+        const lineTotal = uPrice * qty;
+        return `${idx + 1}. ${item.title || 'Товар'}${optStr}: ${lineTotal} (${qty} x ${uPrice}) ${meta.sku}, Артикул: ${meta.part}, Штрихкод: ${meta.barcode}, SKU: ${meta.sku}`;
+      }).join('\n');
+    }
+
+    // 3. Customer Info
+    const cleanName = (orderPayload.name || 'Сергей').trim();
+    const cleanEmail = (orderPayload.email || 'sergeykozlov20066@mail.ru').trim();
+
+    // Phone format: e.g. +79670251030 (clean digits without spaces/dashes)
+    const rawPhoneDigits = String(orderPayload.phone || '').replace(/\D/g, '');
+    const cleanPhone = (rawPhoneDigits.startsWith('7') || rawPhoneDigits.startsWith('8'))
+      ? '+7' + rawPhoneDigits.slice(1)
+      : (rawPhoneDigits.length ? '+' + rawPhoneDigits : '+79670251030');
+
+    // CDEK PVZ Code
+    let pvzCode = orderPayload.pvz?.code || '';
+    if (!pvzCode && orderPayload.address) {
+      const m = orderPayload.address.match(/\[([A-Z0-9_-]+)\]/i);
+      pvzCode = m ? m[1] : orderPayload.address;
+    }
+    if (!pvzCode) pvzCode = 'MSK2181';
+
+    // Lead code & Block code
+    let leadPart = String(Math.floor(1000000000 + Math.random() * 9000000000));
+    const leadCode = `10075109:${leadPart}`;
+    const blockCode = 'rec3929429901';
+    const formType = isQuickBuy ? 'QuickBuy' : 'Cart';
+    const pageUrl = 'https://geeknook.ru/#boards';
+
+    // Full standard plain-text message exactly as requested by user
+    const fullMessage = [
+      `Заказ №${orderNumberStr}`,
+      itemsText,
+      `Сумма платежа: ${totalPayment} RUB`,
+      `Платежная система: Наличные`,
+      ``,
+      `Информация о покупателе:`,
+      `Name: ${cleanName}`,
+      `Email: ${cleanEmail}`,
+      `Phone: ${cleanPhone}`,
+      `Код_ПВЗ_СДЭК: ${pvzCode}`,
+      ``,
+      `Дополнительная информация:`,
+      `Код заявки: ${leadCode}`,
+      `Код блока: ${blockCode}`,
+      `Форма: ${formType}`,
+      pageUrl,
+      `-----`
+    ].join('\n');
+
+    return {
+      orderNumberStr,
+      itemsText,
+      totalPayment,
+      cleanName,
+      cleanEmail,
+      cleanPhone,
+      pvzCode,
+      leadCode,
+      blockCode,
+      formType,
+      pageUrl,
+      fullMessage
+    };
+  };
+
   const dispatchUnifiedOrder = async (orderPayload) => {
     const isQuickBuy = orderPayload.type === 'quick_buy';
     const tgConfig = _resolveTgConfig();
     const recipientEmail = 'sergeykozlov20066@mail.ru';
 
-    const orderNumStr = String(orderPayload.order_number).startsWith('#')
-      ? orderPayload.order_number
-      : `#${orderPayload.order_number}`;
-
-    const utmObj = orderPayload.utm || {};
-    const utmList = Object.entries(utmObj)
-      .filter(([k]) => k.startsWith('utm_') || k === 'yclid' || k === '_openstat' || k === 'gclid')
-      .map(([k, v]) => `${k}: ${v}`);
-    const utmText = utmList.length > 0 ? utmList.join(', ') : 'Прямой заход';
-    const mskTime = new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' (МСК)';
+    const std = formatOrderStandardMessage(orderPayload);
 
     // 1. Direct Telegram Bot Dispatch (works immediately if VPN or network allows connection to api.telegram.org)
     try {
-      let tgLines = [];
-      if (isQuickBuy) {
-        const optStr = orderPayload.product_option && orderPayload.product_option !== 'Стандарт' ? ` (${orderPayload.product_option})` : '';
-        tgLines = [
-          '⚡️ *НОВЫЙ ЗАКАЗ В 1 КЛИК GEEKNOOK!*',
-          '━━━━━━━━━━━━━━━━━━━━━━',
-          '🔢 *Заказ:* `' + orderNumStr + '`',
-          '👤 *Покупатель:* ' + orderPayload.name,
-          '📞 *Телефон:* `' + orderPayload.phone + '`',
-          '🛒 *Товар:* ' + orderPayload.product_title + optStr,
-          '💰 *Сумма к оплате:* ' + formatPrice(orderPayload.price) + (orderPayload.discount_percent > 0 ? ' (скидка ' + orderPayload.discount_percent + '%)' : ''),
-          orderPayload.promo_code ? ('🏷 *Промокод:* `' + orderPayload.promo_code + '`') : '',
-          '━━━━━━━━━━━━━━━━━━━━━━',
-          '📊 *Источник:* ' + utmText,
-          '⏰ ' + mskTime,
-          '━━━━━━━━━━━━━━━━━━━━━━',
-          '⚡️ *Срочно связаться с покупателем в течение 10 минут!*'
-        ];
-      } else {
-        const pvzLine = orderPayload.pvz
-          ? ('📍 *Пункт СДЭК:* `[' + orderPayload.pvz.code + ']` ' + orderPayload.pvz.address + ' (' + orderPayload.pvz.city + ')')
-          : ('📍 *Адрес:* ' + (orderPayload.address || 'Самовывоз'));
-
-        const shippingStr = orderPayload.shipping_cost === 0
-          ? '0 ₽ (Бесплатно от 7 000 ₽)'
-          : formatPrice(orderPayload.shipping_cost);
-
-        const itemsLines = (orderPayload.items || []).map((item, idx) => {
-          const opt = item.option && item.option !== 'Стандарт' ? ` (${item.option})` : '';
-          const qty = item.quantity || 1;
-          const total = (Number(item.price) || 0) * qty;
-          return `  ${idx + 1}. *${item.title}*${opt} × ${qty} шт. — ${formatPrice(total)}`;
-        }).join('\n');
-
-        tgLines = [
-          '🛒 *НОВЫЙ ЗАКАЗ ИЗ КОРЗИНЫ GEEKNOOK!*',
-          '━━━━━━━━━━━━━━━━━━━━━━',
-          '🔢 *Заказ:* `' + orderNumStr + '`',
-          '👤 *Покупатель:* ' + orderPayload.name,
-          '📞 *Телефон:* `' + orderPayload.phone + '`',
-          orderPayload.email ? ('📧 *Email:* ' + orderPayload.email) : '',
-          pvzLine,
-          '🚚 *Доставка:* ' + (orderPayload.delivery || 'СДЭК (ПВЗ)') + ' (' + shippingStr + ')',
-          '💳 *Оплата:* ' + (orderPayload.payment || 'При получении'),
-          '━━━━━━━━━━━━━━━━━━━━━━',
-          '📦 *Состав заказа (' + (orderPayload.items ? orderPayload.items.length : 0) + ' поз.):*',
-          itemsLines,
-          '━━━━━━━━━━━━━━━━━━━━━━',
-          orderPayload.discount_amount > 0 ? ('🏷 *Скидка:* -' + orderPayload.discount_percent + '% (-' + formatPrice(orderPayload.discount_amount) + ')' + (orderPayload.promo_code ? ' [Промокод: `' + orderPayload.promo_code + '`]' : '')) : '',
-          '💰 *ИТОГО К ОПЛАТЕ:* *' + formatPrice(orderPayload.grand_total) + '*',
-          '━━━━━━━━━━━━━━━━━━━━━━',
-          '📊 *Источник:* ' + utmText,
-          '⏰ ' + mskTime
-        ];
-      }
-
       const controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
       const timeoutId = controller ? setTimeout(() => controller.abort(), 3000) : null;
 
@@ -4583,8 +4629,7 @@
         signal: controller ? controller.signal : undefined,
         body: JSON.stringify({
           chat_id: tgConfig.chatId,
-          text: tgLines.filter(Boolean).join('\n'),
-          parse_mode: 'Markdown'
+          text: std.fullMessage
         })
       }).then(res => {
         if (timeoutId) clearTimeout(timeoutId);
@@ -4603,10 +4648,6 @@
 
     // 2. Guaranteed Email Notification via FormSubmit AJAX (100% Works in Russia without VPN)
     try {
-      const emailSubject = isQuickBuy
-        ? `⚡️ Новый заказ в 1 клик ${orderNumStr} (${formatPrice(orderPayload.price)}) - GEEKNOOK`
-        : `🛒 Новый заказ из корзины ${orderNumStr} (${formatPrice(orderPayload.grand_total)}) - GEEKNOOK`;
-
       // Anti-Bot Honeypot trap check
       const honeyVal = (document.getElementById('quickBuyHoneypot')?.value || document.getElementById('checkoutHoneypot')?.value || '').trim();
       if (honeyVal) {
@@ -4614,27 +4655,27 @@
         return;
       }
 
+      const emailSubject = `Заказ №${std.orderNumberStr}`;
+
       const emailPayload = {
         _subject: emailSubject,
-        _template: 'table',
+        _template: 'box',
         _captcha: 'false',
         _honey: '',
         _autoresponse: 'false',
-        'Тип заказа': isQuickBuy ? 'Быстрый заказ в 1 клик' : 'Заказ из корзины сайта',
-        'Номер заказа': orderNumStr,
-        'Покупатель': orderPayload.name,
-        'Телефон': orderPayload.phone,
-        'Email': orderPayload.email || 'sergeykozlov20066@mail.ru',
-        'Адрес доставки': orderPayload.address || (orderPayload.pvz ? `[${orderPayload.pvz.code}] ${orderPayload.pvz.address}` : 'Уточнить при звонке'),
-        'Доставка': orderPayload.delivery || 'СДЭК',
-        'Оплата': orderPayload.payment || 'При получении в ПВЗ СДЭК',
-        'Сумма заказа': isQuickBuy ? formatPrice(orderPayload.price) : formatPrice(orderPayload.grand_total),
-        'Промокод': orderPayload.promo_code || 'Нет',
-        'Товары': isQuickBuy
-          ? `${orderPayload.product_title}${orderPayload.product_option && orderPayload.product_option !== 'Стандарт' ? ' (' + orderPayload.product_option + ')' : ''} — 1 шт.`
-          : (orderPayload.items_summary || (orderPayload.items || []).map(i => `${i.title} (${i.option || 'Стандарт'}) x ${i.quantity} шт.`).join('; ')),
-        'Источник': utmText,
-        'Дата и время (МСК)': mskTime
+        'Заказ': `Заказ №${std.orderNumberStr}`,
+        'Товары': std.itemsText,
+        'Сумма платежа': `${std.totalPayment} RUB`,
+        'Платежная система': 'Наличные',
+        'Name': std.cleanName,
+        'Email': std.cleanEmail,
+        'Phone': std.cleanPhone,
+        'Код_ПВЗ_СДЭК': std.pvzCode,
+        'Код заявки': std.leadCode,
+        'Код блока': std.blockCode,
+        'Форма': std.formType,
+        'URL': std.pageUrl,
+        'Сообщение': std.fullMessage
       };
 
       fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
