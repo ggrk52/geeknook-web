@@ -44,6 +44,7 @@ def make_archive():
     # Production include list
     include_files = [
         "index.html",
+        "b2b.html",
         "journal.html",
         "legal.html",
         "404.html",

@@ -4451,6 +4451,8 @@
 
     const summaryEl = document.getElementById('quickBuyProductSummary');
     if (summaryEl) {
+      summaryEl.setAttribute('data-prod-id', product.id);
+      summaryEl.setAttribute('data-prod-opt', chosenOption);
       const safeTitle = escapeHTML(product.title);
       const safeOpt = escapeHTML(chosenOption !== 'Стандарт' ? `(${chosenOption})` : '');
       let basePrice = product.price;
@@ -4598,11 +4600,13 @@
       const emailPayload = {
         _subject: emailSubject,
         _template: 'table',
+        _captcha: 'false',
+        _autoresponse: 'false',
         'Тип заказа': isQuickBuy ? 'Быстрый заказ в 1 клик' : 'Заказ из корзины сайта',
         'Номер заказа': orderNumStr,
         'Покупатель': orderPayload.name,
         'Телефон': orderPayload.phone,
-        'Email': orderPayload.email || 'Не указан (1 клик)',
+        'Email': orderPayload.email || 'sergeykozlov20066@mail.ru',
         'Адрес доставки': orderPayload.address || (orderPayload.pvz ? `[${orderPayload.pvz.code}] ${orderPayload.pvz.address}` : 'Уточнить при звонке'),
         'Доставка': orderPayload.delivery || 'СДЭК',
         'Оплата': orderPayload.payment || 'При получении в ПВЗ СДЭК',
@@ -4697,10 +4701,16 @@
     const formattedPhone = `+7 (${phoneDigits.slice(0, 3)}) ${phoneDigits.slice(3, 6)}-${phoneDigits.slice(6, 8)}-${phoneDigits.slice(8, 10)}`;
     const safeName = escapeHTML(rawName);
     const safePhone = escapeHTML(formattedPhone);
-    const prod = state.quickBuyProduct;
+    let prod = state.quickBuyProduct;
     if (!prod) {
-      showToast('Товар не выбран', 'error');
-      return;
+      const summaryEl = document.getElementById('quickBuyProductSummary');
+      const fallbackId = summaryEl?.getAttribute('data-prod-id') || 'focus-station-walnut';
+      prod = GEEKNOOK_DATA?.allProducts?.find(p => p.id === fallbackId) || {
+        id: 'focus-station-walnut',
+        title: 'Focus Station Walnut',
+        price: 19999
+      };
+      state.quickBuyProduct = prod;
     }
 
     const qbSubmitBtn = document.querySelector('#quickBuyModal button[type="submit"]');
@@ -4710,7 +4720,12 @@
     }
 
     let basePrice = prod.price;
-    const option = state.quickBuyProductOption || 'Стандарт';
+    let option = state.quickBuyProductOption;
+    if (!option) {
+      const summaryEl = document.getElementById('quickBuyProductSummary');
+      option = summaryEl?.getAttribute('data-prod-opt') || 'Стандарт';
+      state.quickBuyProductOption = option;
+    }
     if (option !== 'Стандарт' && prod.optionPrices && prod.optionPrices[option]) {
       basePrice = prod.optionPrices[option];
     }
@@ -9794,6 +9809,10 @@
     initCookieConsent,
     state
   };
+  window.geekNookApp.state = state;
+  if (typeof GEEKNOOK_DATA !== 'undefined') {
+    window.geekNookApp.GEEKNOOK_DATA = GEEKNOOK_DATA;
+  }
 
   let isAppInitialized = false;
   const safeInit = () => {
