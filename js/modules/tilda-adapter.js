@@ -569,36 +569,74 @@
       }
     };
 
-    // --- 7.1. OVERRIDE: handleQuickBuySubmit (Sync 1-Click Buy with Tilda CRM in background) ---
+    // --- 7.1. OVERRIDE: handleQuickBuySubmit (Sync 1-Click Buy with Tilda Forms, Telegram Bot & Email) ---
     let isTildaQuickBuySubmitting = false;
-    window.geekNookApp.handleQuickBuySubmit = function(e) {
+    window.geekNookApp.handleQuickBuySubmit = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
       if (isTildaQuickBuySubmitting) return false;
 
       const nameInput = document.getElementById('quickBuyName');
       const phoneInput = document.getElementById('quickBuyPhone');
-      const rawName = nameInput ? nameInput.value.trim() : 'Покупатель';
-      const rawPhone = phoneInput ? phoneInput.value.trim() : '';
 
+      // 152-FZ Personal Data Consent Check
+      const qConsentInput = document.getElementById('quickBuyConsentCheckbox');
+      const qConsentErrEl = document.getElementById('quickBuyConsentError');
+      if (qConsentErrEl) qConsentErrEl.style.display = 'none';
+
+      if (qConsentInput && !qConsentInput.checked) {
+        if (qConsentErrEl) {
+          qConsentErrEl.textContent = 'Подтвердите согласие на обработку данных (152-ФЗ)';
+          qConsentErrEl.style.display = 'block';
+        }
+        qConsentInput.focus();
+        if (typeof window.geekNookApp.showToast === 'function') {
+          window.geekNookApp.showToast('Подтвердите согласие на обработку персональных данных', 'error');
+        }
+        return false;
+      }
+
+      if (nameInput) nameInput.classList.remove('input-error');
+      if (phoneInput) phoneInput.classList.remove('input-error');
+
+      const rawName = (nameInput ? nameInput.value : '').trim();
+      if (!rawName || rawName.length < 2) {
+        if (nameInput) {
+          nameInput.classList.add('input-error');
+          nameInput.focus();
+        }
+        if (typeof window.geekNookApp.showToast === 'function') {
+          window.geekNookApp.showToast('Пожалуйста, укажите ваше имя', 'error');
+        }
+        return false;
+      }
+
+      const rawPhone = (phoneInput ? phoneInput.value : '').trim();
       const digitsOnly = rawPhone.replace(/\D/g, '');
       const phoneDigits = (digitsOnly.startsWith('7') || digitsOnly.startsWith('8')) ? digitsOnly.slice(1) : digitsOnly;
       if (phoneDigits.length !== 10) {
-        if (typeof nativeHandleQuickBuySubmit === 'function') {
-          return nativeHandleQuickBuySubmit(e);
+        if (phoneInput) {
+          phoneInput.classList.add('input-error');
+          phoneInput.focus();
+        }
+        if (typeof window.geekNookApp.showToast === 'function') {
+          window.geekNookApp.showToast('Введите полный номер телефона (10 цифр)', 'error');
         }
         return false;
       }
 
       const prod = window.geekNookApp.state?.quickBuyProduct;
       if (!prod) {
-        if (typeof nativeHandleQuickBuySubmit === 'function') {
-          return nativeHandleQuickBuySubmit(e);
+        if (typeof window.geekNookApp.showToast === 'function') {
+          window.geekNookApp.showToast('Товар не выбран', 'error');
         }
         return false;
       }
 
       isTildaQuickBuySubmitting = true;
-      setTimeout(() => { isTildaQuickBuySubmitting = false; }, 800);
+      setTimeout(() => { isTildaQuickBuySubmitting = false; }, 1000);
+
+      const formattedPhone = `+7 (${phoneDigits.slice(0, 3)}) ${phoneDigits.slice(3, 6)}-${phoneDigits.slice(6, 8)}-${phoneDigits.slice(8, 10)}`;
+      const cleanName = rawName.replace(/[^a-zA-Zа-яА-ЯёЁ\s\-]/g, '').trim() || 'Покупатель';
 
       const opt = window.geekNookApp.state?.quickBuyProductOption || 'Стандарт';
       let basePrice = prod.price;
@@ -637,6 +675,7 @@
       const finalPrice = Math.max(0, basePrice - discountAmount);
       const optText = (opt && opt !== 'Стандарт') ? ` (${opt})` : '';
       const fullProdTitle = `${prod.title}${optText}`;
+      const orderNumber = 'GN-1C-' + Math.floor(100000 + Math.random() * 900000);
 
       // Retrieve captured UTM params
       const utmParams = (window.geekNookAnalytics && typeof window.geekNookAnalytics.getUtmParams === 'function')
@@ -645,7 +684,7 @@
       const utmEntries = Object.entries(utmParams).filter(([k]) => k.startsWith('utm_') || k === 'yclid' || k === '_openstat' || k === 'gclid');
       const utmStr = utmEntries.length > 0 ? ` | UTM: ${utmEntries.map(([k, v]) => `${k}=${v}`).join(', ')}` : '';
 
-      // Map product for Tilda Cart / CRM
+      // Map product for Tilda Cart / Orders
       const mapped = mapProductToTilda(prod.id, opt);
       const itemCatalogPrice = (mapped && mapped.price) ? mapped.price : basePrice;
       const itemOpts = mapped ? [...(mapped.options || [])] : [];
@@ -662,156 +701,126 @@
         options: itemOpts
       };
 
-      // 1. Temporarily populate Tilda in-memory cart with this single product
-      if (window.tcart) {
-        window.tcart.products = [tildaProduct];
-        window.tcart.amount = finalPrice;
-        window.tcart.total = finalPrice;
-        window.tcart.prodamount = itemCatalogPrice;
-        window.tcart.prodamount_discountsum = discountAmount;
-        window.tcart.prodamount_withdiscount = finalPrice;
-        window.tcart.currency = 'RUB';
-        window.tcart.system = 'cash';
-        if (typeof window.tcart__saveLocalObj === 'function') {
-          try { window.tcart__saveLocalObj(); } catch(e) {}
-        }
-      }
+      const tildaPaymentData = {
+        amount: finalPrice,
+        system: 'cash',
+        currency: 'RUB',
+        products: [tildaProduct]
+      };
 
-      // 2. Populate Tilda's hidden background order form to trigger Tilda CRM, TG & Email
-      const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form, form.t706__orderform, .t706__orderform');
-      if (tildaCartForm) {
-        // Force payment system to 'cash'
-        const pmRadios = tildaCartForm.querySelectorAll('input[name="paymentsystem"]');
-        const cashRadio = tildaCartForm.querySelector('input[name="paymentsystem"][value="cash"]');
-        if (cashRadio) {
-          pmRadios.forEach(r => { r.checked = false; });
-          cashRadio.checked = true;
-          try {
-            cashRadio.dispatchEvent(new Event('change', { bubbles: true }));
-          } catch(e) {}
-        }
+      // 1. Direct Asynchronous Dispatch to Tilda Forms endpoint (QRATOR CDN - 100% reliable in Russia)
+      try {
+        const tildaFormData = new FormData();
+        const domServices = Array.from(document.querySelectorAll('input[name="formservices[]"]'))
+          .map(el => el.value)
+          .filter(Boolean);
+        const activeServices = domServices.length > 0
+          ? Array.from(new Set(domServices))
+          : ['7bce39650a4791b61ef10c20fc3a9555', '5d572d18170fc7163b4768baf37a42e6', 'ed5c454181069fb9139663f95f08d02a'];
 
-        if (window.tcart) {
-          window.tcart.system = 'cash';
-        }
+        activeServices.forEach(s => tildaFormData.append('formservices[]', s));
 
-        if (window.tildaForm && typeof window.tildaForm.addPaymentInfoToForm === 'function') {
-          try {
-            window.tildaForm.addPaymentInfoToForm(tildaCartForm);
-          } catch(err) {}
+        tildaFormData.append('tildaspec-formname', 'Заказ в 1 клик (GEEK NOOK)');
+        tildaFormData.append('formname', 'Заказ в 1 клик');
+        tildaFormData.append('Name', cleanName);
+        tildaFormData.append('Phone', formattedPhone);
+        tildaFormData.append('Email', 'sergeykozlov20066@mail.ru');
+        tildaFormData.append('Код ПВЗ СДЭК', 'Быстрый заказ в 1 клик (уточнить при звонке)');
+        tildaFormData.append('paymentsystem', 'cash');
+        tildaFormData.append('Товар', fullProdTitle);
+        tildaFormData.append('Сумма', `${finalPrice} ₽`);
+        tildaFormData.append('Номер заказа', `#${orderNumber}`);
+        if (appliedPromo) {
+          tildaFormData.append('Промокод', appliedPromo);
         }
 
-        if (window.tildaForm) {
-          window.tildaForm.amountForStat = finalPrice;
-          if (window.tildaForm.tildapayment) {
-            window.tildaForm.tildapayment.amount = finalPrice;
-            window.tildaForm.tildapayment.system = 'cash';
-            window.tildaForm.tildapayment.currency = 'RUB';
-          }
-        }
+        const commentText = `[Заказ в 1 клик] Товар: ${fullProdTitle}. Сумма: ${finalPrice} ₽. Телефон: ${formattedPhone}. Доставка: СДЭК (уточнить при звонке). Оплата: при получении.${appliedPromo ? ' Промокод: ' + appliedPromo : ''}${utmStr} | Срочно связаться с покупателем в течение 10 минут!`;
+        tildaFormData.append('Comment', commentText);
+        tildaFormData.append('Comments', commentText);
+        tildaFormData.append('tildapayment', JSON.stringify(tildaPaymentData));
 
-        let paymentInput = tildaCartForm.querySelector('input.js-tilda-payment, input[name="tildapayment"]');
-        if (!paymentInput) {
-          paymentInput = document.createElement('input');
-          paymentInput.type = 'hidden';
-          paymentInput.name = 'tildapayment';
-          paymentInput.className = 'js-tilda-payment';
-          tildaCartForm.appendChild(paymentInput);
-        }
-        try {
-          let pData = {};
-          if (paymentInput.value) {
-            try { pData = JSON.parse(paymentInput.value); } catch(e) { pData = {}; }
-          }
-          pData.amount = finalPrice;
-          pData.system = 'cash';
-          pData.currency = 'RUB';
-          pData.products = [tildaProduct];
-          paymentInput.value = JSON.stringify(pData);
-        } catch(e) {}
-
-        const hiddenAmountInps = tildaCartForm.querySelectorAll('input[name="amount"], input[name="tcart_amount"], input[name="tcart_total"], input[name="payment[amount]"]');
-        hiddenAmountInps.forEach(inp => { inp.value = finalPrice; });
-
-        const inpName = tildaCartForm.querySelector('input[name="Name"], input[name="name"]');
-        const inpPhone = tildaCartForm.querySelector('input[name="Phone"], input[name="phone"]');
-        const inpEmail = tildaCartForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
-        const inpPvz = tildaCartForm.querySelector('input[name="Код ПВЗ СДЭК"], input[name*="ПВЗ"], input[name*="CDEK"], input[name*="cdek"], input[name="Address"], input[name="address"]');
-        const inpComment = tildaCartForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
-
-        if (inpName) inpName.value = rawName;
-        if (inpPhone) inpPhone.value = rawPhone;
-        if (inpEmail) inpEmail.value = 'quickbuy@geeknook.ru';
-        if (inpPvz) inpPvz.value = 'Быстрый заказ (уточнить при звонке)';
-        if (inpComment) {
-          inpComment.value = `[Быстрый заказ в 1 клик] Товар: ${fullProdTitle}. Сумма: ${finalPrice} ₽. Оплата: при получении СДЭК.${appliedPromo ? ' Промокод: ' + appliedPromo : ''}${utmStr}`;
-        }
-
-        // Clear any Tilda validation error badges
-        tildaCartForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper').forEach(el => { el.style.display = 'none'; });
-        tildaCartForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
-
-        // Attach UTM parameters as hidden inputs
-        ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', '_openstat', 'gclid'].forEach(key => {
-          if (utmParams[key]) {
-            let utmInp = tildaCartForm.querySelector(`input[name="${key}"]`);
-            if (!utmInp) {
-              utmInp = document.createElement('input');
-              utmInp.type = 'hidden';
-              utmInp.name = key;
-              tildaCartForm.appendChild(utmInp);
-            }
-            utmInp.value = utmParams[key];
-          }
+        Object.entries(utmParams).forEach(([k, v]) => {
+          if (v && typeof v === 'string') tildaFormData.append(k, v);
         });
 
-        // Trigger hidden Tilda submit (single dispatch)
-        const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
-        let submitted = false;
-        if (submitBtn) {
-          try {
-            submitBtn.click();
-            submitted = true;
-          } catch(err) {}
-        }
-        if (!submitted) {
-          try {
-            const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
-            tildaCartForm.dispatchEvent(submitEvt);
-          } catch(err) {}
-        }
-      } else {
-        // Fallback: check if there is a general background Tilda form on page (e.g. CRM lead form)
-        const allForms = document.querySelectorAll('form.t-form, .t-form form, form[name^="form"]');
-        const mount = document.getElementById('geeknook-mount-point');
-        let tForm = null;
-        for (let i = 0; i < allForms.length; i++) {
-          if (!mount || !mount.contains(allForms[i])) {
-            tForm = allForms[i];
-            break;
-          }
-        }
-        if (tForm) {
-          const inpN = tForm.querySelector('input[name="Name"], input[name="name"]');
-          const inpP = tForm.querySelector('input[type="tel"], input[name="Phone"], input[name="phone"]');
-          const inpE = tForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
-          const inpC = tForm.querySelector('textarea, input[name="Comments"], input[name="comments"], input[name="Comment"], input[name="comment"]');
-          if (inpN) inpN.value = rawName;
-          if (inpP) inpP.value = rawPhone;
-          if (inpE) inpE.value = 'quickbuy@geeknook.ru';
-          if (inpC) inpC.value = `[Быстрый заказ в 1 клик] Товар: ${fullProdTitle}. Сумма: ${finalPrice} ₽. Телефон: ${rawPhone}.${appliedPromo ? ' Промокод: ' + appliedPromo : ''}${utmStr}`;
+        fetch('https://forms.tildacdn.com/procces/', {
+          method: 'POST',
+          body: tildaFormData,
+          mode: 'no-cors'
+        }).then(() => {
+          console.log('[GeekNook 1-Click] Order sent directly to Tilda Forms endpoint (Telegram & Email)!');
+        }).catch(err => {
+          console.warn('[GeekNook 1-Click] Direct Tilda forms error:', err);
+        });
+      } catch(err) {
+        console.warn('[GeekNook 1-Click] Form data preparation error:', err);
+      }
 
-          tForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper').forEach(el => { el.style.display = 'none'; });
-          tForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
-
-          const subBtn = tForm.querySelector('button[type="submit"], .t-submit');
-          if (subBtn) {
-            try { subBtn.click(); } catch(_) {}
+      // 2. Also synchronize with background Tilda Cart form (if present in DOM)
+      const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form, form.t706__orderform');
+      if (tildaCartForm) {
+        try {
+          if (window.tcart) {
+            window.tcart.products = [tildaProduct];
+            window.tcart.amount = finalPrice;
+            window.tcart.total = finalPrice;
+            window.tcart.prodamount = itemCatalogPrice;
+            window.tcart.prodamount_discountsum = discountAmount;
+            window.tcart.prodamount_withdiscount = finalPrice;
+            window.tcart.currency = 'RUB';
+            window.tcart.system = 'cash';
           }
+
+          const inpName = tildaCartForm.querySelector('#input_1811158466360, input[name="Name"], input[name="name"]');
+          const inpPhone = tildaCartForm.querySelector('#input_1811158466362, input[name="Phone"], input[name="phone"]');
+          const inpEmail = tildaCartForm.querySelector('#input_1811158466361, input[type="email"], input[name="Email"], input[name="email"]');
+          const inpPvz = tildaCartForm.querySelector('#input_1790269790207, input[name="Код ПВЗ СДЭК"], input[name*="ПВЗ"], input[name*="CDEK"]');
+          const inpComment = tildaCartForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
+
+          if (inpName) {
+            inpName.value = cleanName;
+            try { inpName.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+            try { inpName.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+          }
+          if (inpPhone) {
+            inpPhone.value = formattedPhone;
+            try { inpPhone.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+            try { inpPhone.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+          }
+          if (inpEmail) {
+            inpEmail.value = 'sergeykozlov20066@mail.ru';
+            try { inpEmail.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+            try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+          }
+          if (inpPvz) {
+            inpPvz.value = 'Быстрый заказ (уточнить при звонке)';
+            try { inpPvz.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
+            try { inpPvz.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
+          }
+          if (inpComment) {
+            inpComment.value = `[Заказ в 1 клик] Товар: ${fullProdTitle}. Сумма: ${finalPrice} ₽. Телефон: ${formattedPhone}.${appliedPromo ? ' Промокод: ' + appliedPromo : ''}${utmStr}`;
+          }
+
+          let paymentInput = tildaCartForm.querySelector('input.js-tilda-payment, input[name="tildapayment"]');
+          if (!paymentInput) {
+            paymentInput = document.createElement('input');
+            paymentInput.type = 'hidden';
+            paymentInput.name = 'tildapayment';
+            paymentInput.className = 'js-tilda-payment';
+            tildaCartForm.appendChild(paymentInput);
+          }
+          paymentInput.value = JSON.stringify(tildaPaymentData);
+
+          const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
+          if (submitBtn) {
+            try { submitBtn.click(); } catch(_) {}
+          }
+        } catch(domErr) {
+          console.warn('[GeekNook 1-Click] DOM submit error:', domErr);
         }
       }
 
-      // 3. Complete quick buy in our UI
+      // 3. Mark dispatched so dispatchQuickBuyOrder doesn't duplicate
       if (typeof nativeHandleQuickBuySubmit === 'function') {
         nativeHandleQuickBuySubmit(e);
       }

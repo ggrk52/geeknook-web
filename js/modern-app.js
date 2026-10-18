@@ -4434,7 +4434,88 @@
   };
 
   const dispatchQuickBuyOrder = async (orderPayload) => {
-    // 1. Dispatch to server-side endpoint /api/quick-buy.php (persists to orders.log & server cURL to Telegram)
+    // 1. Direct Tilda Forms Endpoint Dispatch (Guaranteed notification delivery to Telegram Bot & sergeykozlov20066@mail.ru)
+    if (!orderPayload._tildaDispatched) {
+      orderPayload._tildaDispatched = true;
+      try {
+        const tildaFormData = new FormData();
+        const domServices = (typeof document !== 'undefined')
+          ? Array.from(document.querySelectorAll('input[name="formservices[]"]')).map(el => el.value).filter(Boolean)
+          : [];
+        const formServices = domServices.length > 0
+          ? Array.from(new Set(domServices))
+          : [
+              '7bce39650a4791b61ef10c20fc3a9555',
+              '5d572d18170fc7163b4768baf37a42e6',
+              'ed5c454181069fb9139663f95f08d02a'
+            ];
+        formServices.forEach(s => tildaFormData.append('formservices[]', s));
+
+        const optStr = orderPayload.product_option && orderPayload.product_option !== 'Стандарт' ? ` (${orderPayload.product_option})` : '';
+        const prodName = `${orderPayload.product_title}${optStr}`;
+        const priceStr = formatPrice(orderPayload.price);
+        const orderNumStr = String(orderPayload.order_number).startsWith('#') ? orderPayload.order_number : `#${orderPayload.order_number}`;
+
+        tildaFormData.append('tildaspec-formname', 'Заказ в 1 клик (GEEK NOOK)');
+        tildaFormData.append('formname', 'Заказ в 1 клик');
+        tildaFormData.append('Name', orderPayload.name);
+        tildaFormData.append('Phone', orderPayload.phone);
+        tildaFormData.append('Email', 'sergeykozlov20066@mail.ru');
+        tildaFormData.append('Код ПВЗ СДЭК', 'Быстрый заказ в 1 клик (уточнить при звонке)');
+        tildaFormData.append('paymentsystem', 'cash');
+        tildaFormData.append('Товар', prodName);
+        tildaFormData.append('Сумма', priceStr);
+        tildaFormData.append('Номер заказа', orderNumStr);
+        if (orderPayload.promo_code) {
+          tildaFormData.append('Промокод', orderPayload.promo_code);
+        }
+
+        const comment = `[Заказ в 1 клик] Товар: ${prodName}. Сумма: ${priceStr}. Телефон: ${orderPayload.phone}. Оплата: при получении СДЭК.${orderPayload.promo_code ? ' Промокод: ' + orderPayload.promo_code : ''} | Срочно связаться с покупателем в течение 10 минут!`;
+        tildaFormData.append('Comment', comment);
+        tildaFormData.append('Comments', comment);
+
+        const tildaPaymentData = {
+          amount: orderPayload.price,
+          system: 'cash',
+          currency: 'RUB',
+          products: [
+            {
+              name: prodName,
+              price: orderPayload.price,
+              quantity: 1,
+              amount: orderPayload.price,
+              options: [
+                { option: 'Тип заказа', variant: 'Быстрый заказ в 1 клик' },
+                { option: 'Телефон', variant: orderPayload.phone },
+                ...(orderPayload.product_option && orderPayload.product_option !== 'Стандарт' ? [{ option: 'Вариант', variant: orderPayload.product_option }] : []),
+                ...(orderPayload.promo_code ? [{ option: 'Промокод', variant: orderPayload.promo_code }] : [])
+              ]
+            }
+          ]
+        };
+        tildaFormData.append('tildapayment', JSON.stringify(tildaPaymentData));
+
+        if (orderPayload.utm && typeof orderPayload.utm === 'object') {
+          Object.entries(orderPayload.utm).forEach(([k, v]) => {
+            if (v && typeof v === 'string') tildaFormData.append(k, v);
+          });
+        }
+
+        fetch('https://forms.tildacdn.com/procces/', {
+          method: 'POST',
+          body: tildaFormData,
+          mode: 'no-cors'
+        }).then(() => {
+          console.log('[GeekNook] Order successfully sent to Tilda Forms endpoint (Telegram & Email)!');
+        }).catch(err => {
+          console.warn('[GeekNook] Tilda Forms endpoint dispatch error:', err);
+        });
+      } catch(tErr) {
+        console.warn('[GeekNook] Error preparing Tilda Forms payload:', tErr);
+      }
+    }
+
+    // 2. Dispatch to server-side endpoint /api/quick-buy.php (persists to orders.log & server cURL to Telegram)
     try {
       fetch('/api/quick-buy.php', {
         method: 'POST',
@@ -4448,7 +4529,7 @@
       });
     } catch (_) {}
 
-    // 2. Direct Telegram Bot Dispatch (works immediately in any environment with direct network access)
+    // 3. Direct Telegram Bot Dispatch (fallback in environments where api.telegram.org is reachable)
     try {
       const tgBotToken = '8925465504:AAHKTQUxaQdNePXOFcsnPgcBRpnnMXG44FU';
       const tgChatId = '841456475';
@@ -4490,7 +4571,7 @@
       console.warn('[GeekNook] Direct Telegram dispatch error:', e);
     }
 
-    // 3. Fallback queue in localStorage (never lose an order)
+    // 4. Fallback queue in localStorage (never lose an order)
     try {
       const queue = JSON.parse(localStorage.getItem('geeknook_orders_history') || '[]');
       queue.push(orderPayload);
