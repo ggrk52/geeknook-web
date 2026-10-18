@@ -735,13 +735,21 @@
 
         const inpName = tildaCartForm.querySelector('input[name="Name"], input[name="name"]');
         const inpPhone = tildaCartForm.querySelector('input[name="Phone"], input[name="phone"]');
+        const inpEmail = tildaCartForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
+        const inpPvz = tildaCartForm.querySelector('input[name="Код ПВЗ СДЭК"], input[name*="ПВЗ"], input[name*="CDEK"], input[name*="cdek"], input[name="Address"], input[name="address"]');
         const inpComment = tildaCartForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
 
         if (inpName) inpName.value = rawName;
         if (inpPhone) inpPhone.value = rawPhone;
+        if (inpEmail) inpEmail.value = 'quickbuy@geeknook.ru';
+        if (inpPvz) inpPvz.value = 'Быстрый заказ (уточнить при звонке)';
         if (inpComment) {
           inpComment.value = `[Быстрый заказ в 1 клик] Товар: ${fullProdTitle}. Сумма: ${finalPrice} ₽. Оплата: при получении СДЭК.${appliedPromo ? ' Промокод: ' + appliedPromo : ''}${utmStr}`;
         }
+
+        // Clear any Tilda validation error badges
+        tildaCartForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper').forEach(el => { el.style.display = 'none'; });
+        tildaCartForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
 
         // Attach UTM parameters as hidden inputs
         ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'yclid', '_openstat', 'gclid'].forEach(key => {
@@ -771,6 +779,35 @@
             const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
             tildaCartForm.dispatchEvent(submitEvt);
           } catch(err) {}
+        }
+      } else {
+        // Fallback: check if there is a general background Tilda form on page (e.g. CRM lead form)
+        const allForms = document.querySelectorAll('form.t-form, .t-form form, form[name^="form"]');
+        const mount = document.getElementById('geeknook-mount-point');
+        let tForm = null;
+        for (let i = 0; i < allForms.length; i++) {
+          if (!mount || !mount.contains(allForms[i])) {
+            tForm = allForms[i];
+            break;
+          }
+        }
+        if (tForm) {
+          const inpN = tForm.querySelector('input[name="Name"], input[name="name"]');
+          const inpP = tForm.querySelector('input[type="tel"], input[name="Phone"], input[name="phone"]');
+          const inpE = tForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
+          const inpC = tForm.querySelector('textarea, input[name="Comments"], input[name="comments"], input[name="Comment"], input[name="comment"]');
+          if (inpN) inpN.value = rawName;
+          if (inpP) inpP.value = rawPhone;
+          if (inpE) inpE.value = 'quickbuy@geeknook.ru';
+          if (inpC) inpC.value = `[Быстрый заказ в 1 клик] Товар: ${fullProdTitle}. Сумма: ${finalPrice} ₽. Телефон: ${rawPhone}.${appliedPromo ? ' Промокод: ' + appliedPromo : ''}${utmStr}`;
+
+          tForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper').forEach(el => { el.style.display = 'none'; });
+          tForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
+
+          const subBtn = tForm.querySelector('button[type="submit"], .t-submit');
+          if (subBtn) {
+            try { subBtn.click(); } catch(_) {}
+          }
         }
       }
 

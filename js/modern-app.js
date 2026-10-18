@@ -4433,8 +4433,73 @@
     modalManager.open('quickBuyModal');
   };
 
-  const handleQuickBuySubmit = withActionLock((e) => {
-    e.preventDefault();
+  const dispatchQuickBuyOrder = async (orderPayload) => {
+    // 1. Dispatch to server-side endpoint /api/quick-buy.php (persists to orders.log & server cURL to Telegram)
+    try {
+      fetch('/api/quick-buy.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: JSON.stringify(orderPayload)
+      }).catch(err => {
+        console.warn('[GeekNook] API quick-buy dispatch error:', err);
+      });
+    } catch (_) {}
+
+    // 2. Direct Telegram Bot Dispatch (works immediately in any environment with direct network access)
+    try {
+      const tgBotToken = '8925465504:AAHKTQUxaQdNePXOFcsnPgcBRpnnMXG44FU';
+      const tgChatId = '841456475';
+      const optStr = orderPayload.product_option && orderPayload.product_option !== 'Стандарт' ? ` (${orderPayload.product_option})` : '';
+      const utmObj = orderPayload.utm || {};
+      const utmList = Object.entries(utmObj)
+        .filter(([k]) => k.startsWith('utm_') || k === 'yclid' || k === '_openstat' || k === 'gclid')
+        .map(([k, v]) => `${k}: ${v}`);
+      const utmText = utmList.length > 0 ? utmList.join(', ') : 'Прямой заход';
+
+      const lines = [
+        '⚡️ *НОВЫЙ ЗАКАЗ В 1 КЛИК GEEKNOOK!*',
+        '━━━━━━━━━━━━━━━━━━━━━━',
+        '🔢 *Заказ:* `#' + orderPayload.order_number + '`',
+        '👤 *Покупатель:* ' + orderPayload.name,
+        '📞 *Телефон:* `' + orderPayload.phone + '`',
+        '🛒 *Товар:* ' + orderPayload.product_title + optStr,
+        '💰 *Сумма к оплате:* ' + formatPrice(orderPayload.price) + (orderPayload.discount_percent > 0 ? ' (скидка ' + orderPayload.discount_percent + '%)' : ''),
+        orderPayload.promo_code ? ('🏷 *Промокод:* `' + orderPayload.promo_code + '`') : '',
+        '━━━━━━━━━━━━━━━━━━━━━━',
+        '📊 *Источник:* ' + utmText,
+        '⏰ ' + new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' (МСК)',
+        '━━━━━━━━━━━━━━━━━━━━━━',
+        '⚡️ *Срочно связаться с покупателем в течение 10 минут!*'
+      ];
+
+      fetch(`https://api.telegram.org/bot${tgBotToken}/sendMessage`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          chat_id: tgChatId,
+          text: lines.filter(Boolean).join('\n'),
+          parse_mode: 'Markdown'
+        })
+      }).catch(tgErr => {
+        console.warn('[GeekNook] Direct Telegram fetch error:', tgErr);
+      });
+    } catch (e) {
+      console.warn('[GeekNook] Direct Telegram dispatch error:', e);
+    }
+
+    // 3. Fallback queue in localStorage (never lose an order)
+    try {
+      const queue = JSON.parse(localStorage.getItem('geeknook_orders_history') || '[]');
+      queue.push(orderPayload);
+      localStorage.setItem('geeknook_orders_history', JSON.stringify(queue));
+    } catch (_) {}
+  };
+
+  const handleQuickBuySubmit = withActionLock(async (e) => {
+    if (e && e.preventDefault) e.preventDefault();
     const nameInput = document.getElementById('quickBuyName');
     const phoneInput = document.getElementById('quickBuyPhone');
 
@@ -4453,7 +4518,20 @@
       return;
     }
 
-    const rawPhone = phoneInput ? phoneInput.value.trim() : '';
+    if (nameInput) nameInput.classList.remove('input-error');
+    if (phoneInput) phoneInput.classList.remove('input-error');
+
+    const rawName = (nameInput ? nameInput.value : '').trim();
+    if (!rawName || rawName.length < 2) {
+      if (nameInput) {
+        nameInput.classList.add('input-error');
+        nameInput.focus();
+      }
+      showToast('Пожалуйста, укажите ваше имя', 'error');
+      return;
+    }
+
+    const rawPhone = (phoneInput ? phoneInput.value : '').trim();
     const digitsOnly = rawPhone.replace(/\D/g, '');
     const phoneDigits = (digitsOnly.startsWith('7') || digitsOnly.startsWith('8')) ? digitsOnly.slice(1) : digitsOnly;
     if (phoneDigits.length !== 10) {
@@ -4465,20 +4543,25 @@
       return;
     }
 
+    const formattedPhone = `+7 (${phoneDigits.slice(0, 3)}) ${phoneDigits.slice(3, 6)}-${phoneDigits.slice(6, 8)}-${phoneDigits.slice(8, 10)}`;
+    const safeName = escapeHTML(rawName);
+    const safePhone = escapeHTML(formattedPhone);
+    const prod = state.quickBuyProduct;
+    if (!prod) {
+      showToast('Товар не выбран', 'error');
+      return;
+    }
+
     const qbSubmitBtn = document.querySelector('#quickBuyModal button[type="submit"]');
     if (qbSubmitBtn) {
       qbSubmitBtn.disabled = true;
       qbSubmitBtn.innerHTML = '<span style="display:inline-block;width:14px;height:14px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin 0.6s linear infinite;margin-right:8px;vertical-align:middle;"></span><span>Оформляем заказ...</span>';
     }
 
-    const safeName = escapeHTML(nameInput ? nameInput.value.trim() : 'Покупатель');
-    const safePhone = escapeHTML(rawPhone || '');
-    const prod = state.quickBuyProduct;
-    if (!prod) return;
-
     let basePrice = prod.price;
-    if (state.quickBuyProductOption !== 'Стандарт' && prod.optionPrices && prod.optionPrices[state.quickBuyProductOption]) {
-      basePrice = prod.optionPrices[state.quickBuyProductOption];
+    const option = state.quickBuyProductOption || 'Стандарт';
+    if (option !== 'Стандарт' && prod.optionPrices && prod.optionPrices[option]) {
+      basePrice = prod.optionPrices[option];
     }
 
     const promoInput = document.getElementById('quickBuyPromo');
@@ -4499,8 +4582,32 @@
     const finalPrice = Math.max(0, basePrice - discountAmount);
 
     const safeTitle = escapeHTML(prod.title);
-    const safeOpt = escapeHTML(state.quickBuyProductOption !== 'Стандарт' ? `(${state.quickBuyProductOption})` : '');
+    const safeOpt = escapeHTML(option !== 'Стандарт' ? `(${option})` : '');
     const orderNumber = 'GN-1C-' + Math.floor(100000 + Math.random() * 900000);
+
+    const orderPayload = {
+      order_number: orderNumber,
+      name: rawName,
+      phone: formattedPhone,
+      product_id: prod.id,
+      product_title: prod.title,
+      product_option: option,
+      price: finalPrice,
+      base_price: basePrice,
+      discount_amount: discountAmount,
+      discount_percent: discountPct,
+      promo_code: appliedPromo,
+      utm: getCapturedUtm(),
+      timestamp: new Date().toISOString()
+    };
+
+    // Dispatch the order to all channels (API, Telegram, LocalStorage)
+    try {
+      await dispatchQuickBuyOrder(orderPayload);
+    } catch(err) {
+      console.warn('[GeekNook] dispatchQuickBuyOrder error:', err);
+    }
+
     modalManager.close('quickBuyModal');
 
     const detailsEl = document.getElementById('successOrderDetails');
@@ -4516,9 +4623,16 @@
         <div style="margin-bottom:8px;"><strong>Товар:</strong> ${safeTitle} ${safeOpt}</div>
         ${promoHtml}
         <div style="margin-top:12px;padding-top:12px;border-top:1px dashed var(--border);font-weight:800;font-size:1.1rem;color:var(--primary);">
-          Сумма: ${formatPrice(finalPrice)}
+          Сумма к оплате: ${formatPrice(finalPrice)}
+        </div>
+        <div style="margin-top:8px;font-size:0.85rem;color:var(--text-muted);">
+          Менеджер свяжется с вами по номеру ${safePhone} в течение 10 минут для подтверждения адреса доставки СДЭК.
         </div>
       `;
+    }
+
+    if (soundEngine && typeof soundEngine.play === 'function') {
+      soundEngine.play('success');
     }
 
     // Track Analytics & Ecommerce
@@ -4529,11 +4643,21 @@
         price: finalPrice,
         quantity: 1,
         option: safeOpt
-      }], 'СДЭК Быстрый', 'Уточнить при звонке');
+      }], 'СДЭК Быстрый (1 клик)', 'Уточнить при звонке');
+    }
+    if (window.ym && typeof window.ym === 'function') {
+      try {
+        window.ym(113130622, 'reachGoal', 'quick_buy_submit');
+      } catch(_) {}
     }
 
     modalManager.open('successModal');
-    showToast('Быстрый заказ оформлен! Менеджер перезвонит вам.', 'success');
+    showToast('Быстрый заказ оформлен! Менеджер свяжется с вами.', 'success');
+
+    if (qbSubmitBtn) {
+      qbSubmitBtn.disabled = false;
+      qbSubmitBtn.innerHTML = 'Подтвердить заказ в 1 клик';
+    }
   }, 400);
 
   const getCapturedUtm = () => {
@@ -9414,6 +9538,7 @@
     toggleFAQ,
     openQuickBuy,
     handleQuickBuySubmit,
+    dispatchQuickBuyOrder,
     quickBuyViaTelegram,
     orderViaTelegram,
     orderConfigViaTelegram,

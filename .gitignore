@@ -42,6 +42,8 @@ docs/internal/
 api/cdek-config.php
 api/b2b-config.php
 api/leads.log
+api/orders.log
+api/*.log
 *cdek_token_cache*.json
 .env
 .env.*
