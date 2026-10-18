@@ -118,7 +118,10 @@
     if (!img) return;
     const rawSrc = img.getAttribute('src') || '';
     const propSrc = img.src || '';
-    const srcToCheck = rawSrc || propSrc;
+    let srcToCheck = rawSrc || propSrc;
+    if (img.classList && img.classList.contains('card-img-main') && ((img.alt && img.alt.includes('Walnut')) || (img.closest && img.closest('#focus-station-walnut')))) {
+      srcToCheck = 'images/focus-station-walnut-studio.jpg';
+    }
     if (srcToCheck.includes('images/') && !srcToCheck.includes('github.io')) {
       const clean = srcToCheck.substring(srcToCheck.indexOf('images/')).replace(/^\.?\//, '');
       const newUrl = BASE_URL + clean;
