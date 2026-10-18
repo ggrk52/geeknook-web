@@ -3329,21 +3329,25 @@
       <h2 class="modal-title">Оформление заказа</h2>
       
       <form id="checkoutForm" novalidate onsubmit="window.geekNookApp.handleCheckoutSubmit(event)">
+        <!-- Anti-Spam Bot Trap (Honeypot) -->
+        <div style="display:none !important; visibility:hidden !important; opacity:0 !important; position:absolute !important; left:-9999px !important;" aria-hidden="true">
+          <input type="text" id="checkoutHoneypot" name="company_website_trap" tabindex="-1" autocomplete="off" />
+        </div>
         <div class="checkout-modal-layout">
           <div class="checkout-form-col">
             <div class="checkout-field-group">
               <label for="checkoutName" class="checkout-field-label">Имя и Фамилия получателя *</label>
-              <input type="text" id="checkoutName" name="name" class="checkout-input" placeholder="Константин Иванов" autocomplete="name" required />
+              <input type="text" id="checkoutName" name="name" class="checkout-input ym-disable-keys" data-metrika-no-record placeholder="Константин Иванов" autocomplete="name" required />
               <div class="field-error-msg" id="checkoutNameError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
             </div>
             <div class="checkout-field-group">
               <label for="checkoutPhone" class="checkout-field-label">Номер телефона *</label>
-              <input type="tel" id="checkoutPhone" name="phone" class="checkout-input" placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel" required />
+              <input type="tel" id="checkoutPhone" name="phone" class="checkout-input ym-disable-keys" data-metrika-no-record placeholder="+7 (___) ___-__-__" autocomplete="tel" inputmode="tel" required />
               <div class="field-error-msg" id="checkoutPhoneError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
             </div>
             <div class="checkout-field-group">
               <label for="checkoutEmail" class="checkout-field-label">Электронная почта *</label>
-              <input type="email" id="checkoutEmail" name="email" class="checkout-input" placeholder="konstantin@example.com" autocomplete="email" required />
+              <input type="email" id="checkoutEmail" name="email" class="checkout-input ym-disable-keys" data-metrika-no-record placeholder="konstantin@example.com" autocomplete="email" required />
               <div class="field-error-msg" id="checkoutEmailError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
             </div>
             <div class="checkout-field-group">
@@ -3354,7 +3358,7 @@
                   <span>Выбрать ПВЗ на карте</span>
                 </button>
               </div>
-              <input type="text" id="checkoutAddressInput" name="address" class="checkout-input" placeholder="Код ПВЗ СДЭК (или выберите пункт на карте)" required />
+              <input type="text" id="checkoutAddressInput" name="address" class="checkout-input ym-disable-keys" data-metrika-no-record placeholder="Код ПВЗ СДЭК (или выберите пункт на карте)" required />
               <div class="field-error-msg" id="checkoutAddressError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
               <div id="checkoutPvzBadge" class="checkout-pvz-selected-badge" style="display:none;">
                 <div class="checkout-pvz-badge-content">
@@ -3581,13 +3585,17 @@
       </div>
       <div id="quickBuyProductSummary" class="quick-buy-prod-summary"></div>
       <form onsubmit="window.geekNookApp.handleQuickBuySubmit(event)" style="margin-top:16px;">
+        <!-- Anti-Spam Bot Trap (Honeypot) -->
+        <div style="display:none !important; visibility:hidden !important; opacity:0 !important; position:absolute !important; left:-9999px !important;" aria-hidden="true">
+          <input type="text" id="quickBuyHoneypot" name="user_homepage_trap" tabindex="-1" autocomplete="off" />
+        </div>
         <div class="checkout-field-group">
           <label for="quickBuyName" class="checkout-field-label">Ваше имя *</label>
-          <input type="text" id="quickBuyName" class="checkout-input" placeholder="Александр" required />
+          <input type="text" id="quickBuyName" class="checkout-input ym-disable-keys" data-metrika-no-record autocomplete="name" placeholder="Александр" required />
         </div>
         <div class="checkout-field-group">
           <label for="quickBuyPhone" class="checkout-field-label">Телефон *</label>
-          <input type="tel" id="quickBuyPhone" class="checkout-input" placeholder="+7 (999) 000-00-00" required />
+          <input type="tel" id="quickBuyPhone" class="checkout-input ym-disable-keys" data-metrika-no-record autocomplete="tel" inputmode="tel" placeholder="+7 (999) 000-00-00" required />
         </div>
         <div class="checkout-field-group">
           <label for="quickBuyPromo" class="checkout-field-label">Промокод (если есть)</label>

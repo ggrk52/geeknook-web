@@ -4597,10 +4597,18 @@
         ? `⚡️ Новый заказ в 1 клик ${orderNumStr} (${formatPrice(orderPayload.price)}) - GEEKNOOK`
         : `🛒 Новый заказ из корзины ${orderNumStr} (${formatPrice(orderPayload.grand_total)}) - GEEKNOOK`;
 
+      // Anti-Bot Honeypot trap check
+      const honeyVal = (document.getElementById('quickBuyHoneypot')?.value || document.getElementById('checkoutHoneypot')?.value || '').trim();
+      if (honeyVal) {
+        console.warn('[GeekNook Security] Automated bot detected via honeypot trap, dropping spam submission.');
+        return;
+      }
+
       const emailPayload = {
         _subject: emailSubject,
         _template: 'table',
         _captcha: 'false',
+        _honey: '',
         _autoresponse: 'false',
         'Тип заказа': isQuickBuy ? 'Быстрый заказ в 1 клик' : 'Заказ из корзины сайта',
         'Номер заказа': orderNumStr,
@@ -4635,13 +4643,18 @@
       console.warn('[GeekNook] Email dispatch error:', e);
     }
 
-    // 3. Fallback queue in localStorage (never lose an order)
+    // 3. Fallback queue in localStorage (Sanitized metadata only — 152-FZ zero-PII data minimization)
     try {
       const queue = JSON.parse(localStorage.getItem('geeknook_orders_history') || '[]');
       queue.push({
-        ...orderPayload,
+        order_number: orderNumStr,
+        type: isQuickBuy ? 'quick_buy' : 'cart',
+        items_count: isQuickBuy ? 1 : (orderPayload.items ? orderPayload.items.length : 1),
+        amount: isQuickBuy ? orderPayload.price : orderPayload.grand_total,
+        promo_code: orderPayload.promo_code || '',
         timestamp: new Date().toISOString()
       });
+      if (queue.length > 5) queue.shift();
       localStorage.setItem('geeknook_orders_history', JSON.stringify(queue));
     } catch (_) {}
   };
