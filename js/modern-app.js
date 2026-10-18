@@ -1585,7 +1585,7 @@
           <a href="#${p.id}" class="btn-card-details" onclick="window.geekNookApp.openQuickView('${p.id}'); return false;">
             <span>Подробнее</span>
           </a>
-          <button type="button" class="btn-card-one-click" onclick="window.geekNookApp.openQuickBuy('${p.id}'); event.stopPropagation();" title="Быстрый заказ в 1 клик">
+          <button type="button" class="btn-card-one-click" onclick="window.geekNookApp.openQuickBuy('${p.id}'); event.stopPropagation();" title="Быстрый заказ в 1 клик" aria-label="Быстрый заказ «${escapeHTML(p.title)}» в 1 клик">
             <span>В 1 клик</span>
           </button>
           <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">

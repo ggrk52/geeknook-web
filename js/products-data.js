@@ -812,7 +812,7 @@ const GEEKNOOK_DATA = {
     finishes: [
       { id: "black", name: "Чёрное дерево", subtitle: "Глубокий тёмный тон", hex: "#1c1d22", img: "images/tild6138-3463-4138-b133-323262633039__2.jpg", priceDelta: 0 },
       { id: "oak", name: "Натуральный дуб", subtitle: "Светлый сканди-уют", hex: "#d8be9b", img: "images/tild3136-6262-4465-a663-376665626135__photo.jpg", priceDelta: 0 },
-      { id: "walnut", name: "Американский орех", subtitle: "Благородный шоколад", hex: "#684832", img: "images/tild3863-6135-4434-b961-646561306333__noroot.png", priceDelta: 0 }
+      { id: "walnut", name: "Американский орех", subtitle: "Благородный шоколад", hex: "#684832", img: "images/focus-station-walnut-studio.jpg", priceDelta: 0 }
     ],
     lengths: [
       { id: "85", title: "85 см (Компакт)", descr: "Габариты 85 × 9 × 23 см • Для 1 монитора до 34\"", priceBase: 19999, dimensions: "85 × 9 × 23 см" },
