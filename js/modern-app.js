@@ -4500,16 +4500,42 @@
     };
   };
 
-  const getProductMeta = (prodId) => {
+  const getProductMeta = (prodId, optionStr = '') => {
     const allProds = (typeof GEEKNOOK_DATA !== 'undefined' && Array.isArray(GEEKNOOK_DATA?.allProducts))
       ? GEEKNOOK_DATA.allProducts
       : (window.geekNookApp?.GEEKNOOK_DATA?.allProducts || []);
     const found = allProds.find(p => p.id === prodId);
-    return {
-      sku: found?.sku || 'GN-ACC-002',
-      part: found?.part || (found?.specs?.['Артикул'] ? String(found.specs['Артикул']).split(' ')[0] : '202404212'),
-      barcode: found?.barcode || found?.specs?.['Штрихкод (EAN13)'] || '460042888815'
-    };
+    if (!found) {
+      return { sku: 'GN-ACC-002', part: '202404212', barcode: '460042888815' };
+    }
+
+    const opt = String(optionStr || '').toLowerCase();
+    const is116 = opt.includes('116');
+
+    let artStr = '';
+    let barcodeStr = '';
+
+    if (is116 && found.specs?.['Артикул (116 см)']) {
+      artStr = found.specs['Артикул (116 см)'];
+      barcodeStr = found.specs['Штрихкод (116 см)'] || '';
+    } else if (found.specs?.['Артикул (85 см)']) {
+      artStr = found.specs['Артикул (85 см)'];
+      barcodeStr = found.specs['Штрихкод (85 см)'] || '';
+    } else if (found.specs?.['Артикул']) {
+      artStr = found.specs['Артикул'];
+      barcodeStr = found.specs['Штрихкод (EAN13)'] || found.barcode || '';
+    }
+
+    let part = found.part || (artStr ? artStr.split(' ')[0] : '202404212');
+    let sku = found.sku;
+    if (!sku && artStr) {
+      const matchSku = artStr.match(/SKU\s+([A-Z0-9_-]+)/i);
+      if (matchSku) sku = matchSku[1];
+    }
+    if (!sku) sku = 'GN-ACC-002';
+    if (!barcodeStr) barcodeStr = found.barcode || '460042888815';
+
+    return { sku, part, barcode: barcodeStr };
   };
 
   const formatOrderStandardMessage = (orderPayload) => {
@@ -4528,7 +4554,7 @@
     let totalPayment = 0;
 
     if (isQuickBuy) {
-      const meta = getProductMeta(orderPayload.product_id);
+      const meta = getProductMeta(orderPayload.product_id, orderPayload.product_option);
       const optStr = (orderPayload.product_option && orderPayload.product_option !== 'Стандарт') ? ` (${orderPayload.product_option})` : '';
       const unitPrice = Number(orderPayload.price) || 2990;
       totalPayment = unitPrice;
@@ -4540,7 +4566,7 @@
 
       totalPayment = Number(orderPayload.grand_total) || items.reduce((s, i) => s + (Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1), 0);
       itemsText = items.map((item, idx) => {
-        const meta = getProductMeta(item.id);
+        const meta = getProductMeta(item.id, item.option);
         const optStr = (item.option && item.option !== 'Стандарт') ? ` (${item.option})` : '';
         const qty = parseInt(item.quantity, 10) || 1;
         const uPrice = Number(item.price) || 0;
