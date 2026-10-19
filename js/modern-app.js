@@ -9720,30 +9720,49 @@
       '.btn-cad-download',
       '.btn-kp-action',
       '.anatomy-arrow-btn',
-      '.btn-header-catalog'
+      '.btn-header-catalog',
+      '.btn-journal-cta'
     ];
 
     const elements = document.querySelectorAll(selectors.join(', '));
     elements.forEach(btn => {
+      // Dynamic boosted magnetic travel specifically for journal CTA button (user requested ONLY for this button)
+      const isJournalBtn = btn.classList.contains('btn-journal-cta') || btn.id === 'journalCtaBtn';
       let rect = null;
 
       btn.addEventListener('mouseenter', () => {
         rect = btn.getBoundingClientRect();
-        btn.style.transition = 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)';
+        btn.style.transition = isJournalBtn
+          ? 'transform 0.1s cubic-bezier(0.16, 1, 0.3, 1)'
+          : 'transform 0.12s cubic-bezier(0.16, 1, 0.3, 1)';
       }, { passive: true });
 
       btn.addEventListener('mousemove', (e) => {
         if (!rect) return;
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
-        const dx = (e.clientX - centerX) * 0.24;
-        const dy = (e.clientY - centerY) * 0.24;
+
+        let dx, dy;
+        if (isJournalBtn) {
+          // Boosted magnetic travel: high-response displacement horizontally (dx) and vertically (dy)
+          dx = (e.clientX - centerX) * 0.45;
+          dy = (e.clientY - centerY) * 0.75;
+          // Fluid bounding clamp to prevent drifting outside visual layout
+          dx = Math.max(-55, Math.min(55, dx));
+          dy = Math.max(-28, Math.min(28, dy));
+        } else {
+          dx = (e.clientX - centerX) * 0.24;
+          dy = (e.clientY - centerY) * 0.24;
+        }
+
         btn.style.transform = `translate3d(${dx.toFixed(1)}px, ${dy.toFixed(1)}px, 0)`;
       }, { passive: true });
 
       btn.addEventListener('mouseleave', () => {
         rect = null;
-        btn.style.transition = 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+        btn.style.transition = isJournalBtn
+          ? 'transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1)'
+          : 'transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
         btn.style.transform = 'translate3d(0, 0, 0)';
       }, { passive: true });
     });

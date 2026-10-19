@@ -4390,6 +4390,53 @@ textarea:focus-visible {
   }
 }
 
+/* Journal Full Knowledge Hub CTA Button */
+.journal-cta-wrap {
+  margin-top: 36px;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.btn-journal-cta {
+  width: auto !important;
+  width: fit-content !important;
+  max-width: 100% !important;
+  margin: 0 auto;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 12px;
+  text-decoration: none;
+  min-height: 50px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  text-align: center;
+  word-break: normal;
+  overflow-wrap: break-word;
+}
+
+.btn-journal-cta > * {
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .btn-journal-cta {
+    width: fit-content !important;
+    max-width: 100% !important;
+    padding: 12px 18px !important;
+    font-size: 0.92rem !important;
+    line-height: 1.35;
+    border-radius: 10px;
+  }
+}
+
 /* ==========================================================================
    12. DUAL-IMAGE HOVER CROSSFADE (Catalog Cards)
    ========================================================================== */
@@ -13261,7 +13308,8 @@ textarea.input-error {
   .btn-cad-download,
   .btn-kp-action,
   .anatomy-arrow-btn,
-  .btn-header-catalog {
+  .btn-header-catalog,
+  .btn-journal-cta {
     will-change: transform;
     cursor: pointer;
   }
