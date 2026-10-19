@@ -1173,6 +1173,16 @@
       drawer.classList.remove('active');
       modalManager.syncOverflow();
     }
+    try {
+      if (window.location.hash === '#cart' || (window.location.search && window.location.search.includes('openCart=1'))) {
+        const urlParams = new URLSearchParams(window.location.search);
+        urlParams.delete('openCart');
+        urlParams.delete('cart');
+        const searchStr = urlParams.toString() ? '?' + urlParams.toString() : '';
+        const cleanPath = window.location.pathname + searchStr;
+        history.replaceState(null, '', cleanPath || '/');
+      }
+    } catch (_) {}
   };
 
   const openMobileNav = () => {
@@ -9414,6 +9424,33 @@
     };
     checkProductDeepLink();
     window.addEventListener('hashchange', checkProductDeepLink);
+
+    // Deep linking for Cart Drawer via URL param (?openCart=1 / ?cart=1) or URL hash (#cart) or storage flag
+    const checkCartDeepLink = () => {
+      try {
+        const urlParams = new URLSearchParams(window.location.search);
+        const shouldOpenCart = urlParams.get('openCart') === '1' ||
+                               urlParams.get('cart') === '1' ||
+                               window.location.hash === '#cart' ||
+                               safeStorage.getItem('gn_open_cart_on_load') === '1';
+        if (shouldOpenCart) {
+          safeStorage.removeItem('gn_open_cart_on_load');
+          setTimeout(() => {
+            updateCartUI();
+            openCartDrawer();
+          }, 350);
+        }
+      } catch (err) {
+        console.warn('[Cart DeepLink] Error checking deep link:', err);
+      }
+    };
+    checkCartDeepLink();
+    window.addEventListener('hashchange', () => {
+      if (window.location.hash === '#cart') {
+        updateCartUI();
+        openCartDrawer();
+      }
+    });
 
     // 4. Global ESC key listener to close all active modals & drawers seamlessly
     window.addEventListener('keydown', (e) => {

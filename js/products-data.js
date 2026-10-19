@@ -2573,7 +2573,58 @@ GEEKNOOK_DATA.mats.find(p => p.id === 'desk-mat-xl').specs['Цвет'] = 'Чёр
 const legacyAliases = [
   { ...GEEKNOOK_DATA.boards[0], id: "focus-station-1200" },
   { ...GEEKNOOK_DATA.boards[1], id: "focus-board-600" },
-  { ...GEEKNOOK_DATA.boards[2], id: "focus-station-900" }
+  { ...GEEKNOOK_DATA.boards[2], id: "focus-station-900" },
+  {
+    id: "cable-mini",
+    title: "Cable Manager Mini",
+    subtitle: "Компактный держатель кабелей",
+    category: "accessories",
+    price: 1599,
+    oldPrice: 1999,
+    sku: "GN-ACC-011",
+    part: "202404213",
+    barcode: "460042888822",
+    images: ["images/tild3164-3565-4065-b830-316632303363__3_2.jpg"],
+    specs: {
+      "Артикул": "202404213 (SKU GN-ACC-011)",
+      "Штрихкод (EAN13)": "460042888822",
+      "Габариты": "4 × 2,7 × 5 см"
+    }
+  },
+  {
+    id: "magnetic-catch",
+    title: "T-Track Magnetic Catch (4 шт.)",
+    subtitle: "Комплект неодимовых магнитных фиксаторов N52",
+    category: "accessories",
+    price: 1590,
+    oldPrice: 1990,
+    sku: "GN-ACC-005",
+    part: "202404207",
+    barcode: "460042888810",
+    images: ["images/tild6565-3263-4938-b233-376334646532__14.jpg"],
+    specs: {
+      "Артикул": "202404207 (SKU GN-ACC-005)",
+      "Штрихкод (EAN13)": "460042888810",
+      "Комплектность": "4 магнитных фиксатора N52"
+    }
+  },
+  {
+    id: "stealth-kit",
+    title: "All-in-One Stealth Cable Kit",
+    subtitle: "Полный комплект скрытого кабель-менеджмента",
+    category: "accessories",
+    price: 5490,
+    oldPrice: 6890,
+    sku: "GN-ACC-006",
+    part: "202404208",
+    barcode: "460042888811",
+    images: ["images/tild3931-6666-4933-a466-373836393933__1.jpg"],
+    specs: {
+      "Артикул": "202404208 (SKU GN-ACC-006)",
+      "Штрихкод (EAN13)": "460042888811",
+      "Состав комплекта": "Подвесной лоток Power Strip + 4 магнитных держателя N52 + клипсы"
+    }
+  }
 ];
 
 GEEKNOOK_DATA.allProducts = [
