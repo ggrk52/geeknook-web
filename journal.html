@@ -287,17 +287,26 @@
     /* Tabs Navigation */
     .filter-tabs-row {
       display: flex;
-      gap: 8px;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
-      padding-bottom: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      padding-bottom: 16px;
       margin-bottom: 32px;
-      scrollbar-width: none;
       max-width: 1200px;
       margin-left: auto;
       margin-right: auto;
       padding-left: 20px;
       padding-right: 20px;
+    }
+    @media (max-width: 768px) {
+      .filter-tabs-row {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        padding-bottom: 12px;
+      }
     }
     .filter-tabs-row::-webkit-scrollbar {
       display: none;
@@ -425,7 +434,7 @@
     }
     .card-bottom-row {
       display: flex;
-      justify-content: space-between;
+      justify-content: flex-end;
       align-items: center;
       gap: 12px;
       padding-top: 14px;
@@ -884,7 +893,6 @@
           </h2>
           <p class="card-excerpt">Компьютерный коврик часто выбирают в последнюю очередь и почти всегда по фотографии. Понравился цвет, понравился принт — заказ оформлен...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">10 585 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-kak-vybrat-pod-svoy-stol-a-ne-pod-kartinku" data-slug="kompyuternyy-kovrik-kak-vybrat-pod-svoy-stol-a-ne-pod-kartinku" class="card-read-link">
               Читать статью →
             </a>
@@ -902,7 +910,6 @@
           </h2>
           <p class="card-excerpt">Коврик для компьютерной мыши кажется самой простой покупкой на рабочем столе. Небольшой прямоугольник, на котором двигается мышь, — что...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">988 запросов/мес</span>
             <a href="/journal?article=kovrik-dlya-myshi-ili-kovrik-na-ves-stol-kakoy-format-nuzhen-imenno-va" data-slug="kovrik-dlya-myshi-ili-kovrik-na-ves-stol-kakoy-format-nuzhen-imenno-va" class="card-read-link">
               Читать статью →
             </a>
@@ -920,7 +927,6 @@
           </h2>
           <p class="card-excerpt">Коврики для компьютерной мышки делают из десятка материалов: тканей разного плетения, резины, пластика, стекла, экокожи. Каждый даёт св...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">530 запросов/мес</span>
             <a href="/journal?article=fetrovyy-kovrik-dlya-kompyuternoy-myshki-chto-menyaetsya-v-skolzhenii-" data-slug="fetrovyy-kovrik-dlya-kompyuternoy-myshki-chto-menyaetsya-v-skolzhenii-" class="card-read-link">
               Читать статью →
             </a>
@@ -938,7 +944,6 @@
           </h2>
           <p class="card-excerpt">В играх мышь двигается совсем иначе, чем в офисной работе. Резкие развороты, широкие движения, быстрые остановки — рука проходит десятк...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">217 запросов/мес</span>
             <a href="/journal?article=igrovoy-kompyuternyy-kovrik-kakoy-razmer-nuzhen-pri-nizkoy-chuvstvitel" data-slug="igrovoy-kompyuternyy-kovrik-kakoy-razmer-nuzhen-pri-nizkoy-chuvstvitel" class="card-read-link">
               Читать статью →
             </a>
@@ -956,7 +961,6 @@
           </h2>
           <p class="card-excerpt">Стол может быть дорогим, монитор — большим, клавиатура — механической, а рабочее место всё равно выглядит несобранным. Клавиатура стоит...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">891 запросов/мес</span>
             <a href="/journal?article=kovrik-dlya-kompyuternogo-stola-kak-on-sobiraet-rabochuyu-zonu-v-odnu-" data-slug="kovrik-dlya-kompyuternogo-stola-kak-on-sobiraet-rabochuyu-zonu-v-odnu-" class="card-read-link">
               Читать статью →
             </a>
@@ -974,7 +978,6 @@
           </h2>
           <p class="card-excerpt">Большой компьютерный коврик за последние годы стал почти обязательной частью красивого сетапа. На фотографиях рабочих мест он лежит под...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">645 запросов/мес</span>
             <a href="/journal?article=bolshoy-kompyuternyy-kovrik-na-ves-stol-kogda-on-nuzhen-a-kogda-meshae" data-slug="bolshoy-kompyuternyy-kovrik-na-ves-stol-kogda-on-nuzhen-a-kogda-meshae" class="card-read-link">
               Читать статью →
             </a>
@@ -992,7 +995,6 @@
           </h2>
           <p class="card-excerpt">Компьютерные коврики купить сегодня можно где угодно: в магазине электроники, на маркетплейсе, у небольших брендов. Выбор огромный, а к...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">664 запросов/мес</span>
             <a href="/journal?article=gde-kupit-kompyuternyy-kovrik-i-chto-proverit-v-kartochke-tovara" data-slug="gde-kupit-kompyuternyy-kovrik-i-chto-proverit-v-kartochke-tovara" class="card-read-link">
               Читать статью →
             </a>
@@ -1010,7 +1012,6 @@
           </h2>
           <p class="card-excerpt">Разброс цен на компьютерные коврики удивляет. Один стоит как чашка кофе, другой — как хорошая клавиатура. При этом на фотографиях они в...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">392 запросов/мес</span>
             <a href="/journal?article=skolko-stoit-kompyuternyy-kovrik-i-za-chto-vy-na-samom-dele-platite" data-slug="skolko-stoit-kompyuternyy-kovrik-i-za-chto-vy-na-samom-dele-platite" class="card-read-link">
               Читать статью →
             </a>
@@ -1028,7 +1029,6 @@
           </h2>
           <p class="card-excerpt">Компьютерный коврик на заказ — популярная идея. Любимая иллюстрация, фото, логотип компании, нестандартный размер под конкретный стол. ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">208 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-na-zakaz-ili-gotovyy-chto-vybrat-dlya-rabochego-st" data-slug="kompyuternyy-kovrik-na-zakaz-ili-gotovyy-chto-vybrat-dlya-rabochego-st" class="card-read-link">
               Читать статью →
             </a>
@@ -1046,7 +1046,6 @@
           </h2>
           <p class="card-excerpt">Рано или поздно на коврике появляется пятно. Пролитый кофе, крошки от обеда за столом, жирный след в зоне мыши. И сразу возникает вопро...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">291 запросов/мес</span>
             <a href="/journal?article=mozhno-li-stirat-kompyuternyy-kovrik-pravila-dlya-tkani-reziny-i-fetra" data-slug="mozhno-li-stirat-kompyuternyy-kovrik-pravila-dlya-tkani-reziny-i-fetra" class="card-read-link">
               Читать статью →
             </a>
@@ -1064,7 +1063,6 @@
           </h2>
           <p class="card-excerpt">Подставка для монитора — одна из тех вещей, ценность которых становится понятна только после покупки. Пока её нет, кажется, что всё в п...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">6 603 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-zachem-ona-nuzhna-i-kak-vybrat" data-slug="podstavka-dlya-monitora-zachem-ona-nuzhna-i-kak-vybrat" class="card-read-link">
               Читать статью →
             </a>
@@ -1082,7 +1080,6 @@
           </h2>
           <p class="card-excerpt">Большинство рабочих мест собираются постепенно. Сначала стол и монитор. Потом клавиатура получше, наушники, второй экран, док-станция д...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">772 запросов/мес</span>
             <a href="/journal?article=nastolnaya-podstavka-dlya-monitora-kak-osnova-modulnogo-rabochego-mest" data-slug="nastolnaya-podstavka-dlya-monitora-kak-osnova-modulnogo-rabochego-mest" class="card-read-link">
               Читать статью →
             </a>
@@ -1100,7 +1097,6 @@
           </h2>
           <p class="card-excerpt">Выбирая подставку для монитора на стол, обычно думают о высоте. Но на практике чаще ошибаются в других размерах: ширине и глубине....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">697 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-na-stol-kak-podobrat-shirinu-i-glubinu-pod-svo" data-slug="podstavka-dlya-monitora-na-stol-kak-podobrat-shirinu-i-glubinu-pod-svo" class="card-read-link">
               Читать статью →
             </a>
@@ -1118,7 +1114,6 @@
           </h2>
           <p class="card-excerpt">Тёмные рабочие места выглядят собранно и сосредоточенно. Чёрный монитор, чёрная клавиатура, приглушённый свет — ничто не отвлекает от э...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">400 запросов/мес</span>
             <a href="/journal?article=chernaya-podstavka-dlya-monitora-v-temnom-i-igrovom-setape" data-slug="chernaya-podstavka-dlya-monitora-v-temnom-i-igrovom-setape" class="card-read-link">
               Читать статью →
             </a>
@@ -1136,7 +1131,6 @@
           </h2>
           <p class="card-excerpt">Купить подставку для монитора кажется простой задачей. Открыли каталог, выбрали понравившуюся, оформили заказ....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">225 запросов/мес</span>
             <a href="/journal?article=kupit-podstavku-dlya-monitora-chek-list-pered-zakazom" data-slug="kupit-podstavku-dlya-monitora-chek-list-pered-zakazom" class="card-read-link">
               Читать статью →
             </a>
@@ -1154,7 +1148,6 @@
           </h2>
           <p class="card-excerpt">Второй монитор меняет работу. Код на одном экране, документация на другом. Таблица слева, почта справа. Монтаж и превью. Производительн...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">237 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-dvuh-monitorov-kak-razmestit-ekrany-i-ne-poteryat-stol" data-slug="podstavka-dlya-dvuh-monitorov-kak-razmestit-ekrany-i-ne-poteryat-stol" class="card-read-link">
               Читать статью →
             </a>
@@ -1172,7 +1165,6 @@
           </h2>
           <p class="card-excerpt">Высота подставки для монитора — главный параметр, ради которого подставку обычно и покупают. Но чаще всего её выбирают на глаз: «вроде ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">327 запросов/мес</span>
             <a href="/journal?article=vysota-podstavki-dlya-monitora-kak-rasschitat-za-dve-minuty" data-slug="vysota-podstavki-dlya-monitora-kak-rasschitat-za-dve-minuty" class="card-read-link">
               Читать статью →
             </a>
@@ -1190,7 +1182,6 @@
           </h2>
           <p class="card-excerpt">Подставка для монитора с регулировкой высоты кажется очевидным выбором. Зачем фиксированная высота, если можно настроить экран точно по...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">234 запросов/мес</span>
             <a href="/journal?article=reguliruemaya-ili-fiksirovannaya-podstavka-dlya-monitora-kogda-hvataet" data-slug="reguliruemaya-ili-fiksirovannaya-podstavka-dlya-monitora-kogda-hvataet" class="card-read-link">
               Читать статью →
             </a>
@@ -1208,7 +1199,6 @@
           </h2>
           <p class="card-excerpt">Подставки для монитора компьютера выглядят простыми: столешница и ножки. Кажется, ошибиться невозможно....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">206 запросов/мес</span>
             <a href="/journal?article=7-oshibok-pri-vybore-podstavki-dlya-monitora-kompyutera" data-slug="7-oshibok-pri-vybore-podstavki-dlya-monitora-kompyutera" class="card-read-link">
               Читать статью →
             </a>
@@ -1226,7 +1216,6 @@
           </h2>
           <p class="card-excerpt">Когда монитор стоит слишком низко, у задачи есть два популярных решения: подставка и кронштейн. В поиске их часто объединяют — «подстав...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">499 запросов/мес</span>
             <a href="/journal?article=podstavka-ili-kronshteyn-dlya-monitora-razbor-bez-marketinga" data-slug="podstavka-ili-kronshteyn-dlya-monitora-razbor-bez-marketinga" class="card-read-link">
               Читать статью →
             </a>
@@ -1244,7 +1233,6 @@
           </h2>
           <p class="card-excerpt">В описаниях мониторов и подставок часто встречается аббревиатура VESA. Для многих она звучит как обязательный технический параметр, без...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">196 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-vesa-chto-eto-i-kogda-ona-vam-ne-nuzhna" data-slug="podstavka-dlya-monitora-vesa-chto-eto-i-kogda-ona-vam-ne-nuzhna" class="card-read-link">
               Читать статью →
             </a>
@@ -1262,7 +1250,6 @@
           </h2>
           <p class="card-excerpt">Кабель-менеджмент часто понимают как «спрятать провода». Берутся стяжки, кабели собираются в пучок, пучок уводится под стол. Через пару...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">5 655 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-rabochego-stola-sistema-vmesto-styazhek" data-slug="kabel-menedzhment-rabochego-stola-sistema-vmesto-styazhek" class="card-read-link">
               Читать статью →
             </a>
@@ -1280,7 +1267,6 @@
           </h2>
           <p class="card-excerpt">Кабель-менеджмент кажется большим проектом, который откладывают на выходные, а потом на следующие выходные. На деле рабочий стол можно ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">418 запросов/мес</span>
             <a href="/journal?article=kak-sdelat-kabel-menedzhment-za-odin-vecher-poshagovaya-instruktsiya" data-slug="kak-sdelat-kabel-menedzhment-za-odin-vecher-poshagovaya-instruktsiya" class="card-read-link">
               Читать статью →
             </a>
@@ -1298,7 +1284,6 @@
           </h2>
           <p class="card-excerpt">Красивый кабель-менеджмент легко сделать для фотографии. Сложнее сделать такой, который переживёт первую замену устройства, переезд мон...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">146 запросов/мес</span>
             <a href="/journal?article=pravilnyy-kabel-menedzhment-6-printsipov-chtoby-provoda-ne-vernulis" data-slug="pravilnyy-kabel-menedzhment-6-printsipov-chtoby-provoda-ne-vernulis" class="card-read-link">
               Читать статью →
             </a>
@@ -1316,7 +1301,6 @@
           </h2>
           <p class="card-excerpt">Большинство советов про кабель-менеджмент касаются постоянных проводов: питания монитора, компьютера, колонок. Их действительно можно с...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">164 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-dlya-provodov-zaryadki-kabeli-pod-rukoy-no-ne-na-sto" data-slug="kabel-menedzhment-dlya-provodov-zaryadki-kabeli-pod-rukoy-no-ne-na-sto" class="card-read-link">
               Читать статью →
             </a>
@@ -1334,7 +1318,6 @@
           </h2>
           <p class="card-excerpt">Сверху рабочий стол может выглядеть аккуратно. Но стоит заглянуть под столешницу — и там клубок проводов, удлинитель на полу, блоки пит...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">136 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-pod-stolom-kuda-det-udlinitel-i-bloki-pitaniya" data-slug="kabel-menedzhment-pod-stolom-kuda-det-udlinitel-i-bloki-pitaniya" class="card-read-link">
               Читать статью →
             </a>
@@ -1352,7 +1335,6 @@
           </h2>
           <p class="card-excerpt">Стол убран в воскресенье, а к среде на нём снова телефон поверх бумаг, наушники рядом с клавиатурой и кабель зарядки, свисающий к полу....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">7 566 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-sistema-zon-vmesto-razovoy-uborki" data-slug="organizatsiya-stola-sistema-zon-vmesto-razovoy-uborki" class="card-read-link">
               Читать статью →
             </a>
@@ -1370,7 +1352,6 @@
           </h2>
           <p class="card-excerpt">Организация рабочего стола часто откладывается, потому что кажется большим проектом. Нужно что-то купить, что-то выбросить, что-то пере...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">2 229 запросов/мес</span>
             <a href="/journal?article=organizatsiya-rabochego-stola-za-odin-vecher-poshagovyy-stsenariy" data-slug="organizatsiya-rabochego-stola-za-odin-vecher-poshagovyy-stsenariy" class="card-read-link">
               Читать статью →
             </a>
@@ -1388,7 +1369,6 @@
           </h2>
           <p class="card-excerpt">На маленьком столе проблема видна сразу. Монитор, клавиатура, мышь — и места больше нет. Ноутбук приходится ставить на край, телефон — ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">324 запросов/мес</span>
             <a href="/journal?article=organizatsiya-mesta-na-malenkom-stole-kak-rabotat-vertikalyu" data-slug="organizatsiya-mesta-na-malenkom-stole-kak-rabotat-vertikalyu" class="card-read-link">
               Читать статью →
             </a>
@@ -1406,7 +1386,6 @@
           </h2>
           <p class="card-excerpt">Гибридная работа изменила рабочие столы. Ноутбук приезжает домой из офиса и уезжает обратно. Дома он подключается к монитору, клавиатур...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">274 запросов/мес</span>
             <a href="/journal?article=organizatsiya-rabochego-mesta-na-stole-dlya-gibridnoy-raboty-noutbuk-m" data-slug="organizatsiya-rabochego-mesta-na-stole-dlya-gibridnoy-raboty-noutbuk-m" class="card-read-link">
               Читать статью →
             </a>
@@ -1424,7 +1403,6 @@
           </h2>
           <p class="card-excerpt">Как понять, хорошо ли организован ваш стол? Иногда кажется, что всё в порядке, а к вечеру накапливается усталость и раздражение. Иногда...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">200 запросов/мес</span>
             <a href="/journal?article=chek-list-organizatsii-prostranstva-na-stole-12-punktov" data-slug="chek-list-organizatsii-prostranstva-na-stole-12-punktov" class="card-read-link">
               Читать статью →
             </a>
@@ -1442,7 +1420,6 @@
           </h2>
           <p class="card-excerpt">Стол на работе живёт по другим правилам, чем домашний. Места меньше, мебель часто общая, личные вещи уместны не всегда, а к концу недел...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">265 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-na-rabote-poryadok-kotoryy-perezhivaet-rabochuyu-n" data-slug="organizatsiya-stola-na-rabote-poryadok-kotoryy-perezhivaet-rabochuyu-n" class="card-read-link">
               Читать статью →
             </a>
@@ -1460,7 +1437,6 @@
           </h2>
           <p class="card-excerpt">Стол руководителя — одновременно рабочее место и лицо кабинета. За ним принимают решения, проводят встречи, подписывают документы. Посе...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">184 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-rukovoditelya-minimum-predmetov-maksimum-kontrolya" data-slug="organizatsiya-stola-rukovoditelya-minimum-predmetov-maksimum-kontrolya" class="card-read-link">
               Читать статью →
             </a>
@@ -1478,7 +1454,6 @@
           </h2>
           <p class="card-excerpt">Стол учителя работает в нескольких режимах за день. Утром — подготовка к урокам. На уроке — компьютер, проектор, журнал. После уроков —...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">330 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-uchitelya-zony-kompyutera-proverki-i-hraneniya" data-slug="organizatsiya-stola-uchitelya-zony-kompyutera-proverki-i-hraneniya" class="card-read-link">
               Читать статью →
             </a>
@@ -1496,7 +1471,6 @@
           </h2>
           <p class="card-excerpt">Когда на столе не хватает места, первая мысль — купить органайзер. Он появляется на столе, в него складываются мелочи, и через месяц ор...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">155 запросов/мес</span>
             <a href="/journal?article=organizatsiya-hraneniya-na-stole-chto-ostavit-chto-podnyat-chto-spryat" data-slug="organizatsiya-hraneniya-na-stole-chto-ostavit-chto-podnyat-chto-spryat" class="card-read-link">
               Читать статью →
             </a>
@@ -1514,7 +1488,6 @@
           </h2>
           <p class="card-excerpt">Учебный стол — место, где одновременно лежат учебники, тетради, ноутбук и телефон. Каждый из этих предметов требует внимания, и большая...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">382 запросов/мес</span>
             <a href="/journal?article=organizatsiya-uchebnogo-stola-chtoby-stol-pomogal-uchitsya-a-ne-otvlek" data-slug="organizatsiya-uchebnogo-stola-chtoby-stol-pomogal-uchitsya-a-ne-otvlek" class="card-read-link">
               Читать статью →
             </a>
@@ -1532,7 +1505,6 @@
           </h2>
           <p class="card-excerpt">Стол подростка — это одновременно учебное место, игровая станция и личное пространство. Днём здесь делают уроки, вечером играют, в пере...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">378 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-shkolnika-podrostka-s-kompyuterom" data-slug="organizatsiya-stola-shkolnika-podrostka-s-kompyuterom" class="card-read-link">
               Читать статью →
             </a>
@@ -1550,7 +1522,6 @@
           </h2>
           <p class="card-excerpt">Письменный стол изначально создавался для бумаги: книги, тетради, конспекты. Сегодня на нём же стоит ноутбук, лежит телефон, тянутся за...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">285 запросов/мес</span>
             <a href="/journal?article=organizatsiya-pismennogo-stola-studenta-uchebniki-noutbuk-i-telefon" data-slug="organizatsiya-pismennogo-stola-studenta-uchebniki-noutbuk-i-telefon" class="card-read-link">
               Читать статью →
             </a>
@@ -1568,7 +1539,6 @@
           </h2>
           <p class="card-excerpt">Эргономика рабочего места звучит как что-то из учебника по охране труда. На деле это простая идея: стол, кресло и техника должны подстр...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">2 637 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-pyat-tochek-nastroyki" data-slug="ergonomika-rabochego-mesta-pyat-tochek-nastroyki" class="card-read-link">
               Читать статью →
             </a>
@@ -1586,7 +1556,6 @@
           </h2>
           <p class="card-excerpt">Когда говорят об эргономике рабочего места за компьютером, обычно имеют в виду один экран — монитор. Но сегодня на столе редко бывает о...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">186 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-za-kompyuterom-monitor-noutbuk-i-telefon-na" data-slug="ergonomika-rabochego-mesta-za-kompyuterom-monitor-noutbuk-i-telefon-na" class="card-read-link">
               Читать статью →
             </a>
@@ -1604,7 +1573,6 @@
           </h2>
           <p class="card-excerpt">Требования эргономики рабочего места описаны в санитарных нормах и стандартах. Для офисов они обязательны, для домашнего стола — служат...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">395 запросов/мес</span>
             <a href="/journal?article=trebovaniya-ergonomiki-rabochego-mesta-normy-na-realnom-stole" data-slug="trebovaniya-ergonomiki-rabochego-mesta-normy-na-realnom-stole" class="card-read-link">
               Читать статью →
             </a>
@@ -1622,7 +1590,6 @@
           </h2>
           <p class="card-excerpt">Аксессуары для компьютерного стола обещают порядок и удобство. Органайзер для ручек, док-станция для телефона, стойка для наушников, ло...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">173 запросов/мес</span>
             <a href="/journal?article=aksessuary-dlya-kompyuternogo-stola-kakie-reshayut-zadachu-a-kakie-dob" data-slug="aksessuary-dlya-kompyuternogo-stola-kakie-reshayut-zadachu-a-kakie-dob" class="card-read-link">
               Читать статью →
             </a>
@@ -1640,7 +1607,6 @@
           </h2>
           <p class="card-excerpt">Игровой стол собирает больше устройств, чем обычный рабочий. Клавиатура, мышь, гарнитура, геймпад, иногда консоль, телефон для чата. У ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">1 030 запросов/мес</span>
             <a href="/journal?article=aksessuary-dlya-igrovogo-stola-derzhateli-dlya-geympada-garnitury-i-ko" data-slug="aksessuary-dlya-igrovogo-stola-derzhateli-dlya-geympada-garnitury-i-ko" class="card-read-link">
               Читать статью →
             </a>
@@ -1658,7 +1624,6 @@
           </h2>
           <p class="card-excerpt">Полноразмерные наушники — один из самых неудобных предметов на рабочем столе. Их сложно аккуратно положить: они не лежат ровно, занимаю...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">6 234 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-naushnikov-zachem-ona-nuzhna-i-kak-vybrat-pod-svoy-stol" data-slug="podstavka-dlya-naushnikov-zachem-ona-nuzhna-i-kak-vybrat-pod-svoy-stol" class="card-read-link">
               Читать статью →
             </a>
@@ -1676,7 +1641,6 @@
           </h2>
           <p class="card-excerpt">Подставки для наушников выглядят по-разному: деревянные стойки, металлические крючки, фигурки, держатели с подсветкой. Но если отбросит...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">250 запросов/мес</span>
             <a href="/journal?article=vidy-podstavok-dlya-naushnikov-nastolnaya-pod-stoleshnitsey-ili-na-pod" data-slug="vidy-podstavok-dlya-naushnikov-nastolnaya-pod-stoleshnitsey-ili-na-pod" class="card-read-link">
               Читать статью →
             </a>
@@ -1694,7 +1658,6 @@
           </h2>
           <p class="card-excerpt">Подставок для наушников на рынке сотни. Деревянные, металлические, акриловые, с подсветкой, с зарядкой, в виде фигурок. Выбрать по фото...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">221 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-naushnikov-chto-proverit-pered-pokupkoy" data-slug="podstavka-dlya-naushnikov-chto-proverit-pered-pokupkoy" class="card-read-link">
               Читать статью →
             </a>
@@ -1712,7 +1675,6 @@
           </h2>
           <p class="card-excerpt">Телефон на рабочем столе живёт в двух состояниях. Либо он лежит экраном вверх и отвлекает каждым уведомлением. Либо лежит экраном вниз,...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">456 запросов/мес</span>
             <a href="/journal?article=derzhatel-dlya-telefona-na-stol-gde-postavit-chtoby-pomogal-a-ne-otvle" data-slug="derzhatel-dlya-telefona-na-stol-gde-postavit-chtoby-pomogal-a-ne-otvle" class="card-read-link">
               Читать статью →
             </a>
@@ -1730,7 +1692,6 @@
           </h2>
           <p class="card-excerpt">Представим распространённый сценарий. Дома или в офисе ноутбук подключён к внешнему монитору, клавиатуре и мыши. Экран ноутбука почти н...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">312 запросов/мес</span>
             <a href="/journal?article=vertikalnaya-podstavka-dlya-noutbuka-kogda-noutbuk-stanovitsya-sistemn" data-slug="vertikalnaya-podstavka-dlya-noutbuka-kogda-noutbuk-stanovitsya-sistemn" class="card-read-link">
               Читать статью →
             </a>
@@ -1748,7 +1709,6 @@
           </h2>
           <p class="card-excerpt">Геймпад — устройство, которому редко находится место. После игры его кладут на стол, на диван, на полку, на клавиатуру. В следующий раз...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">1 598 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-geympada-poryadok-v-igrovom-uglu-stola" data-slug="podstavka-dlya-geympada-poryadok-v-igrovom-uglu-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -1766,7 +1726,6 @@
           </h2>
           <p class="card-excerpt">Геймпад Xbox давно вышел за пределы консоли. На нём играют на компьютере, подключают к ноутбуку, используют с облачным геймингом. Поэто...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">212 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-geympada-xbox-kak-derzhat-kontroller-pod-rukoy" data-slug="podstavka-dlya-geympada-xbox-kak-derzhat-kontroller-pod-rukoy" class="card-read-link">
               Читать статью →
             </a>
@@ -1784,7 +1743,6 @@
           </h2>
           <p class="card-excerpt">Коврик для стола — большая подложка, на которой помещаются клавиатура, мышь и часть рабочей зоны. Он защищает столешницу от царапин и п...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">10 585 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik" data-slug="kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -1802,7 +1760,6 @@
           </h2>
           <p class="card-excerpt">Организация стола — это система, при которой у каждой вещи есть своё место, а на поверхности остаётся только нужное для работы. Хорошо ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">7 566 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola" data-slug="organizatsiya-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -1820,7 +1777,6 @@
           </h2>
           <p class="card-excerpt">Подставка для монитора решает две задачи: поднимает экран до уровня глаз и освобождает место на столе. Когда верхний край экрана находи...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">6 603 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora" data-slug="podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -1838,7 +1794,6 @@
           </h2>
           <p class="card-excerpt">Кабель-менеджмент — это система организации проводов на рабочем месте. Цель — чтобы кабели не путались, не мешали и не бросались в глаз...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">5 655 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment" data-slug="kabel-menedzhment" class="card-read-link">
               Читать статью →
             </a>
@@ -1856,7 +1811,6 @@
           </h2>
           <p class="card-excerpt">Эргономика рабочего места — наука о том, как настроить стол, кресло и технику под тело человека. Цель — работать долго и без вреда для ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">2 637 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta" data-slug="ergonomika-rabochego-mesta" class="card-read-link">
               Читать статью →
             </a>
@@ -1874,7 +1828,6 @@
           </h2>
           <p class="card-excerpt">Организация рабочего стола начинается с эргономики, а не с органайзеров. Сначала настройте главное: монитор на уровне глаз, клавиатуру ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">2 229 запросов/мес</span>
             <a href="/journal?article=organizatsiya-rabochego-stola" data-slug="organizatsiya-rabochego-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -1892,7 +1845,6 @@
           </h2>
           <p class="card-excerpt">Гаджеты для рабочего стола добавляют функций и делают работу удобнее....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">1 030 запросов/мес</span>
             <a href="/journal?article=kompyuternye-aksessuary" data-slug="kompyuternye-aksessuary" class="card-read-link">
               Читать статью →
             </a>
@@ -1910,7 +1862,6 @@
           </h2>
           <p class="card-excerpt">Коврик для мыши улучшает работу сенсора, делает скольжение равномерным и защищает стол от потёртостей....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">988 запросов/мес</span>
             <a href="/journal?article=kovrik-dlya-kompyuternoy-myshi" data-slug="kovrik-dlya-kompyuternoy-myshi" class="card-read-link">
               Читать статью →
             </a>
@@ -1928,7 +1879,6 @@
           </h2>
           <p class="card-excerpt">Выбор коврика для стола начинается с задачи. Защитить стол, улучшить скольжение мыши, заглушить звук клавиатуры или сделать стол красив...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">891 запросов/мес</span>
             <a href="/journal?article=kovrik-dlya-kompyuternogo-stola" data-slug="kovrik-dlya-kompyuternogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -1946,7 +1896,6 @@
           </h2>
           <p class="card-excerpt">Выбор подставки для монитора начинается с рулетки....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">772 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-na-stol" data-slug="podstavka-dlya-monitora-na-stol" class="card-read-link">
               Читать статью →
             </a>
@@ -1964,7 +1913,6 @@
           </h2>
           <p class="card-excerpt">Покупая коврик для стола, определите размер, материал и цвет....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">664 запросов/мес</span>
             <a href="/journal?article=kompyuternye-kovriki-kupit" data-slug="kompyuternye-kovriki-kupit" class="card-read-link">
               Читать статью →
             </a>
@@ -1982,7 +1930,6 @@
           </h2>
           <p class="card-excerpt">Большой коврик для мыши и клавиатуры объединяет всю периферию в одну зону. Размер — от 80×30 см до 120×60 см и больше....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">645 запросов/мес</span>
             <a href="/journal?article=bolshoy-kompyuternyy-kovrik" data-slug="bolshoy-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -2000,7 +1947,6 @@
           </h2>
           <p class="card-excerpt">Кронштейн и подставка решают похожую задачу — поднимают монитор, — но делают это по-разному....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">499 запросов/мес</span>
             <a href="/journal?article=podstavka-kronshteyn-dlya-monitora" data-slug="podstavka-kronshteyn-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -2018,7 +1964,6 @@
           </h2>
           <p class="card-excerpt">Кабель-менеджмент своими руками обойдётся в несколько сотен рублей и один вечер....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">418 запросов/мес</span>
             <a href="/journal?article=kak-sdelat-kabel-menedzhment" data-slug="kak-sdelat-kabel-menedzhment" class="card-read-link">
               Читать статью →
             </a>
@@ -2036,7 +1981,6 @@
           </h2>
           <p class="card-excerpt">Чёрная подставка — выбор для строгих и геймерских сетапов. Она сливается с техникой, не отвлекает внимание и хорошо сочетается с тёмным...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">400 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-chernaya" data-slug="podstavka-dlya-monitora-chernaya" class="card-read-link">
               Читать статью →
             </a>
@@ -2054,7 +1998,6 @@
           </h2>
           <p class="card-excerpt">Требования к эргономике рабочего места с компьютером установлены санитарными нормами и стандартами. Для офисов они задают минимальные у...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">395 запросов/мес</span>
             <a href="/journal?article=trebovaniya-ergonomiki-rabochego-mesta" data-slug="trebovaniya-ergonomiki-rabochego-mesta" class="card-read-link">
               Читать статью →
             </a>
@@ -2072,7 +2015,6 @@
           </h2>
           <p class="card-excerpt">Цена компьютерного коврика зависит от размера, материала и бренда....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">392 запросов/мес</span>
             <a href="/journal?article=skolko-stoit-kompyuternyy-kovrik" data-slug="skolko-stoit-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -2090,7 +2032,6 @@
           </h2>
           <p class="card-excerpt">Рабочее место студента должно быть функциональным, недорогим и выдерживать сессии....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">382 запросов/мес</span>
             <a href="/journal?article=organizatsiya-uchebnogo-stola" data-slug="organizatsiya-uchebnogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -2108,7 +2049,6 @@
           </h2>
           <p class="card-excerpt">Рабочее место школьника должно расти вместе с ребёнком. Поэтому главное требование — регулировка....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">378 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-shkolnika" data-slug="organizatsiya-stola-shkolnika" class="card-read-link">
               Читать статью →
             </a>
@@ -2126,7 +2066,6 @@
           </h2>
           <p class="card-excerpt">Стол учителя — рабочее место с особыми задачами: проверка тетрадей, подготовка к урокам, работа с журналом и компьютером, приём ученико...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">330 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-uchitelya" data-slug="organizatsiya-stola-uchitelya" class="card-read-link">
               Читать статью →
             </a>
@@ -2144,7 +2083,6 @@
           </h2>
           <p class="card-excerpt">Правильная высота подставки — та, при которой верхний край экрана находится на уровне глаз или чуть ниже. Тогда взгляд падает на центр ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">327 запросов/мес</span>
             <a href="/journal?article=vysota-podstavki-dlya-monitora" data-slug="vysota-podstavki-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -2162,7 +2100,6 @@
           </h2>
           <p class="card-excerpt">Пространство на столе делится на зоны. Центральная — для клавиатуры, мыши и текущей задачи. Ближняя боковая — для того, что берёте пост...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">324 запросов/мес</span>
             <a href="/journal?article=organizatsiya-mesta-na-stole" data-slug="organizatsiya-mesta-na-stole" class="card-read-link">
               Читать статью →
             </a>
@@ -2180,7 +2117,6 @@
           </h2>
           <p class="card-excerpt">Стирать компьютерный коврик можно, но не любой и не любым способом....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">291 запросов/мес</span>
             <a href="/journal?article=mozhno-li-stirat-kompyuternyy-kovrik" data-slug="mozhno-li-stirat-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -2198,7 +2134,6 @@
           </h2>
           <p class="card-excerpt">Письменный стол чаще используют для работы с бумагой: письма, учёбы, творчества, ведения записей. Его организация немного отличается от...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">285 запросов/мес</span>
             <a href="/journal?article=organizatsiya-pismennogo-stola" data-slug="organizatsiya-pismennogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -2216,7 +2151,6 @@
           </h2>
           <p class="card-excerpt">Рабочий стол в офисе организовать сложнее, чем дома: место ограничено, часть мебели общая, а личные вещи не всегда уместны....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">265 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-na-rabote" data-slug="organizatsiya-stola-na-rabote" class="card-read-link">
               Читать статью →
             </a>
@@ -2234,7 +2168,6 @@
           </h2>
           <p class="card-excerpt">Детский стол используется для рисования, поделок, чтения, а позже — для учёбы. Организация должна быть простой, чтобы ребёнок сам подде...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">244 запросов/мес</span>
             <a href="/journal?article=organizatsiya-detskogo-stola" data-slug="organizatsiya-detskogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -2252,7 +2185,6 @@
           </h2>
           <p class="card-excerpt">Два монитора требуют широкой и прочной опоры. Подставка для двух экранов должна быть длиной не меньше суммарной ширины их оснований с з...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">237 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-dvuh-monitorov" data-slug="podstavka-dlya-dvuh-monitorov" class="card-read-link">
               Читать статью →
             </a>
@@ -2270,7 +2202,6 @@
           </h2>
           <p class="card-excerpt">Регулируемая подставка позволяет настроить высоту экрана точно под себя. Это важно, если за столом работают несколько человек или вы ча...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">234 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-s-regulirovkoy-po-vysote" data-slug="podstavka-dlya-monitora-s-regulirovkoy-po-vysote" class="card-read-link">
               Читать статью →
             </a>
@@ -2288,7 +2219,6 @@
           </h2>
           <p class="card-excerpt">Перед покупкой подставки под монитор определите три параметра: ширину, высоту и то, что вы хотите хранить под ней....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">225 запросов/мес</span>
             <a href="/journal?article=kupit-podstavku-dlya-monitora" data-slug="kupit-podstavku-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -2306,7 +2236,6 @@
           </h2>
           <p class="card-excerpt">Игровой коврик для мыши большого размера даёт свободу для резких движений. Геймеры с низкой чувствительностью мыши водят рукой широко, ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">217 запросов/мес</span>
             <a href="/journal?article=igrovoy-kompyuternyy-kovrik" data-slug="igrovoy-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -2324,7 +2253,6 @@
           </h2>
           <p class="card-excerpt">Компьютерный коврик на заказ — коврик с вашим собственным изображением или размером....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">208 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-na-zakaz" data-slug="kompyuternyy-kovrik-na-zakaz" class="card-read-link">
               Читать статью →
             </a>
@@ -2342,7 +2270,6 @@
           </h2>
           <p class="card-excerpt">VESA — международный стандарт крепления мониторов. На задней крышке экрана есть четыре резьбовых отверстия, расположенных квадратом 75×...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">196 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-vesa" data-slug="podstavka-dlya-monitora-vesa" class="card-read-link">
               Читать статью →
             </a>
@@ -2360,7 +2287,6 @@
           </h2>
           <p class="card-excerpt">Эргономика рабочего места за компьютером — настройка стола, кресла, монитора и периферии так, чтобы работать без боли в шее, спине и за...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">186 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-za-kompyuterom" data-slug="ergonomika-rabochego-mesta-za-kompyuterom" class="card-read-link">
               Читать статью →
             </a>
@@ -2378,7 +2304,6 @@
           </h2>
           <p class="card-excerpt">Стол руководителя — это рабочее место и одновременно пространство для встреч. Он должен выглядеть собранно и работать эффективно....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">184 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-rukovoditelya" data-slug="organizatsiya-stola-rukovoditelya" class="card-read-link">
               Читать статью →
             </a>
@@ -2396,7 +2321,6 @@
           </h2>
           <p class="card-excerpt">Аксессуары делают рабочий стол удобнее, но только если решают конкретную задачу....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">173 запросов/мес</span>
             <a href="/journal?article=aksessuary-dlya-kompyuternogo-stola" data-slug="aksessuary-dlya-kompyuternogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -2414,7 +2338,6 @@
           </h2>
           <p class="card-excerpt">Органайзер для проводов собирает кабели в одном направлении и не даёт им путаться. Это касается и проводов на столе, и тех, что свисают...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">164 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-dlya-provodov" data-slug="kabel-menedzhment-dlya-provodov" class="card-read-link">
               Читать статью →
             </a>
@@ -2432,7 +2355,6 @@
           </h2>
           <p class="card-excerpt">Система хранения для рабочего стола — это не один органайзер, а продуманное распределение всех вещей по уровням....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">155 запросов/мес</span>
             <a href="/journal?article=organizatsiya-hraneniya-na-stole" data-slug="organizatsiya-hraneniya-na-stole" class="card-read-link">
               Читать статью →
             </a>
@@ -2450,7 +2372,6 @@
           </h2>
           <p class="card-excerpt">Компьютерный стол с подставкой для монитора — стол, у которого второй уровень встроен в конструкцию: полка или надстройка над столешниц...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">146 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-stol-s-podstavkoy-dlya-monitora" data-slug="kompyuternyy-stol-s-podstavkoy-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -2468,7 +2389,6 @@
           </h2>
           <p class="card-excerpt">Пространство на рабочем столе можно организовать по трём уровням....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">146 запросов/мес</span>
             <a href="/journal?article=organizatsiya-prostranstva-na-rabochem-stole" data-slug="organizatsiya-prostranstva-na-rabochem-stole" class="card-read-link">
               Читать статью →
             </a>
@@ -2486,7 +2406,6 @@
           </h2>
           <p class="card-excerpt">Правильный кабель-менеджмент — не тот, что красиво смотрится на фото, а тот, что удобен в повседневной жизни....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">146 запросов/мес</span>
             <a href="/journal?article=pravilnyy-kabel-menedzhment" data-slug="pravilnyy-kabel-menedzhment" class="card-read-link">
               Читать статью →
             </a>
@@ -2504,7 +2423,6 @@
           </h2>
           <p class="card-excerpt">Игровые мониторы обычно крупнее и тяжелее офисных: 27 дюймов и больше, часто изогнутые, с массивным основанием. Подставка под них должн...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">145 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-igrovogo-monitora" data-slug="podstavka-dlya-igrovogo-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -2522,7 +2440,6 @@
           </h2>
           <p class="card-excerpt">Офисный органайзер для стола должен быть практичным, прочным и нейтральным по дизайну....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">143 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-v-ofise" data-slug="organizatsiya-stola-v-ofise" class="card-read-link">
               Читать статью →
             </a>
@@ -2540,7 +2457,6 @@
           </h2>
           <p class="card-excerpt">Правильная посадка за компьютером: стопы на полу, колени под углом около 90 градусов, бёдра параллельно полу....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">142 запросов/мес</span>
             <a href="/journal?article=pravilnaya-ergonomika-rabochego-mesta" data-slug="pravilnaya-ergonomika-rabochego-mesta" class="card-read-link">
               Читать статью →
             </a>
@@ -2558,7 +2474,6 @@
           </h2>
           <p class="card-excerpt">Несколько идей, которые быстро улучшают рабочий стол....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">140 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-idei" data-slug="organizatsiya-stola-idei" class="card-read-link">
               Читать статью →
             </a>
@@ -2576,7 +2491,6 @@
           </h2>
           <p class="card-excerpt">Под столешницей обычно скрывается главный беспорядок рабочего места: удлинитель, блоки питания, излишки кабелей. Органайзер для проводо...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">136 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-pod-stolom" data-slug="kabel-menedzhment-pod-stolom" class="card-read-link">
               Читать статью →
             </a>
@@ -2594,7 +2508,6 @@
           </h2>
           <p class="card-excerpt">Белая подставка для монитора делает рабочее место светлым и минималистичным. Она хорошо смотрится с белым столом, светлой техникой и ск...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">135 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-belaya" data-slug="podstavka-dlya-monitora-belaya" class="card-read-link">
               Читать статью →
             </a>
@@ -2612,7 +2525,6 @@
           </h2>
           <p class="card-excerpt">Порядок на рабочем столе поддерживается не уборкой, а системой. Если у каждой вещи есть своё место, стол приводится в порядок за минуту...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">132 запросов/мес</span>
             <a href="/journal?article=organizatsiya-poryadka-na-stole" data-slug="organizatsiya-poryadka-na-stole" class="card-read-link">
               Читать статью →
             </a>
@@ -2630,7 +2542,6 @@
           </h2>
           <p class="card-excerpt">Лучший коврик — тот, что подходит под ваши задачи. Вот как выбрать....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">131 запросов/мес</span>
             <a href="/journal?article=luchshie-kompyuternye-kovriki" data-slug="luchshie-kompyuternye-kovriki" class="card-read-link">
               Читать статью →
             </a>
@@ -2648,7 +2559,6 @@
           </h2>
           <p class="card-excerpt">Спрятать провода от компьютера можно в три этапа....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">127 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-kompyuternogo-stola" data-slug="kabel-menedzhment-kompyuternogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -2666,7 +2576,6 @@
           </h2>
           <p class="card-excerpt">Коврики для стола бывают разных размеров, и выбор зависит от сетапа....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">127 запросов/мес</span>
             <a href="/journal?article=razmery-kompyuternyh-kovrikov" data-slug="razmery-kompyuternyh-kovrikov" class="card-read-link">
               Читать статью →
             </a>
@@ -2684,7 +2593,6 @@
           </h2>
           <p class="card-excerpt">Органайзер для кабелей на стол — это держатели, которые фиксируют концы проводов на краю столешницы. Кабель зарядки больше не падает за...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">123 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-dlya-stola" data-slug="kabel-menedzhment-dlya-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -2702,7 +2610,6 @@
           </h2>
           <p class="card-excerpt">Ножки для подставки монитора ищут в двух случаях: когда потеряна или сломана штатная ножка монитора и когда хотят собрать подставку-пол...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">121 запросов/мес</span>
             <a href="/journal?article=nozhki-dlya-podstavki-monitora" data-slug="nozhki-dlya-podstavki-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -2720,7 +2627,6 @@
           </h2>
           <p class="card-excerpt">Чистка коврика зависит от материала....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">121 запросов/мес</span>
             <a href="/journal?article=kak-postirat-kompyuternyy-kovrik" data-slug="kak-postirat-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -2738,7 +2644,6 @@
           </h2>
           <p class="card-excerpt">Монитор на 27 дюймов шире и тяжелее стандартных 24 дюймов, поэтому подставка под него должна иметь запас по размерам и прочности....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">119 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-27-dyuymov" data-slug="podstavka-dlya-monitora-27-dyuymov" class="card-read-link">
               Читать статью →
             </a>
@@ -2756,7 +2661,6 @@
           </h2>
           <p class="card-excerpt">Подставка для монитора и ноутбука позволяет работать с двумя экранами одновременно: монитор — основной, ноутбук — дополнительный....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">114 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-noutbuka-i-monitora" data-slug="podstavka-dlya-noutbuka-i-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -2774,7 +2678,6 @@
           </h2>
           <p class="card-excerpt">Стена над столом часто пустует, хотя это отличное место для хранения и декора....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">113 запросов/мес</span>
             <a href="/journal?article=organizatsiya-nad-stolom" data-slug="organizatsiya-nad-stolom" class="card-read-link">
               Читать статью →
             </a>
@@ -2792,7 +2695,6 @@
           </h2>
           <p class="card-excerpt">Подставка с полкой добавляет второй уровень хранения: сверху стоит монитор, снизу лежат клавиатура, планшет или документы. Это удобно н...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">112 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-s-polkoy" data-slug="podstavka-dlya-monitora-s-polkoy" class="card-read-link">
               Читать статью →
             </a>
@@ -2810,7 +2712,6 @@
           </h2>
           <p class="card-excerpt">Коврик с подсветкой — коврик со светодиодной лентой по краю. Он добавляет атмосферы игровому сетапу....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">103 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-s-podsvetkoy" data-slug="kompyuternyy-kovrik-s-podsvetkoy" class="card-read-link">
               Читать статью →
             </a>
@@ -2828,7 +2729,6 @@
           </h2>
           <p class="card-excerpt">Красивый кабель-менеджмент — это когда проводов не видно вообще или видны только те, что сделаны частью дизайна....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">97 запросов/мес</span>
             <a href="/journal?article=krasivyy-kabel-menedzhment" data-slug="krasivyy-kabel-menedzhment" class="card-read-link">
               Читать статью →
             </a>
@@ -2846,7 +2746,6 @@
           </h2>
           <p class="card-excerpt">В магазине компьютерных аксессуаров можно найти всё: от кабелей и мышей до подставок и ковриков. Выбор места покупки зависит от задач....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">96 запросов/мес</span>
             <a href="/journal?article=magazin-kompyuternyh-aksessuarov" data-slug="magazin-kompyuternyh-aksessuarov" class="card-read-link">
               Читать статью →
             </a>
@@ -2864,7 +2763,6 @@
           </h2>
           <p class="card-excerpt">Металлическая подставка для монитора выбирается за прочность и строгий вид. Сталь выдерживает большой вес, не прогибается и хорошо смот...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">95 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-metallicheskaya" data-slug="podstavka-dlya-monitora-metallicheskaya" class="card-read-link">
               Читать статью →
             </a>
@@ -2882,7 +2780,6 @@
           </h2>
           <p class="card-excerpt">Стол геймера должен быть большим, устойчивым и рассчитанным на долгие сессии....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">95 запросов/мес</span>
             <a href="/journal?article=organizatsiya-igrovogo-stola" data-slug="organizatsiya-igrovogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -2900,7 +2797,6 @@
           </h2>
           <p class="card-excerpt">Резиновый коврик — это чаще всего коврик с резиновой основой и тканевым верхом, реже — полностью резиновый....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">95 запросов/мес</span>
             <a href="/journal?article=rezinovyy-kompyuternyy-kovrik" data-slug="rezinovyy-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -2918,7 +2814,6 @@
           </h2>
           <p class="card-excerpt">Подставка с ящиком нравится тем, кто хочет спрятать мелочи: ручки, кабели, флешки, стикеры. Всё лежит в одном месте и не мешает работат...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">93 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-s-yashchikom" data-slug="podstavka-dlya-monitora-s-yashchikom" class="card-read-link">
               Читать статью →
             </a>
@@ -2936,7 +2831,6 @@
           </h2>
           <p class="card-excerpt">Подставка под монитор с местом для клавиатуры — классика организованного стола. После работы клавиатура уезжает под экран, и освобождае...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">93 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-i-klaviatury" data-slug="podstavka-dlya-monitora-i-klaviatury" class="card-read-link">
               Читать статью →
             </a>
@@ -2954,7 +2848,6 @@
           </h2>
           <p class="card-excerpt">Мыть компьютерный коврик нужно по-разному в зависимости от материала....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">91 запросов/мес</span>
             <a href="/journal?article=kak-myt-kompyuternyy-kovrik" data-slug="kak-myt-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -2972,7 +2865,6 @@
           </h2>
           <p class="card-excerpt">Компьютерный стол требует особого внимания к проводам и технике. Начните с системного блока: его лучше поставить на пол на подставку ил...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">89 запросов/мес</span>
             <a href="/journal?article=organizatsiya-kompyuternogo-stola" data-slug="organizatsiya-kompyuternogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -2990,7 +2882,6 @@
           </h2>
           <p class="card-excerpt">Белый коврик — выбор для светлых и минималистичных сетапов. Он хорошо сочетается с белым столом, белой техникой и светлым деревом....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">88 запросов/мес</span>
             <a href="/journal?article=belyy-kompyuternyy-kovrik" data-slug="belyy-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -3008,7 +2899,6 @@
           </h2>
           <p class="card-excerpt">«Универсальной» обычно называют подставку, которая подходит к большинству мониторов независимо от производителя....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">83 запросов/мес</span>
             <a href="/journal?article=universalnaya-podstavka-dlya-monitora" data-slug="universalnaya-podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3026,7 +2916,6 @@
           </h2>
           <p class="card-excerpt">Подставка с USB-портами превращает монитор в центр подключения: флешки, зарядка телефона и мышь подключаются спереди, а не за корпусом ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">80 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-s-usb" data-slug="podstavka-dlya-monitora-s-usb" class="card-read-link">
               Читать статью →
             </a>
@@ -3044,7 +2933,6 @@
           </h2>
           <p class="card-excerpt">Портативный монитор — тонкий экран на 13–17 дюймов, который подключается к ноутбуку по USB-C. Его берут в поездки и используют как втор...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">79 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-portativnogo-monitora" data-slug="podstavka-dlya-portativnogo-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3062,7 +2950,6 @@
           </h2>
           <p class="card-excerpt">Коврик с вырезом имеет выемку по краю — обычно под живот или под руки, чтобы было удобнее сидеть близко к столу....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">77 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-s-vyrezom" data-slug="kompyuternyy-kovrik-s-vyrezom" class="card-read-link">
               Читать статью →
             </a>
@@ -3080,7 +2967,6 @@
           </h2>
           <p class="card-excerpt">Органайзер в ящик стола превращает хаотичную «свалку» в систему. Каждая вещь получает своё отделение, и ящик открывается без раздражени...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">75 запросов/мес</span>
             <a href="/journal?article=organizatsiya-yashchika-stola" data-slug="organizatsiya-yashchika-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -3098,7 +2984,6 @@
           </h2>
           <p class="card-excerpt">Уборка и организация стола — разные вещи. Уборка возвращает порядок, организация делает так, чтобы беспорядок не возвращался....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">75 запросов/мес</span>
             <a href="/journal?article=uborka-i-organizatsiya-stola" data-slug="uborka-i-organizatsiya-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -3116,7 +3001,6 @@
           </h2>
           <p class="card-excerpt">Три монитора — сетап для трейдеров, программистов, видеомонтажёров и симрейсеров. Подставка под них должна быть широкой и жёсткой....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">72 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-treh-monitorov" data-slug="podstavka-dlya-treh-monitorov" class="card-read-link">
               Читать статью →
             </a>
@@ -3134,7 +3018,6 @@
           </h2>
           <p class="card-excerpt">Стандартная высота рабочего стола — 72–75 см. Она подходит людям ростом примерно 165–180 см....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">72 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-stola" data-slug="ergonomika-rabochego-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -3152,7 +3035,6 @@
           </h2>
           <p class="card-excerpt">Коврик на весь стол покрывает всю рабочую поверхность — от края до края. Это самый большой формат: 120×60, 140×60, 160×80 см и больше....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">71 запросов/мес</span>
             <a href="/journal?article=kovrik-na-ves-stol" data-slug="kovrik-na-ves-stol" class="card-read-link">
               Читать статью →
             </a>
@@ -3170,7 +3052,6 @@
           </h2>
           <p class="card-excerpt">Подсветка на подставке для монитора создаёт атмосферу и снижает нагрузку на глаза вечером. Мягкий свет позади экрана уменьшает контраст...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">69 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-s-podsvetkoy" data-slug="podstavka-dlya-monitora-s-podsvetkoy" class="card-read-link">
               Читать статью →
             </a>
@@ -3188,7 +3069,6 @@
           </h2>
           <p class="card-excerpt">Подставку для монитора называют по-разному, и от названия зависит, что вы найдёте в поиске....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">67 запросов/мес</span>
             <a href="/journal?article=kak-nazyvaetsya-podstavka-dlya-monitora" data-slug="kak-nazyvaetsya-podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3206,7 +3086,6 @@
           </h2>
           <p class="card-excerpt">Угловая подставка предназначена для углового стола или для угла комнаты, где монитор ставится по диагонали....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">66 запросов/мес</span>
             <a href="/journal?article=uglovaya-podstavka-dlya-monitora" data-slug="uglovaya-podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3224,7 +3103,6 @@
           </h2>
           <p class="card-excerpt">Оператор ПК проводит за компьютером большую часть рабочего дня, поэтому эргономика его места особенно важна....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">66 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-operatora" data-slug="ergonomika-rabochego-mesta-operatora" class="card-read-link">
               Читать статью →
             </a>
@@ -3242,7 +3120,6 @@
           </h2>
           <p class="card-excerpt">Размеры подставки для монитора подбираются по трём параметрам....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">64 запросов/мес</span>
             <a href="/journal?article=razmery-podstavki-dlya-monitora" data-slug="razmery-podstavki-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3260,7 +3137,6 @@
           </h2>
           <p class="card-excerpt">Деревянная подставка под монитор — самый популярный вариант для домашнего кабинета. Дерево не бликует, приятно на ощупь и хорошо сочета...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">63 запросов/мес</span>
             <a href="/journal?article=derevyannaya-podstavka-dlya-monitora" data-slug="derevyannaya-podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3278,7 +3154,6 @@
           </h2>
           <p class="card-excerpt">Компьютерные коврики различаются по материалу, размеру и назначению....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">62 запросов/мес</span>
             <a href="/journal?article=vidy-kompyuternyh-kovrikov" data-slug="vidy-kompyuternyh-kovrikov" class="card-read-link">
               Читать статью →
             </a>
@@ -3296,7 +3171,6 @@
           </h2>
           <p class="card-excerpt">Материал коврика определяет скольжение мыши, ощущения рук, уход и срок службы....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">62 запросов/мес</span>
             <a href="/journal?article=material-dlya-kompyuternogo-kovrika" data-slug="material-dlya-kompyuternogo-kovrika" class="card-read-link">
               Читать статью →
             </a>
@@ -3314,7 +3188,6 @@
           </h2>
           <p class="card-excerpt">Коврик под клавиатуру гасит звук нажатий, защищает стол от царапин и не даёт клавиатуре ездить....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">62 запросов/мес</span>
             <a href="/journal?article=kovrik-dlya-klaviatury-i-myshi" data-slug="kovrik-dlya-klaviatury-i-myshi" class="card-read-link">
               Читать статью →
             </a>
@@ -3332,7 +3205,6 @@
           </h2>
           <p class="card-excerpt">Стяжки для проводов собирают кабели в пучки и не дают им разбегаться....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">58 запросов/мес</span>
             <a href="/journal?article=styazhki-dlya-kabel-menedzhmenta" data-slug="styazhki-dlya-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -3350,7 +3222,6 @@
           </h2>
           <p class="card-excerpt">Поворотная подставка позволяет разворачивать монитор влево и вправо без того, чтобы двигать всю конструкцию. Это удобно, когда нужно по...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">57 запросов/мес</span>
             <a href="/journal?article=povorotnaya-podstavka-dlya-monitora" data-slug="povorotnaya-podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3368,7 +3239,6 @@
           </h2>
           <p class="card-excerpt">Прежде чем покупать кабельный органайзер, определите задачу. Решений много, и каждое закрывает свою часть проблемы....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">56 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-kupit" data-slug="kabel-menedzhment-kupit" class="card-read-link">
               Читать статью →
             </a>
@@ -3386,7 +3256,6 @@
           </h2>
           <p class="card-excerpt">Регулярная чистка коврика сохраняет его вид и скольжение мыши....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">55 запросов/мес</span>
             <a href="/journal?article=kak-pochistit-kompyuternyy-kovrik" data-slug="kak-pochistit-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -3404,7 +3273,6 @@
           </h2>
           <p class="card-excerpt">Складная подставка разбирается или складывается в плоскую форму. Её выбирают для переездов, съёмного жилья и тех, кто работает в разных...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">53 запросов/мес</span>
             <a href="/journal?article=skladnaya-podstavka-dlya-monitora" data-slug="skladnaya-podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3422,7 +3290,6 @@
           </h2>
           <p class="card-excerpt">Лоток для проводов под столом — главный элемент кабель-менеджмента. В него убирают удлинитель, блоки питания и излишки кабелей....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">53 запросов/мес</span>
             <a href="/journal?article=organayzer-dlya-kabel-menedzhmenta" data-slug="organayzer-dlya-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -3440,7 +3307,6 @@
           </h2>
           <p class="card-excerpt">Угловой коврик предназначен для углового стола. Он повторяет Г-образную форму столешницы и покрывает обе рабочие зоны....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">50 запросов/мес</span>
             <a href="/journal?article=uglovoy-kompyuternyy-kovrik" data-slug="uglovoy-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -3458,7 +3324,6 @@
           </h2>
           <p class="card-excerpt">Подставка с органайзером объединяет два предмета в одном: подъём экрана и хранение мелочей. Ручки, стикеры, телефон, наушники оказывают...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">49 запросов/мес</span>
             <a href="/journal?article=podstavka-organayzer-dlya-monitora" data-slug="podstavka-organayzer-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3476,7 +3341,6 @@
           </h2>
           <p class="card-excerpt">Маленькие мониторы на 7–13 дюймов используют как дополнительный экран: для мониторинга системы, чатов, управления стримом, системных да...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">49 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-malenkogo-monitora" data-slug="podstavka-dlya-malenkogo-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3494,7 +3358,6 @@
           </h2>
           <p class="card-excerpt">Вертикальный монитор — экран, повёрнутый на 90 градусов в портретную ориентацию. Он идеален для кода, длинных документов, лент соцсетей...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">49 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-vertikalnogo-monitora" data-slug="podstavka-dlya-vertikalnogo-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3512,7 +3375,6 @@
           </h2>
           <p class="card-excerpt">Сборка подставки для монитора обычно занимает 10–30 минут. Общие правила помогут избежать ошибок....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">48 запросов/мес</span>
             <a href="/journal?article=kak-sobrat-podstavku-dlya-monitora" data-slug="kak-sobrat-podstavku-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -3530,7 +3392,6 @@
           </h2>
           <p class="card-excerpt">В ИКЕА продаются простые компьютерные коврики и настольные подложки. Их выбирают за доступную цену и нейтральный дизайн....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">47 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-ikea" data-slug="kompyuternyy-kovrik-ikea" class="card-read-link">
               Читать статью →
             </a>
@@ -3548,7 +3409,6 @@
           </h2>
           <p class="card-excerpt">Кабель-менеджмент без сверления подходит для арендованных квартир и дорогой мебели....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">46 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-rabochego-mesta" data-slug="kabel-menedzhment-rabochego-mesta" class="card-read-link">
               Читать статью →
             </a>
@@ -3566,7 +3426,6 @@
           </h2>
           <p class="card-excerpt">Безопасность и эргономика рабочего места тесно связаны. Неправильно организованное место не только утомляет, но и создаёт риски....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">45 запросов/мес</span>
             <a href="/journal?article=bezopasnost-i-ergonomika-rabochego-mesta" data-slug="bezopasnost-i-ergonomika-rabochego-mesta" class="card-read-link">
               Читать статью →
             </a>
@@ -3584,7 +3443,6 @@
           </h2>
           <p class="card-excerpt">Организация рабочего места дома начинается с выбора зоны. Желательно отдельный стол, где вы только работаете: так мозгу проще переключа...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">42 запросов/мес</span>
             <a href="/journal?article=organizatsiya-rabochego-stola-doma" data-slug="organizatsiya-rabochego-stola-doma" class="card-read-link">
               Читать статью →
             </a>
@@ -3602,7 +3460,6 @@
           </h2>
           <p class="card-excerpt">Отмыть сильно загрязнённый коврик можно, если действовать аккуратно....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">42 запросов/мес</span>
             <a href="/journal?article=kak-otmyt-kompyuternyy-kovrik" data-slug="kak-otmyt-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -3620,7 +3477,6 @@
           </h2>
           <p class="card-excerpt">Домашний кабинет — отдельная комната для работы. Это роскошь, но и ответственность: пространство нужно организовать так, чтобы в нём хо...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">41 запросов/мес</span>
             <a href="/journal?article=organizatsiya-rabochego-stola-v-kabinete" data-slug="organizatsiya-rabochego-stola-v-kabinete" class="card-read-link">
               Читать статью →
             </a>
@@ -3638,7 +3494,6 @@
           </h2>
           <p class="card-excerpt">Стоимость кабель-менеджмента зависит от того, делаете вы его сами или заказываете услугу....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">40 запросов/мес</span>
             <a href="/journal?article=skolko-stoit-kabel-menedzhment" data-slug="skolko-stoit-kabel-menedzhment" class="card-read-link">
               Читать статью →
             </a>
@@ -3656,7 +3511,6 @@
           </h2>
           <p class="card-excerpt">Как выглядит рабочее место без кабель-менеджмента, знает каждый: клубок проводов под столом, удлинитель на полу, кабели зарядки, свисаю...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">39 запросов/мес</span>
             <a href="/journal?article=bez-kabel-menedzhmenta" data-slug="bez-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -3674,7 +3528,6 @@
           </h2>
           <p class="card-excerpt">Компьютерный коврик называют по-разному, и от названия зависит, что вы найдёте в поиске....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">37 запросов/мес</span>
             <a href="/journal?article=kak-nazyvaetsya-kompyuternyy-kovrik" data-slug="kak-nazyvaetsya-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -3692,7 +3545,6 @@
           </h2>
           <p class="card-excerpt">Стол подростка — место для учёбы, игр, творчества и общения. Организация должна учитывать все эти задачи и при этом оставлять подростку...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">36 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-podrostka" data-slug="organizatsiya-stola-podrostka" class="card-read-link">
               Читать статью →
             </a>
@@ -3710,7 +3562,6 @@
           </h2>
           <p class="card-excerpt">Держатель для проводов на столе фиксирует кабели зарядки и подключения на одном месте. Это решает проблему проводов, которые соскальзыв...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">36 запросов/мес</span>
             <a href="/journal?article=krepleniya-dlya-kabel-menedzhmenta" data-slug="krepleniya-dlya-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -3728,7 +3579,6 @@
           </h2>
           <p class="card-excerpt">Белый кабель-менеджмент — для белых столов, светлых стен и минималистичных сетапов. Чёрные кабели и крепления на белом фоне бросаются в...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">33 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-belyy" data-slug="kabel-menedzhment-belyy" class="card-read-link">
               Читать статью →
             </a>
@@ -3746,7 +3596,6 @@
           </h2>
           <p class="card-excerpt">Улучшать рабочее место удобно поэтапно, от главного к мелочам....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">33 запросов/мес</span>
             <a href="/journal?article=uluchshenie-ergonomiki-rabochih-mest" data-slug="uluchshenie-ergonomiki-rabochih-mest" class="card-read-link">
               Читать статью →
             </a>
@@ -3764,7 +3613,6 @@
           </h2>
           <p class="card-excerpt">Аксессуары для игрового стола помогают играть комфортнее и держать сетап в порядке....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">33 запросов/мес</span>
             <a href="/journal?article=aksessuary-dlya-kompyuternogo-stola-dlya-geymerov" data-slug="aksessuary-dlya-kompyuternogo-stola-dlya-geymerov" class="card-read-link">
               Читать статью →
             </a>
@@ -3782,7 +3630,6 @@
           </h2>
           <p class="card-excerpt">Несколько примеров кабель-менеджмента для разных рабочих мест....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">32 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-primery" data-slug="kabel-menedzhment-primery" class="card-read-link">
               Читать статью →
             </a>
@@ -3800,7 +3647,6 @@
           </h2>
           <p class="card-excerpt">Коврик 1200×600 мм — один из самых больших форматов. Он покрывает почти всю рабочую зону стандартного стола....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">32 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-1200h600" data-slug="kompyuternyy-kovrik-1200h600" class="card-read-link">
               Читать статью →
             </a>
@@ -3818,7 +3664,6 @@
           </h2>
           <p class="card-excerpt">Сделать подставку для монитора своими руками реально за выходные. Понадобится доска или лист фанеры толщиной от 18 мм, две опоры и шлиф...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">29 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-svoimi-rukami" data-slug="podstavka-dlya-monitora-svoimi-rukami" class="card-read-link">
               Читать статью →
             </a>
@@ -3836,7 +3681,6 @@
           </h2>
           <p class="card-excerpt">ЛДСП — ламинированная древесно-стружечная плита. Это самый распространённый материал для недорогой мебели, в том числе подставок под мо...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">29 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-ldsp" data-slug="podstavka-dlya-monitora-ldsp" class="card-read-link">
               Читать статью →
             </a>
@@ -3854,7 +3698,6 @@
           </h2>
           <p class="card-excerpt">Работа за компьютером может вредить здоровью, но большинство негативных эффектов связано не с самим компьютером, а с неправильной орган...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">29 запросов/мес</span>
             <a href="/journal?article=vred-kompyutera-i-ergonomika-rabochego-mesta" data-slug="vred-kompyutera-i-ergonomika-rabochego-mesta" class="card-read-link">
               Читать статью →
             </a>
@@ -3872,7 +3715,6 @@
           </h2>
           <p class="card-excerpt">Стяжки-липучки — главный инструмент кабель-менеджмента. Это полоски ленты с крючками с одной стороны и петлями с другой....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">28 запросов/мес</span>
             <a href="/journal?article=lipuchki-dlya-kabel-menedzhmenta" data-slug="lipuchki-dlya-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -3890,7 +3732,6 @@
           </h2>
           <p class="card-excerpt">Эргономика в офисе — это ответственность работодателя и возможность сотрудника настроить место под себя....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">28 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-v-ofise" data-slug="ergonomika-rabochego-mesta-v-ofise" class="card-read-link">
               Читать статью →
             </a>
@@ -3908,7 +3749,6 @@
           </h2>
           <p class="card-excerpt">Подставка под монитор для офиса должна быть прочной, нейтральной по дизайну и удобной для любого сотрудника....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">27 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-ofisnyh-monitorov" data-slug="podstavka-dlya-ofisnyh-monitorov" class="card-read-link">
               Читать статью →
             </a>
@@ -3926,7 +3766,6 @@
           </h2>
           <p class="card-excerpt">Готовый набор для кабель-менеджмента экономит время: всё необходимое в одной коробке....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">27 запросов/мес</span>
             <a href="/journal?article=nabor-dlya-kabel-menedzhmenta" data-slug="nabor-dlya-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -3944,7 +3783,6 @@
           </h2>
           <p class="card-excerpt">Полка для колонок поднимает их с поверхности стола до уровня ушей и освобождает место....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">25 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-i-kolonok" data-slug="podstavka-dlya-monitora-i-kolonok" class="card-read-link">
               Читать статью →
             </a>
@@ -3962,7 +3800,6 @@
           </h2>
           <p class="card-excerpt">Кабель-менеджмент кажется мелочью, пока не попробуешь работать за столом без видимых проводов. Разница ощущается сразу....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">25 запросов/мес</span>
             <a href="/journal?article=dlya-chego-nuzhen-kabel-menedzhment" data-slug="dlya-chego-nuzhen-kabel-menedzhment" class="card-read-link">
               Читать статью →
             </a>
@@ -3980,7 +3817,6 @@
           </h2>
           <p class="card-excerpt">Организация стола первоклассника — это первый опыт собственного рабочего места. От него зависят привычки на годы вперёд....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">24 запросов/мес</span>
             <a href="/journal?article=organizatsiya-stola-pervoklassnika" data-slug="organizatsiya-stola-pervoklassnika" class="card-read-link">
               Читать статью →
             </a>
@@ -3998,7 +3834,6 @@
           </h2>
           <p class="card-excerpt">Убрать провода на рабочем столе можно за один вечер. План простой....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">24 запросов/мес</span>
             <a href="/journal?article=organizatsiya-provodov-na-stole" data-slug="organizatsiya-provodov-na-stole" class="card-read-link">
               Читать статью →
             </a>
@@ -4016,7 +3851,6 @@
           </h2>
           <p class="card-excerpt">Коврик с горячими клавишами — коврик с напечатанными комбинациями клавиш для программ: Photoshop, Excel, Windows, macOS, IDE, игр....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">24 запросов/мес</span>
             <a href="/journal?article=kovrik-s-goryachimi-klavishami" data-slug="kovrik-s-goryachimi-klavishami" class="card-read-link">
               Читать статью →
             </a>
@@ -4034,7 +3868,6 @@
           </h2>
           <p class="card-excerpt">Дома провода есть не только на рабочем столе: у телевизора, у кровати, на кухне. Принципы кабель-менеджмента одинаковы везде....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">23 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-doma" data-slug="kabel-menedzhment-doma" class="card-read-link">
               Читать статью →
             </a>
@@ -4052,7 +3885,6 @@
           </h2>
           <p class="card-excerpt">Запах от нового коврика — частая жалоба. Его источник — резиновая основа и клей....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">23 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-bez-zapaha" data-slug="kompyuternyy-kovrik-bez-zapaha" class="card-read-link">
               Читать статью →
             </a>
@@ -4070,7 +3902,6 @@
           </h2>
           <p class="card-excerpt">Войлочный коврик на стол — мягкий, тёплый и приятный на ощупь. Он хорошо гасит звуки клавиатуры и мыши....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">23 запросов/мес</span>
             <a href="/journal?article=voylochnyy-kovrik-dlya-kompyuternogo-stola" data-slug="voylochnyy-kovrik-dlya-kompyuternogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -4088,7 +3919,6 @@
           </h2>
           <p class="card-excerpt">Эргономика рабочего места школьника важна вдвойне: осанка и зрение формируются в детском возрасте....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">23 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-shkolnika" data-slug="ergonomika-rabochego-mesta-shkolnika" class="card-read-link">
               Читать статью →
             </a>
@@ -4106,7 +3936,6 @@
           </h2>
           <p class="card-excerpt">Лента для кабель-менеджмента — рулон липучки, который отрезают кусками нужной длины. Это универсальная замена отдельным стяжкам....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">22 запросов/мес</span>
             <a href="/journal?article=lenta-dlya-kabel-menedzhmenta" data-slug="lenta-dlya-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -4124,7 +3953,6 @@
           </h2>
           <p class="card-excerpt">В офисе кабель-менеджмент — это не только аккуратный вид, но и безопасность. Провода на полу в проходах — риск споткнуться, а перегруже...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">22 запросов/мес</span>
             <a href="/journal?article=kabel-menedzhment-v-ofise" data-slug="kabel-menedzhment-v-ofise" class="card-read-link">
               Читать статью →
             </a>
@@ -4142,7 +3970,6 @@
           </h2>
           <p class="card-excerpt">Защитный коврик для стола бережёт столешницу от царапин, пятен и потёртостей. Особенно это важно для дорогих столов из массива и шпона....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">22 запросов/мес</span>
             <a href="/journal?article=dlya-chego-nuzhen-kompyuternyy-kovrik" data-slug="dlya-chego-nuzhen-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -4160,7 +3987,6 @@
           </h2>
           <p class="card-excerpt">Если коврика нет под рукой, его можно временно заменить....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">22 запросов/мес</span>
             <a href="/journal?article=chem-zamenit-kompyuternyy-kovrik" data-slug="chem-zamenit-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -4178,7 +4004,6 @@
           </h2>
           <p class="card-excerpt">Коврик 140×60 см — один из самых больших стандартных размеров. Он рассчитан на широкие столы от 140 см....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">19 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-140h60" data-slug="kompyuternyy-kovrik-140h60" class="card-read-link">
               Читать статью →
             </a>
@@ -4196,7 +4021,6 @@
           </h2>
           <p class="card-excerpt">Оплётка для проводов собирает несколько кабелей в одну аккуратную трубку. Это выглядит чище, чем пучок, стянутый хомутами....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">17 запросов/мес</span>
             <a href="/journal?article=opletka-dlya-kabel-menedzhmenta" data-slug="opletka-dlya-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -4214,7 +4038,6 @@
           </h2>
           <p class="card-excerpt">Подставка для монитора с держателем телефона объединяет два предмета. Телефон стоит рядом с экраном, на уровне глаз, и не занимает мест...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">16 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-telefona-na-monitor" data-slug="podstavka-dlya-telefona-na-monitor" class="card-read-link">
               Читать статью →
             </a>
@@ -4232,7 +4055,6 @@
           </h2>
           <p class="card-excerpt">Многие начинают поиск подставки с ИКЕА: там есть простые и недорогие модели из бамбука и пластика. Они решают базовую задачу — поднять ...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">16 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-ikea" data-slug="podstavka-dlya-monitora-ikea" class="card-read-link">
               Читать статью →
             </a>
@@ -4250,7 +4072,6 @@
           </h2>
           <p class="card-excerpt">Коврик, который ездит по столу при каждом движении мыши, раздражает быстрее всего. Нескользящая основа решает эту проблему....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">16 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-skolzit" data-slug="kompyuternyy-kovrik-skolzit" class="card-read-link">
               Читать статью →
             </a>
@@ -4268,7 +4089,6 @@
           </h2>
           <p class="card-excerpt">Эргономика рабочего места простыми словами — это когда стол, кресло и техника подстроены под вас, а не вы под них....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">16 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-prostymi-slovami" data-slug="ergonomika-rabochego-mesta-prostymi-slovami" class="card-read-link">
               Читать статью →
             </a>
@@ -4286,7 +4106,6 @@
           </h2>
           <p class="card-excerpt">Красивый коврик делает рабочее место цельным. Он — основа композиции стола....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">15 запросов/мес</span>
             <a href="/journal?article=krasivyy-kovrik-dlya-kompyuternogo-stola" data-slug="krasivyy-kovrik-dlya-kompyuternogo-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -4304,7 +4123,6 @@
           </h2>
           <p class="card-excerpt">Коврик из эко-кожи выглядит солидно и легко чистится. Пролитый кофе вытирается влажной салфеткой....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">15 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-iz-ekokozhi" data-slug="kompyuternyy-kovrik-iz-ekokozhi" class="card-read-link">
               Читать статью →
             </a>
@@ -4322,7 +4140,6 @@
           </h2>
           <p class="card-excerpt">Гофра — гибкая ребристая трубка, через которую прокладывают кабели. Она защищает провода и собирает их в одну линию....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">14 запросов/мес</span>
             <a href="/journal?article=gofra-dlya-kabel-menedzhmenta" data-slug="gofra-dlya-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -4340,7 +4157,6 @@
           </h2>
           <p class="card-excerpt">Наклонная подставка позволяет изменить угол экрана относительно вертикали. Правильный наклон убирает блики и делает изображение более ч...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">13 запросов/мес</span>
             <a href="/journal?article=naklonnaya-podstavka-dlya-monitora" data-slug="naklonnaya-podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -4358,7 +4174,6 @@
           </h2>
           <p class="card-excerpt">Премиальная подставка под монитор отличается от бюджетной не ценой, а деталями....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">12 запросов/мес</span>
             <a href="/journal?article=premium-podstavki-dlya-monitorov" data-slug="premium-podstavki-dlya-monitorov" class="card-read-link">
               Читать статью →
             </a>
@@ -4376,7 +4191,6 @@
           </h2>
           <p class="card-excerpt">Подставки для монитора делятся на несколько видов....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">12 запросов/мес</span>
             <a href="/journal?article=vidy-podstavok-dlya-monitora" data-slug="vidy-podstavok-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -4394,7 +4208,6 @@
           </h2>
           <p class="card-excerpt">Прокладка кабелей под столом начинается с плана. Нарисуйте, откуда идут кабели, куда уходят и где стоит розетка....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">12 запросов/мес</span>
             <a href="/journal?article=organizatsiya-provodov-pod-stolom" data-slug="organizatsiya-provodov-pod-stolom" class="card-read-link">
               Читать статью →
             </a>
@@ -4412,7 +4225,6 @@
           </h2>
           <p class="card-excerpt">Клипсы — маленькие держатели, которые фиксируют кабель в нужном месте. Их используют на краю стола, под столешницей, на стене и на задн...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">12 запросов/мес</span>
             <a href="/journal?article=klipsy-dlya-kabel-menedzhmenta" data-slug="klipsy-dlya-kabel-menedzhmenta" class="card-read-link">
               Читать статью →
             </a>
@@ -4430,7 +4242,6 @@
           </h2>
           <p class="card-excerpt">Коврик с подогревом греет руки и запястья, когда в комнате прохладно. Он работает от USB-порта или от сети через адаптер....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">12 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-s-podogrevom" data-slug="kompyuternyy-kovrik-s-podogrevom" class="card-read-link">
               Читать статью →
             </a>
@@ -4448,7 +4259,6 @@
           </h2>
           <p class="card-excerpt">Коврик с прозрачным верхом — настольная подложка, у которой сверху прозрачный слой. Под него можно положить календарь, фото, заметки, ш...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">12 запросов/мес</span>
             <a href="/journal?article=kovrik-na-stol-s-prozrachnym-verhom" data-slug="kovrik-na-stol-s-prozrachnym-verhom" class="card-read-link">
               Читать статью →
             </a>
@@ -4466,7 +4276,6 @@
           </h2>
           <p class="card-excerpt">Стол юриста — это много документов, много текста и высокая цена ошибки. Организация должна обеспечивать быстрый доступ к материалам и з...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">12 запросов/мес</span>
             <a href="/journal?article=organizatsiya-rabochego-stola-yurista" data-slug="organizatsiya-rabochego-stola-yurista" class="card-read-link">
               Читать статью →
             </a>
@@ -4484,7 +4293,6 @@
           </h2>
           <p class="card-excerpt">Подставка под монитор решает три задачи....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">11 запросов/мес</span>
             <a href="/journal?article=dlya-chego-nuzhna-podstavka-pod-monitor" data-slug="dlya-chego-nuzhna-podstavka-pod-monitor" class="card-read-link">
               Читать статью →
             </a>
@@ -4502,7 +4310,6 @@
           </h2>
           <p class="card-excerpt">Мониторы на 49 дюймов — сверхширокие экраны с соотношением 32:9, по сути два 27-дюймовых монитора без рамки посередине. Ширина такого э...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">11 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-monitora-49-dyuymov" data-slug="podstavka-dlya-monitora-49-dyuymov" class="card-read-link">
               Читать статью →
             </a>
@@ -4520,7 +4327,6 @@
           </h2>
           <p class="card-excerpt">Графический монитор, или монитор-планшет, — экран, на котором можно рисовать стилусом. Им пользуются иллюстраторы, дизайнеры и 3D-худож...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">11 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-graficheskogo-monitora" data-slug="podstavka-dlya-graficheskogo-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -4538,7 +4344,6 @@
           </h2>
           <p class="card-excerpt">Дома эргономика часто страдает: работа ведётся за кухонным столом, на диване, в кровати. Для коротких сессий это нормально, для полного...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">11 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-doma" data-slug="ergonomika-rabochego-mesta-doma" class="card-read-link">
               Читать статью →
             </a>
@@ -4556,7 +4361,6 @@
           </h2>
           <p class="card-excerpt">Низкая подставка — высотой 5–8 см — нужна, когда монитор нужно поднять совсем немного....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">10 запросов/мес</span>
             <a href="/journal?article=nizkaya-podstavka-dlya-monitora" data-slug="nizkaya-podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -4574,7 +4378,6 @@
           </h2>
           <p class="card-excerpt">Настольный органайзер для канцелярии собирает ручки, карандаши, ножницы и стикеры в одном месте. Это самый быстрый способ убрать мелкий...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">10 запросов/мес</span>
             <a href="/journal?article=organizatsiya-kantselyarii-na-rabochem-stole" data-slug="organizatsiya-kantselyarii-na-rabochem-stole" class="card-read-link">
               Читать статью →
             </a>
@@ -4592,7 +4395,6 @@
           </h2>
           <p class="card-excerpt">Маленький коврик — от 25×30 до 50×30 см — предназначен только для мыши или для мыши с зоной под запястье....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">10 запросов/мес</span>
             <a href="/journal?article=malenkiy-kompyuternyy-kovrik" data-slug="malenkiy-kompyuternyy-kovrik" class="card-read-link">
               Читать статью →
             </a>
@@ -4610,7 +4412,6 @@
           </h2>
           <p class="card-excerpt">Коврик 80×40 см — средний размер, популярный для компактных сетапов....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">9 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-80h40" data-slug="kompyuternyy-kovrik-80h40" class="card-read-link">
               Читать статью →
             </a>
@@ -4628,7 +4429,6 @@
           </h2>
           <p class="card-excerpt">Большинство рабочих мест по умолчанию настраиваются под правшей. Левшам приходится переставлять всё под себя....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">9 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-dlya-pravshi-i-levshi" data-slug="ergonomika-rabochego-mesta-dlya-pravshi-i-levshi" class="card-read-link">
               Читать статью →
             </a>
@@ -4646,7 +4446,6 @@
           </h2>
           <p class="card-excerpt">Коврик длиной 150 см — экстра-большой формат для широких столов от 150–160 см....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">8 запросов/мес</span>
             <a href="/journal?article=kompyuternyy-kovrik-150-sm" data-slug="kompyuternyy-kovrik-150-sm" class="card-read-link">
               Читать статью →
             </a>
@@ -4664,7 +4463,6 @@
           </h2>
           <p class="card-excerpt">Рынок аксессуаров для рабочего места быстро меняется. Несколько направлений, которые заметны в последние годы....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">8 запросов/мес</span>
             <a href="/journal?article=novinki-kompyuternyh-aksessuarov" data-slug="novinki-kompyuternyh-aksessuarov" class="card-read-link">
               Читать статью →
             </a>
@@ -4682,7 +4480,6 @@
           </h2>
           <p class="card-excerpt">Штатная подставка — ножка, которая идёт в комплекте с монитором. Её качество сильно различается у разных моделей....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">8 запросов/мес</span>
             <a href="/journal?article=shtatnaya-podstavka-dlya-monitora" data-slug="shtatnaya-podstavka-dlya-monitora" class="card-read-link">
               Читать статью →
             </a>
@@ -4700,7 +4497,6 @@
           </h2>
           <p class="card-excerpt">Подставка для бумаг под монитор — это держатель документов, который ставится между клавиатурой и экраном или сбоку от монитора....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">7 запросов/мес</span>
             <a href="/journal?article=podstavka-dlya-bumag-pod-monitor" data-slug="podstavka-dlya-bumag-pod-monitor" class="card-read-link">
               Читать статью →
             </a>
@@ -4718,7 +4514,6 @@
           </h2>
           <p class="card-excerpt">Премиальный коврик отличается материалом, обработкой и долговечностью....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">7 запросов/мес</span>
             <a href="/journal?article=premialnye-kompyuternye-kovriki" data-slug="premialnye-kompyuternye-kovriki" class="card-read-link">
               Читать статью →
             </a>
@@ -4736,7 +4531,6 @@
           </h2>
           <p class="card-excerpt">Ортопедический коврик для мыши — коврик с мягкой подушкой под запястье. Подушка поддерживает руку и снижает нагрузку на запястный суста...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">7 запросов/мес</span>
             <a href="/journal?article=ortopedicheskiy-kovrik-dlya-myshi" data-slug="ortopedicheskiy-kovrik-dlya-myshi" class="card-read-link">
               Читать статью →
             </a>
@@ -4754,7 +4548,6 @@
           </h2>
           <p class="card-excerpt">Дизайнер работает с визуальной информацией много часов подряд, и эргономика его рабочего места влияет и на здоровье, и на качество рабо...</p>
           <div class="card-bottom-row">
-            <span class="card-stat">7 запросов/мес</span>
             <a href="/journal?article=ergonomika-rabochego-mesta-dizaynera" data-slug="ergonomika-rabochego-mesta-dizaynera" class="card-read-link">
               Читать статью →
             </a>
@@ -4772,7 +4565,6 @@
           </h2>
           <p class="card-excerpt">Несколько недорогих вещей, которые заметно меняют рабочий стол....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">5 запросов/мес</span>
             <a href="/journal?article=poleznye-veshchi-dlya-organizatsii-stola" data-slug="poleznye-veshchi-dlya-organizatsii-stola" class="card-read-link">
               Читать статью →
             </a>
@@ -4790,7 +4582,6 @@
           </h2>
           <p class="card-excerpt">Коврик-органайзер — настольный коврик с карманами, отделениями или встроенными держателями. Он совмещает функции коврика и органайзера....</p>
           <div class="card-bottom-row">
-            <span class="card-stat">5 запросов/мес</span>
             <a href="/journal?article=kovrik-organayzer-dlya-kompyuternogo-stola" data-slug="kovrik-organayzer-dlya-kompyuternogo-stola" class="card-read-link">
               Читать статью →
             </a>
