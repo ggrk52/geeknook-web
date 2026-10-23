@@ -6,14 +6,40 @@
  * Credentials are read dynamically from cdek-config.php or environment variables.
  */
 
-// Allow cross-origin requests from frontends
-header('Access-Control-Allow-Origin: *');
+// Allow cross-origin requests from frontends (Strict Whitelist)
+$allowedOrigins = [
+    'https://geeknook.ru',
+    'https://www.geeknook.ru',
+    'http://geeknook.ru',
+    'http://www.geeknook.ru',
+    'https://ggrk52.github.io'
+];
+
+$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+if (!empty($origin)) {
+    $parsedHost = parse_url($origin, PHP_URL_HOST);
+    $isLocal = in_array($parsedHost, ['localhost', '127.0.0.1'], true);
+    $isTilda = $parsedHost && preg_match('/\.tilda\.(ws|cc)$/i', $parsedHost);
+    if (in_array($origin, $allowedOrigins, true) || $isLocal || $isTilda) {
+        header('Access-Control-Allow-Origin: ' . $origin);
+        header('Vary: Origin');
+    } else {
+        http_response_code(403);
+        header('Content-Type: application/json; charset=utf-8');
+        echo json_encode(['success' => false, 'error' => 'Forbidden: Origin not allowed']);
+        exit;
+    }
+} else {
+    header('Access-Control-Allow-Origin: https://geeknook.ru');
+}
+
 header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Max-Age: 86400');
 header('Content-Type: application/json; charset=utf-8');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(200);
+    http_response_code(204);
     exit;
 }
 
