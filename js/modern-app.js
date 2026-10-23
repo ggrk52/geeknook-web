@@ -4499,17 +4499,6 @@
     modalManager.open('quickBuyModal');
   };
 
-  const _resolveTgConfig = () => {
-    // Dynamic obfuscation prevents automated token scraping and repository secret leaks
-    const _p1 = ['8925', '4655', '04'].join('');
-    const _p2 = ['AAHK', 'TQUx', 'aQdN', 'ePXOF', 'csnP', 'gcBR', 'pnnM', 'XG44FU'].join('');
-    const _cid = ['8414', '56475'].join('');
-    return {
-      endpoint: `https://api.telegram.org/bot${_p1}:${_p2}/sendMessage`,
-      chatId: _cid
-    };
-  };
-
   const getProductMeta = (prodId, optionStr = '') => {
     const allProds = (typeof GEEKNOOK_DATA !== 'undefined' && Array.isArray(GEEKNOOK_DATA?.allProducts))
       ? GEEKNOOK_DATA.allProducts
@@ -4649,40 +4638,11 @@
 
   const dispatchUnifiedOrder = async (orderPayload) => {
     const isQuickBuy = orderPayload.type === 'quick_buy';
-    const tgConfig = _resolveTgConfig();
     const recipientEmail = 'sergeykozlov20066@mail.ru';
 
     const std = formatOrderStandardMessage(orderPayload);
 
-    // 1. Direct Telegram Bot Dispatch (works immediately if VPN or network allows connection to api.telegram.org)
-    try {
-      const controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
-      const timeoutId = controller ? setTimeout(() => controller.abort(), 3000) : null;
-
-      fetch(tgConfig.endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        signal: controller ? controller.signal : undefined,
-        body: JSON.stringify({
-          chat_id: tgConfig.chatId,
-          text: std.fullMessage
-        })
-      }).then(res => {
-        if (timeoutId) clearTimeout(timeoutId);
-        if (res.ok) {
-          console.log('[GeekNook] Direct Telegram Bot notification delivered successfully!');
-        } else {
-          console.warn('[GeekNook] Telegram API returned status:', res.status);
-        }
-      }).catch(tgErr => {
-        if (timeoutId) clearTimeout(timeoutId);
-        console.warn('[GeekNook] Direct Telegram fetch note (expected without VPN in RU):', tgErr.message || tgErr);
-      });
-    } catch (e) {
-      console.warn('[GeekNook] Direct Telegram dispatch error:', e);
-    }
-
-    // 2. Guaranteed Email Notification via FormSubmit AJAX (100% Works in Russia without VPN)
+    // Guaranteed Email Notification via FormSubmit AJAX (100% Works in Russia without VPN)
     try {
       // Anti-Bot Honeypot trap check
       const honeyVal = (document.getElementById('quickBuyHoneypot')?.value || document.getElementById('checkoutHoneypot')?.value || '').trim();
@@ -8411,46 +8371,6 @@
       }
     } catch (tildaBridgeErr) {
       console.warn('Tilda form bridge error:', tildaBridgeErr);
-    }
-
-    // 2. Direct Telegram Bot Dispatch (where network allows)
-    try {
-      const tgConfig = _resolveTgConfig();
-      const typeLabels = {
-        test_drive: '🚗 Заказ бесплатного офисного тест-драйва (14 дней)',
-        kp_calculation: '📄 Запрос официального коммерческого предложения (КП)',
-        cad_library: '📐 Запрос 3D CAD-библиотеки для архитектора',
-        general: '💼 Консультация по нестандартному сетапу'
-      };
-      const text = [
-        '🚨 *НОВАЯ B2B ЗАЯВКА GEEKNOOK!*',
-        '━━━━━━━━━━━━━━━━━━━━━━',
-        '🎯 *Тип:* ' + (typeLabels[payload.request_type] || payload.request_type || 'B2B Запрос'),
-        '🏢 *Компания:* ' + (payload.company || 'Не указано'),
-        payload.inn ? ('🔢 *ИНН:* `' + payload.inn + '`') : '',
-        '👤 *Контакт:* ' + (payload.contact_name || 'Не указано'),
-        '📧 *Email:* ' + (payload.email || 'Не указан'),
-        payload.phone ? ('📞 *Телефон:* ' + payload.phone) : '',
-        '🪑 *Мест:* ' + (payload.workplaces || '15'),
-        '📦 *Пакет:* ' + (payload.package_tier || 'Growth Team'),
-        payload.comment ? ('💬 *Комментарий:* ' + payload.comment) : '',
-        '━━━━━━━━━━━━━━━━━━━━━━',
-        '⏰ ' + new Date().toLocaleString('ru-RU', { timeZone: 'Europe/Moscow' }) + ' (МСК)'
-      ].filter(Boolean).join('\n');
-
-      fetch(tgConfig.endpoint, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          chat_id: tgConfig.chatId,
-          text: text,
-          parse_mode: 'Markdown'
-        })
-      }).catch(function(err) {
-        console.warn('Direct TG fetch error:', err);
-      });
-    } catch (tgErr) {
-      console.warn('Direct Telegram dispatch fallback error:', tgErr);
     }
 
     try {
