@@ -2010,10 +2010,6 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path></svg>
               <span>Оплата при осмотре</span>
             </div>
-            <div class="qv-trust-item">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path></svg>
-              <span>Тест-драйв 14 дней</span>
-            </div>
           </div>
         </div>
       </div>
@@ -8685,7 +8681,7 @@
         id: 'action-legal',
         category: 'Информация',
         title: 'Доставка и гарантия 2 года',
-        sub: 'СДЭК по всей России, возврат 14 дней',
+        sub: 'СДЭК по всей России, оплата при осмотре',
         badge: 'Сервис',
         icon: '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>',
         action: () => { closeCommandPalette(); openLegalModal('delivery'); }

@@ -1161,29 +1161,21 @@ textarea:focus-visible {
 /* Catalog Trust Strip */
 .catalog-trust-strip {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  padding: 18px 22px;
+  padding: 18px 24px;
   margin-bottom: 32px;
   box-shadow: var(--shadow-sm);
 }
 
-@media (max-width: 991px) {
-  .catalog-trust-strip {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-    padding: 16px;
-  }
-}
-
-@media (max-width: 540px) {
+@media (max-width: 860px) {
   .catalog-trust-strip {
     grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 14px;
+    gap: 14px;
+    padding: 16px;
   }
 }
 
@@ -2100,14 +2092,14 @@ textarea:focus-visible {
 
 .qv-trust-badges {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 12px;
   margin-top: 20px;
   padding-top: 16px;
   border-top: 1px dashed var(--border);
 }
 
-@media (max-width: 480px) {
+@media (max-width: 640px) {
   .qv-trust-badges {
     grid-template-columns: 1fr;
     gap: 8px;
