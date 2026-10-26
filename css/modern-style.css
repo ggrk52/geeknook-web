@@ -1890,6 +1890,42 @@ textarea:focus-visible {
   gap: 16px;
 }
 
+.footer-author-credit {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  text-align: center;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-subtle, #8a92a2);
+}
+
+.footer-author-credit a {
+  color: var(--text-main, #f8fafc);
+  font-weight: 800;
+  text-decoration: none;
+  letter-spacing: 0.14em;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.footer-author-credit a:hover {
+  color: var(--primary, #3b82f6);
+}
+
+[data-theme="light"] .footer-author-credit {
+  border-top-color: var(--border-light, #e2e5ea);
+  color: var(--text-muted, #5e6675);
+}
+
+[data-theme="light"] .footer-author-credit a {
+  color: var(--text-main, #111418);
+}
+
+[data-theme="light"] .footer-author-credit a:hover {
+  color: var(--primary, #2b70f0);
+}
+
 /* ==========================================================================
    MODALS: SLIDE-OVER CART, QUICK VIEW, CHECKOUT, SUCCESS, LIGHTBOX
    ========================================================================== */
