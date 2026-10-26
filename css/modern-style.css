@@ -1040,8 +1040,7 @@ textarea:focus-visible {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: rgba(17, 20, 24, 0.88);
-  backdrop-filter: blur(8px);
+  background: rgba(17, 20, 24, 0.94);
   color: #ffffff;
   font-family: var(--font-mono);
   font-size: 0.65rem;
@@ -1052,6 +1051,7 @@ textarea:focus-visible {
   border-radius: var(--radius-full);
   border: 1px solid rgba(255, 255, 255, 0.15);
   z-index: 2;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 .card-meta-tag {
@@ -4330,8 +4330,7 @@ textarea:focus-visible {
   position: absolute;
   top: 14px;
   left: 14px;
-  background: rgba(17, 20, 24, 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(17, 20, 24, 0.94);
   color: #ffffff;
   font-family: var(--font-mono);
   font-size: 0.6875rem;
@@ -4340,6 +4339,7 @@ textarea:focus-visible {
   padding: 5px 12px;
   border-radius: var(--radius-full);
   border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   z-index: 2;
 }
 
@@ -4571,8 +4571,7 @@ textarea:focus-visible {
   position: absolute;
   top: 12px;
   left: 12px;
-  background: rgba(10, 14, 20, 0.85);
-  backdrop-filter: blur(8px);
+  background: rgba(10, 14, 20, 0.94);
   color: #ffffff;
   font-family: var(--font-mono);
   font-size: 0.68rem;
@@ -4581,6 +4580,7 @@ textarea:focus-visible {
   padding: 4px 10px;
   border-radius: var(--radius-full);
   border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
   z-index: 2;
 }
 
@@ -13999,5 +13999,47 @@ textarea.input-error {
   margin: 0 !important;
   padding: 0 !important;
 }
+
+/* ==========================================================================
+   MOBILE TOUCH ERGONOMICS (Fitts's Law & UI/UX Pro Max)
+   Ensures interactive targets meet the standard 44x44px minimum tap area.
+   ========================================================================== */
+@media (max-width: 768px) {
+  .engraving-preset-pill {
+    min-height: 44px;
+    padding: 10px 16px;
+    font-size: 0.8125rem;
+  }
+  .btn-card-xray {
+    min-height: 42px;
+    padding: 8px 14px;
+    font-size: 0.775rem;
+  }
+  .btn-3d-light,
+  .btn-3d-mon {
+    min-height: 44px;
+    padding: 8px 14px;
+    font-size: 0.8125rem;
+  }
+  .compat-badge-btn {
+    min-height: 40px;
+    padding: 8px 14px;
+  }
+  .hotspot-pin {
+    width: 38px;
+    height: 38px;
+  }
+  .hotspot-pin::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+  }
+  .theme-toggle-btn,
+  .sound-toggle-btn {
+    width: 44px;
+    height: 44px;
+  }
+}
+
 
 
