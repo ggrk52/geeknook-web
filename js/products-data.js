@@ -1925,7 +1925,7 @@ const GEEKNOOK_DATA = {
 115193, г. Москва, ул. Петра Романова, д. 7, стр. 1, помещение 20/5</p>
 <p><strong>Электронная почта:</strong> <a href="mailto:info@geeknook.ru">info@geeknook.ru</a></p>
 <p><strong>Сайт:</strong> <a href="https://geeknook.ru" target="_blank">https://geeknook.ru</a></p>
-<p><strong>Телефон:</strong> <a href="tel:+79670251030">+7 (967) 025-10-30</a></p>
+<p><strong>Телефон:</strong> <a href="tel:+70000000000">+7 (000) 000-00-00</a></p>
 <h4 class="legal-h4"><strong>5. Заключительные положения</strong></h4>
 <p>Актуальная редакция настоящих документов размещается на сайте geeknook.ru.</p>
 <p>Оператор вправе актуализировать документы в связи с изменением законодательства, развитием сайта, интернет-магазина, товаров, сервисов и процессов обработки персональных данных.</p>
@@ -2024,7 +2024,7 @@ const GEEKNOOK_DATA = {
 Юридический адрес: 115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5<br>
 Сайт: <a href="https://geeknook.ru" target="_blank" style="color:#d4af37;">https://geeknook.ru</a><br>
 E-mail: <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a><br>
-Телефон: <a href="tel:+79670251030" style="color:#d4af37;">+7 (967) 025-10-30</a></p>`
+Телефон: <a href="tel:+70000000000" style="color:#d4af37;">+7 (000) 000-00-00</a></p>`
     },
     requisites: {
       title: "Реквизиты продавца",
@@ -2039,7 +2039,7 @@ E-mail: <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.r
     <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Юридический адрес:</strong> 115193, г. Москва, ул. Петра Романова, дом 7, стр. 1, помещение 20/5</div>
     <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Официальный сайт:</strong> <a href="https://geeknook.ru" target="_blank" style="color:#d4af37;">https://geeknook.ru</a></div>
     <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Электронная почта:</strong> <a href="mailto:info@geeknook.ru" style="color:#d4af37;">info@geeknook.ru</a></div>
-    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Контактный телефон:</strong> <a href="tel:+79670251030" style="color:#d4af37;">+7 (967) 025-10-30</a></div>
+    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Контактный телефон:</strong> <a href="tel:+70000000000" style="color:#d4af37;">+7 (000) 000-00-00</a></div>
     <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:6px;"><strong>Telegram-поддержка:</strong> <a href="https://t.me/geeknook" target="_blank" style="color:#d4af37;">@geeknook</a></div>
   </div>
 </div>

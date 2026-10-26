@@ -97,7 +97,7 @@ def draw_slide_base(c, slide_num_str):
     c.setFont('AppFont', 8.5)
     c.setFillColor(TEXT_DIM)
     c.drawString(48, 30, 'ООО «ГИК НУК» • Инженерные рабочие места • Москва')
-    c.drawRightString(PAGE_W - 48, 30, 'https://geeknook.ru/b2b • b2b@geeknook.ru • +7 (967) 025-10-30')
+    c.drawRightString(PAGE_W - 48, 30, 'https://geeknook.ru/b2b • b2b@geeknook.ru • +7 (000) 000-00-00')
 
 def draw_badge(c, x, y, text, theme='blue'):
     if theme == 'amber':
@@ -477,7 +477,7 @@ def render_slide_8(c):
     contacts_html = """
     <b>Email:</b> <font color="#2b70f0">b2b@geeknook.ru</font><br/>
     <font color="#64748b">Отвечаем на запросы в течение 2 часов в рабочее время</font><br/><br/>
-    <b>Телефон:</b> <font color="#2b70f0">+7 (967) 025-10-30</font><br/>
+    <b>Телефон:</b> <font color="#2b70f0">+7 (000) 000-00-00</font><br/>
     <font color="#64748b">Пн – Пт с 10:00 до 19:00 по московскому времени</font><br/><br/>
     <b>Telegram:</b> <font color="#2b70f0">@geeknook</font><br/>
     <font color="#64748b">Прямой чат с руководителем для оперативных расчетов</font><br/><br/>

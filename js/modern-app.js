@@ -4578,11 +4578,11 @@
     const cleanName = (orderPayload.name || 'Сергей').trim();
     const cleanEmail = (orderPayload.email || 'sergeykozlov20066@mail.ru').trim();
 
-    // Phone format: e.g. +79670251030 (clean digits without spaces/dashes)
+    // Phone format: e.g. +70000000000 (clean digits without spaces/dashes)
     const rawPhoneDigits = String(orderPayload.phone || '').replace(/\D/g, '');
     const cleanPhone = (rawPhoneDigits.startsWith('7') || rawPhoneDigits.startsWith('8'))
       ? '+7' + rawPhoneDigits.slice(1)
-      : (rawPhoneDigits.length ? '+' + rawPhoneDigits : '+79670251030');
+      : (rawPhoneDigits.length ? '+' + rawPhoneDigits : '+70000000000');
 
     // CDEK PVZ Code
     let pvzCode = orderPayload.pvz?.code || '';
@@ -8166,7 +8166,7 @@
           ОГРН: 1247700620265 | ИНН: 9723239478 | КПП: 772301001<br>
           115193, г. Москва, ул. Петра Романова, д. 7, стр. 1, пом. 20/5<br>
           Р/с: 40702810938000123456 в ПАО Сбербанк | БИК: 044525225<br>
-          Тел: +7 (967) 025-10-30 | Email: b2b@geeknook.ru | Сайт: geeknook.ru
+          Тел: +7 (000) 000-00-00 | Email: b2b@geeknook.ru | Сайт: geeknook.ru
         </div>
       </div>
 
