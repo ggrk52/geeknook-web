@@ -462,6 +462,8 @@ textarea:focus-visible {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  min-height: 44px;
+  box-sizing: border-box;
   padding: 8px 18px;
   border-radius: var(--radius-full);
   background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
@@ -481,9 +483,25 @@ textarea:focus-visible {
 }
 
 @media (max-width: 480px) {
+  .b2b-header-nav-link {
+    display: none !important;
+  }
   .b2b-header-cta-btn {
-    padding: 6px 12px;
-    font-size: 0.78rem;
+    min-height: 44px;
+    padding: 6px 10px;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 360px) {
+  .b2b-header-cta-btn {
+    min-height: 44px;
+    padding: 5px 8px;
+    font-size: 0.70rem;
+    letter-spacing: -0.01em;
+    box-sizing: border-box;
   }
 }
 
@@ -11399,6 +11417,13 @@ textarea.input-error {
   font-family: var(--font-mono, monospace);
 }
 
+@media (max-width: 480px) {
+  .b2b-slider-ticks span:nth-child(2),
+  .b2b-slider-ticks span:nth-child(4) {
+    display: none;
+  }
+}
+
 .b2b-quick-chips-row {
   display: flex;
   gap: 8px;
@@ -14003,7 +14028,7 @@ textarea.input-error {
     font-size: 0.8125rem;
   }
   .btn-card-xray {
-    min-height: 42px;
+    min-height: 44px;
     padding: 8px 14px;
     font-size: 0.775rem;
   }
@@ -14014,7 +14039,7 @@ textarea.input-error {
     font-size: 0.8125rem;
   }
   .compat-badge-btn {
-    min-height: 40px;
+    min-height: 44px;
     padding: 8px 14px;
   }
   .hotspot-pin {

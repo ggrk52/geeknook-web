@@ -1048,10 +1048,15 @@
       .header-nav { display: none !important; }
     }
     @media (max-width: 768px) {
+      .container { padding: 0 16px; }
       .footer-content { grid-template-columns: 1fr; gap: 24px; }
       .product-grid { grid-template-columns: 1fr; }
       .compare-grid { grid-template-columns: 1fr; }
       .hero-features-grid { grid-template-columns: 1fr; }
+      .size-cards-grid,
+      .guides-grid {
+        grid-template-columns: 1fr !important;
+      }
     }
     @media (max-width: 420px) {
       .header-container { padding: 10px 14px; }

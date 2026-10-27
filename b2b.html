@@ -53,6 +53,19 @@
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/modern-style.min.css?v=2.9.11" />
+  <style>
+    @media (max-width: 480px) {
+      .b2b-header-nav-link { display: none !important; }
+      .b2b-header-cta-btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 6px 12px; font-size: 0.75rem; white-space: nowrap; }
+      .b2b-slider-ticks span:nth-child(2),
+      .b2b-slider-ticks span:nth-child(4) { display: none; }
+    }
+    @media (max-width: 360px) {
+      .b2b-header-cta-btn { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; box-sizing: border-box; padding: 5px 8px; font-size: 0.70rem; letter-spacing: -0.01em; }
+      .brand-logo { gap: 4px; }
+      .brand-logo span { font-size: 0.95rem; }
+    }
+  </style>
 </head>
 <body class="b2b-page">
   <!-- Structured data stays with the imported body in the Tilda loader. -->

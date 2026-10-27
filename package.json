@@ -1,0 +1,16 @@
+{
+  "name": "geeknook-e2e-audit",
+  "version": "1.0.0",
+  "description": "Comprehensive automated E2E audit and testing suite for GeekNook",
+  "private": true,
+  "scripts": {
+    "test": "playwright test",
+    "test:responsiveness": "playwright test tests/e2e/responsiveness.spec.js",
+    "test:interactive": "playwright test tests/e2e/interactive.spec.js",
+    "test:console": "playwright test tests/e2e/console-errors.spec.js",
+    "test:report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}

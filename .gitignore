@@ -62,4 +62,9 @@ GEMINI.md
 PLAN.md
 build-archive.ps1
 
+# Test reports & run artifacts
+playwright-report/
+test-results/
+scripts/challenger-*-results.json
+
 
