@@ -129,21 +129,30 @@
 html {
   scroll-behavior: smooth;
   font-size: 16px;
-  overflow-x: clip;
+  overflow-x: clip !important;
   max-width: 100vw;
 }
 
-body {
+body,
+.t-body {
   font-family: var(--font-main);
   background-color: var(--bg-page);
   color: var(--text-main);
   line-height: 1.6;
-  overflow-x: clip;
+  overflow-x: clip !important;
   max-width: 100vw;
   width: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   transition: var(--transition-theme);
+}
+
+.t-records,
+#allrecords,
+#geeknook-mount-point,
+.geeknook-tilda-wrapper {
+  overflow-x: clip !important;
+  overflow: visible !important;
 }
 
 img, video {

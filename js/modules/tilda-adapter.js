@@ -1103,7 +1103,24 @@
 
   // --- IMMEDIATE TILDA DOM ENHANCEMENTS (Runs independently of geekNookApp) ---
   function initTildaDomEnhancements() {
-    // 0. SUPPRESS TILDA AUTO OPEN ON PRODUCT ADD (Keeps catalog browsing uninterrupted)
+    // 0. ENFORCE ZERO OVERFLOW & CLIP DISCIPLINE FOR STICKY BLOCKS
+    function enforceStickyDiscipline() {
+      try {
+        document.documentElement.style.setProperty('overflow-x', 'clip', 'important');
+        document.body.style.setProperty('overflow-x', 'clip', 'important');
+        ['allrecords', 'geeknook-mount-point'].forEach(id => {
+          const el = document.getElementById(id);
+          if (el) {
+            el.style.setProperty('overflow-x', 'clip', 'important');
+            el.style.setProperty('overflow', 'visible', 'important');
+          }
+        });
+      } catch (_) {}
+    }
+    enforceStickyDiscipline();
+    setInterval(enforceStickyDiscipline, 1000);
+
+    // 0.1. SUPPRESS TILDA AUTO OPEN ON PRODUCT ADD (Keeps catalog browsing uninterrupted)
     function suppressTildaAutoOpen() {
       const t706 = document.querySelector('.t706');
       if (t706 && t706.getAttribute('data-opencart-onorder') === 'yes') {

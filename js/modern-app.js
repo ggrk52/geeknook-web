@@ -9198,6 +9198,19 @@
 
   // --- INITIALIZE APPLICATION ---
   const init = () => {
+    // 0. Enforce sticky discipline across all viewports & platforms
+    try {
+      document.documentElement.style.setProperty('overflow-x', 'clip', 'important');
+      document.body.style.setProperty('overflow-x', 'clip', 'important');
+      ['allrecords', 'geeknook-mount-point'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.style.setProperty('overflow-x', 'clip', 'important');
+          el.style.setProperty('overflow', 'visible', 'important');
+        }
+      });
+    } catch (_) {}
+
     // 1. Global image fallback (Capture phase handles non-bubbling img error events)
     window.addEventListener('error', (e) => {
       if (e.target && e.target.tagName === 'IMG') {
@@ -9602,6 +9615,19 @@
 
   // --- 2.1.5. INTERACTIVE SCROLL ASSEMBLY BLOCK ---
   const initScrollAssembly = () => {
+    // Enforce clip on html/body and Tilda wrappers to prevent sticky breakage
+    try {
+      document.documentElement.style.setProperty('overflow-x', 'clip', 'important');
+      document.body.style.setProperty('overflow-x', 'clip', 'important');
+      ['allrecords', 'geeknook-mount-point'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.style.setProperty('overflow-x', 'clip', 'important');
+          el.style.setProperty('overflow', 'visible', 'important');
+        }
+      });
+    } catch (_) {}
+
     const track = document.getElementById('assemblyTrack');
     if (!track) return;
 
