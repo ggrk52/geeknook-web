@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>GeekNook Focus Station // Vertical Launch Film (9:16)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Onest:wght@400;600;700;800;900&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Onest', 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* GeekNook Brand Tokens */
+    :root {
+      --primary: #2b70f0;
+      --primary-light: #528eff;
+      --primary-hover: #1b5ed6;
+      --primary-glow: rgba(43, 112, 240, 0.45);
+      --primary-surface: rgba(43, 112, 240, 0.12);
+      --dark-bg: #07090c;
+      --dark-surface: #0e1218;
+      --dark-card: #121720;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(43, 112, 240, 0.4);
+    }
+
+    #stage {
+      position: relative;
+      width: 1080px;
+      height: 1920px;
+      background: var(--dark-bg);
+      overflow: hidden;
+      color: #fff;
+    }
+
+    /* Atmospheric Lighting in 9:16 */
+    .ambient-glow-primary {
+      position: absolute;
+      width: 1100px;
+      height: 1100px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(43, 112, 240, 0.18) 0%, rgba(43, 112, 240, 0.04) 45%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      filter: blur(50px);
+    }
+    .ambient-glow-wood {
+      position: absolute;
+      width: 800px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(200, 130, 60, 0.1) 0%, transparent 60%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      filter: blur(60px);
+    }
+    .tech-grid {
+      position: absolute;
+      inset: 0;
+      background-size: 80px 80px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+      pointer-events: none;
+    }
+    .tech-grid-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(43, 112, 240, 0.25) 1px, transparent 1px);
+      background-size: 80px 80px;
+      background-position: -1px -1px;
+      pointer-events: none;
+    }
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 40%, rgba(7, 9, 12, 0.94) 100%);
+      pointer-events: none;
+    }
+
+    /* Scene Containers */
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      padding: 80px;
+    }
+
+    /* SCENE 1: Kinetic Brand Typography */
+    #scene-1 .pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      background: var(--primary-surface);
+      border: 1px solid var(--border-active);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      margin-bottom: 36px;
+      transform: translateY(30px);
+      opacity: 0;
+    }
+    #scene-1 .pill-tag-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 12px var(--primary);
+    }
+    #scene-1 .hero-title-wrap {
+      overflow: hidden;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    #scene-1 .hero-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 116px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.95;
+      text-align: center;
+      background: linear-gradient(180deg, #FFFFFF 0%, #D8DFEE 60%, #90A0BE 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transform: translateY(115%);
+    }
+    #scene-1 .hero-sub-wrap {
+      overflow: hidden;
+    }
+    #scene-1 .hero-sub {
+      font-family: 'Onest', sans-serif;
+      font-size: 22px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      color: rgba(255, 255, 255, 0.65);
+      text-transform: uppercase;
+      transform: translateY(110%);
+    }
+    #scene-1 .laser-beam-wrap {
+      width: 100%;
+      max-width: 800px;
+      height: 4px;
+      margin: 24px 0 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    #scene-1 .laser-beam {
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, transparent, var(--primary) 25%, #fff 50%, var(--primary) 75%, transparent);
+      box-shadow: 0 0 30px var(--primary), 0 0 12px #fff;
+    }
+
+    /* SCENE 2: Architectural CAD Blueprint */
+    #scene-2 .cad-box {
+      position: relative;
+      width: 960px;
+      height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #scene-2 svg.cad-svg {
+      width: 100%;
+      height: 100%;
+    }
+    .cad-scan-line {
+      position: absolute;
+      width: 900px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary) 20%, #fff 50%, var(--primary) 80%, transparent);
+      box-shadow: 0 0 20px var(--primary);
+      top: 50px;
+      left: 30px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .cad-badges-col {
+      position: absolute;
+      bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 100%;
+    }
+    .cad-card {
+      padding: 14px 26px;
+      background: rgba(14, 18, 24, 0.88);
+      border: 1px solid var(--border-active);
+      border-radius: 12px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 45px rgba(0,0,0,0.7), 0 0 30px rgba(43, 112, 240, 0.15);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    .cad-card .tag-lbl {
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+
+    /* SCENE 3: Material Realism & Light Sweep */
+    #scene-3 .product-stage {
+      position: relative;
+      width: 980px;
+      height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #scene-3 .stand-shadow {
+      position: absolute;
+      width: 920px;
+      height: 60px;
+      bottom: 205px;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.4) 50%, transparent 75%);
+      filter: blur(18px);
+      transform: scale(0.85);
+      opacity: 0;
+    }
+    #scene-3 .product-img {
+      width: 920px;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 40px 80px rgba(0,0,0,0.9)) drop-shadow(0 0 50px rgba(43, 112, 240, 0.2));
+      transform: translateY(40px) scale(0.92);
+      opacity: 0;
+      z-index: 10;
+    }
+    #scene-3 .sheen-sweep {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 25%, rgba(255, 255, 255, 0.35) 48%, rgba(82, 142, 255, 0.4) 52%, transparent 75%);
+      transform: translateX(-150%);
+      pointer-events: none;
+      mix-blend-mode: overlay;
+      z-index: 15;
+    }
+    .vertical-features-col {
+      margin-top: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 18px;
+    }
+    .material-pill {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 28px;
+      background: rgba(14, 18, 24, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      backdrop-filter: blur(24px);
+      font-family: 'Onest', sans-serif;
+      font-size: 16px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #fafafa;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.65), 0 0 25px rgba(43, 112, 240, 0.12);
+      opacity: 0;
+      z-index: 20;
+    }
+    .material-pill::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 12px var(--primary);
+    }
+
+    /* SCENE 4: Brand Finale & CTA */
+    #scene-4 .finale-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+    }
+    #scene-4 .brand-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 104px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 18px;
+      transform: scale(0.88);
+      opacity: 0;
+      text-shadow: 0 0 60px rgba(43, 112, 240, 0.5);
+    }
+    #scene-4 .brand-claim {
+      font-family: 'Onest', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      margin-bottom: 50px;
+      transform: translateY(25px);
+      opacity: 0;
+      max-width: 700px;
+      line-height: 1.4;
+    }
+    #scene-4 .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 56px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: #fff;
+      font-family: 'Onest', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      box-shadow: 0 0 50px var(--primary-glow), 0 15px 35px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      transform: scale(0.82);
+      opacity: 0;
+    }
+    #scene-4 .cta-arrow {
+      font-size: 24px;
+    }
+    #scene-4 .trust-badge {
+      margin-top: 40px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      letter-spacing: 0.14em;
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(15px);
+      text-align: center;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="stage">
+    <div class="ambient-glow-primary" id="ambient-blue"></div>
+    <div class="ambient-glow-wood" id="ambient-wood"></div>
+    <div class="tech-grid"></div>
+    <div class="tech-grid-dots"></div>
+    <div class="vignette"></div>
+
+    <!-- ========================================================
+         SCENE 1: KINETIC TYPOGRAPHY & LASER SCAN
+         ======================================================== -->
+    <div class="scene" id="scene-1">
+      <div class="pill-tag" id="s1-tag">
+        <span class="pill-tag-dot"></span>
+        DESK ARCHITECTURE
+      </div>
+      <div class="hero-title-wrap">
+        <div class="hero-title" id="s1-title">FOCUS<br>STATION</div>
+      </div>
+      <div class="laser-beam-wrap">
+        <div class="laser-beam" id="s1-laser"></div>
+      </div>
+      <div class="hero-sub-wrap">
+        <div class="hero-sub" id="s1-sub">PRECISION SOLID WOOD STAND</div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SCENE 2: ARCHITECTURAL CAD BLUEPRINT (ELECTRIC BLUE)
+         ======================================================== -->
+    <div class="scene" id="scene-2">
+      <div class="cad-box">
+        <div class="cad-scan-line" id="cad-scan"></div>
+        <svg class="cad-svg" viewBox="0 0 960 480" fill="none">
+          <!-- Stand Top Shelf Isometric Blueprint -->
+          <path id="cad-top-plane" d="M 120 180 L 840 180 L 880 214 L 80 214 Z" 
+                stroke="#2b70f0" stroke-width="2.5" stroke-dasharray="2100" stroke-dashoffset="2100" 
+                fill="rgba(43, 112, 240, 0.04)" />
+          
+          <path id="cad-front-bevel" d="M 80 214 L 880 214 L 880 234 L 80 234 Z" 
+                stroke="#528eff" stroke-width="2" stroke-dasharray="2100" stroke-dashoffset="2100" 
+                fill="rgba(82, 142, 255, 0.08)" />
+
+          <!-- Aluminum Legs Blueprint -->
+          <path id="cad-leg-l" d="M 140 234 L 185 234 L 185 350 L 140 350 Z" 
+                stroke="#ffffff" stroke-width="2" stroke-dasharray="700" stroke-dashoffset="700" 
+                fill="rgba(255, 255, 255, 0.06)" />
+          <path id="cad-leg-r" d="M 775 234 L 820 234 L 820 350 L 775 350 Z" 
+                stroke="#ffffff" stroke-width="2" stroke-dasharray="700" stroke-dashoffset="700" 
+                fill="rgba(255, 255, 255, 0.06)" />
+
+          <!-- Dimension Calibration Arrows & Lines -->
+          <line id="cad-dim-w-line" x1="80" y1="140" x2="880" y2="140" 
+                stroke="rgba(82, 142, 255, 0.6)" stroke-width="1.5" stroke-dasharray="800" stroke-dashoffset="800" />
+          <line id="cad-dim-w-t1" x1="80" y1="130" x2="80" y2="150" stroke="#528eff" stroke-width="1.5" opacity="0" />
+          <line id="cad-dim-w-t2" x1="880" y1="130" x2="880" y2="150" stroke="#528eff" stroke-width="1.5" opacity="0" />
+          <text id="cad-dim-w-txt" x="480" y="130" fill="#528eff" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="700" text-anchor="middle" letter-spacing="3" opacity="0">WIDTH 800 mm</text>
+
+          <line id="cad-dim-h-line" x1="915" y1="180" x2="915" y2="350" 
+                stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.5" stroke-dasharray="170" stroke-dashoffset="170" />
+          <text id="cad-dim-h-txt" x="925" y="270" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="13" letter-spacing="1" opacity="0">110 mm</text>
+        </svg>
+
+        <div class="cad-badges-col">
+          <div class="cad-card" id="cad-card-dim">
+            <span class="tag-lbl">[ГАБАРИТЫ]</span> 800 × 210 × 110 ММ
+          </div>
+          <div class="cad-card" id="cad-card-mat">
+            <span class="tag-lbl">[МАТЕРИАЛ]</span> АМЕРИКАНСКИЙ ОРЕХ • АЛЮМИНИЙ
+          </div>
+          <div class="cad-card" id="cad-card-load">
+            <span class="tag-lbl">[НАГРУЗКА]</span> 50 КГ БЕЗ ПРОГИБА
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SCENE 3: REALISTIC MATERIAL HONESTY & LIGHT SWEEP
+         ======================================================== -->
+    <div class="scene" id="scene-3">
+      <div class="product-stage" id="prod-stage">
+        <div class="stand-shadow" id="prod-shadow"></div>
+        <img src="assets/stand_cutout.png" class="product-img" id="prod-img" alt="Focus Station" />
+        <div class="sheen-sweep" id="prod-sheen"></div>
+      </div>
+      <div class="vertical-features-col">
+        <div class="material-pill" id="mat-pill-1">Натуральный массив и шпон ореха</div>
+        <div class="material-pill" id="mat-pill-2">Опоры из анодированного сплава</div>
+        <div class="material-pill" id="mat-pill-3">Скрытый кабель-менеджмент</div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+         SCENE 4: BRAND IMPACT FINALE & CTA
+         ======================================================== -->
+    <div class="scene" id="scene-4">
+      <div class="finale-wrap">
+        <h1 class="brand-title" id="s4-brand">GEEKNOOK</h1>
+        <p class="brand-claim" id="s4-claim">ПРОСТРАНСТВО ТВОЕЙ СВЕРХПРОДУКТИВНОСТИ</p>
+        <div class="cta-button" id="s4-cta">
+          <span>GEEKNOOK.RU</span>
+          <span class="cta-arrow">→</span>
+        </div>
+        <div class="trust-badge" id="s4-trust">
+          ОФИЦИАЛЬНАЯ ГАРАНТИЯ 12 МЕСЯЦЕВ<br>ОПЛАТА ПРИ ОСМОТРЕ В СДЭК
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Smooth Easing Mathematics
+    const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
+    const progress = (t, t0, t1) => clamp((t - t0) / (t1 - t0));
+    const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+    const easeInOutCubic = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    const easeOutExpo = (x) => (x === 1 ? 1 : 1 - Math.pow(2, -10 * x));
+
+    // Element Cache
+    const s1 = document.getElementById('scene-1');
+    const s1Tag = document.getElementById('s1-tag');
+    const s1Title = document.getElementById('s1-title');
+    const s1Sub = document.getElementById('s1-sub');
+    const s1Laser = document.getElementById('s1-laser');
+
+    const s2 = document.getElementById('scene-2');
+    const cadScan = document.getElementById('cad-scan');
+    const cadTop = document.getElementById('cad-top-plane');
+    const cadFront = document.getElementById('cad-front-bevel');
+    const cadLegL = document.getElementById('cad-leg-l');
+    const cadLegR = document.getElementById('cad-leg-r');
+    const cadDimW = document.getElementById('cad-dim-w-line');
+    const cadDimWT1 = document.getElementById('cad-dim-w-t1');
+    const cadDimWT2 = document.getElementById('cad-dim-w-t2');
+    const cadDimWTxt = document.getElementById('cad-dim-w-txt');
+    const cadDimH = document.getElementById('cad-dim-h-line');
+    const cadDimHTxt = document.getElementById('cad-dim-h-txt');
+    const cadCardDim = document.getElementById('cad-card-dim');
+    const cadCardMat = document.getElementById('cad-card-mat');
+    const cadCardLoad = document.getElementById('cad-card-load');
+
+    const s3 = document.getElementById('scene-3');
+    const prodImg = document.getElementById('prod-img');
+    const prodShadow = document.getElementById('prod-shadow');
+    const prodSheen = document.getElementById('prod-sheen');
+    const matPill1 = document.getElementById('mat-pill-1');
+    const matPill2 = document.getElementById('mat-pill-2');
+    const matPill3 = document.getElementById('mat-pill-3');
+
+    const s4 = document.getElementById('scene-4');
+    const s4Brand = document.getElementById('s4-brand');
+    const s4Claim = document.getElementById('s4-claim');
+    const s4Cta = document.getElementById('s4-cta');
+    const s4Trust = document.getElementById('s4-trust');
+
+    const ambientBlue = document.getElementById('ambient-blue');
+    const ambientWood = document.getElementById('ambient-wood');
+
+    /**
+     * Master deterministic seek function: window.seek(t)
+     * Duration: 5.8s
+     */
+    window.seek = async (t) => {
+      // Ambient Breathing Lighting
+      const bluePulse = 1 + 0.12 * Math.sin(t * 2.8);
+      ambientBlue.style.transform = `translate(-50%, -50%) scale(${bluePulse})`;
+      ambientWood.style.opacity = String(t >= 2.5 && t < 4.6 ? 0.75 : 0.2);
+
+      // ========================================================
+      // SCENE 1: Kinetic Brand Typography (t = 0.0 -> 1.45)
+      // ========================================================
+      if (t < 1.5) {
+        s1.style.opacity = t < 1.2 ? '1' : String(clamp((1.45 - t) / 0.25));
+
+        const pTag = easeOutExpo(progress(t, 0.05, 0.5));
+        s1Tag.style.opacity = String(pTag);
+        s1Tag.style.transform = `translateY(${(1 - pTag) * 24}px)`;
+
+        const pTitle = easeOutCubic(progress(t, 0.15, 0.7));
+        s1Title.style.transform = `translateY(${(1 - pTitle) * 115}%) scale(${0.96 + 0.04 * pTitle})`;
+
+        const pSub = easeOutCubic(progress(t, 0.3, 0.8));
+        s1Sub.style.transform = `translateY(${(1 - pSub) * 110}%)`;
+
+        const pLaser = easeOutExpo(progress(t, 0.4, 0.95));
+        s1Laser.style.width = `${pLaser * 85}%`;
+        s1Laser.style.opacity = String(pLaser < 1 ? pLaser : clamp((1.35 - t) / 0.25));
+      } else {
+        s1.style.opacity = '0';
+      }
+
+      // ========================================================
+      // SCENE 2: Architectural CAD Blueprint (t = 1.3 -> 3.0)
+      // ========================================================
+      if (t >= 1.25 && t < 3.05) {
+        const s2In = easeOutCubic(progress(t, 1.25, 1.55));
+        const s2Out = clamp((3.0 - t) / 0.25);
+        s2.style.opacity = String(Math.min(s2In, s2Out));
+
+        const pScan = progress(t, 1.3, 2.0);
+        cadScan.style.opacity = String(pScan > 0 && pScan < 1 ? 0.85 : 0);
+        cadScan.style.transform = `translateY(${pScan * 420}px)`;
+
+        const pDrawTop = easeOutCubic(progress(t, 1.35, 1.95));
+        cadTop.style.strokeDashoffset = String((1 - pDrawTop) * 2100);
+
+        const pDrawFront = easeOutCubic(progress(t, 1.45, 2.05));
+        cadFront.style.strokeDashoffset = String((1 - pDrawFront) * 2100);
+
+        const pDrawLegs = easeOutCubic(progress(t, 1.6, 2.15));
+        cadLegL.style.strokeDashoffset = String((1 - pDrawLegs) * 700);
+        cadLegR.style.strokeDashoffset = String((1 - pDrawLegs) * 700);
+
+        const pDimW = easeOutCubic(progress(t, 1.7, 2.2));
+        cadDimW.style.strokeDashoffset = String((1 - pDimW) * 800);
+        cadDimWT1.style.opacity = String(pDimW);
+        cadDimWT2.style.opacity = String(pDimW);
+        cadDimWTxt.style.opacity = String(pDimW);
+
+        const pDimH = easeOutCubic(progress(t, 1.85, 2.3));
+        cadDimH.style.strokeDashoffset = String((1 - pDimH) * 170);
+        cadDimHTxt.style.opacity = String(pDimH);
+
+        const pC1 = easeOutExpo(progress(t, 1.8, 2.2));
+        cadCardDim.style.opacity = String(pC1);
+        cadCardDim.style.transform = `scale(${0.9 + 0.1 * pC1}) translateY(${(1 - pC1) * 12}px)`;
+
+        const pC2 = easeOutExpo(progress(t, 1.95, 2.35));
+        cadCardMat.style.opacity = String(pC2);
+        cadCardMat.style.transform = `scale(${0.9 + 0.1 * pC2}) translateY(${(1 - pC2) * 12}px)`;
+
+        const pC3 = easeOutExpo(progress(t, 2.1, 2.5));
+        cadCardLoad.style.opacity = String(pC3);
+        cadCardLoad.style.transform = `scale(${0.9 + 0.1 * pC3}) translateY(${(1 - pC3) * 12}px)`;
+      } else {
+        s2.style.opacity = '0';
+      }
+
+      // ========================================================
+      // SCENE 3: Material Realism & Light Sweep (t = 2.85 -> 4.5)
+      // ========================================================
+      if (t >= 2.8 && t < 4.55) {
+        const s3In = easeOutCubic(progress(t, 2.8, 3.1));
+        const s3Out = clamp((4.5 - t) / 0.25);
+        s3.style.opacity = String(Math.min(s3In, s3Out));
+
+        const pProd = easeOutCubic(progress(t, 2.85, 3.4));
+        const cameraZoom = 0.94 + 0.08 * progress(t, 2.85, 4.5);
+        prodImg.style.opacity = String(pProd);
+        prodImg.style.transform = `translateY(${(1 - pProd) * 35}px) scale(${cameraZoom})`;
+
+        prodShadow.style.opacity = String(pProd * 0.95);
+        prodShadow.style.transform = `scale(${0.85 + 0.15 * pProd})`;
+
+        const pSheen = progress(t, 3.2, 4.1);
+        prodSheen.style.transform = `translateX(${-150 + pSheen * 300}%)`;
+
+        const pM1 = easeOutCubic(progress(t, 3.25, 3.65));
+        matPill1.style.opacity = String(pM1);
+        matPill1.style.transform = `translateY(${(1 - pM1) * 20}px)`;
+
+        const pM2 = easeOutCubic(progress(t, 3.4, 3.8));
+        matPill2.style.opacity = String(pM2);
+        matPill2.style.transform = `translateY(${(1 - pM2) * 20}px)`;
+
+        const pM3 = easeOutCubic(progress(t, 3.55, 3.95));
+        matPill3.style.opacity = String(pM3);
+        matPill3.style.transform = `translateY(${(1 - pM3) * 20}px)`;
+      } else {
+        s3.style.opacity = '0';
+      }
+
+      // ========================================================
+      // SCENE 4: Brand Finale & CTA (t = 4.35 -> 5.8)
+      // ========================================================
+      if (t >= 4.3) {
+        const s4In = easeOutCubic(progress(t, 4.3, 4.65));
+        s4.style.opacity = String(s4In);
+
+        const pBrand = easeOutExpo(progress(t, 4.4, 4.95));
+        s4Brand.style.opacity = String(pBrand);
+        s4Brand.style.transform = `scale(${0.88 + 0.12 * pBrand})`;
+
+        const pClaim = easeOutCubic(progress(t, 4.6, 5.1));
+        s4Claim.style.opacity = String(pClaim);
+        s4Claim.style.transform = `translateY(${(1 - pClaim) * 22}px)`;
+
+        const pCta = easeOutExpo(progress(t, 4.75, 5.25));
+        s4Cta.style.opacity = String(pCta);
+        s4Cta.style.transform = `scale(${0.82 + 0.18 * pCta})`;
+
+        const pTrust = easeOutCubic(progress(t, 4.9, 5.4));
+        s4Trust.style.opacity = String(pTrust);
+        s4Trust.style.transform = `translateY(${(1 - pTrust) * 15}px)`;
+      } else {
+        s4.style.opacity = '0';
+      }
+    };
+
+    // Preload & Initialization
+    const img = document.getElementById('prod-img');
+    const onAssetsReady = () => {
+      window.ready = true;
+      window.seek(0);
+    };
+
+    if (img.complete) {
+      onAssetsReady();
+    } else {
+      img.onload = onAssetsReady;
+      img.onerror = onAssetsReady;
+    }
+  </script>
+</body>
+</html>

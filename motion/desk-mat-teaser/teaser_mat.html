@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>GeekNook Desk Mat Light // 60 FPS Product Film</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Onest:wght@400;600;700;800;900&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      background: #000;
+      overflow: hidden;
+      font-family: 'Onest', 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    :root {
+      --primary: #2b70f0;
+      --primary-light: #528eff;
+      --primary-hover: #1b5ed6;
+      --primary-glow: rgba(43, 112, 240, 0.45);
+      --primary-surface: rgba(43, 112, 240, 0.12);
+      --dark-bg: #07090c;
+      --dark-surface: #0e1218;
+      --dark-card: #121720;
+      --border-subtle: rgba(255, 255, 255, 0.08);
+      --border-active: rgba(43, 112, 240, 0.4);
+    }
+
+    #stage {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      background: var(--dark-bg);
+      overflow: hidden;
+      color: #fff;
+    }
+
+    /* Ambient Stage Lighting */
+    .ambient-glow-primary {
+      position: absolute;
+      width: 1400px;
+      height: 900px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(43, 112, 240, 0.16) 0%, rgba(43, 112, 240, 0.03) 45%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      filter: blur(60px);
+    }
+    .ambient-glow-felt {
+      position: absolute;
+      width: 1100px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(160, 175, 195, 0.09) 0%, transparent 65%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      filter: blur(50px);
+    }
+    .tech-grid {
+      position: absolute;
+      inset: 0;
+      background-size: 80px 80px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      pointer-events: none;
+    }
+    .tech-grid-dots {
+      position: absolute;
+      inset: 0;
+      background-image: radial-gradient(rgba(43, 112, 240, 0.22) 1px, transparent 1px);
+      background-size: 80px 80px;
+      background-position: -1px -1px;
+      pointer-events: none;
+    }
+    .vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, transparent 45%, rgba(7, 9, 12, 0.95) 100%);
+      pointer-events: none;
+    }
+
+    /* Scene Containers */
+    .scene {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      padding: 60px;
+    }
+
+    /* SCENE 1: Kinetic Brand Typography */
+    #scene-1 .pill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 22px;
+      border-radius: 999px;
+      background: var(--primary-surface);
+      border: 1px solid var(--border-active);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      color: var(--primary-light);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    #scene-1 .pill-tag-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+    }
+    #scene-1 .hero-title-wrap {
+      overflow: hidden;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+    #scene-1 .hero-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 108px;
+      font-weight: 900;
+      letter-spacing: -0.04em;
+      line-height: 0.92;
+      background: linear-gradient(180deg, #FFFFFF 0%, #D8DFEE 60%, #90A0BE 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transform: translateY(115%);
+    }
+    #scene-1 .hero-sub-wrap {
+      overflow: hidden;
+    }
+    #scene-1 .hero-sub {
+      font-family: 'Onest', sans-serif;
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      color: rgba(255, 255, 255, 0.65);
+      text-transform: uppercase;
+      transform: translateY(110%);
+    }
+    #scene-1 .laser-beam-wrap {
+      width: 100%;
+      max-width: 900px;
+      height: 4px;
+      margin: 20px 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    #scene-1 .laser-beam {
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, transparent, var(--primary) 25%, #fff 50%, var(--primary) 75%, transparent);
+      box-shadow: 0 0 25px var(--primary), 0 0 10px #fff;
+    }
+
+    /* SCENE 2: Architectural CAD Blueprint & Dual Dimensions */
+    #scene-2 .cad-box {
+      position: relative;
+      width: 1400px;
+      height: 650px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #scene-2 svg.cad-svg {
+      width: 100%;
+      height: 100%;
+    }
+    .cad-scan-line {
+      position: absolute;
+      width: 1300px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary) 20%, #fff 50%, var(--primary) 80%, transparent);
+      box-shadow: 0 0 20px var(--primary);
+      top: 60px;
+      left: 50px;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .cad-cards-row {
+      position: absolute;
+      bottom: 10px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+    }
+    .cad-card {
+      padding: 14px 24px;
+      background: rgba(14, 18, 24, 0.9);
+      border: 1px solid var(--border-active);
+      border-radius: 12px;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 25px rgba(43, 112, 240, 0.15);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.08em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    .cad-card .tag-lbl {
+      color: var(--primary-light);
+      font-weight: 700;
+    }
+
+    /* SCENE 3: Physical Material & Water Repellent Lotus Test */
+    #scene-3 .product-stage {
+      position: relative;
+      width: 1200px;
+      height: 520px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #scene-3 .mat-card-wrap {
+      position: relative;
+      width: 880px;
+      height: 440px;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.95), 0 0 60px rgba(43, 112, 240, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      transform: translateY(30px) scale(0.94);
+      opacity: 0;
+      background: #141820;
+    }
+    #scene-3 .mat-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+    #scene-3 .mat-sheen {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(115deg, transparent 25%, rgba(255, 255, 255, 0.3) 48%, rgba(82, 142, 255, 0.35) 52%, transparent 75%);
+      transform: translateX(-150%);
+      pointer-events: none;
+      mix-blend-mode: overlay;
+    }
+
+    /* Water Droplet Physics Simulator Canvas */
+    #scene-3 canvas#water-canvas {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 25;
+    }
+
+    .hydro-badge {
+      position: absolute;
+      top: 24px;
+      right: 28px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px;
+      border-radius: 999px;
+      background: rgba(14, 18, 24, 0.92);
+      border: 1px solid var(--border-active);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 0.12em;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6), 0 0 20px rgba(56, 189, 248, 0.25);
+      opacity: 0;
+      transform: translateY(-10px);
+      z-index: 30;
+    }
+    .hydro-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #38bdf8;
+      box-shadow: 0 0 10px #38bdf8;
+    }
+
+    .mat-features-row {
+      margin-top: 36px;
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      justify-content: center;
+    }
+    .material-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 26px;
+      background: rgba(14, 18, 24, 0.88);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      backdrop-filter: blur(24px);
+      font-family: 'Onest', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: #fafafa;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.65), 0 0 25px rgba(43, 112, 240, 0.12);
+      opacity: 0;
+    }
+    .material-pill::before {
+      content: '';
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 10px var(--primary);
+    }
+
+    /* SCENE 4: Brand Finale & CTA */
+    #scene-4 .finale-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    #scene-4 .brand-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 110px;
+      font-weight: 900;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #fff;
+      margin-bottom: 16px;
+      transform: scale(0.88);
+      opacity: 0;
+      text-shadow: 0 0 60px rgba(43, 112, 240, 0.5);
+    }
+    #scene-4 .brand-claim {
+      font-family: 'Onest', sans-serif;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: 0.28em;
+      color: rgba(255, 255, 255, 0.7);
+      text-transform: uppercase;
+      margin-bottom: 40px;
+      transform: translateY(20px);
+      opacity: 0;
+    }
+    #scene-4 .cta-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 20px 52px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-hover) 100%);
+      color: #fff;
+      font-family: 'Onest', sans-serif;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      box-shadow: 0 0 45px var(--primary-glow), 0 15px 35px rgba(0,0,0,0.5);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      transform: scale(0.82);
+      opacity: 0;
+    }
+    #scene-4 .cta-arrow {
+      font-size: 22px;
+    }
+    #scene-4 .trust-badge {
+      margin-top: 36px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      letter-spacing: 0.14em;
+      color: rgba(255, 255, 255, 0.45);
+      text-transform: uppercase;
+      opacity: 0;
+      transform: translateY(12px);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="stage">
+    <div class="ambient-glow-primary" id="ambient-blue"></div>
+    <div class="ambient-glow-felt" id="ambient-felt"></div>
+    <div class="tech-grid"></div>
+    <div class="tech-grid-dots"></div>
+    <div class="vignette"></div>
+
+    <!-- SCENE 1: KINETIC BRAND TYPOGRAPHY -->
+    <div class="scene" id="scene-1">
+      <div class="pill-tag" id="s1-tag">
+        <span class="pill-tag-dot"></span>
+        ACOUSTIC SURFACE ARCHITECTURE
+      </div>
+      <div class="hero-title-wrap">
+        <div class="hero-title" id="s1-title">DESK MAT<br>LIGHT</div>
+      </div>
+      <div class="laser-beam-wrap">
+        <div class="laser-beam" id="s1-laser"></div>
+      </div>
+      <div class="hero-sub-wrap">
+        <div class="hero-sub" id="s1-sub">4 ММ ПРЕССОВАННЫЙ ШЕРСТЯНОЙ ВОЙЛОК</div>
+      </div>
+    </div>
+
+    <!-- SCENE 2: ARCHITECTURAL CAD BLUEPRINT & DUAL SIZES (80×40 & 100×50 CM) -->
+    <div class="scene" id="scene-2">
+      <div class="cad-box">
+        <div class="cad-scan-line" id="cad-scan"></div>
+        <svg class="cad-svg" viewBox="0 0 1400 580" fill="none">
+          <!-- Size M Outline: 100 × 50 cm (1000 × 500 px aspect) -->
+          <rect id="cad-rect-m" x="200" y="80" width="1000" height="420" rx="28" 
+                stroke="#2b70f0" stroke-width="2.5" stroke-dasharray="3200" stroke-dashoffset="3200"
+                fill="rgba(43, 112, 240, 0.04)" />
+          
+          <!-- Size S Outline: 80 × 40 cm (800 × 400 px aspect) -->
+          <rect id="cad-rect-s" x="300" y="130" width="800" height="320" rx="22" 
+                stroke="#528eff" stroke-width="2" stroke-dasharray="2600" stroke-dashoffset="2600"
+                fill="rgba(82, 142, 255, 0.06)" />
+
+          <!-- Dimensions Size M -->
+          <line id="cad-dim-m-w" x1="200" y1="50" x2="1200" y2="50" stroke="#2b70f0" stroke-width="1.5" stroke-dasharray="1000" stroke-dashoffset="1000" />
+          <line id="cad-dim-m-t1" x1="200" y1="42" x2="200" y2="58" stroke="#2b70f0" stroke-width="1.5" opacity="0" />
+          <line id="cad-dim-m-t2" x1="1200" y1="42" x2="1200" y2="58" stroke="#2b70f0" stroke-width="1.5" opacity="0" />
+          <text id="cad-txt-m" x="700" y="42" fill="#2b70f0" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="2" opacity="0">SIZE M // 1000 × 500 ММ</text>
+
+          <!-- Dimensions Size S -->
+          <line id="cad-dim-s-w" x1="300" y1="480" x2="1100" y2="480" stroke="#528eff" stroke-width="1.5" stroke-dasharray="800" stroke-dashoffset="800" />
+          <line id="cad-dim-s-t1" x1="300" y1="472" x2="300" y2="488" stroke="#528eff" stroke-width="1.5" opacity="0" />
+          <line id="cad-dim-s-t2" x1="1100" y1="472" x2="1100" y2="488" stroke="#528eff" stroke-width="1.5" opacity="0" />
+          <text id="cad-txt-s" x="700" y="505" fill="#528eff" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" text-anchor="middle" letter-spacing="2" opacity="0">SIZE S // 800 × 400 ММ</text>
+
+          <!-- Thickness calibration on right -->
+          <line id="cad-dim-h" x1="1230" y1="80" x2="1230" y2="500" stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.5" stroke-dasharray="420" stroke-dashoffset="420" />
+          <text id="cad-txt-h" x="1245" y="295" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="13" letter-spacing="1" opacity="0">4.0 ММ</text>
+        </svg>
+
+        <div class="cad-cards-row">
+          <div class="cad-card" id="cad-card-1">
+            <span class="tag-lbl">[ТОЛЩИНА]</span> 4 ММ АКУСТИЧЕСКИЙ ДЕМПФЕР
+          </div>
+          <div class="cad-card" id="cad-card-2">
+            <span class="tag-lbl">[КРОМКА]</span> ЛАЗЕРНАЯ ЗАПАЙКА БЕЗ РАСПУШИВАНИЯ
+          </div>
+          <div class="cad-card" id="cad-card-3">
+            <span class="tag-lbl">[ОСНОВА]</span> СИЛИКОНОВЫЙ ГРИП 0 СКОЛЬЖЕНИЯ
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENE 3: MATERIAL HONESTY & HYDROPHOBIC WATER-REPELLENT TEST -->
+    <div class="scene" id="scene-3">
+      <div class="product-stage">
+        <div class="mat-card-wrap" id="mat-wrap">
+          <img src="assets/mat_light_setup.jpg" class="mat-img" id="mat-img" alt="Desk Mat Light Texture" />
+          <div class="mat-sheen" id="mat-sheen"></div>
+          
+          <div class="hydro-badge" id="hydro-badge">
+            <span class="hydro-dot"></span>
+            HYDROPHOBIC TEST // PASSED
+          </div>
+
+          <!-- Dynamic Water Droplet Canvas Overlay -->
+          <canvas id="water-canvas" width="880" height="440"></canvas>
+        </div>
+      </div>
+      <div class="mat-features-row">
+        <div class="material-pill" id="mat-pill-1">Водоотталкивающая пропитка</div>
+        <div class="material-pill" id="mat-pill-2">Гасит удары клавиатуры на 92%</div>
+        <div class="material-pill" id="mat-pill-3">Тепло и комфорт для запястий</div>
+      </div>
+    </div>
+
+    <!-- SCENE 4: BRAND FINALE & CTA -->
+    <div class="scene" id="scene-4">
+      <div class="finale-wrap">
+        <h1 class="brand-title" id="s4-brand">GEEKNOOK</h1>
+        <p class="brand-claim" id="s4-claim">ЧИСТЫЙ СТОЛ. МАКСИМАЛЬНЫЙ ФОКУС.</p>
+        <div class="cta-button" id="s4-cta">
+          <span>GEEKNOOK.RU</span>
+          <span class="cta-arrow">→</span>
+        </div>
+        <div class="trust-badge" id="s4-trust">
+          ОФИЦИАЛЬНАЯ ГАРАНТИЯ 12 МЕСЯЦЕВ // ОПЛАТА ПРИ ОСМОТРЕ В СДЭК
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Smooth Easing Functions
+    const clamp = (v, min = 0, max = 1) => Math.min(max, Math.max(min, v));
+    const progress = (t, t0, t1) => clamp((t - t0) / (t1 - t0));
+    const easeOutCubic = (x) => 1 - Math.pow(1 - x, 3);
+    const easeInOutCubic = (x) => x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+    const easeOutExpo = (x) => (x === 1 ? 1 : 1 - Math.pow(2, -10 * x));
+
+    // Elements Cache
+    const s1 = document.getElementById('scene-1');
+    const s1Tag = document.getElementById('s1-tag');
+    const s1Title = document.getElementById('s1-title');
+    const s1Sub = document.getElementById('s1-sub');
+    const s1Laser = document.getElementById('s1-laser');
+
+    const s2 = document.getElementById('scene-2');
+    const cadScan = document.getElementById('cad-scan');
+    const cadRectM = document.getElementById('cad-rect-m');
+    const cadRectS = document.getElementById('cad-rect-s');
+    const cadDimMW = document.getElementById('cad-dim-m-w');
+    const cadDimMT1 = document.getElementById('cad-dim-m-t1');
+    const cadDimMT2 = document.getElementById('cad-dim-m-t2');
+    const cadTxtM = document.getElementById('cad-txt-m');
+    const cadDimSW = document.getElementById('cad-dim-s-w');
+    const cadDimST1 = document.getElementById('cad-dim-s-t1');
+    const cadDimST2 = document.getElementById('cad-dim-s-t2');
+    const cadTxtS = document.getElementById('cad-txt-s');
+    const cadDimH = document.getElementById('cad-dim-h');
+    const cadTxtH = document.getElementById('cad-txt-h');
+    const cadCard1 = document.getElementById('cad-card-1');
+    const cadCard2 = document.getElementById('cad-card-2');
+    const cadCard3 = document.getElementById('cad-card-3');
+
+    const s3 = document.getElementById('scene-3');
+    const matWrap = document.getElementById('mat-wrap');
+    const matSheen = document.getElementById('mat-sheen');
+    const hydroBadge = document.getElementById('hydro-badge');
+    const waterCanvas = document.getElementById('water-canvas');
+    const ctx = waterCanvas.getContext('2d');
+    const matPill1 = document.getElementById('mat-pill-1');
+    const matPill2 = document.getElementById('mat-pill-2');
+    const matPill3 = document.getElementById('mat-pill-3');
+
+    const s4 = document.getElementById('scene-4');
+    const s4Brand = document.getElementById('s4-brand');
+    const s4Claim = document.getElementById('s4-claim');
+    const s4Cta = document.getElementById('s4-cta');
+    const s4Trust = document.getElementById('s4-trust');
+
+    const ambientBlue = document.getElementById('ambient-blue');
+    const ambientFelt = document.getElementById('ambient-felt');
+
+    // Water Droplet Trajectories (Hydrophobic simulation)
+    const dropletsData = [
+      { tStart: 3.15, x0: 380, y0: -20, landX: 380, landY: 210, rollDx: 130, rollDy: 90, r: 16 },
+      { tStart: 3.38, x0: 510, y0: -20, landX: 510, landY: 180, rollDx: 160, rollDy: 80, r: 21 },
+      { tStart: 3.62, x0: 290, y0: -20, landX: 290, landY: 240, rollDx: 140, rollDy: 85, r: 14 },
+      { tStart: 3.80, x0: 640, y0: -20, landX: 640, landY: 195, rollDx: 150, rollDy: 75, r: 18 },
+    ];
+
+    function drawDroplet(ctx, x, y, r, squish = 1) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(1, squish);
+
+      // Droplet shadow
+      ctx.beginPath();
+      ctx.ellipse(2, 6, r * 1.05, r * 0.45, 0, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.filter = 'blur(4px)';
+      ctx.fill();
+      ctx.filter = 'none';
+
+      // Outer water bead dome
+      const grad = ctx.createRadialGradient(-r * 0.25, -r * 0.35, 1, 0, 0, r);
+      grad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+      grad.addColorStop(0.25, 'rgba(210, 235, 255, 0.85)');
+      grad.addColorStop(0.65, 'rgba(82, 142, 255, 0.6)');
+      grad.addColorStop(0.9, 'rgba(43, 112, 240, 0.7)');
+      grad.addColorStop(1, 'rgba(25, 75, 180, 0.9)');
+
+      ctx.beginPath();
+      ctx.arc(0, 0, r, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      // Specular highlight gleam
+      ctx.beginPath();
+      ctx.ellipse(-r * 0.35, -r * 0.38, r * 0.32, r * 0.18, -Math.PI / 6, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+      ctx.fill();
+
+      // Secondary caustic rim light
+      ctx.beginPath();
+      ctx.ellipse(r * 0.25, r * 0.35, r * 0.25, r * 0.12, Math.PI / 4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+      ctx.fill();
+
+      ctx.restore();
+    }
+
+    /**
+     * Master deterministic seek function: window.seek(t)
+     * Total Duration: 5.8s
+     */
+    window.seek = async (t) => {
+      // Ambient Breathing Lighting
+      const pulse = 1 + 0.1 * Math.sin(t * 2.8);
+      ambientBlue.style.transform = `translate(-50%, -50%) scale(${pulse})`;
+      ambientFelt.style.opacity = String(t >= 2.6 && t < 4.6 ? 0.85 : 0.25);
+
+      // ========================================================
+      // SCENE 1: Kinetic Brand Typography (t = 0.0 -> 1.45)
+      // ========================================================
+      if (t < 1.5) {
+        s1.style.opacity = t < 1.2 ? '1' : String(clamp((1.45 - t) / 0.25));
+
+        const pTag = easeOutExpo(progress(t, 0.05, 0.5));
+        s1Tag.style.opacity = String(pTag);
+        s1Tag.style.transform = `translateY(${(1 - pTag) * 20}px)`;
+
+        const pTitle = easeOutCubic(progress(t, 0.15, 0.7));
+        s1Title.style.transform = `translateY(${(1 - pTitle) * 115}%) scale(${0.96 + 0.04 * pTitle})`;
+
+        const pSub = easeOutCubic(progress(t, 0.3, 0.8));
+        s1Sub.style.transform = `translateY(${(1 - pSub) * 110}%)`;
+
+        const pLaser = easeOutExpo(progress(t, 0.4, 0.95));
+        s1Laser.style.width = `${pLaser * 80}%`;
+        s1Laser.style.opacity = String(pLaser < 1 ? pLaser : clamp((1.35 - t) / 0.25));
+      } else {
+        s1.style.opacity = '0';
+      }
+
+      // ========================================================
+      // SCENE 2: Architectural CAD Blueprint & Dual Dimensions (t = 1.25 -> 3.0)
+      // ========================================================
+      if (t >= 1.25 && t < 3.05) {
+        const s2In = easeOutCubic(progress(t, 1.25, 1.55));
+        const s2Out = clamp((3.0 - t) / 0.25);
+        s2.style.opacity = String(Math.min(s2In, s2Out));
+
+        const pScan = progress(t, 1.3, 2.0);
+        cadScan.style.opacity = String(pScan > 0 && pScan < 1 ? 0.85 : 0);
+        cadScan.style.transform = `translateY(${pScan * 460}px)`;
+
+        // Draw Size M Outline
+        const pDrawM = easeOutCubic(progress(t, 1.35, 1.95));
+        cadRectM.style.strokeDashoffset = String((1 - pDrawM) * 3200);
+
+        // Draw Size S Outline
+        const pDrawS = easeOutCubic(progress(t, 1.5, 2.1));
+        cadRectS.style.strokeDashoffset = String((1 - pDrawS) * 2600);
+
+        // Dimension lines & labels
+        const pDimM = easeOutCubic(progress(t, 1.7, 2.2));
+        cadDimMW.style.strokeDashoffset = String((1 - pDimM) * 1000);
+        cadDimMT1.style.opacity = String(pDimM);
+        cadDimMT2.style.opacity = String(pDimM);
+        cadTxtM.style.opacity = String(pDimM);
+
+        const pDimS = easeOutCubic(progress(t, 1.85, 2.35));
+        cadDimSW.style.strokeDashoffset = String((1 - pDimS) * 800);
+        cadDimST1.style.opacity = String(pDimS);
+        cadDimST2.style.opacity = String(pDimS);
+        cadTxtS.style.opacity = String(pDimS);
+
+        const pDimH = easeOutCubic(progress(t, 2.0, 2.45));
+        cadDimH.style.strokeDashoffset = String((1 - pDimH) * 420);
+        cadTxtH.style.opacity = String(pDimH);
+
+        // CAD data badges
+        const pC1 = easeOutExpo(progress(t, 1.8, 2.2));
+        cadCard1.style.opacity = String(pC1);
+        cadCard1.style.transform = `scale(${0.9 + 0.1 * pC1}) translateY(${(1 - pC1) * 10}px)`;
+
+        const pC2 = easeOutExpo(progress(t, 1.95, 2.35));
+        cadCard2.style.opacity = String(pC2);
+        cadCard2.style.transform = `scale(${0.9 + 0.1 * pC2}) translateY(${(1 - pC2) * 10}px)`;
+
+        const pC3 = easeOutExpo(progress(t, 2.1, 2.5));
+        cadCard3.style.opacity = String(pC3);
+        cadCard3.style.transform = `scale(${0.9 + 0.1 * pC3}) translateY(${(1 - pC3) * 10}px)`;
+      } else {
+        s2.style.opacity = '0';
+      }
+
+      // ========================================================
+      // SCENE 3: Physical Material & Hydrophobic Water Drop Test (t = 2.85 -> 4.55)
+      // ========================================================
+      if (t >= 2.8 && t < 4.55) {
+        const s3In = easeOutCubic(progress(t, 2.8, 3.1));
+        const s3Out = clamp((4.5 - t) / 0.25);
+        s3.style.opacity = String(Math.min(s3In, s3Out));
+
+        const pCard = easeOutCubic(progress(t, 2.85, 3.35));
+        const cameraZoom = 0.94 + 0.08 * progress(t, 2.85, 4.5);
+        matWrap.style.opacity = String(pCard);
+        matWrap.style.transform = `translateY(${(1 - pCard) * 30}px) scale(${cameraZoom})`;
+
+        // Light Sheen Sweep
+        const pSheen = progress(t, 3.1, 4.0);
+        matSheen.style.transform = `translateX(${-150 + pSheen * 300}%)`;
+
+        // Hydrophobic Badge
+        const pHydro = easeOutExpo(progress(t, 3.2, 3.6));
+        hydroBadge.style.opacity = String(pHydro);
+        hydroBadge.style.transform = `translateY(${(1 - pHydro) * -10}px)`;
+
+        // Clear and draw Hydrophobic Canvas Droplets
+        ctx.clearRect(0, 0, waterCanvas.width, waterCanvas.height);
+
+        dropletsData.forEach((d) => {
+          if (t >= d.tStart) {
+            const dtDrop = t - d.tStart;
+            let curX = d.landX;
+            let curY = d.landY;
+            let squish = 1.0;
+
+            if (dtDrop < 0.18) {
+              // Falling phase
+              const fallP = dtDrop / 0.18;
+              curY = d.y0 + (d.landY - d.y0) * (fallP * fallP);
+              squish = 1.15 - 0.15 * fallP;
+            } else if (dtDrop < 0.32) {
+              // Impact bounce / dampening
+              const bounceP = (dtDrop - 0.18) / 0.14;
+              squish = 0.75 + 0.25 * Math.sin(bounceP * Math.PI);
+            } else {
+              // Hydrophobic rolling slide phase across felt
+              const rollP = easeInOutCubic(clamp((dtDrop - 0.32) / 0.85));
+              curX = d.landX + d.rollDx * rollP;
+              curY = d.landY + d.rollDy * rollP;
+              squish = 0.95 + 0.05 * Math.sin(rollP * 8);
+            }
+
+            drawDroplet(ctx, curX, curY, d.r, squish);
+          }
+        });
+
+        // Feature Pills
+        const pM1 = easeOutCubic(progress(t, 3.25, 3.65));
+        matPill1.style.opacity = String(pM1);
+        matPill1.style.transform = `translateY(${(1 - pM1) * 18}px)`;
+
+        const pM2 = easeOutCubic(progress(t, 3.4, 3.8));
+        matPill2.style.opacity = String(pM2);
+        matPill2.style.transform = `translateY(${(1 - pM2) * 18}px)`;
+
+        const pM3 = easeOutCubic(progress(t, 3.55, 3.95));
+        matPill3.style.opacity = String(pM3);
+        matPill3.style.transform = `translateY(${(1 - pM3) * 18}px)`;
+      } else {
+        s3.style.opacity = '0';
+      }
+
+      // ========================================================
+      // SCENE 4: Brand Finale & CTA (t = 4.35 -> 5.8)
+      // ========================================================
+      if (t >= 4.3) {
+        const s4In = easeOutCubic(progress(t, 4.3, 4.65));
+        s4.style.opacity = String(s4In);
+
+        const pBrand = easeOutExpo(progress(t, 4.4, 4.95));
+        s4Brand.style.opacity = String(pBrand);
+        s4Brand.style.transform = `scale(${0.88 + 0.12 * pBrand})`;
+
+        const pClaim = easeOutCubic(progress(t, 4.6, 5.1));
+        s4Claim.style.opacity = String(pClaim);
+        s4Claim.style.transform = `translateY(${(1 - pClaim) * 20}px)`;
+
+        const pCta = easeOutExpo(progress(t, 4.75, 5.25));
+        s4Cta.style.opacity = String(pCta);
+        s4Cta.style.transform = `scale(${0.82 + 0.18 * pCta})`;
+
+        const pTrust = easeOutCubic(progress(t, 4.9, 5.4));
+        s4Trust.style.opacity = String(pTrust);
+        s4Trust.style.transform = `translateY(${(1 - pTrust) * 12}px)`;
+      } else {
+        s4.style.opacity = '0';
+      }
+    };
+
+    // Preload & Initialization
+    const img = document.getElementById('mat-img');
+    const onAssetsReady = () => {
+      window.ready = true;
+      window.seek(0);
+    };
+
+    if (img.complete) {
+      onAssetsReady();
+    } else {
+      img.onload = onAssetsReady;
+      img.onerror = onAssetsReady;
+    }
+  </script>
+</body>
+</html>

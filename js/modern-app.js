@@ -9300,6 +9300,7 @@
     initMobileStickyBuyBar();
     initScrollReveals();
     initAnatomyScroll();
+    initScrollAssembly();
     initNumberCounters();
     initTickerObserver();
     initMagneticButtons();
@@ -9599,6 +9600,227 @@
     }
   };
 
+  // --- 2.1.5. INTERACTIVE SCROLL ASSEMBLY BLOCK ---
+  const initScrollAssembly = () => {
+    const track = document.getElementById('assemblyTrack');
+    if (!track) return;
+
+    const slider = document.getElementById('assemblySlider');
+    const percentLbl = document.getElementById('percentLbl');
+    const badgeText = document.getElementById('badgeText');
+    const assemblyTitle = document.getElementById('assemblyTitle');
+    const assemblySub = document.getElementById('assemblySub');
+
+    const svgDeck = document.getElementById('svgGroupDeck');
+    const svgLegs = document.getElementById('svgGroupLegs');
+    const svgCork = document.getElementById('svgGroupCork');
+    const svgTray = document.getElementById('svgGroupTray');
+    const assemblySvg = document.getElementById('assemblySvg');
+    const realImg = document.getElementById('assemblyRealImg');
+    const floorShadow = document.getElementById('floorShadow');
+
+    const calloutDeck = document.getElementById('calloutDeck');
+    const calloutTtrack = document.getElementById('calloutTtrack');
+    const calloutLegs = document.getElementById('calloutLegs');
+    const calloutCork = document.getElementById('calloutCork');
+
+    const snapLegL = document.getElementById('snapLegL');
+    const snapLegR = document.getElementById('snapLegR');
+    const snapDeck = document.getElementById('snapDeck');
+    const ctaRow = document.getElementById('ctaRow');
+
+    const navPills = track.querySelectorAll('.assembly-nav-pill');
+
+    let userIsScrubbing = false;
+    let hasSnappedLegs = false;
+    let hasSnappedDeck = false;
+
+    const STAGES = [
+      {
+        threshold: 0.0,
+        badge: '01 // ВЗРЫВ-СХЕМА (EXPLODED CAD VIEW)',
+        title: 'Разобранный вид компонентов',
+        sub: 'Каждая деталь спроектирована по стандарту ISO-9241 для максимальной жесткости и нулевого люфта.'
+      },
+      {
+        threshold: 0.25,
+        badge: '02 // КАРКАС ИЗ АЛЮМИНИЯ Д16Т',
+        title: 'Монтаж силовых опор шасси',
+        sub: 'Цельнофрезерованные стойки Д16Т толщиной 25 мкм матового анодирования выдерживают 50+ кг.'
+      },
+      {
+        threshold: 0.50,
+        badge: '03 // МАССИВ АМЕРИКАНСКОГО ОРЕХА',
+        title: 'Посадка столешницы и фаска 45°',
+        sub: 'Отборные цельные ламели твёрдых пород с 11 слоями немецкого экологичного масла Osmo.'
+      },
+      {
+        threshold: 0.75,
+        badge: '04 // T-TRACK & КАБЕЛЬ-КАНАЛ',
+        title: 'Интеграция модулей и скрытой разводки',
+        sub: 'Направляющий паз под углом 45° для крепления держателей без единого винта за 1 секунду.'
+      },
+      {
+        threshold: 0.95,
+        badge: '05 // ГОТОВЫЙ МОНОЛИТНЫЙ СЕТАП',
+        title: 'Focus Station готов к работе',
+        sub: 'Идеальный визуальный дзен, эргономичный подъём экрана на 9 см и 100% защита от царапин.'
+      }
+    ];
+
+    const clamp = (val, min = 0, max = 1) => Math.min(max, Math.max(min, val));
+
+    const updateAssembly = (p, syncSlider = true) => {
+      p = clamp(p);
+
+      if (syncSlider && slider) {
+        slider.value = Math.round(p * 100);
+      }
+      if (percentLbl) {
+        percentLbl.textContent = Math.round(p * 100) + '%';
+      }
+
+      const pDeck = clamp(p / 0.65);
+      const deckY = (1 - pDeck) * -90;
+      if (svgDeck) svgDeck.style.transform = `translateY(${deckY}px)`;
+
+      const pLegs = clamp(p / 0.45);
+      const legsY = (1 - pLegs) * 80;
+      if (svgLegs) svgLegs.style.transform = `translateY(${legsY}px)`;
+
+      const pCork = clamp(p / 0.40);
+      const corkY = (1 - pCork) * 130;
+      if (svgCork) svgCork.style.transform = `translateY(${corkY}px)`;
+
+      const pTray = clamp(p / 0.75);
+      const trayY = (1 - pTray) * 160;
+      if (svgTray) svgTray.style.transform = `translateY(${trayY}px)`;
+
+      if (p >= 0.42 && !hasSnappedLegs) {
+        hasSnappedLegs = true;
+        if (snapLegL && snapLegR) {
+          snapLegL.classList.remove('is-snapping');
+          snapLegR.classList.remove('is-snapping');
+          void snapLegL.offsetWidth;
+          snapLegL.classList.add('is-snapping');
+          snapLegR.classList.add('is-snapping');
+        }
+      } else if (p < 0.35) {
+        hasSnappedLegs = false;
+      }
+
+      if (p >= 0.62 && !hasSnappedDeck) {
+        hasSnappedDeck = true;
+        if (snapDeck) {
+          snapDeck.classList.remove('is-snapping');
+          void snapDeck.offsetWidth;
+          snapDeck.classList.add('is-snapping');
+        }
+      } else if (p < 0.55) {
+        hasSnappedDeck = false;
+      }
+
+      const pCrossfade = clamp((p - 0.65) / 0.28);
+      if (assemblySvg) assemblySvg.style.opacity = String(1 - pCrossfade * 0.92);
+      if (realImg) {
+        realImg.style.opacity = String(pCrossfade);
+        realImg.style.transform = `scale(${0.96 + 0.04 * pCrossfade})`;
+      }
+
+      if (floorShadow) {
+        floorShadow.style.opacity = String(0.3 + 0.65 * p);
+        floorShadow.style.transform = `scale(${0.85 + 0.15 * p})`;
+      }
+
+      if (calloutDeck) {
+        calloutDeck.style.opacity = String(p < 0.7 ? 1 : clamp((0.85 - p) / 0.15));
+        calloutDeck.style.transform = `translateY(${deckY * 0.5}px)`;
+      }
+      if (calloutLegs) {
+        calloutLegs.style.opacity = String(p < 0.7 ? 1 : clamp((0.85 - p) / 0.15));
+        calloutLegs.style.transform = `translateY(${legsY * 0.5}px)`;
+      }
+      if (calloutCork) {
+        calloutCork.style.opacity = String(p < 0.6 ? 1 : clamp((0.75 - p) / 0.15));
+        calloutCork.style.transform = `translateY(${corkY * 0.5}px)`;
+      }
+      if (calloutTtrack) {
+        calloutTtrack.style.opacity = String(p < 0.8 ? 1 : clamp((0.9 - p) / 0.1));
+      }
+
+      if (ctaRow) {
+        if (p >= 0.92) {
+          ctaRow.classList.add('is-visible');
+        } else {
+          ctaRow.classList.remove('is-visible');
+        }
+      }
+
+      let currentStage = STAGES[0];
+      for (let i = STAGES.length - 1; i >= 0; i--) {
+        if (p >= STAGES[i].threshold - 0.05) {
+          currentStage = STAGES[i];
+          break;
+        }
+      }
+      if (badgeText) badgeText.textContent = currentStage.badge;
+      if (assemblyTitle) assemblyTitle.textContent = currentStage.title;
+      if (assemblySub) assemblySub.textContent = currentStage.sub;
+
+      navPills.forEach(pill => {
+        const pillP = parseFloat(pill.dataset.progress);
+        if (Math.abs(p - pillP) < 0.15) {
+          pill.classList.add('active');
+        } else {
+          pill.classList.remove('active');
+        }
+      });
+    };
+
+    const onScroll = () => {
+      if (userIsScrubbing) return;
+      const rect = track.getBoundingClientRect();
+      const totalScrollable = track.offsetHeight - window.innerHeight;
+      if (totalScrollable <= 0) return;
+
+      const currentScroll = -rect.top;
+      const p = clamp(currentScroll / totalScrollable);
+      updateAssembly(p, true);
+    };
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+
+    if (slider) {
+      slider.addEventListener('input', (e) => {
+        userIsScrubbing = true;
+        const p = parseFloat(e.target.value) / 100;
+        updateAssembly(p, false);
+      });
+
+      slider.addEventListener('change', (e) => {
+        userIsScrubbing = false;
+        const p = parseFloat(e.target.value) / 100;
+        const totalScrollable = track.offsetHeight - window.innerHeight;
+        const trackTop = track.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop);
+        window.scrollTo({ top: trackTop + p * totalScrollable, behavior: 'auto' });
+      });
+    }
+
+    navPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        const targetP = parseFloat(pill.dataset.progress);
+        const totalScrollable = track.offsetHeight - window.innerHeight;
+        const trackTop = track.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop);
+        const targetScrollTop = trackTop + targetP * totalScrollable;
+        window.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+        updateAssembly(targetP, true);
+      });
+    });
+
+    updateAssembly(0);
+  };
+
   // --- 2.2. LIVE NUMBER COUNTER ROLLERS ---
   const initNumberCounters = () => {
     if (typeof window === 'undefined' || !('IntersectionObserver' in window)) return;
@@ -9849,6 +10071,7 @@
     focusStation3DStudio,
     production3DStudio,
     initProduction3DStudio,
+    initScrollAssembly,
     ensureThreeLoaded,
     setProduction3dFinish,
     setProduction3dLength,

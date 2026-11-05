@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>GeekNook Focus Station // Интерактивная Scroll-сборка (Локальный прототип)</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;600;700;800;900&family=Onest:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/modern-style.css">
+
+  <style>
+    /* Reset & Viewport Discipline (clip preserves position: sticky) */
+    html {
+      scroll-behavior: smooth;
+      background: #07090c;
+      color: #fff;
+      overflow-x: clip;
+      max-width: 100vw;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      overflow-x: clip;
+      max-width: 100vw;
+      width: 100%;
+      font-family: 'Onest', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #07090c;
+    }
+
+    /* Top Demo Navigation Bar */
+    .demo-top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      background: rgba(14, 18, 24, 0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      box-sizing: border-box;
+    }
+    .demo-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: 'Manrope', sans-serif;
+      font-weight: 900;
+      font-size: 18px;
+      letter-spacing: 0.12em;
+      color: #fff;
+      text-decoration: none;
+    }
+    .demo-badge-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(43, 112, 240, 0.15);
+      border: 1px solid rgba(43, 112, 240, 0.4);
+      color: #528eff;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .demo-return-link {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+    .demo-return-link:hover {
+      color: #fff;
+    }
+
+    /* Intro Hero Block Before Assembly */
+    .demo-intro-section {
+      min-height: 70vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 60px;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .demo-intro-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: rgba(43, 112, 240, 0.12);
+      border: 1px solid rgba(43, 112, 240, 0.35);
+      color: #528eff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+    .demo-intro-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(36px, 6vw, 68px);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #FFFFFF 0%, #D8DFEE 70%, #90A0BE 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      max-width: 900px;
+    }
+    .demo-intro-desc {
+      font-size: clamp(16px, 2vw, 20px);
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 680px;
+      margin-bottom: 36px;
+    }
+    .demo-scroll-hint {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      letter-spacing: 0.1em;
+      color: #528eff;
+      animation: floatHint 2s infinite ease-in-out;
+    }
+    @keyframes floatHint {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(8px); }
+    }
+
+    /* ==========================================================================
+       INTERACTIVE SCROLL ASSEMBLY BLOCK
+       ========================================================================== */
+    .scroll-assembly-track {
+      position: relative;
+      height: 250vh;
+      width: 100%;
+      overflow: visible;
+      box-sizing: border-box;
+    }
+
+    .scroll-assembly-sticky {
+      position: -webkit-sticky;
+      position: sticky;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 72px 24px 28px;
+      box-sizing: border-box;
+      background: #07090c;
+      z-index: 2;
+    }
+
+    /* Stage Ambient Lighting */
+    .assembly-ambient-blue {
+      position: absolute;
+      width: 1200px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(ellipse at center, rgba(43, 112, 240, 0.15) 0%, rgba(43, 112, 240, 0.03) 50%, transparent 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      filter: blur(60px);
+      z-index: 1;
+    }
+    .assembly-grid {
+      position: absolute;
+      inset: 0;
+      background-size: 60px 60px;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Top Telemetry Header */
+    .assembly-header {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      max-width: 800px;
+      width: 100%;
+    }
+    .assembly-step-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(14, 18, 24, 0.9);
+      border: 1px solid rgba(43, 112, 240, 0.4);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: #528eff;
+      text-transform: uppercase;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+      margin-bottom: 12px;
+    }
+    .assembly-badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2b70f0;
+      box-shadow: 0 0 8px #2b70f0;
+    }
+    .assembly-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(24px, 3.2vw, 38px);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .assembly-sub {
+      font-size: clamp(13px, 1.4vw, 15px);
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Viewport Stage */
+    .assembly-viewport {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 1000px;
+      height: 480px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Layer Containers */
+    .assembly-stage-box {
+      position: relative;
+      width: 100%;
+      max-width: 840px;
+      height: 380px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* CAD Blueprint SVG Layer */
+    .assembly-cad-svg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 5;
+      transition: opacity 0.25s ease;
+    }
+
+    /* Real Wood Cutout Image Layer */
+    .assembly-real-img {
+      position: absolute;
+      width: 820px;
+      max-width: 95%;
+      height: auto;
+      object-fit: contain;
+      z-index: 6;
+      opacity: 0;
+      filter: drop-shadow(0 35px 70px rgba(0,0,0,0.9)) drop-shadow(0 0 40px rgba(43, 112, 240, 0.2));
+      transform: translateY(0);
+      pointer-events: none;
+    }
+
+    /* Floor Drop Shadow */
+    .assembly-floor-shadow {
+      position: absolute;
+      width: 840px;
+      max-width: 92%;
+      height: 45px;
+      bottom: 60px;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 55%, transparent 75%);
+      filter: blur(16px);
+      z-index: 4;
+      opacity: 0.3;
+      transform: scale(0.85);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    /* Snap Ring Feedback Animation */
+    .snap-ring {
+      position: absolute;
+      border: 2px solid #528eff;
+      border-radius: 50%;
+      pointer-events: none;
+      opacity: 0;
+      transform: scale(0.4);
+      z-index: 20;
+    }
+    .snap-ring.is-snapping {
+      animation: snapRipple 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes snapRipple {
+      0% { opacity: 0.9; transform: scale(0.5); }
+      100% { opacity: 0; transform: scale(2.2); }
+    }
+
+    /* Floating Technical Annotation Callouts */
+    .assembly-callout {
+      position: absolute;
+      padding: 8px 14px;
+      background: rgba(14, 18, 24, 0.92);
+      border: 1px solid rgba(43, 112, 240, 0.45);
+      border-radius: 8px;
+      backdrop-filter: blur(16px);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 15;
+    }
+    .callout-tag {
+      color: #528eff;
+    }
+    .callout-deck {
+      top: 40px;
+      right: 40px;
+    }
+    .callout-ttrack {
+      top: 130px;
+      left: 30px;
+    }
+    .callout-legs {
+      bottom: 90px;
+      left: 40px;
+    }
+    .callout-cork {
+      bottom: 30px;
+      right: 50px;
+    }
+
+    /* Bottom Interactive Scrubber & Status Strip */
+    .assembly-bottom-controls {
+      position: relative;
+      z-index: 10;
+      width: 100%;
+      max-width: 840px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    /* Step Navigation Pills */
+    .assembly-pills-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 4px;
+      box-sizing: border-box;
+      scrollbar-width: none;
+    }
+    .assembly-pills-row::-webkit-scrollbar {
+      display: none;
+    }
+    .assembly-nav-pill {
+      flex-shrink: 0;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(14, 18, 24, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.65);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .assembly-nav-pill:hover,
+    .assembly-nav-pill.active {
+      background: rgba(43, 112, 240, 0.18);
+      border-color: #2b70f0;
+      color: #fff;
+      box-shadow: 0 0 15px rgba(43, 112, 240, 0.3);
+    }
+
+    /* Slider Progress Bar */
+    .assembly-slider-wrap {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .assembly-slider {
+      flex: 1;
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.12);
+      outline: none;
+      appearance: none;
+      -webkit-appearance: none;
+      cursor: pointer;
+      position: relative;
+    }
+    .assembly-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #528eff;
+      box-shadow: 0 0 15px #2b70f0;
+      border: 2px solid #fff;
+      cursor: grab;
+      transition: transform 0.15s ease;
+    }
+    .assembly-slider::-webkit-slider-thumb:active {
+      transform: scale(1.2);
+      cursor: grabbing;
+    }
+    .assembly-percent-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 700;
+      color: #528eff;
+      min-width: 48px;
+      text-align: right;
+    }
+
+    /* Action Buttons Row when Assembly is 100% Complete */
+    .assembly-cta-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-top: 4px;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+    }
+    .assembly-cta-row.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .btn-assembly-3d {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 28px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #2b70f0 0%, #1b5ed6 100%);
+      color: #fff;
+      font-family: 'Onest', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      box-shadow: 0 0 25px rgba(43, 112, 240, 0.4);
+      min-height: 44px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-assembly-3d:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 35px rgba(43, 112, 240, 0.6);
+    }
+    .btn-assembly-buy {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: 999px;
+      background: rgba(14, 18, 24, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      color: #fff;
+      font-family: 'Onest', sans-serif;
+      font-weight: 600;
+      font-size: 14px;
+      text-decoration: none;
+      min-height: 44px;
+      transition: all 0.2s ease;
+    }
+    .btn-assembly-buy:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Outro Section After Assembly */
+    .demo-outro-section {
+      min-height: 50vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px;
+      background: #0e1218;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .demo-outro-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+    .demo-outro-sub {
+      color: rgba(255, 255, 255, 0.6);
+      max-width: 580px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* Mobile Responsive Overrides (<= 768px) */
+    @media (max-width: 768px) {
+      .scroll-assembly-sticky {
+        padding: 68px 16px 20px;
+      }
+      .assembly-viewport {
+        height: 380px;
+      }
+      .assembly-stage-box {
+        height: 300px;
+      }
+      .assembly-callout {
+        display: none; /* Hide cluttered labels on narrow screens to keep clean focal visual */
+      }
+      .assembly-pills-row {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header class="demo-top-bar">
+    <a href="index.html" class="demo-brand">
+      <span>GEEKNOOK</span>
+      <span class="demo-badge-tag">SCROLL LAB</span>
+    </a>
+    <a href="index.html" class="demo-return-link">
+      <span>← Вернуться на главную</span>
+    </a>
+  </header>
+
+  <!-- Intro Block -->
+  <section class="demo-intro-section">
+    <div class="demo-intro-tag">
+      <span>●</span> ИНЖЕНЕРНЫЙ ПРОТОТИП 2026
+    </div>
+    <h1 class="demo-intro-title">Exploded Scroll Assembly // Модульная сборка Focus Station</h1>
+    <p class="demo-intro-desc">
+      Интерактивный скролл-блок: наблюдайте, как отдельные компоненты флагманской подставки (массив ореха, шасси Д16Т, направляющие T-Track и пробковые демпферы) собираются в единый монолит по мере прокрутки.
+    </p>
+    <div class="demo-scroll-hint">
+      <span>ПРОКРУТИТЕ ВНИЗ ДЛЯ СБОРКИ</span>
+      <span>↓</span>
+    </div>
+  </section>
+
+  <!-- ==========================================================================
+       INTERACTIVE SCROLL ASSEMBLY BLOCK
+       ========================================================================== -->
+  <section class="scroll-assembly-track" id="assemblyTrack">
+    <div class="scroll-assembly-sticky">
+      
+      <!-- Atmospheric Lighting -->
+      <div class="assembly-ambient-blue" id="ambientGlow"></div>
+      <div class="assembly-grid"></div>
+
+      <!-- Header Telemetry -->
+      <div class="assembly-header">
+        <div class="assembly-step-badge" id="assemblyBadge">
+          <span class="assembly-badge-dot"></span>
+          <span id="badgeText">01 // ВЗРЫВ-СХЕМА (EXPLODED CAD VIEW)</span>
+        </div>
+        <h2 class="assembly-title" id="assemblyTitle">Разобранный вид компонентов</h2>
+        <p class="assembly-sub" id="assemblySub">
+          Каждая деталь спроектирована по стандарту ISO-9241 для максимальной жесткости и нулевого люфта.
+        </p>
+      </div>
+
+      <!-- Main Stage Viewport -->
+      <div class="assembly-viewport">
+        <div class="assembly-stage-box" id="stageBox">
+          
+          <!-- Floor Shadow -->
+          <div class="assembly-floor-shadow" id="floorShadow"></div>
+
+          <!-- Dynamic Snap Rings -->
+          <div class="snap-ring" id="snapLegL" style="left: 17%; bottom: 85px; width: 60px; height: 60px;"></div>
+          <div class="snap-ring" id="snapLegR" style="right: 17%; bottom: 85px; width: 60px; height: 60px;"></div>
+          <div class="snap-ring" id="snapDeck" style="left: 50%; top: 38%; width: 120px; height: 40px; margin-left: -60px;"></div>
+
+          <!-- SVG CAD Explosive Schematic Blueprint -->
+          <svg class="assembly-cad-svg" id="assemblySvg" viewBox="0 0 840 380" fill="none">
+            <!-- Group 1: Walnut Solid Deck (Floating Y = -80 -> 0) -->
+            <g id="svgGroupDeck">
+              <!-- Deck Top Surface -->
+              <path d="M 100 130 L 740 130 L 775 160 L 65 160 Z" 
+                    stroke="#2b70f0" stroke-width="2.2" fill="rgba(43, 112, 240, 0.05)" />
+              <!-- Deck 45 deg Chamfer Edge -->
+              <path d="M 65 160 L 775 160 L 775 178 L 65 178 Z" 
+                    stroke="#528eff" stroke-width="2" fill="rgba(82, 142, 255, 0.08)" />
+              <!-- Milled T-Track Slot in Deck -->
+              <path d="M 120 144 L 720 144" stroke="#ffffff" stroke-width="1.8" stroke-dasharray="8 4" opacity="0.7" />
+              <!-- Dimension Leader Line -->
+              <line x1="65" y1="120" x2="775" y2="120" stroke="rgba(82, 142, 255, 0.5)" stroke-width="1.2" stroke-dasharray="4 4" />
+              <text x="420" y="112" fill="#528eff" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" text-anchor="middle" letter-spacing="2">LENGTH 800 MM // 22 MM SOLID WOOD</text>
+            </g>
+
+            <!-- Group 2: D16T Aluminum Legs (Floating Y = +80 -> 0) -->
+            <g id="svgGroupLegs">
+              <!-- Left Leg -->
+              <path d="M 120 178 L 165 178 L 165 275 L 120 275 Z" 
+                    stroke="#ffffff" stroke-width="2.2" fill="rgba(255, 255, 255, 0.06)" />
+              <!-- Left Leg Chamfer -->
+              <path d="M 120 275 L 165 275 L 175 285 L 110 285 Z" 
+                    stroke="#528eff" stroke-width="1.5" fill="rgba(82, 142, 255, 0.12)" />
+
+              <!-- Right Leg -->
+              <path d="M 675 178 L 720 178 L 720 275 L 675 275 Z" 
+                    stroke="#ffffff" stroke-width="2.2" fill="rgba(255, 255, 255, 0.06)" />
+              <!-- Right Leg Chamfer -->
+              <path d="M 675 275 L 720 275 L 730 285 L 665 285 Z" 
+                    stroke="#528eff" stroke-width="1.5" fill="rgba(82, 142, 255, 0.12)" />
+
+              <!-- Leg Height Callout -->
+              <line x1="750" y1="178" x2="750" y2="285" stroke="rgba(255, 255, 255, 0.4)" stroke-width="1.2" stroke-dasharray="3 3" />
+              <text x="760" y="235" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="11">90 MM</text>
+            </g>
+
+            <!-- Group 3: Natural Cork Footpads (Floating Y = +130 -> 0) -->
+            <g id="svgGroupCork">
+              <rect x="110" y="287" width="65" height="8" rx="2" stroke="#d97706" stroke-width="1.5" fill="rgba(217, 119, 6, 0.2)" />
+              <rect x="665" y="287" width="65" height="8" rx="2" stroke="#d97706" stroke-width="1.5" fill="rgba(217, 119, 6, 0.2)" />
+            </g>
+
+            <!-- Group 4: Stealth Cable Tray (Floating Y = +160 -> 0) -->
+            <g id="svgGroupTray">
+              <path d="M 230 210 L 610 210 L 590 250 L 250 250 Z" 
+                    stroke="#38bdf8" stroke-width="1.8" stroke-dasharray="6 3" fill="rgba(56, 189, 248, 0.04)" />
+              <text x="420" y="234" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle" letter-spacing="1">STEALTH CABLE TRAY // 140W</text>
+            </g>
+          </svg>
+
+          <!-- Spotless Physical Wood Stand Cutout (v5) -->
+          <img src="motion/focus-station-teaser/assets/stand_cutout.png" 
+               alt="Focus Station Monolith Assembly" 
+               class="assembly-real-img" 
+               id="assemblyRealImg" />
+
+          <!-- Technical Callouts -->
+          <div class="assembly-callout callout-deck" id="calloutDeck">
+            <span class="callout-tag">[LEVEL 01]</span> МАССИВ ОРЕХА 22 ММ
+          </div>
+          <div class="assembly-callout callout-ttrack" id="calloutTtrack">
+            <span class="callout-tag">[LEVEL 02]</span> МОДУЛЬНЫЙ ПАЗ T-TRACK 45°
+          </div>
+          <div class="assembly-callout callout-legs" id="calloutLegs">
+            <span class="callout-tag">[LEVEL 03]</span> ШАССИ Д16Т // 50+ КГ
+          </div>
+          <div class="assembly-callout callout-cork" id="calloutCork">
+            <span class="callout-tag">[LEVEL 04]</span> ПРОБКА 4 ММ // 0 ЦАРАПИН
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Bottom Interactive Controls & Scrubbing -->
+      <div class="assembly-bottom-controls">
+        
+        <!-- Step Navigation Pills -->
+        <div class="assembly-pills-row">
+          <button type="button" class="assembly-nav-pill active" data-progress="0.0">01 Взрыв-схема</button>
+          <button type="button" class="assembly-nav-pill" data-progress="0.28">02 Шасси Д16Т</button>
+          <button type="button" class="assembly-nav-pill" data-progress="0.55">03 Массив ореха</button>
+          <button type="button" class="assembly-nav-pill" data-progress="0.78">04 Кабель-трей</button>
+          <button type="button" class="assembly-nav-pill" data-progress="1.0">05 Монолитный сетап</button>
+        </div>
+
+        <!-- Slider Bar -->
+        <div class="assembly-slider-wrap">
+          <input type="range" class="assembly-slider" id="assemblySlider" min="0" max="100" value="0" aria-label="Степень сборки Focus Station">
+          <span class="assembly-percent-lbl" id="percentLbl">0%</span>
+        </div>
+
+        <!-- Final CTA Buttons (Visible when fully assembled) -->
+        <div class="assembly-cta-row" id="ctaRow">
+          <a href="index.html#configurator" class="btn-assembly-3d">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+            <span>Открыть 3D Конфигуратор</span>
+          </a>
+          <a href="index.html#focus-station-walnut" class="btn-assembly-buy">
+            <span>В каталог Focus Station →</span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Outro Section -->
+  <section class="demo-outro-section">
+    <h3 class="demo-outro-title">Монолитность. Модульность. Дзен.</h3>
+    <p class="demo-outro-sub">
+      Все элементы Focus Station собираются с допуском менее 0.1 мм. Никаких люфтов, скрипов или деформаций столешницы. Официальная гарантия 12 месяцев.
+    </p>
+    <a href="index.html" class="btn-assembly-3d">
+      <span>Перейти в магазин GeekNook</span>
+    </a>
+  </section>
+
+  <script>
+    (function() {
+      'use strict';
+
+      // Elements
+      const track = document.getElementById('assemblyTrack');
+      const slider = document.getElementById('assemblySlider');
+      const percentLbl = document.getElementById('percentLbl');
+      const badgeText = document.getElementById('badgeText');
+      const assemblyTitle = document.getElementById('assemblyTitle');
+      const assemblySub = document.getElementById('assemblySub');
+
+      const svgDeck = document.getElementById('svgGroupDeck');
+      const svgLegs = document.getElementById('svgGroupLegs');
+      const svgCork = document.getElementById('svgGroupCork');
+      const svgTray = document.getElementById('svgGroupTray');
+      const assemblySvg = document.getElementById('assemblySvg');
+      const realImg = document.getElementById('assemblyRealImg');
+      const floorShadow = document.getElementById('floorShadow');
+
+      const calloutDeck = document.getElementById('calloutDeck');
+      const calloutTtrack = document.getElementById('calloutTtrack');
+      const calloutLegs = document.getElementById('calloutLegs');
+      const calloutCork = document.getElementById('calloutCork');
+
+      const snapLegL = document.getElementById('snapLegL');
+      const snapLegR = document.getElementById('snapLegR');
+      const snapDeck = document.getElementById('snapDeck');
+      const ctaRow = document.getElementById('ctaRow');
+
+      const navPills = document.querySelectorAll('.assembly-nav-pill');
+
+      let userIsScrubbing = false;
+      let hasSnappedLegs = false;
+      let hasSnappedDeck = false;
+
+      // Telemetry Data Stages
+      const STAGES = [
+        {
+          threshold: 0.0,
+          badge: '01 // ВЗРЫВ-СХЕМА (EXPLODED CAD VIEW)',
+          title: 'Разобранный вид компонентов',
+          sub: 'Каждая деталь спроектирована по стандарту ISO-9241 для максимальной жесткости и нулевого люфта.'
+        },
+        {
+          threshold: 0.25,
+          badge: '02 // КАРКАС ИЗ АЛЮМИНИЯ Д16Т',
+          title: 'Монтаж силовых опор шасси',
+          sub: 'Цельнофрезерованные стойки Д16Т толщиной 25 мкм матового анодирования выдерживают 50+ кг.'
+        },
+        {
+          threshold: 0.50,
+          badge: '03 // МАССИВ АМЕРИКАНСКОГО ОРЕХА',
+          title: 'Посадка столешницы и фаска 45°',
+          sub: 'Отборные цельные ламели твёрдых пород с 11 слоями немецкого экологичного масла Osmo.'
+        },
+        {
+          threshold: 0.75,
+          badge: '04 // T-TRACK & КАБЕЛЬ-КАНАЛ',
+          title: 'Интеграция модулей и скрытой разводки',
+          sub: 'Направляющий паз под углом 45° для крепления держателей без единого винта за 1 секунду.'
+        },
+        {
+          threshold: 0.95,
+          badge: '05 // ГОТОВЫЙ МОНОЛИТНЫЙ СЕТАП',
+          title: 'Focus Station готов к работе',
+          sub: 'Идеальный визуальный дзен, эргономичный подъём экрана на 9 см и 100% защита от царапин.'
+        }
+      ];
+
+      function clamp(val, min = 0, max = 1) {
+        return Math.min(max, Math.max(min, val));
+      }
+
+      function updateAssembly(p, syncSlider = true) {
+        p = clamp(p);
+
+        if (syncSlider) {
+          slider.value = Math.round(p * 100);
+        }
+        percentLbl.textContent = Math.round(p * 100) + '%';
+
+        // 1. Exploded Motions
+        // Deck: Y moves from -90px down to 0
+        const pDeck = clamp(p / 0.65);
+        const deckY = (1 - pDeck) * -90;
+        svgDeck.style.transform = `translateY(${deckY}px)`;
+
+        // Legs: Y moves from +80px up to 0
+        const pLegs = clamp(p / 0.45);
+        const legsY = (1 - pLegs) * 80;
+        svgLegs.style.transform = `translateY(${legsY}px)`;
+
+        // Cork: Y moves from +130px up to 0
+        const pCork = clamp(p / 0.40);
+        const corkY = (1 - pCork) * 130;
+        svgCork.style.transform = `translateY(${corkY}px)`;
+
+        // Tray: Y moves from +160px up to 0
+        const pTray = clamp(p / 0.75);
+        const trayY = (1 - pTray) * 160;
+        svgTray.style.transform = `translateY(${trayY}px)`;
+
+        // 2. Snap Rings Feedback Trigger
+        if (p >= 0.42 && !hasSnappedLegs) {
+          hasSnappedLegs = true;
+          snapLegL.classList.remove('is-snapping');
+          snapLegR.classList.remove('is-snapping');
+          void snapLegL.offsetWidth;
+          snapLegL.classList.add('is-snapping');
+          snapLegR.classList.add('is-snapping');
+        } else if (p < 0.35) {
+          hasSnappedLegs = false;
+        }
+
+        if (p >= 0.62 && !hasSnappedDeck) {
+          hasSnappedDeck = true;
+          snapDeck.classList.remove('is-snapping');
+          void snapDeck.offsetWidth;
+          snapDeck.classList.add('is-snapping');
+        } else if (p < 0.55) {
+          hasSnappedDeck = false;
+        }
+
+        // 3. Blueprint <-> Real Wood Crossfade (p from 0.65 to 0.95)
+        const pCrossfade = clamp((p - 0.65) / 0.28);
+        assemblySvg.style.opacity = String(1 - pCrossfade * 0.92);
+        realImg.style.opacity = String(pCrossfade);
+        realImg.style.transform = `scale(${0.96 + 0.04 * pCrossfade})`;
+
+        // Floor Shadow scaling
+        floorShadow.style.opacity = String(0.3 + 0.65 * p);
+        floorShadow.style.transform = `scale(${0.85 + 0.15 * p})`;
+
+        // 4. Callout Annotations Opacity
+        calloutDeck.style.opacity = String(p < 0.7 ? 1 : clamp((0.85 - p) / 0.15));
+        calloutDeck.style.transform = `translateY(${deckY * 0.5}px)`;
+
+        calloutLegs.style.opacity = String(p < 0.7 ? 1 : clamp((0.85 - p) / 0.15));
+        calloutLegs.style.transform = `translateY(${legsY * 0.5}px)`;
+
+        calloutCork.style.opacity = String(p < 0.6 ? 1 : clamp((0.75 - p) / 0.15));
+        calloutCork.style.transform = `translateY(${corkY * 0.5}px)`;
+
+        calloutTtrack.style.opacity = String(p < 0.8 ? 1 : clamp((0.9 - p) / 0.1));
+
+        // 5. Final CTA Button Reveal
+        if (p >= 0.92) {
+          ctaRow.classList.add('is-visible');
+        } else {
+          ctaRow.classList.remove('is-visible');
+        }
+
+        // 6. Stage Header Telemetry Update
+        let currentStage = STAGES[0];
+        for (let i = STAGES.length - 1; i >= 0; i--) {
+          if (p >= STAGES[i].threshold - 0.05) {
+            currentStage = STAGES[i];
+            break;
+          }
+        }
+        badgeText.textContent = currentStage.badge;
+        assemblyTitle.textContent = currentStage.title;
+        assemblySub.textContent = currentStage.sub;
+
+        // Active pill update
+        navPills.forEach(pill => {
+          const pillP = parseFloat(pill.dataset.progress);
+          if (Math.abs(p - pillP) < 0.15) {
+            pill.classList.add('active');
+          } else {
+            pill.classList.remove('active');
+          }
+        });
+      }
+
+      // Scroll Progress Calculation
+      function onScroll() {
+        if (userIsScrubbing) return;
+        const rect = track.getBoundingClientRect();
+        const totalScrollable = track.offsetHeight - window.innerHeight;
+        if (totalScrollable <= 0) return;
+
+        const currentScroll = -rect.top;
+        const p = clamp(currentScroll / totalScrollable);
+        updateAssembly(p, true);
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onScroll, { passive: true });
+
+      // Slider Scrubbing
+      slider.addEventListener('input', (e) => {
+        userIsScrubbing = true;
+        const p = parseFloat(e.target.value) / 100;
+        updateAssembly(p, false);
+      });
+
+      slider.addEventListener('change', (e) => {
+        userIsScrubbing = false;
+        const p = parseFloat(e.target.value) / 100;
+        const totalScrollable = track.offsetHeight - window.innerHeight;
+        const trackTop = track.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop);
+        window.scrollTo({ top: trackTop + p * totalScrollable, behavior: 'auto' });
+      });
+
+      // Navigation Pills Click
+      navPills.forEach(pill => {
+        pill.addEventListener('click', () => {
+          const targetP = parseFloat(pill.dataset.progress);
+          const totalScrollable = track.offsetHeight - window.innerHeight;
+          const trackTop = track.getBoundingClientRect().top + (window.pageYOffset || document.documentElement.scrollTop);
+          const targetScrollTop = trackTop + targetP * totalScrollable;
+          window.scrollTo({ top: targetScrollTop, behavior: 'smooth' });
+          updateAssembly(targetP, true);
+        });
+      });
+
+      // Initial Call
+      updateAssembly(0);
+    })();
+  </script>
+
+</body>
+</html>

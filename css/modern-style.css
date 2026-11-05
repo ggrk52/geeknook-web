@@ -14060,3 +14060,388 @@ textarea.input-error {
 
 
 
+
+/* ==========================================================================
+   INTERACTIVE SCROLL ASSEMBLY BLOCK (Focus Station)
+   ========================================================================== */
+.scroll-assembly-track {
+  position: relative;
+  height: 250vh;
+  width: 100%;
+  overflow: visible;
+  box-sizing: border-box;
+}
+
+.scroll-assembly-sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 72px 24px 28px;
+  box-sizing: border-box;
+  background: #07090c;
+  z-index: 2;
+}
+
+/* Stage Ambient Lighting */
+.assembly-ambient-blue {
+  position: absolute;
+  width: 1200px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(43, 112, 240, 0.15) 0%, rgba(43, 112, 240, 0.03) 50%, transparent 70%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  filter: blur(60px);
+  z-index: 1;
+}
+.assembly-grid {
+  position: absolute;
+  inset: 0;
+  background-size: 60px 60px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Top Telemetry Header */
+.assembly-header {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 800px;
+  width: 100%;
+}
+.assembly-step-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(14, 18, 24, 0.9);
+  border: 1px solid rgba(43, 112, 240, 0.4);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #528eff;
+  text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  margin-bottom: 12px;
+}
+.assembly-badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2b70f0;
+  box-shadow: 0 0 8px #2b70f0;
+}
+.assembly-title {
+  font-family: 'Manrope', var(--font-main), sans-serif;
+  font-size: clamp(24px, 3.2vw, 38px);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  margin-bottom: 8px;
+  color: #fff;
+}
+.assembly-sub {
+  font-size: clamp(13px, 1.4vw, 15px);
+  color: rgba(255, 255, 255, 0.65);
+  max-width: 620px;
+  margin: 0 auto;
+  line-height: 1.5;
+}
+
+/* Viewport Stage */
+.assembly-viewport {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1000px;
+  height: 460px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assembly-stage-box {
+  position: relative;
+  width: 100%;
+  max-width: 840px;
+  height: 380px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.assembly-cad-svg {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 5;
+  transition: opacity 0.25s ease;
+}
+
+.assembly-real-img {
+  position: absolute;
+  width: 820px;
+  max-width: 95%;
+  height: auto;
+  object-fit: contain;
+  z-index: 6;
+  opacity: 0;
+  filter: drop-shadow(0 35px 70px rgba(0,0,0,0.9)) drop-shadow(0 0 40px rgba(43, 112, 240, 0.2));
+  transform: translateY(0);
+  pointer-events: none;
+}
+
+.assembly-floor-shadow {
+  position: absolute;
+  width: 840px;
+  max-width: 92%;
+  height: 45px;
+  bottom: 60px;
+  background: radial-gradient(ellipse at center, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.35) 55%, transparent 75%);
+  filter: blur(16px);
+  z-index: 4;
+  opacity: 0.3;
+  transform: scale(0.85);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.snap-ring {
+  position: absolute;
+  border: 2px solid #528eff;
+  border-radius: 50%;
+  pointer-events: none;
+  opacity: 0;
+  transform: scale(0.4);
+  z-index: 20;
+}
+.snap-ring.is-snapping {
+  animation: snapRipple 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes snapRipple {
+  0% { opacity: 0.9; transform: scale(0.5); }
+  100% { opacity: 0; transform: scale(2.2); }
+}
+
+.assembly-callout {
+  position: absolute;
+  padding: 8px 14px;
+  background: rgba(14, 18, 24, 0.92);
+  border: 1px solid rgba(43, 112, 240, 0.45);
+  border-radius: 8px;
+  backdrop-filter: blur(16px);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 15;
+}
+.callout-tag {
+  color: #528eff;
+}
+.callout-deck {
+  top: 40px;
+  right: 40px;
+}
+.callout-ttrack {
+  top: 130px;
+  left: 30px;
+}
+.callout-legs {
+  bottom: 90px;
+  left: 40px;
+}
+.callout-cork {
+  bottom: 30px;
+  right: 50px;
+}
+
+.assembly-bottom-controls {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 840px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.assembly-pills-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px;
+  box-sizing: border-box;
+  scrollbar-width: none;
+}
+.assembly-pills-row::-webkit-scrollbar {
+  display: none;
+}
+.assembly-nav-pill {
+  flex-shrink: 0;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(14, 18, 24, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.65);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.assembly-nav-pill:hover,
+.assembly-nav-pill.active {
+  background: rgba(43, 112, 240, 0.18);
+  border-color: #2b70f0;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(43, 112, 240, 0.3);
+}
+
+.assembly-slider-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.assembly-slider {
+  flex: 1;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  position: relative;
+}
+.assembly-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #528eff;
+  box-shadow: 0 0 15px #2b70f0;
+  border: 2px solid #fff;
+  cursor: grab;
+  transition: transform 0.15s ease;
+}
+.assembly-slider::-webkit-slider-thumb:active {
+  transform: scale(1.2);
+  cursor: grabbing;
+}
+.assembly-percent-lbl {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: #528eff;
+  min-width: 48px;
+  text-align: right;
+}
+
+.assembly-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  pointer-events: none;
+}
+.assembly-cta-row.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.btn-assembly-3d {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #2b70f0 0%, #1b5ed6 100%);
+  color: #fff;
+  font-family: 'Onest', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  box-shadow: 0 0 25px rgba(43, 112, 240, 0.4);
+  min-height: 44px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.btn-assembly-3d:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 35px rgba(43, 112, 240, 0.6);
+}
+.btn-assembly-buy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: rgba(14, 18, 24, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #fff;
+  font-family: 'Onest', sans-serif;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: none;
+  min-height: 44px;
+  transition: all 0.2s ease;
+}
+.btn-assembly-buy:hover {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+  .scroll-assembly-sticky {
+    padding: 68px 16px 20px;
+  }
+  .assembly-viewport {
+    height: 380px;
+  }
+  .assembly-stage-box {
+    height: 300px;
+  }
+  .assembly-callout {
+    display: none;
+  }
+  .assembly-pills-row {
+    justify-content: flex-start;
+  }
+}
