@@ -149,10 +149,19 @@ body,
 
 .t-records,
 #allrecords,
+.r.t-rec,
+.r,
+.t123,
+.t-container_100,
+.t-width,
+.t-col,
+.t-col_100,
 #geeknook-mount-point,
 .geeknook-tilda-wrapper {
-  overflow-x: clip !important;
   overflow: visible !important;
+  overflow-x: clip !important;
+  overflow-y: visible !important;
+  max-width: 100% !important;
 }
 
 img, video {
@@ -12245,16 +12254,52 @@ textarea.input-error {
 
 @media (max-width: 768px) {
   .anatomy-section {
-    height: auto;
-    padding: 44px 0 36px;
-    overflow: hidden;
-  }
-  .anatomy-sticky-container {
     position: relative;
-    width: 100%;
-    height: auto;
+    height: 250vh;
+    overflow: visible;
     padding: 0;
     box-sizing: border-box;
+  }
+  .anatomy-sticky-container {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 92px 16px 74px;
+    box-sizing: border-box;
+    z-index: 2;
+  }
+  .anatomy-header-wrap {
+    margin-bottom: 8px;
+  }
+  .anatomy-sub {
+    display: none;
+  }
+  .anatomy-stepper-pills {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+    width: 100%;
+  }
+  .anatomy-step-pill {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    min-height: 36px;
+    flex-shrink: 0;
+  }
+  .anatomy-progress-track {
+    margin-top: 8px;
+    height: 3px;
   }
 }
 
@@ -12457,21 +12502,76 @@ textarea.input-error {
 
 @media (max-width: 768px) {
   .anatomy-rail-viewport {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding: 0 20px;
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
   }
   .anatomy-rail-viewport::-webkit-scrollbar {
     display: none;
   }
   .anatomy-rail-track {
     display: flex;
-    gap: 16px;
+    gap: 14px;
     width: max-content;
-    padding: 8px 0 20px;
+    padding: 6px 0 16px;
     box-sizing: border-box;
+    will-change: transform;
+    transition: transform 0.05s linear;
+  }
+  .anatomy-card {
+    width: clamp(280px, 82vw, 360px);
+    max-width: 82vw;
+    height: auto;
+    max-height: 60vh;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .anatomy-card-content {
+    padding: 14px;
+  }
+  .anatomy-card-level {
+    font-size: 0.65rem;
+  }
+  .anatomy-card-tag {
+    font-size: 0.65rem;
+  }
+  .anatomy-card-title {
+    font-size: 1.05rem;
+    line-height: 1.25;
+    margin-bottom: 6px;
+  }
+  .anatomy-card-desc {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .anatomy-specs-row {
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .anatomy-spec-box {
+    padding: 4px 6px;
+  }
+  .anatomy-spec-val {
+    font-size: 0.85rem;
+  }
+  .anatomy-spec-lbl {
+    font-size: 0.62rem;
+  }
+  .anatomy-card-visual {
+    height: 115px;
+    min-height: 115px;
+  }
+  .anatomy-card-btn {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+    min-height: 36px;
   }
 }
 
@@ -14438,19 +14538,45 @@ textarea.input-error {
 }
 
 @media (max-width: 768px) {
+  .scroll-assembly-track {
+    height: 250vh;
+    overflow: visible;
+  }
   .scroll-assembly-sticky {
-    padding: 68px 16px 20px;
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    padding: 92px 16px 74px;
+    box-sizing: border-box;
+    overflow: hidden;
   }
   .assembly-viewport {
-    height: 380px;
+    height: clamp(180px, 32vh, 250px);
+    margin: 2px 0;
   }
   .assembly-stage-box {
-    height: 300px;
+    height: 100%;
+  }
+  .assembly-title {
+    font-size: clamp(1.1rem, 4.8vw, 1.3rem);
+    margin-bottom: 2px;
+  }
+  .assembly-sub {
+    font-size: 0.74rem;
+    line-height: 1.25;
+    max-width: 90%;
   }
   .assembly-callout {
     display: none;
   }
   .assembly-pills-row {
     justify-content: flex-start;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
   }
 }

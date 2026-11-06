@@ -9457,23 +9457,14 @@
       progressFill.style.width = `${((idx + 1) / anatomyState.totalSlides) * 100}%`;
     }
 
-    const isDesktop = window.innerWidth >= 769;
-    if (isDesktop) {
-      const section = document.getElementById('anatomy');
-      if (section) {
-        const rect = section.getBoundingClientRect();
-        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-        const sectionTop = rect.top + scrollTop;
-        const scrollRange = Math.max(1, section.offsetHeight - window.innerHeight);
-        const targetScroll = sectionTop + ((idx / (anatomyState.totalSlides - 1)) * scrollRange);
-        window.scrollTo({ top: targetScroll, behavior: 'smooth' });
-      }
-    } else {
-      const viewport = document.getElementById('anatomyViewport');
-      const cards = document.querySelectorAll('.anatomy-card');
-      if (viewport && cards[idx]) {
-        cards[idx].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
-      }
+    const section = document.getElementById('anatomy');
+    if (section) {
+      const rect = section.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const sectionTop = rect.top + scrollTop;
+      const scrollRange = Math.max(1, section.offsetHeight - window.innerHeight);
+      const targetScroll = sectionTop + ((idx / (anatomyState.totalSlides - 1)) * scrollRange);
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
     }
   };
 
@@ -9493,39 +9484,22 @@
     if (!section || !track) return;
 
     let ticking = false;
-    let sectionTop = 0;
-    let scrollRange = 0;
     let maxTranslate = 0;
 
     const measure = () => {
-      anatomyState.isDesktop = window.innerWidth >= 769;
-      if (!anatomyState.isDesktop) {
-        track.style.transform = '';
-        if (stickyContainer) {
-          stickyContainer.style.position = '';
-          stickyContainer.style.top = '';
-          stickyContainer.style.left = '';
-          stickyContainer.style.width = '';
-          stickyContainer.style.bottom = '';
-        }
-        return;
-      }
-      const rect = section.getBoundingClientRect();
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      sectionTop = rect.top + scrollTop;
-      scrollRange = Math.max(1, section.offsetHeight - window.innerHeight);
       const trackWidth = track.scrollWidth;
       const viewportWidth = viewport ? viewport.clientWidth : window.innerWidth;
-      maxTranslate = Math.max(0, trackWidth - viewportWidth + 60);
+      maxTranslate = Math.max(0, trackWidth - viewportWidth + 32);
     };
 
     measure();
     window.addEventListener('resize', measure, { passive: true });
 
     const updateScroll = () => {
-      if (!anatomyState.isDesktop) return;
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const progress = Math.max(0, Math.min(1, (scrollTop - sectionTop) / scrollRange));
+      const rect = section.getBoundingClientRect();
+      const scrollRange = Math.max(1, section.offsetHeight - window.innerHeight);
+      const currentScroll = -rect.top;
+      const progress = Math.max(0, Math.min(1, currentScroll / scrollRange));
       const currentX = progress * maxTranslate;
 
       track.style.transform = `translate3d(-${currentX}px, 0, 0)`;
@@ -9538,8 +9512,12 @@
       if (activeIdx !== anatomyState.activeIndex) {
         anatomyState.activeIndex = activeIdx;
         pills.forEach((p, i) => {
-          p.classList.toggle('active', i === activeIdx);
-          p.setAttribute('aria-selected', i === activeIdx ? 'true' : 'false');
+          const isActive = i === activeIdx;
+          p.classList.toggle('active', isActive);
+          p.setAttribute('aria-selected', isActive ? 'true' : 'false');
+          if (isActive && p.scrollIntoView) {
+            p.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          }
         });
         if (counterEl) {
           counterEl.textContent = `0${activeIdx + 1} / 05`;
@@ -9548,23 +9526,19 @@
 
       // Defensive Pinning Fallback (ensures smooth pinning across WebKit/Safari/Tilda)
       if (stickyContainer) {
-        const rect = section.getBoundingClientRect();
         if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
-          // Inside sticky zone: active lock to top of viewport
           stickyContainer.style.position = 'fixed';
           stickyContainer.style.top = '0';
           stickyContainer.style.left = '0';
           stickyContainer.style.width = '100%';
           stickyContainer.style.bottom = '';
         } else if (rect.bottom < window.innerHeight) {
-          // Scrolled past section: park cleanly at the bottom
           stickyContainer.style.position = 'absolute';
           stickyContainer.style.top = 'auto';
           stickyContainer.style.bottom = '0';
           stickyContainer.style.left = '0';
           stickyContainer.style.width = '100%';
         } else {
-          // Above section: park at top
           stickyContainer.style.position = 'absolute';
           stickyContainer.style.top = '0';
           stickyContainer.style.bottom = 'auto';
@@ -9585,32 +9559,6 @@
 
     window.addEventListener('scroll', onScroll, { passive: true });
     updateScroll();
-
-    // Mobile Horizontal Touch Swipe Listener
-    if (viewport) {
-      viewport.addEventListener('scroll', () => {
-        if (anatomyState.isDesktop) return;
-        const cards = document.querySelectorAll('.anatomy-card');
-        if (!cards.length) return;
-        const cardWidth = cards[0].offsetWidth + 16;
-        const scrollLeft = viewport.scrollLeft;
-        const idx = Math.min(anatomyState.totalSlides - 1, Math.max(0, Math.round(scrollLeft / cardWidth)));
-
-        if (idx !== anatomyState.activeIndex) {
-          anatomyState.activeIndex = idx;
-          pills.forEach((p, i) => {
-            p.classList.toggle('active', i === idx);
-            p.setAttribute('aria-selected', i === idx ? 'true' : 'false');
-          });
-          if (counterEl) {
-            counterEl.textContent = `0${idx + 1} / 05`;
-          }
-          if (progressFill) {
-            progressFill.style.width = `${((idx + 1) / anatomyState.totalSlides) * 100}%`;
-          }
-        }
-      }, { passive: true });
-    }
   };
 
   // --- 2.1.5. INTERACTIVE SCROLL ASSEMBLY BLOCK ---
@@ -9619,17 +9567,23 @@
     try {
       document.documentElement.style.setProperty('overflow-x', 'clip', 'important');
       document.body.style.setProperty('overflow-x', 'clip', 'important');
-      ['allrecords', 'geeknook-mount-point'].forEach(id => {
-        const el = document.getElementById(id);
+      const wrappers = document.querySelectorAll(
+        '.t-records, #allrecords, .r.t-rec, .r, .t123, .t-container_100, .t-width, .t-col, .t-col_100, #geeknook-mount-point, .geeknook-tilda-wrapper'
+      );
+      wrappers.forEach(el => {
         if (el) {
-          el.style.setProperty('overflow-x', 'clip', 'important');
           el.style.setProperty('overflow', 'visible', 'important');
+          el.style.setProperty('overflow-x', 'clip', 'important');
+          el.style.setProperty('overflow-y', 'visible', 'important');
+          el.style.setProperty('max-width', '100%', 'important');
         }
       });
     } catch (_) {}
 
     const track = document.getElementById('assemblyTrack');
     if (!track) return;
+
+    const sticky = track.querySelector('.scroll-assembly-sticky');
 
     const slider = document.getElementById('assemblySlider');
     const percentLbl = document.getElementById('percentLbl');
@@ -9803,7 +9757,32 @@
       });
     };
 
+    const updatePinning = () => {
+      if (!sticky) return;
+      const rect = track.getBoundingClientRect();
+      if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
+        sticky.style.position = 'fixed';
+        sticky.style.top = '0';
+        sticky.style.left = '0';
+        sticky.style.width = '100%';
+        sticky.style.bottom = '';
+      } else if (rect.bottom < window.innerHeight) {
+        sticky.style.position = 'absolute';
+        sticky.style.top = 'auto';
+        sticky.style.bottom = '0';
+        sticky.style.left = '0';
+        sticky.style.width = '100%';
+      } else {
+        sticky.style.position = 'absolute';
+        sticky.style.top = '0';
+        sticky.style.bottom = 'auto';
+        sticky.style.left = '0';
+        sticky.style.width = '100%';
+      }
+    };
+
     const onScroll = () => {
+      updatePinning();
       if (userIsScrubbing) return;
       const rect = track.getBoundingClientRect();
       const totalScrollable = track.offsetHeight - window.innerHeight;
@@ -9845,6 +9824,7 @@
     });
 
     updateAssembly(0);
+    onScroll();
   };
 
   // --- 2.2. LIVE NUMBER COUNTER ROLLERS ---

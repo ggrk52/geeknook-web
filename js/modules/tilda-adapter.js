@@ -1108,17 +1108,43 @@
       try {
         document.documentElement.style.setProperty('overflow-x', 'clip', 'important');
         document.body.style.setProperty('overflow-x', 'clip', 'important');
-        ['allrecords', 'geeknook-mount-point'].forEach(id => {
-          const el = document.getElementById(id);
+        const parents = document.querySelectorAll(
+          '.t-records, #allrecords, .r.t-rec, .r, .t123, .t-container_100, .t-width, .t-col, .t-col_100, #geeknook-mount-point, .geeknook-tilda-wrapper'
+        );
+        parents.forEach(el => {
           if (el) {
-            el.style.setProperty('overflow-x', 'clip', 'important');
             el.style.setProperty('overflow', 'visible', 'important');
+            el.style.setProperty('overflow-x', 'clip', 'important');
+            el.style.setProperty('overflow-y', 'visible', 'important');
+            el.style.setProperty('max-width', '100%', 'important');
           }
         });
       } catch (_) {}
     }
     enforceStickyDiscipline();
-    setInterval(enforceStickyDiscipline, 1000);
+    setInterval(enforceStickyDiscipline, 800);
+
+    // Dynamic Mutation Observer to defeat any inline style overflow injected by Tilda runtime
+    try {
+      if (typeof MutationObserver !== 'undefined') {
+        const recObserver = new MutationObserver((mutations) => {
+          mutations.forEach(m => {
+            if (m.type === 'attributes' && m.attributeName === 'style' && m.target) {
+              const el = m.target;
+              if (el.style && (el.style.overflow === 'auto' || el.style.overflow === 'hidden' || el.style.overflow === 'scroll' ||
+                  el.style.overflowX === 'auto' || el.style.overflowX === 'hidden' || el.style.overflowX === 'scroll')) {
+                el.style.setProperty('overflow', 'visible', 'important');
+                el.style.setProperty('overflow-x', 'clip', 'important');
+                el.style.setProperty('overflow-y', 'visible', 'important');
+              }
+            }
+          });
+        });
+        document.querySelectorAll('.r.t-rec, .r, .t-records, #allrecords').forEach(el => {
+          recObserver.observe(el, { attributes: true, attributeFilter: ['style'] });
+        });
+      }
+    } catch (_) {}
 
     // 0.1. SUPPRESS TILDA AUTO OPEN ON PRODUCT ADD (Keeps catalog browsing uninterrupted)
     function suppressTildaAutoOpen() {
