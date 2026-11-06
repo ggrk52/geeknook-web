@@ -9443,8 +9443,16 @@
 
     const pills = document.querySelectorAll('.anatomy-step-pill');
     pills.forEach((p, i) => {
-      p.classList.toggle('active', i === idx);
-      p.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+      const isActive = i === idx;
+      p.classList.toggle('active', isActive);
+      p.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      if (isActive) {
+        const pillsWrap = p.parentElement;
+        if (pillsWrap && pillsWrap.scrollTo) {
+          const targetLeft = p.offsetLeft - (pillsWrap.clientWidth - p.offsetWidth) / 2;
+          pillsWrap.scrollTo({ left: targetLeft, behavior: 'smooth' });
+        }
+      }
     });
 
     const counterEl = document.getElementById('anatomyCounterDisplay');
@@ -9515,8 +9523,12 @@
           const isActive = i === activeIdx;
           p.classList.toggle('active', isActive);
           p.setAttribute('aria-selected', isActive ? 'true' : 'false');
-          if (isActive && p.scrollIntoView) {
-            p.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+          if (isActive) {
+            const pillsWrap = p.parentElement;
+            if (pillsWrap && pillsWrap.scrollTo) {
+              const targetLeft = p.offsetLeft - (pillsWrap.clientWidth - p.offsetWidth) / 2;
+              pillsWrap.scrollTo({ left: targetLeft, behavior: 'smooth' });
+            }
           }
         });
         if (counterEl) {
