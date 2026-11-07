@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>GEEK NOOK — Интерактивный 3D-конфигуратор Focus Station (Прототип)</title>
+  <meta name="description" content="Интерактивный 3D WebGL просмотрщик подставки под монитор Focus Station. Выбор пород дерева, взрыв-схема компонентов и инженерные узлы." />
+  <link rel="icon" href="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" type="image/png" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&family=Onest:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Three.js & OrbitControls (Local Zero-Latency Bundles) -->
+  <script src="js/three.min.js"></script>
+  <script src="js/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg: #07090e;
+      --panel-bg: rgba(13, 17, 25, 0.78);
+      --panel-border: rgba(255, 255, 255, 0.08);
+      --panel-border-active: rgba(56, 189, 248, 0.4);
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.25);
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Onest', -apple-system, sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      user-select: none;
+    }
+
+    #webgl-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      outline: none;
+    }
+
+    /* Ambient Blueprint Grid */
+    .cad-grid-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 2;
+      background-image: 
+        linear-gradient(rgba(56, 189, 248, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.035) 1px, transparent 1px);
+      background-size: 36px 36px;
+      mask-image: radial-gradient(circle at center, rgba(0,0,0,0.85) 30%, transparent 85%);
+      -webkit-mask-image: radial-gradient(circle at center, rgba(0,0,0,0.85) 30%, transparent 85%);
+    }
+
+    /* Top HUD Header */
+    .viewer-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      z-index: 10;
+      background: linear-gradient(180deg, rgba(7, 9, 14, 0.92) 0%, rgba(7, 9, 14, 0) 100%);
+      pointer-events: none;
+    }
+
+    .header-left, .header-right {
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .btn-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 999px;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.2s ease;
+    }
+    .btn-back:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateX(-2px);
+    }
+
+    .model-badge {
+      display: flex;
+      flex-direction: column;
+    }
+    .model-title {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .model-title .proto-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 2px 6px;
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent);
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+    .model-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    /* Quick View Tools */
+    .quick-view-tools {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .hud-icon-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.2s ease;
+    }
+    .hud-icon-btn:hover, .hud-icon-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    /* Bottom Control Cockpit */
+    .bottom-cockpit {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(92vw, 640px);
+      background: var(--panel-bg);
+      border: 1px solid var(--panel-border);
+      border-radius: 18px;
+      padding: 14px 18px;
+      z-index: 10;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), 0 0 1px rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .cockpit-row-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* Wood Selector Tabs */
+    .wood-tabs-wrap {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 3px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+    .wood-tab-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 11px;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .wood-tab-btn:hover {
+      color: var(--text);
+    }
+    .wood-tab-btn.active {
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.16);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .swatch-circle {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+    .swatch-walnut { background: #5a3820; }
+    .swatch-oak { background: #c2a173; }
+    .swatch-black { background: #1c1d22; }
+
+    /* Explode Section */
+    .explode-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 240px;
+    }
+    .explode-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+    }
+    .explode-slider {
+      flex: 1;
+      -webkit-appearance: none;
+      height: 5px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.12);
+      outline: none;
+      cursor: pointer;
+    }
+    .explode-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 17px;
+      height: 17px;
+      border-radius: 50%;
+      background: var(--accent);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--accent-glow);
+      transition: transform 0.1s ease;
+    }
+    .explode-slider::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+
+    .btn-toggle-explode {
+      padding: 6px 12px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 8px;
+      color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+    .btn-toggle-explode:hover {
+      background: var(--accent);
+      color: #07090e;
+    }
+
+    /* Lighting Presets */
+    .lighting-presets {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 9px;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .light-btn-group {
+      display: flex;
+      gap: 6px;
+    }
+    .btn-light-preset {
+      padding: 4px 9px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .btn-light-preset.active, .btn-light-preset:hover {
+      color: var(--text);
+      border-color: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* 3D Hotspot Card Tooltip */
+    .hotspot-card {
+      position: absolute;
+      top: 80px;
+      left: 20px;
+      width: min(88vw, 310px);
+      background: var(--panel-bg);
+      border: 1px solid var(--accent);
+      border-radius: 14px;
+      padding: 13px 15px;
+      z-index: 10;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.6), 0 0 20px var(--accent-glow);
+      display: none;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .hotspot-card.visible { display: block; }
+    .hotspot-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.64rem;
+      color: var(--accent);
+      margin-bottom: 3px;
+    }
+    .hotspot-title {
+      font-family: 'Manrope', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .hotspot-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+      margin-bottom: 7px;
+    }
+    .hotspot-specs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .h-spec-item {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem;
+    }
+    .h-spec-val { color: #fff; font-weight: 600; }
+    .h-spec-lbl { color: var(--text-muted); font-size: 0.58rem; }
+    .btn-close-hotspot {
+      position: absolute;
+      top: 8px;
+      right: 11px;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    /* Help Hint */
+    .interaction-hint {
+      position: absolute;
+      top: 76px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.65);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      padding: 5px 13px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      pointer-events: none;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: opacity 0.8s ease;
+    }
+    .interaction-hint.fade { opacity: 0; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 640px) {
+      .bottom-cockpit {
+        bottom: 12px;
+        padding: 10px 12px;
+        gap: 9px;
+      }
+      .wood-tabs-wrap {
+        width: 100%;
+        justify-content: space-around;
+      }
+      .explode-controls {
+        width: 100%;
+      }
+      .viewer-header {
+        padding: 0 12px;
+      }
+      .model-sub {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background CAD Grid -->
+  <div class="cad-grid-overlay"></div>
+
+  <!-- Top Navigation & Model HUD -->
+  <header class="viewer-header">
+    <div class="header-left">
+      <a href="index.html" class="btn-back">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        <span>В каталог</span>
+      </a>
+      <div class="model-badge">
+        <div class="model-title">
+          <span>Focus Station 850</span>
+          <span class="proto-tag">3D WEBGL</span>
+        </div>
+        <div class="model-sub">ISO-9241 // REALTIME PBR VIEWER</div>
+      </div>
+    </div>
+
+    <div class="header-right">
+      <div class="quick-view-tools">
+        <button class="hud-icon-btn" id="btnAutoRotate" title="Автоматическое вращение" aria-label="Авто-вращение">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/></svg>
+        </button>
+        <button class="hud-icon-btn" id="btnResetView" title="Сбросить камеру" aria-label="Сброс камеры">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Interaction Hint -->
+  <div class="interaction-hint" id="interactionHint">
+    <span>💡 Вращайте модель мышью / пальцем • Колесо — зум</span>
+  </div>
+
+  <!-- 3D Node Specs Hotspot Card -->
+  <div class="hotspot-card" id="hotspotCard">
+    <button class="btn-close-hotspot" onclick="closeHotspot()">×</button>
+    <div class="hotspot-tag" id="hotspotTag">NODE 01 // МАССИВ ДЕРЕВА</div>
+    <div class="hotspot-title" id="hotspotTitle">Массив американского ореха 22 мм</div>
+    <div class="hotspot-desc" id="hotspotDesc">Цельный массив благородного ореха с 11-слойным сатиновым эко-маслом Osmo. Скошенная фаска 45° по контуру.</div>
+    <div class="hotspot-specs" id="hotspotSpecs">
+      <div class="h-spec-item">
+        <div class="h-spec-val">22 мм</div>
+        <div class="h-spec-lbl">Толщина массива</div>
+      </div>
+      <div class="h-spec-item">
+        <div class="h-spec-val">850 × 230 мм</div>
+        <div class="h-spec-lbl">Габариты стола</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D WebGL Canvas Mount -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- Bottom Cockpit Controls -->
+  <div class="bottom-cockpit">
+    <div class="cockpit-row-top">
+      <!-- Wood Finish Switcher -->
+      <div class="wood-tabs-wrap" role="tablist">
+        <button class="wood-tab-btn active" data-wood="walnut" onclick="switchWood('walnut')">
+          <span class="swatch-circle swatch-walnut"></span>
+          <span>Орех</span>
+        </button>
+        <button class="wood-tab-btn" data-wood="oak" onclick="switchWood('oak')">
+          <span class="swatch-circle swatch-oak"></span>
+          <span>Дуб</span>
+        </button>
+        <button class="wood-tab-btn" data-wood="black" onclick="switchWood('black')">
+          <span class="swatch-circle swatch-black"></span>
+          <span>Чёрный ясень</span>
+        </button>
+      </div>
+
+      <!-- Explode Section -->
+      <div class="explode-controls">
+        <span class="explode-label">ВЗРЫВ-СХЕМА:</span>
+        <input type="range" class="explode-slider" id="explodeSlider" min="0" max="100" value="0" />
+        <button class="btn-toggle-explode" id="btnToggleExplode" onclick="toggleExplode()">Взорвать</button>
+      </div>
+    </div>
+
+    <!-- Lighting & Status Footer -->
+    <div class="lighting-presets">
+      <span>Освещение сцены:</span>
+      <div class="light-btn-group">
+        <button class="btn-light-preset active" data-light="studio" onclick="setLighting('studio')">Студия</button>
+        <button class="btn-light-preset" data-light="dark" onclick="setLighting('dark')">Stealth Dark</button>
+        <button class="btn-light-preset" data-light="warm" onclick="setLighting('warm')">Тёплый вечер</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3D WebGL Logic -->
+  <script>
+    let scene, camera, renderer, controls;
+    let woodMaterials = {};
+    let currentWood = 'walnut';
+    let isAutoRotating = false;
+    let explodeProgress = 0; // 0 to 1
+    let targetExplode = 0;
+    let isAnimatingExplode = false;
+
+    // Model component meshes
+    const components = {
+      rootGroup: null,
+      board: null,
+      tTrack: null,
+      leftLeg: null,
+      rightLeg: null,
+      cableTray: null,
+      phoneMount: null,
+      hotspotNodes: []
+    };
+
+    const nodeDetails = {
+      deck: {
+        tag: 'NODE 01 // МАССИВ ДЕРЕВА',
+        title: 'Массив дерева 22 мм с фаской 45°',
+        desc: 'Отборный массив с натуральным рисунком волокон. Обработан 11 слоями шелковисто-матового масла Osmo с защитой от влаги и истирания.',
+        specs: [['22 мм', 'Толщина'], ['850 × 230 мм', 'Размер']]
+      },
+      ttrack: {
+        tag: 'NODE 02 // T-TRACK ПАЗ',
+        title: 'Интегрированный монтажный паз T-Track',
+        desc: 'Фрезерованный направляющий паз для мгновенной фиксации держателей MagSafe, подставок для планшетов и органайзеров без сверления.',
+        specs: [['ISO-45°', 'Профиль'], ['Быстрый слайд', 'Монтаж']]
+      },
+      legs: {
+        tag: 'NODE 03 // ОПОРЫ Д16Т',
+        title: 'Авиационный сплав Д16Т + Пробка',
+        desc: 'Фрезерованные цельнометаллические опоры с премиальным анодированием. Основание из португальской пробки 4 мм защищает столешницу.',
+        specs: [['до 60 кг', 'Нагрузка'], ['Д16Т Анод', 'Сплав']]
+      },
+      tray: {
+        tag: 'NODE 04 // КАБЕЛЬ-МАТРИЦА',
+        title: 'Stealth Cable Matrix (Лоток проводов)',
+        desc: 'Навесной лоток из конструкционной листовой стали для сетевых фильтров и блоков питания. Провода полностью скрыты от глаз.',
+        specs: [['0 проводов', 'На виду'], ['Сталь 1.5 мм', 'Корпус']]
+      }
+    };
+
+    // --- 1. PROCEDURAL PBR WOOD TEXTURE GENERATION ---
+    function createProceduralWoodTexture(type) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1024;
+      canvas.height = 512;
+      const ctx = canvas.getContext('2d');
+
+      let baseColor, ringColor, poreColor;
+      if (type === 'walnut') {
+        baseColor = '#52341d';
+        ringColor = '#3a2212';
+        poreColor = '#24140a';
+      } else if (type === 'oak') {
+        baseColor = '#c2a173';
+        ringColor = '#a38255';
+        poreColor = '#85663d';
+      } else { // black ash
+        baseColor = '#1c1e23';
+        ringColor = '#121317';
+        poreColor = '#08090b';
+      }
+
+      ctx.fillStyle = baseColor;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      // Fine grain streaks
+      ctx.fillStyle = ringColor;
+      for (let i = 0; i < 2400; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const w = 40 + Math.random() * 260;
+        const h = 0.8 + Math.random() * 1.6;
+        ctx.globalAlpha = 0.18 + Math.random() * 0.25;
+        ctx.fillRect(x, y, w, h);
+      }
+
+      // Growth rings / wavy fibers
+      ctx.strokeStyle = ringColor;
+      ctx.lineWidth = 1.3;
+      for (let y = 0; y < canvas.height; y += 10) {
+        ctx.beginPath();
+        ctx.globalAlpha = 0.22 + Math.random() * 0.2;
+        ctx.moveTo(0, y);
+        let curY = y;
+        for (let x = 0; x < canvas.width; x += 25) {
+          curY += (Math.random() - 0.5) * 5;
+          ctx.lineTo(x, curY);
+        }
+        ctx.stroke();
+      }
+
+      // Micro pores
+      ctx.fillStyle = poreColor;
+      ctx.globalAlpha = 0.35;
+      for (let i = 0; i < 3500; i++) {
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        ctx.fillRect(x, y, 2 + Math.random() * 4, 0.7);
+      }
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.wrapS = THREE.RepeatWrapping;
+      texture.wrapT = THREE.RepeatWrapping;
+      texture.repeat.set(2, 1);
+      return texture;
+    }
+
+    // --- 2. THREE.JS SCENE SETUP ---
+    function init() {
+      const container = document.getElementById('webgl-canvas');
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x07090e);
+      scene.fog = new THREE.FogExp2(0x07090e, 0.035);
+
+      camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
+      setupResponsiveCamera();
+
+      renderer = new THREE.WebGLRenderer({
+        canvas: container,
+        antialias: true,
+        powerPreference: 'high-performance'
+      });
+      renderer.setSize(width, height);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.15;
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 - 0.04;
+      controls.minDistance = 3.5;
+      controls.maxDistance = 20.0;
+      controls.target.set(0, 0.2, 0);
+
+      setupLighting();
+      buildMaterials();
+      buildModel();
+      setupFloor();
+
+      window.addEventListener('resize', onWindowResize);
+
+      const hint = document.getElementById('interactionHint');
+      const dismissHint = () => {
+        if (hint) hint.classList.add('fade');
+        window.removeEventListener('pointerdown', dismissHint);
+      };
+      window.addEventListener('pointerdown', dismissHint);
+
+      const slider = document.getElementById('explodeSlider');
+      slider.addEventListener('input', (e) => {
+        targetExplode = parseFloat(e.target.value) / 100;
+        explodeProgress = targetExplode;
+        updateExplodeTransforms();
+      });
+
+      document.getElementById('btnAutoRotate').addEventListener('click', function() {
+        isAutoRotating = !isAutoRotating;
+        controls.autoRotate = isAutoRotating;
+        controls.autoRotateSpeed = 1.4;
+        this.classList.toggle('active', isAutoRotating);
+      });
+
+      document.getElementById('btnResetView').addEventListener('click', () => {
+        setupResponsiveCamera();
+        controls.target.set(0, 0.2, 0);
+        controls.update();
+      });
+
+      animate();
+    }
+
+    function setupResponsiveCamera() {
+      const aspect = window.innerWidth / window.innerHeight;
+      if (aspect < 1.0) {
+        // Mobile portrait: comfortable overview of the whole 850mm stand with side margins
+        camera.fov = 46;
+        camera.position.set(2.4, 6.5, 17.0);
+      } else {
+        // Desktop landscape: elegant 3/4 perspective
+        camera.fov = 38;
+        camera.position.set(3.8, 4.2, 8.8);
+      }
+      camera.updateProjectionMatrix();
+    }
+
+    // --- 3. LIGHTING RIG ---
+    let lights = {};
+    function setupLighting() {
+      lights.ambient = new THREE.AmbientLight(0xffffff, 0.45);
+      scene.add(lights.ambient);
+
+      lights.key = new THREE.DirectionalLight(0xfff8ee, 1.4);
+      lights.key.position.set(5, 9, 6);
+      lights.key.castShadow = true;
+      lights.key.shadow.mapSize.width = 2048;
+      lights.key.shadow.mapSize.height = 2048;
+      lights.key.shadow.camera.near = 0.5;
+      lights.key.shadow.camera.far = 30;
+      lights.key.shadow.bias = -0.0005;
+      scene.add(lights.key);
+
+      lights.fill = new THREE.DirectionalLight(0xcfd8dc, 0.6);
+      lights.fill.position.set(-6, 5, -3);
+      scene.add(lights.fill);
+
+      lights.rim = new THREE.DirectionalLight(0x38bdf8, 0.6);
+      lights.rim.position.set(0, -1, -6);
+      scene.add(lights.rim);
+    }
+
+    function setLighting(preset) {
+      document.querySelectorAll('.btn-light-preset').forEach(b => b.classList.toggle('active', b.dataset.light === preset));
+      if (preset === 'studio') {
+        lights.ambient.color.setHex(0xffffff);
+        lights.ambient.intensity = 0.45;
+        lights.key.color.setHex(0xfff8ee);
+        lights.key.intensity = 1.4;
+        lights.fill.intensity = 0.6;
+        lights.rim.color.setHex(0x38bdf8);
+        lights.rim.intensity = 0.6;
+        renderer.toneMappingExposure = 1.15;
+      } else if (preset === 'dark') {
+        lights.ambient.color.setHex(0x334155);
+        lights.ambient.intensity = 0.2;
+        lights.key.color.setHex(0x60a5fa);
+        lights.key.intensity = 0.85;
+        lights.fill.intensity = 0.2;
+        lights.rim.color.setHex(0x38bdf8);
+        lights.rim.intensity = 1.6;
+        renderer.toneMappingExposure = 0.95;
+      } else if (preset === 'warm') {
+        lights.ambient.color.setHex(0xffecd2);
+        lights.ambient.intensity = 0.5;
+        lights.key.color.setHex(0xffaa5e);
+        lights.key.intensity = 1.6;
+        lights.fill.color.setHex(0xffd8b4);
+        lights.fill.intensity = 0.4;
+        lights.rim.color.setHex(0xf97316);
+        lights.rim.intensity = 0.35;
+        renderer.toneMappingExposure = 1.1;
+      }
+    }
+
+    // --- 4. MATERIALS SETUP ---
+    function buildMaterials() {
+      ['walnut', 'oak', 'black'].forEach(wood => {
+        const tex = createProceduralWoodTexture(wood);
+        woodMaterials[wood] = new THREE.MeshStandardMaterial({
+          map: tex,
+          roughness: wood === 'black' ? 0.45 : 0.32,
+          metalness: 0.02,
+          bumpMap: tex,
+          bumpScale: 0.012
+        });
+      });
+
+      woodMaterials.aluminum = new THREE.MeshStandardMaterial({
+        color: 0x1a1d24,
+        metalness: 0.85,
+        roughness: 0.28
+      });
+
+      woodMaterials.cork = new THREE.MeshStandardMaterial({
+        color: 0x935f37,
+        roughness: 0.95,
+        metalness: 0.0
+      });
+
+      woodMaterials.tTrack = new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
+        metalness: 0.92,
+        roughness: 0.18
+      });
+
+      woodMaterials.steel = new THREE.MeshStandardMaterial({
+        color: 0x111317,
+        metalness: 0.65,
+        roughness: 0.4
+      });
+    }
+
+    // --- 5. 3D MODEL GEOMETRY BUILDER ---
+    function buildModel() {
+      components.rootGroup = new THREE.Group();
+      components.rootGroup.position.y = 0.65;
+
+      // 1. TOP WOODEN BOARD (8.5 x 0.22 x 2.3)
+      const boardGeo = new THREE.BoxGeometry(8.5, 0.22, 2.3);
+      components.board = new THREE.Mesh(boardGeo, woodMaterials[currentWood]);
+      components.board.castShadow = true;
+      components.board.receiveShadow = true;
+      components.rootGroup.add(components.board);
+
+      // 2. T-TRACK REAR SLOT
+      const trackGeo = new THREE.BoxGeometry(7.2, 0.04, 0.12);
+      components.tTrack = new THREE.Mesh(trackGeo, woodMaterials.tTrack);
+      components.tTrack.position.set(0, 0.115, -0.75);
+      components.board.add(components.tTrack);
+
+      // 3. MODULAR DOCK IN T-TRACK
+      const dockGeo = new THREE.BoxGeometry(0.8, 0.9, 0.08);
+      components.phoneMount = new THREE.Mesh(dockGeo, woodMaterials.aluminum);
+      components.phoneMount.position.set(2.4, 0.5, -0.75);
+      components.phoneMount.rotation.x = -0.15;
+      components.phoneMount.castShadow = true;
+      components.rootGroup.add(components.phoneMount);
+
+      // 4. LEGS (D16T Aerospace Aluminum)
+      const legGeo = new THREE.BoxGeometry(0.35, 1.25, 2.1);
+      
+      // Left Leg
+      components.leftLeg = new THREE.Mesh(legGeo, woodMaterials.aluminum);
+      components.leftLeg.position.set(-3.7, -0.68, 0);
+      components.leftLeg.castShadow = true;
+      components.leftLeg.receiveShadow = true;
+      
+      const corkPadGeo = new THREE.BoxGeometry(0.35, 0.05, 2.1);
+      const leftCork = new THREE.Mesh(corkPadGeo, woodMaterials.cork);
+      leftCork.position.y = -0.63;
+      components.leftLeg.add(leftCork);
+      components.rootGroup.add(components.leftLeg);
+
+      // Right Leg
+      components.rightLeg = new THREE.Mesh(legGeo, woodMaterials.aluminum);
+      components.rightLeg.position.set(3.7, -0.68, 0);
+      components.rightLeg.castShadow = true;
+      components.rightLeg.receiveShadow = true;
+      
+      const rightCork = new THREE.Mesh(corkPadGeo, woodMaterials.cork);
+      rightCork.position.y = -0.63;
+      components.rightLeg.add(rightCork);
+      components.rootGroup.add(components.rightLeg);
+
+      // 5. STEALTH CABLE TRAY
+      const trayGroup = new THREE.Group();
+      const trayBaseGeo = new THREE.BoxGeometry(5.8, 0.04, 1.2);
+      const trayBase = new THREE.Mesh(trayBaseGeo, woodMaterials.steel);
+      trayBase.castShadow = true;
+      trayGroup.add(trayBase);
+
+      const trayBackGeo = new THREE.BoxGeometry(5.8, 0.35, 0.04);
+      const trayBack = new THREE.Mesh(trayBackGeo, woodMaterials.steel);
+      trayBack.position.set(0, 0.16, -0.58);
+      trayGroup.add(trayBack);
+
+      trayGroup.position.set(0, -0.38, -0.3);
+      components.cableTray = trayGroup;
+      components.rootGroup.add(components.cableTray);
+
+      scene.add(components.rootGroup);
+
+      // 3D Hotspot pins placed across distinct parts of the stand
+      createHotspot(0, 0.9, 0.4, 'deck');
+      createHotspot(-1.8, 0.85, -0.75, 'ttrack');
+      createHotspot(-3.7, 0.15, 0.8, 'legs');
+      createHotspot(0, 0.1, -0.3, 'tray');
+    }
+
+    // --- 6. 3D HOTSPOT PINS ---
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let clickableHotspots = [];
+
+    function createHotspot(x, y, z, nodeId) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+
+      ctx.beginPath();
+      ctx.arc(32, 32, 22, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.28)';
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.arc(32, 32, 12, 0, Math.PI * 2);
+      ctx.fillStyle = '#38bdf8';
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      const texture = new THREE.CanvasTexture(canvas);
+      const spriteMat = new THREE.SpriteMaterial({ map: texture, depthTest: false });
+      const sprite = new THREE.Sprite(spriteMat);
+      sprite.position.set(x, y, z);
+      sprite.scale.set(0.32, 0.32, 0.32);
+      sprite.userData = { nodeId };
+
+      scene.add(sprite);
+      clickableHotspots.push(sprite);
+    }
+
+    window.addEventListener('pointerdown', (e) => {
+      if (e.target.closest('.bottom-cockpit') || e.target.closest('.viewer-header') || e.target.closest('.hotspot-card')) return;
+
+      mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(clickableHotspots);
+
+      if (intersects.length > 0) {
+        const nodeId = intersects[0].object.userData.nodeId;
+        openHotspot(nodeId, intersects[0].object.position);
+      }
+    });
+
+    function openHotspot(nodeId, pos) {
+      const data = nodeDetails[nodeId];
+      if (!data) return;
+
+      document.getElementById('hotspotTag').textContent = data.tag;
+      document.getElementById('hotspotTitle').textContent = data.title;
+      document.getElementById('hotspotDesc').textContent = data.desc;
+      
+      const specsWrap = document.getElementById('hotspotSpecs');
+      specsWrap.innerHTML = data.specs.map(s => `
+        <div class="h-spec-item">
+          <div class="h-spec-val">${s[0]}</div>
+          <div class="h-spec-lbl">${s[1]}</div>
+        </div>
+      `).join('');
+
+      document.getElementById('hotspotCard').classList.add('visible');
+      controls.target.lerp(new THREE.Vector3(pos.x * 0.4, pos.y, pos.z * 0.4), 0.5);
+    }
+
+    function closeHotspot() {
+      document.getElementById('hotspotCard').classList.remove('visible');
+    }
+
+    // --- 7. STUDIO FLOOR ---
+    function setupFloor() {
+      const floorGeo = new THREE.PlaneGeometry(40, 40);
+      const floorMat = new THREE.ShadowMaterial({ opacity: 0.35 });
+      const floor = new THREE.Mesh(floorGeo, floorMat);
+      floor.rotation.x = -Math.PI / 2;
+      floor.position.y = -0.68;
+      floor.receiveShadow = true;
+      scene.add(floor);
+    }
+
+    // --- 8. WOOD SWITCHING ---
+    function switchWood(woodKey) {
+      currentWood = woodKey;
+      if (components.board && woodMaterials[woodKey]) {
+        components.board.material = woodMaterials[woodKey];
+        components.board.material.needsUpdate = true;
+      }
+      document.querySelectorAll('.wood-tab-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.wood === woodKey);
+      });
+    }
+
+    // --- 9. INTERACTIVE EXPLODE LOGIC ---
+    function toggleExplode() {
+      targetExplode = targetExplode === 0 ? 1 : 0;
+      isAnimatingExplode = true;
+      document.getElementById('btnToggleExplode').textContent = targetExplode === 1 ? 'Собрать' : 'Взорвать';
+    }
+
+    function updateExplodeTransforms() {
+      const t = explodeProgress;
+
+      // Board lifts up gently
+      if (components.board) components.board.position.y = t * 0.95;
+
+      // Dock rises higher out of slot
+      if (components.phoneMount) {
+        components.phoneMount.position.y = 0.5 + t * 1.2;
+        components.phoneMount.position.z = -0.75 - t * 0.35;
+      }
+
+      // Legs slide out left and right
+      if (components.leftLeg) components.leftLeg.position.x = -3.7 - t * 0.85;
+      if (components.rightLeg) components.rightLeg.position.x = 3.7 + t * 0.85;
+
+      // Cable tray lowers down
+      if (components.cableTray) components.cableTray.position.y = -0.38 - t * 0.75;
+
+      document.getElementById('explodeSlider').value = Math.round(t * 100);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      setupResponsiveCamera();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    // --- 10. ANIMATION LOOP ---
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (isAnimatingExplode) {
+        const delta = (targetExplode - explodeProgress) * 0.1;
+        explodeProgress += delta;
+        if (Math.abs(targetExplode - explodeProgress) < 0.005) {
+          explodeProgress = targetExplode;
+          isAnimatingExplode = false;
+        }
+        updateExplodeTransforms();
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    window.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

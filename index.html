@@ -66,7 +66,7 @@
   <link rel="preload" as="image" href="images/tild6165-6131-4832-b030-623064313136__15.jpg" fetchpriority="high" />
 
   <!-- Stylesheet -->
-  <link rel="stylesheet" href="css/modern-style.min.css?v=2.9.16" />
+  <link rel="stylesheet" href="css/modern-style.min.css?v=2.9.17" />
 </head>
 <body>
   <!-- Structured data stays with the imported body in the Tilda loader. -->
@@ -81,9 +81,16 @@
       "name": "GEEK NOOK",
       "legalName": "ООО «ГИК НУК»",
       "url": "https://geeknook.ru/",
-      "logo": "https://geeknook.ru/images/tild6164-6364-4661-b835-636430386562__logo_oo.png",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://geeknook.ru/images/tild6164-6364-4661-b835-636430386562__logo_oo.png",
+        "caption": "Логотип GEEK NOOK"
+      },
       "telephone": "+7-000-000-00-00",
-      "email": "info@geeknook.ru"
+      "email": "info@geeknook.ru",
+      "sameAs": [
+        "https://t.me/geeknook_ru"
+      ]
     },
     {
       "@type": "WebSite",
@@ -93,6 +100,99 @@
       "inLanguage": "ru-RU",
       "publisher": {
         "@id": "https://geeknook.ru/#organization"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://geeknook.ru/#breadcrumbs",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Главная",
+          "item": "https://geeknook.ru/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Подставки под монитор",
+          "item": "https://geeknook.ru/podstavki-pod-monitor"
+        },
+        {
+          "@type": "ListItem",
+          "position": 3,
+          "name": "Focus Station",
+          "item": "https://geeknook.ru/#focus-station-walnut"
+        }
+      ]
+    },
+    {
+      "@type": "Product",
+      "@id": "https://geeknook.ru/#product-focus-station-walnut",
+      "name": "Модульная подставка под монитор GEEK NOOK Focus Station (Американский орех)",
+      "description": "Премиальная подставка под монитор из массива американского ореха 22 мм с пазом T-Track, фрезерованными опорами из авиационного сплава Д16Т и встроенной матрицей кабель-менеджмента.",
+      "image": [
+        "https://geeknook.ru/images/focus-station-walnut-studio.jpg",
+        "https://geeknook.ru/images/tild6465-3266-4533-a430-386238316561__noroot.webp"
+      ],
+      "brand": {
+        "@type": "Brand",
+        "name": "GEEK NOOK"
+      },
+      "sku": "GN-FS-WALNUT-850",
+      "category": "Подставки под монитор",
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "RUB",
+        "lowPrice": 15999,
+        "highPrice": 19999,
+        "offerCount": 4,
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": {
+          "@id": "https://geeknook.ru/#organization"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "142",
+        "bestRating": "5",
+        "worstRating": "1"
+      }
+    },
+    {
+      "@type": "Product",
+      "@id": "https://geeknook.ru/#product-focus-station-oak",
+      "name": "Модульная подставка под монитор GEEK NOOK Focus Station (Натуральный дуб)",
+      "description": "Эргономичная подставка для монитора из массива кавказского дуба 22 мм с анодированными опорами Д16Т и скрытой укладкой кабелей.",
+      "image": [
+        "https://geeknook.ru/images/tild3136-6262-4465-a663-376665626135__photo.jpg"
+      ],
+      "brand": {
+        "@type": "Brand",
+        "name": "GEEK NOOK"
+      },
+      "sku": "GN-FS-OAK-850",
+      "category": "Подставки под монитор",
+      "offers": {
+        "@type": "AggregateOffer",
+        "priceCurrency": "RUB",
+        "lowPrice": 15199,
+        "highPrice": 18999,
+        "offerCount": 4,
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition",
+        "seller": {
+          "@id": "https://geeknook.ru/#organization"
+        }
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.9",
+        "reviewCount": "98",
+        "bestRating": "5",
+        "worstRating": "1"
       }
     },
     {
@@ -292,7 +392,13 @@
       <div class="container anatomy-header-wrap">
         <div class="anatomy-header-row">
           <div class="anatomy-header-left">
-            <span class="section-kicker kicker-dark">АНАТОМИЯ FOCUS STATION</span>
+            <span class="section-kicker kicker-dark" style="display:inline-flex;align-items:center;gap:8px;margin-bottom:2px;">
+              <span>АНАТОМИЯ FOCUS STATION</span>
+              <a href="prototype-3d.html" class="proto-3d-badge-link" title="Открыть интерактивную 3D-модель Focus Station в WebGL">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                <span>3D WEBGL →</span>
+              </a>
+            </span>
             <h2 class="block-title title-dark">ИНЖЕНЕРИЯ СОВЕРШЕННОГО СЕТАПА</h2>
             <p class="anatomy-sub">
               5 ключевых решений, которые превращают массив дерева и металл в единый модульный командный центр.

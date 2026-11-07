@@ -838,6 +838,30 @@ textarea:focus-visible {
   color: #60a5fa;
 }
 
+.proto-3d-badge-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  vertical-align: middle;
+}
+
+.proto-3d-badge-link:hover {
+  background: #38bdf8;
+  color: #080a0f;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.4);
+  transform: translateY(-1px);
+}
+
 .block-title {
   font-family: var(--font-display);
   font-size: clamp(1.8rem, 2.8vw, 2.4rem);
@@ -1452,6 +1476,7 @@ textarea:focus-visible {
 }
 
 .btn-config-matcher-link {
+  position: relative;
   background: rgba(43, 112, 240, 0.08);
   border: 1px solid rgba(43, 112, 240, 0.22);
   color: var(--primary);
@@ -1464,6 +1489,16 @@ textarea:focus-visible {
   align-items: center;
   gap: 5px;
   transition: all var(--transition-fast);
+}
+
+.btn-config-matcher-link::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  min-height: 44px;
 }
 
 .btn-config-matcher-link:hover {
@@ -8443,6 +8478,7 @@ textarea:focus-visible {
 }
 
 .prod-pill {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -8456,6 +8492,16 @@ textarea:focus-visible {
   cursor: pointer;
   transition: all var(--transition-fast);
   white-space: nowrap;
+}
+
+.prod-pill::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  transform: translateY(-50%);
+  min-height: 44px;
 }
 
 .prod-pill:hover {
@@ -12276,8 +12322,8 @@ textarea.input-error {
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    gap: 8px;
-    padding: 68px 14px 64px;
+    gap: 4px;
+    padding: 62px 14px 40px;
     box-sizing: border-box;
     z-index: 2;
   }
@@ -12335,6 +12381,17 @@ textarea.input-error {
     border-radius: 6px;
     white-space: nowrap;
     flex-shrink: 0;
+    position: relative;
+  }
+  .anatomy-step-pill::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    min-height: 44px;
+    height: 44px;
   }
   .anatomy-nav-actions {
     display: flex;
@@ -12897,6 +12954,17 @@ textarea.input-error {
     padding: 2px 0 !important;
     font-size: 0.72rem !important;
     gap: 6px !important;
+    position: relative !important;
+  }
+  .anatomy-card-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    min-height: 44px;
+    height: 44px;
   }
 }
 
