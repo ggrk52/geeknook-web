@@ -24,7 +24,7 @@ function attachStrictErrorSniffer(page) {
   page.on('console', msg => {
     if (msg.type() === 'error') {
       const text = msg.text();
-      const isExternalAbort = /net::ERR_FAILED|net::ERR_ABORTED|mc\.yandex\.ru|google-analytics\.com|googletagmanager\.com/i.test(text);
+      const isExternalAbort = /net::ERR_FAILED|net::ERR_ABORTED|mc\.yandex\.ru|google-analytics\.com|googletagmanager\.com|fonts\.googleapis\.com|fonts\.gstatic\.com/i.test(text);
       if (!isExternalAbort) {
         errors.push(`[console.error] ${text} (location: ${msg.location().url}:${msg.location().lineNumber})`);
       }

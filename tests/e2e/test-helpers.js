@@ -16,7 +16,7 @@ async function setupPageRoutes(page) {
     } catch (e) {}
   });
 
-  await page.route(/(mc\.yandex\.ru|google-analytics\.com|googletagmanager\.com|tilda\.ws)/i, route => {
+  await page.route(/(mc\.yandex\.ru|google-analytics\.com|googletagmanager\.com|tilda\.ws|fonts\.googleapis\.com|fonts\.gstatic\.com)/i, route => {
     route.abort();
   });
 }
