@@ -858,13 +858,12 @@
     const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
     const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
     const discountAmount = Math.round(subtotal * (discountPercent / 100));
-    const isFreeShipping = (subtotal - discountAmount) >= 7000;
-    const shippingCost = isFreeShipping ? 0 : (subtotal > 0 ? 490 : 0);
+    const shippingCost = 0;
     const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
 
     if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
     if (discountEl) discountEl.textContent = discountAmount > 0 ? `-${formatPrice(discountAmount)} (-${discountPercent}%)` : '0 ₽';
-    if (shippingEl) shippingEl.textContent = isFreeShipping ? 'Бесплатно' : (subtotal > 0 ? '490 ₽' : '0 ₽');
+    if (shippingEl) shippingEl.textContent = 'Бесплатно';
     if (grandTotalEl) grandTotalEl.textContent = formatPrice(grandTotal);
 
     // Sync Cart Drawer Promo Box UI
@@ -884,19 +883,9 @@
       if (cartPromoApplied) cartPromoApplied.style.display = 'none';
     }
 
-    // Free shipping progress bar
     if (progressFill && progressText) {
-      const freeThreshold = 7000;
-      const currentNet = Math.max(0, subtotal - discountAmount);
-      const pct = Math.min(100, Math.round((currentNet / freeThreshold) * 100));
-      progressFill.style.width = `${pct}%`;
-
-      if (pct >= 100) {
-        progressText.innerHTML = `<span>✓ Бесплатная доставка активна!</span><span>100%</span>`;
-      } else {
-        const left = Math.max(0, freeThreshold - currentNet);
-        progressText.innerHTML = `<span>До бесплатной доставки: <strong>${formatPrice(left)}</strong></span><span>${pct}%</span>`;
-      }
+      progressFill.style.width = '100%';
+      progressText.textContent = 'Доставка бесплатная';
     }
 
     // Render cart items
@@ -1044,8 +1033,7 @@
     const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
     const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
     const discountAmount = Math.round(subtotal * (discountPercent / 100));
-    const isFreeShipping = (subtotal - discountAmount) >= 7000;
-    const shippingCost = isFreeShipping ? 0 : (subtotal > 0 ? 490 : 0);
+    const shippingCost = 0;
     const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
 
     if (totalCount > 0) {
@@ -1321,7 +1309,7 @@
     }
 
     if (badgeCalc) {
-      badgeCalc.innerHTML = `🚚 ${applied ? 'Срок доставки СДЭК' : 'Предварительная оценка доставки'}: <strong>${state.cdekDelivery.daysText}</strong> (тариф: ${state.cdekDelivery.cost} ₽${applied ? '' : ', уточним при подтверждении'})`;
+      badgeCalc.innerHTML = `🚚 ${applied ? 'Срок доставки СДЭК' : 'Предварительная оценка доставки'}: <strong>${state.cdekDelivery.daysText}</strong> (доставка бесплатно)`;
       badgeCalc.style.color = '#10b981';
     }
 
@@ -1344,19 +1332,7 @@
     const discountAmount = Math.round(subtotal * (discountPercent / 100));
     const itemsTotal = Math.max(0, subtotal - discountAmount);
     
-    // Free shipping threshold: 7 000 ₽
-    const isFreeShipping = itemsTotal >= 7000;
-    
-    let shippingCost = 0;
-    if (subtotal > 0) {
-      if (isFreeShipping) {
-        shippingCost = 0;
-      } else if (state.cdekDelivery && state.cdekDelivery.calculated) {
-        shippingCost = state.cdekDelivery.cost;
-      } else {
-        shippingCost = 490;
-      }
-    }
+    const shippingCost = 0;
     const grandTotal = Math.max(0, itemsTotal + shippingCost);
 
     if (state.activePromoCode && PROMO_CODES[state.activePromoCode]) {
@@ -1384,24 +1360,7 @@
       }
     }
 
-    if (shippingVal) {
-      if (!state.selectedPvz) {
-        if (isFreeShipping) {
-          shippingVal.innerHTML = '<span style="color:#10b981;font-weight:700;">0 ₽ (Бесплатно от 7 000 ₽)</span>';
-        } else {
-          shippingVal.innerHTML = '<span>Выберите ПВЗ (от 315 ₽)</span>';
-        }
-      } else if (state.cdekDelivery && state.cdekDelivery.calculating) {
-        shippingVal.innerHTML = '<span style="color:var(--text-muted);">Расчёт...</span>';
-      } else if (isFreeShipping) {
-        const daysInfo = state.cdekDelivery && state.cdekDelivery.daysText ? ` • Срок: ${state.cdekDelivery.daysText}` : '';
-        const savedCost = state.cdekDelivery && state.cdekDelivery.cost ? state.cdekDelivery.cost : 490;
-        shippingVal.innerHTML = `<span style="color:#10b981;font-weight:700;">0 ₽ (Бесплатно)</span> <span style="font-size:0.75rem;color:var(--text-muted);">(экономия ${formatPrice(savedCost)}${daysInfo})</span>`;
-      } else {
-        const daysInfo = state.cdekDelivery && state.cdekDelivery.daysText ? ` <span style="font-size:0.75rem;color:var(--text-muted);">(срок: ${state.cdekDelivery.daysText})</span>` : '';
-        shippingVal.innerHTML = `<span style="font-weight:700;">${state.cdekDelivery?.estimated ? 'Ориентировочно ' : ''}${formatPrice(shippingCost)}</span>${daysInfo}`;
-      }
-    }
+    if (shippingVal) shippingVal.textContent = 'Бесплатно';
 
     const subtotalEl = document.getElementById('checkoutSubtotalVal');
     if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
@@ -4025,8 +3984,7 @@
 
     const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
     const discountAmount = Math.round(subtotal * (discountPercent / 100));
-    const isFreeShipping = (subtotal - discountAmount) >= 7000;
-    const shippingCost = isFreeShipping ? 0 : 490;
+    const shippingCost = 0;
     const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
 
     if (summaryTotal) summaryTotal.textContent = formatPrice(grandTotal);
@@ -4249,12 +4207,12 @@
     const safePayment = escapeHTML(formData.get('payment') || 'При получении');
 
     const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
-    const orderNumber = 'GN-' + Math.floor(100000 + Math.random() * 900000);
+    const orderNumber = form.dataset.orderNumber || ('GN-' + Math.floor(100000 + Math.random() * 900000));
     const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
     const discountAmount = Math.round(subtotal * (discountPercent / 100));
     const itemsTotal = Math.max(0, subtotal - discountAmount);
-    const isFreeShipping = itemsTotal >= 7000;
-    const shippingCost = isFreeShipping ? 0 : (state.cdekDelivery && state.cdekDelivery.calculated ? state.cdekDelivery.cost : 490);
+    const isFreeShipping = true;
+    const shippingCost = 0;
     const grandTotal = Math.max(0, itemsTotal + shippingCost);
 
     const detailsEl = document.getElementById('successOrderDetails');
@@ -4267,7 +4225,7 @@
         ? `<div style="margin-bottom:8px;color:#60a5fa;"><strong>Пункт выдачи СДЭК:</strong> [${escapeHTML(state.selectedPvz.code)}] ${escapeHTML(state.selectedPvz.address)} (${escapeHTML(state.selectedPvz.city)})</div>`
         : '';
 
-      const deliveryInfoHtml = `<div style="margin-bottom:8px;"><strong>Доставка${state.cdekDelivery?.estimated && !isFreeShipping ? ' (предварительно)' : ''}:</strong> ${isFreeShipping ? '<span style="color:#10b981;">0 ₽ (Бесплатно от 7 000 ₽)</span>' : formatPrice(shippingCost)} ${state.cdekDelivery && state.cdekDelivery.daysText ? `(Срок: ${state.cdekDelivery.daysText})` : ''}</div>`;
+      const deliveryInfoHtml = `<div style="margin-bottom:8px;"><strong>Доставка${state.cdekDelivery?.estimated && !isFreeShipping ? ' (предварительно)' : ''}:</strong> ${isFreeShipping ? '<span style="color:#10b981;">0 ₽ (Бесплатно)</span>' : formatPrice(shippingCost)} ${state.cdekDelivery && state.cdekDelivery.daysText ? `(Срок: ${state.cdekDelivery.daysText})` : ''}</div>`;
 
       detailsEl.innerHTML = `
         <div style="margin-bottom:8px;"><strong>Номер заказа:</strong> #${orderNumber}</div>

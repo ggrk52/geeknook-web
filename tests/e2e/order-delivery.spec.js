@@ -107,13 +107,18 @@ test('main catalog checkout sends mat details to Tilda and the email fallback', 
   await page.locator('#checkoutName').fill('Тест Тестов');
   await page.locator('#checkoutEmail').fill('test@example.com');
   await page.locator('#checkoutPhone').fill('+79990000000');
-  await page.locator('#checkoutAddressInput').fill('MSK2499');
+  await expect(page.locator('#checkoutGrandTotalSummary')).toContainText('1 199');
+  await expect(page.locator('#checkoutShippingVal')).toContainText('Бесплатно');
+  await page.locator('#checkoutAddressInput').fill('MSK2499 ТЕСТ НЕ ОТПРАВЛЯТЬ');
   await page.locator('#checkoutForm').getByRole('button', { name: 'Подтвердить заказ' }).click();
 
   await expect(page.locator('#successModal')).toHaveClass(/active/);
   const tildaOrders = await page.evaluate(() => window.testTildaOrders);
   expect(tildaOrders).toHaveLength(1);
   expect(tildaOrders[0]).toMatchObject({ Email: 'test@example.com', Address: 'MSK2499' });
+  expect(tildaOrders[0]['Пункт выдачи полностью']).toBe('MSK2499 ТЕСТ НЕ ОТПРАВЛЯТЬ');
+  expect(tildaOrders[0]['Стоимость доставки']).toBe('0 ₽ (бесплатно)');
+  expect(JSON.parse(tildaOrders[0].tildapayment).amount).toBe(1199);
   expect(JSON.parse(tildaOrders[0].tildapayment).products[0]).toMatchObject({
     name: expect.stringContaining('Desk Mat Light'), quantity: 1
   });
@@ -121,5 +126,8 @@ test('main catalog checkout sends mat details to Tilda and the email fallback', 
   expect(fallbackOrders[0]['Товары']).toContain('Desk Mat Light');
   const orderNumber = fallbackOrders[0]['Заказ'].match(/GN-\d+/)?.[0];
   expect(orderNumber).toBeTruthy();
+  expect(tildaOrders[0]['Номер заказа сайта']).toBe(orderNumber);
+  expect(fallbackOrders[0]['Сумма платежа']).toBe('1199 RUB');
+  expect(fallbackOrders[0]['Код_ПВЗ_СДЭК']).toContain('ТЕСТ НЕ ОТПРАВЛЯТЬ');
   await expect(page.locator('#successOrderDetails')).toContainText(orderNumber);
 });

@@ -445,6 +445,7 @@
       const payment = formData.get('payment') || 'Оплата при получении в ПВЗ СДЭК';
       const checkoutPromo = (window.geekNookApp.state?.activePromoCode || (typeof localStorage !== 'undefined' ? localStorage.getItem('geeknook_promo') : '') || '').trim().toUpperCase();
       const pvz = window.geekNookApp.state?.selectedPvz;
+      form.dataset.orderNumber = form.dataset.orderNumber || ('GN-' + Math.floor(100000 + Math.random() * 900000));
 
       // 1. Sync Tilda's background tcart products object & grand total
       syncTildaInMemory();
@@ -536,8 +537,18 @@
           }
         }
 
-        const pvzCode = pvz ? pvz.code : (address.match(/\[([A-Z0-9_-]+)\]/i)?.[1] || address);
+        const pvzCode = pvz ? pvz.code : (address.match(/\[([A-Z0-9_-]+)\]/i)?.[1] || address.match(/^[A-Z0-9_-]+/i)?.[0] || '');
         const pvzString = pvz ? `ПВЗ СДЭК: [${pvz.code}] ${pvz.address} (${pvz.city})` : address;
+        [['Номер заказа сайта', form.dataset.orderNumber], ['Пункт выдачи полностью', pvzString], ['Стоимость доставки', '0 ₽ (бесплатно)']].forEach(([name, value]) => {
+          let input = Array.from(tildaCartForm.elements).find(el => el.name === name);
+          if (!input) {
+            input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = name;
+            tildaCartForm.appendChild(input);
+          }
+          input.value = value;
+        });
         if (inpPvz) {
           inpPvz.value = pvzCode;
           try { inpPvz.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
