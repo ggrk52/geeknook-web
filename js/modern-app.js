@@ -57,9 +57,9 @@
   const toAssetUrl = (url) => {
     if (!url || typeof url !== 'string') return '';
     if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:') || url.startsWith('blob:')) return url;
-    const base = (typeof window !== 'undefined' && window.GEEKNOOK_CDN_URL) || 'https://ggrk52.github.io/geeknook-web/';
+    const base = window.GEEKNOOK_CDN_URL;
     const clean = url.replace(/^\.?\//, '');
-    return base.endsWith('/') ? base + clean : base + '/' + clean;
+    return new URL(clean, base ? base.replace(/\/?$/, '/') : document.baseURI).href;
   };
 
   // --- LAZY THREE.JS LOADER ---
@@ -1287,7 +1287,8 @@
     try {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 3500);
-      const url = `/api/cdek-calc.php?to_city=${encodeURIComponent(cleanCity)}${cityCode ? `&to_code=${cityCode}` : ''}`;
+      const apiBase = (window.GEEKNOOK_API_BASE_URL || '').replace(/\/$/, '');
+      const url = `${apiBase}/api/cdek-calc.php?to_city=${encodeURIComponent(cleanCity)}${cityCode ? `&to_code=${cityCode}` : ''}`;
       const res = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
       if (res.ok) {
@@ -1308,6 +1309,7 @@
       // Graceful fallback to calibrated calculation
     }
 
+    state.cdekDelivery.estimated = !applied;
     if (!applied) {
       const est = estimateCdekDelivery(cleanCity);
       state.cdekDelivery.calculated = true;
@@ -1319,7 +1321,7 @@
     }
 
     if (badgeCalc) {
-      badgeCalc.innerHTML = `🚚 Срок доставки СДЭК: <strong>${state.cdekDelivery.daysText}</strong> (тариф: ${state.cdekDelivery.cost} ₽)`;
+      badgeCalc.innerHTML = `🚚 ${applied ? 'Срок доставки СДЭК' : 'Предварительная оценка доставки'}: <strong>${state.cdekDelivery.daysText}</strong> (тариф: ${state.cdekDelivery.cost} ₽${applied ? '' : ', уточним при подтверждении'})`;
       badgeCalc.style.color = '#10b981';
     }
 
@@ -1397,7 +1399,7 @@
         shippingVal.innerHTML = `<span style="color:#10b981;font-weight:700;">0 ₽ (Бесплатно)</span> <span style="font-size:0.75rem;color:var(--text-muted);">(экономия ${formatPrice(savedCost)}${daysInfo})</span>`;
       } else {
         const daysInfo = state.cdekDelivery && state.cdekDelivery.daysText ? ` <span style="font-size:0.75rem;color:var(--text-muted);">(срок: ${state.cdekDelivery.daysText})</span>` : '';
-        shippingVal.innerHTML = `<span style="font-weight:700;">${formatPrice(shippingCost)}</span>${daysInfo}`;
+        shippingVal.innerHTML = `<span style="font-weight:700;">${state.cdekDelivery?.estimated ? 'Ориентировочно ' : ''}${formatPrice(shippingCost)}</span>${daysInfo}`;
       }
     }
 
@@ -4130,9 +4132,10 @@
     }
   };
 
-  const handleCheckoutSubmit = withActionLock((e) => {
+  const handleCheckoutSubmit = withActionLock(async (e) => {
     e.preventDefault();
     const form = e.target;
+    if (form.querySelector('button[type="submit"]')?.disabled) return;
     const formData = new FormData(form);
 
     const nameInput = form.querySelector('input[name="name"]');
@@ -4264,7 +4267,7 @@
         ? `<div style="margin-bottom:8px;color:#60a5fa;"><strong>Пункт выдачи СДЭК:</strong> [${escapeHTML(state.selectedPvz.code)}] ${escapeHTML(state.selectedPvz.address)} (${escapeHTML(state.selectedPvz.city)})</div>`
         : '';
 
-      const deliveryInfoHtml = `<div style="margin-bottom:8px;"><strong>Доставка:</strong> ${isFreeShipping ? '<span style="color:#10b981;">0 ₽ (Бесплатно от 7 000 ₽)</span>' : formatPrice(shippingCost)} ${state.cdekDelivery && state.cdekDelivery.daysText ? `(Срок: ${state.cdekDelivery.daysText})` : ''}</div>`;
+      const deliveryInfoHtml = `<div style="margin-bottom:8px;"><strong>Доставка${state.cdekDelivery?.estimated && !isFreeShipping ? ' (предварительно)' : ''}:</strong> ${isFreeShipping ? '<span style="color:#10b981;">0 ₽ (Бесплатно от 7 000 ₽)</span>' : formatPrice(shippingCost)} ${state.cdekDelivery && state.cdekDelivery.daysText ? `(Срок: ${state.cdekDelivery.daysText})` : ''}</div>`;
 
       detailsEl.innerHTML = `
         <div style="margin-bottom:8px;"><strong>Номер заказа:</strong> #${orderNumber}</div>
@@ -4324,19 +4327,22 @@
       timestamp: new Date().toISOString()
     };
 
-    // Track Analytics & Ecommerce
+    // Dispatch the order and record analytics only after acknowledgement.
+    // Dispatch the cart order to all channels (Telegram, Email, LocalStorage)
+    try {
+      await dispatchUnifiedOrder(cartOrderPayload);
+    } catch(err) {
+      console.warn('[GeekNook] dispatchCartOrder error:', err);
+      showToast('Не удалось отправить заказ. Проверьте соединение и попробуйте ещё раз.', 'error');
+      if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText; }
+      return;
+    }
+
     if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackOrderSubmit === 'function') {
       window.geekNookAnalytics.trackOrderSubmit(orderNumber, grandTotal, state.cart, safeDelivery, safePayment);
     }
 
-    // Dispatch the cart order to all channels (Telegram, Email, LocalStorage)
-    try {
-      dispatchUnifiedOrder(cartOrderPayload);
-    } catch(err) {
-      console.warn('[GeekNook] dispatchCartOrder error:', err);
-    }
-
-    // Close checkout and show confirmation modal immediately
+    // Close checkout after the notification service acknowledges the order.
     modalManager.close('checkoutModal');
     modalManager.open('successModal');
 
@@ -4536,12 +4542,7 @@
   const formatOrderStandardMessage = (orderPayload) => {
     const isQuickBuy = orderPayload.type === 'quick_buy';
 
-    // 1. Order Number: 10-digit number like 1021213001
-    let rawDigits = String(orderPayload.order_number || '').replace(/\D/g, '');
-    while (rawDigits.length < 8) {
-      rawDigits += Math.floor(Math.random() * 10);
-    }
-    const orderNumberStr = rawDigits.startsWith('10') ? rawDigits.slice(0, 10) : ('10' + rawDigits).slice(0, 10);
+    const orderNumberStr = String(orderPayload.order_number || '');
 
     // 2. Items list formatted strictly as:
     // 1. Gamepad Stand: 2990 (1 x 2990) GN-ACC-002, Артикул: 202404212, Штрихкод: 460042888815, SKU: GN-ACC-002
@@ -4571,8 +4572,8 @@
     }
 
     // 3. Customer Info
-    const cleanName = (orderPayload.name || 'Сергей').trim();
-    const cleanEmail = (orderPayload.email || 'sergeykozlov20066@mail.ru').trim();
+    const cleanName = (orderPayload.name || '').trim();
+    const cleanEmail = (orderPayload.email || '').trim();
 
     // Phone format: e.g. +70000000000 (clean digits without spaces/dashes)
     const rawPhoneDigits = String(orderPayload.phone || '').replace(/\D/g, '');
@@ -4586,7 +4587,7 @@
       const m = orderPayload.address.match(/\[([A-Z0-9_-]+)\]/i);
       pvzCode = m ? m[1] : orderPayload.address;
     }
-    if (!pvzCode) pvzCode = 'MSK2181';
+    if (!pvzCode) pvzCode = 'Уточняется';
 
     // Lead code & Block code
     let leadPart = String(Math.floor(1000000000 + Math.random() * 9000000000));
@@ -4600,7 +4601,7 @@
       `Заказ №${orderNumberStr}`,
       itemsText,
       `Сумма платежа: ${totalPayment} RUB`,
-      `Платежная система: Наличные`,
+      `Платежная система: ${orderPayload.payment || 'Уточнить при звонке'}`,
       ``,
       `Информация о покупателе:`,
       `Name: ${cleanName}`,
@@ -4658,7 +4659,7 @@
         'Заказ': `Заказ №${std.orderNumberStr}`,
         'Товары': std.itemsText,
         'Сумма платежа': `${std.totalPayment} RUB`,
-        'Платежная система': 'Наличные',
+        'Платежная система': orderPayload.payment || 'Уточнить при звонке',
         'Name': std.cleanName,
         'Email': std.cleanEmail,
         'Phone': std.cleanPhone,
@@ -4670,27 +4671,27 @@
         'Сообщение': std.fullMessage
       };
 
-      fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+      const response = await fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
         body: JSON.stringify(emailPayload)
-      }).then(r => r.json()).then(resp => {
-        console.log('[GeekNook] FormSubmit email dispatch response:', resp);
-      }).catch(fErr => {
-        console.warn('[GeekNook] FormSubmit dispatch error:', fErr);
       });
+      const result = await response.json();
+      if (!response.ok || (result.success !== true && result.success !== 'true')) {
+        throw new Error('Order delivery was not acknowledged');
+      }
     } catch (e) {
-      console.warn('[GeekNook] Email dispatch error:', e);
+      throw new Error('Order delivery failed', { cause: e });
     }
 
     // 3. Fallback queue in localStorage (Sanitized metadata only — 152-FZ zero-PII data minimization)
     try {
       const queue = JSON.parse(localStorage.getItem('geeknook_orders_history') || '[]');
       queue.push({
-        order_number: orderNumStr,
+        order_number: std.orderNumberStr,
         type: isQuickBuy ? 'quick_buy' : 'cart',
         items_count: isQuickBuy ? 1 : (orderPayload.items ? orderPayload.items.length : 1),
         amount: isQuickBuy ? orderPayload.price : orderPayload.grand_total,
@@ -4711,6 +4712,7 @@
 
   const handleQuickBuySubmit = withActionLock(async (e) => {
     if (e && e.preventDefault) e.preventDefault();
+    if (document.querySelector('#quickBuyModal button[type="submit"]')?.disabled) return;
     const nameInput = document.getElementById('quickBuyName');
     const phoneInput = document.getElementById('quickBuyPhone');
 
@@ -4828,6 +4830,9 @@
       await dispatchQuickBuyOrder(orderPayload);
     } catch(err) {
       console.warn('[GeekNook] dispatchQuickBuyOrder error:', err);
+      showToast('Не удалось отправить заказ. Проверьте соединение и попробуйте ещё раз.', 'error');
+      if (qbSubmitBtn) { qbSubmitBtn.disabled = false; qbSubmitBtn.innerHTML = 'Подтвердить заказ в 1 клик'; }
+      return;
     }
 
     modalManager.close('quickBuyModal');
@@ -5264,7 +5269,7 @@
     if (!video) return;
 
     // Check for mobile or slow connection
-    const isMobile = window.innerWidth < 768 || ('connection' in navigator && (navigator.connection.saveData || navigator.connection.effectiveType === '2g' || navigator.connection.effectiveType === '3g'));
+    const isMobile = (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) || window.innerWidth < 768 || ('connection' in navigator && (navigator.connection.saveData || navigator.connection.effectiveType === '2g' || navigator.connection.effectiveType === '3g'));
 
     // On mobile devices, keep crisp preloaded poster image to guarantee sub-second LCP
     if (isMobile) {
@@ -8263,119 +8268,15 @@
   };
 
   const submitB2bLeadData = async (payload) => {
-    try {
-      const response = await fetch('/api/b2b-lead.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        },
-        body: JSON.stringify(payload)
-      });
-      if (response.ok) {
-        const json = await response.json();
-        return json;
-      }
-    } catch (err) {
-      console.warn('API lead dispatch error, attempting direct Telegram dispatch fallback:', err);
-    }
-
-    // 1. Tilda Native Form Bridge (Triggers Tilda's internal processor & Telegram notification)
-    try {
-      const tildaForms = document.querySelectorAll('form.t-form, .t-form form, form[name^="form"]');
-      let tildaForm = null;
-      const mount = document.getElementById('geeknook-mount-point');
-      for (let i = 0; i < tildaForms.length; i++) {
-        if (!mount || !mount.contains(tildaForms[i])) {
-          tildaForm = tildaForms[i];
-          break;
-        }
-      }
-
-      if (tildaForm) {
-        let cleanName = (payload.contact_name || payload.company || 'Представитель').replace(/[^a-zA-Zа-яА-ЯёЁ\s\-]/g, '').trim();
-        if (!cleanName || cleanName.length < 2) cleanName = 'Представитель компании';
-        let cleanEmail = (payload.email && payload.email.includes('@')) ? payload.email : 'b2b-lead@geeknook.ru';
-        let cleanPhone = payload.phone || '+7 (999) 000-00-00';
-
-        const typeLabels = {
-          test_drive: '🚗 Заказ бесплатного тест-драйва (14 дней)',
-          kp_calculation: '📄 Расчет официального счета / КП',
-          cad_library: '📐 Запрос 3D CAD-библиотеки для архитектора',
-          general: '💼 Консультация по нестандартному сетапу'
-        };
-
-        const details = [
-          `[B2B Заявка: ${typeLabels[payload.request_type] || payload.request_type}]`,
-          payload.company ? `Компания: ${payload.company}` : '',
-          payload.inn ? `ИНН: ${payload.inn}` : '',
-          payload.contact_name ? `Контакт: ${payload.contact_name}` : '',
-          payload.email ? `Email: ${payload.email}` : '',
-          payload.phone ? `Телефон: ${payload.phone}` : '',
-          `Рабочих мест: ${payload.workplaces}`,
-          payload.package_tier ? `Пакет: ${payload.package_tier}` : '',
-          payload.comment ? `Пожелания: ${payload.comment}` : ''
-        ].filter(Boolean).join('\n');
-
-        const inpEmail = tildaForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
-        const inpName = tildaForm.querySelector('input[name="Name"], input[name="name"]');
-        const inpCompany = tildaForm.querySelector('input[name="Company"], input[name="company"]');
-        const inpPhone = tildaForm.querySelector('input[type="tel"], input[name="Phone"], input[name="phone"]');
-        const inpText = tildaForm.querySelector('textarea, input[name="Comments"], input[name="comments"], input[name="Comment"], input[name="comment"]');
-
-        if (inpName) {
-          inpName.value = cleanName;
-          try { inpName.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpName.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-        if (inpEmail) {
-          inpEmail.value = cleanEmail;
-          try { inpEmail.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-        if (inpPhone) {
-          inpPhone.value = cleanPhone;
-          try { inpPhone.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpPhone.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-        if (inpCompany && payload.company) {
-          inpCompany.value = payload.company;
-          try { inpCompany.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpCompany.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-        if (inpText) {
-          inpText.value = details;
-          try { inpText.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpText.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-
-        tildaForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper').forEach(el => { el.style.display = 'none'; });
-        tildaForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
-
-        const submitBtn = tildaForm.querySelector('button[type="submit"], .t-submit');
-        if (submitBtn) {
-          try { submitBtn.click(); } catch(err) { console.warn('Tilda submit error:', err); }
-        }
-        if (window.jQuery) {
-          try { window.jQuery(tildaForm).trigger('submit'); } catch(_) {}
-        }
-        try {
-          const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
-          tildaForm.dispatchEvent(submitEvt);
-        } catch(_) {}
-        console.log('[GeekNook B2B] Bridged lead into native Tilda form');
-      }
-    } catch (tildaBridgeErr) {
-      console.warn('Tilda form bridge error:', tildaBridgeErr);
-    }
-
-    try {
-      const queue = JSON.parse(localStorage.getItem('geeknook_b2b_leads') || '[]');
-      queue.push({ ...payload, timestamp: new Date().toISOString() });
-      localStorage.setItem('geeknook_b2b_leads', JSON.stringify(queue));
-    } catch (_) {}
-
-    return { success: true, fallback: true };
+    const response = await fetch(`${(window.GEEKNOOK_API_BASE_URL || '').replace(/\/$/, '')}/api/b2b-lead.php`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error('Lead delivery failed');
+    const result = await response.json();
+    if (result.success !== true) throw new Error('Lead delivery was not acknowledged');
+    return result;
   };
 
   const handleB2bSubmit = async (e) => {
@@ -8429,13 +8330,13 @@
       }
 
       closeModal('cadLibraryModal');
-      showToast(`✓ Заявка для «${escapeHTML(company)}» успешно принята! Мы свяжемся с вами в течение 10 минут.`, 'success');
+      showToast(`✓ Заявка для «${escapeHTML(company)}» успешно принята! Мы свяжемся с вами.`, 'success');
 
       if (form && typeof form.reset === 'function') {
         form.reset();
       }
     } catch (err) {
-      showToast('✓ Заявка зафиксирована! Наш менеджер свяжется с вами.', 'success');
+      showToast('Не удалось отправить заявку. Попробуйте ещё раз или напишите на b2b@geeknook.ru.', 'error');
     } finally {
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -9287,7 +9188,7 @@
 
     themeManager.init();
     initHeroVideo();
-    initAntigravitySphere();
+    // The particle canvas is hidden; do not run its animation loop.
     initCommandPalette();
     initSetupMatcher();
     initPhoneMasks();
@@ -9301,7 +9202,7 @@
     renderCatalogStructuredData();
     renderBundles();
     initBeforeAfterSlider();
-    initCardTiltInteraction();
+    // Cards use CSS hover feedback without a pointer-driven animation loop.
     renderAdvantages();
     renderProduction();
     renderClientSetups();

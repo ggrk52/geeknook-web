@@ -582,30 +582,9 @@
         const cartWin = document.querySelector('.t706__cartwin');
         if (cartWin) cartWin.classList.add('t706__cartwin_showed');
 
-        // Trigger hidden Tilda submit across all supported Tilda APIs
-        if (typeof window.t_forms__ajaxSubmit === 'function') {
-          try { window.t_forms__ajaxSubmit(tildaCartForm); } catch(_) {}
-        }
-        if (window.tildaForm && typeof window.tildaForm.send === 'function') {
-          try { window.tildaForm.send(tildaCartForm, 2); } catch(_) {}
-        }
+        // Submit once; Tilda's own handler processes this button.
         const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
-        let submitted = false;
-        if (submitBtn) {
-          try {
-            submitBtn.click();
-            submitted = true;
-          } catch(err) {}
-        }
-        if (window.jQuery) {
-          try { window.jQuery(tildaCartForm).trigger('submit'); submitted = true; } catch(_) {}
-        }
-        if (!submitted) {
-          try {
-            const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
-            tildaCartForm.dispatchEvent(submitEvt);
-          } catch(err) {}
-        }
+        if (submitBtn) submitBtn.click();
       }
 
       // 3. Complete checkout in our beautiful UI (shows confirmation modal GN-XXXXXX)
@@ -686,7 +665,7 @@
       }
 
       isTildaQuickBuySubmitting = true;
-      setTimeout(() => { isTildaQuickBuySubmitting = false; }, 1000);
+
 
       const formattedPhone = `+7 (${phoneDigits.slice(0, 3)}) ${phoneDigits.slice(3, 6)}-${phoneDigits.slice(6, 8)}-${phoneDigits.slice(8, 10)}`;
       const cleanName = rawName.replace(/[^a-zA-Zа-яА-ЯёЁ\s\-]/g, '').trim() || 'Покупатель';
@@ -761,11 +740,15 @@
       };
 
       try {
-        if (window.geekNookApp && typeof window.geekNookApp.dispatchUnifiedOrder === 'function') {
-          window.geekNookApp.dispatchUnifiedOrder(unifiedOrderPayload);
+        if (!window.geekNookApp || typeof window.geekNookApp.dispatchUnifiedOrder !== 'function') {
+          throw new Error('Order dispatch unavailable');
         }
+        await window.geekNookApp.dispatchUnifiedOrder(unifiedOrderPayload);
       } catch(dispErr) {
         console.warn('[GeekNook 1-Click] dispatchUnifiedOrder error:', dispErr);
+        window.geekNookApp.showToast('Не удалось подтвердить отправку. Свяжитесь с нами перед повторным заказом.', 'error');
+        isTildaQuickBuySubmitting = false;
+        return;
       }
 
       // 2. IMMEDIATE UI CONFIRMATION & FEEDBACK
@@ -924,27 +907,15 @@
           const cartWin = document.querySelector('.t706__cartwin');
           if (cartWin) cartWin.classList.add('t706__cartwin_showed');
 
-          // Trigger Tilda submit
-          if (typeof window.t_forms__ajaxSubmit === 'function') {
-            try { window.t_forms__ajaxSubmit(tildaCartForm); } catch(_) {}
-          }
-          if (window.tildaForm && typeof window.tildaForm.send === 'function') {
-            try { window.tildaForm.send(tildaCartForm, 2); } catch(_) {}
-          }
+          // Submit once; Tilda's own handler processes this button.
           const submitBtn = tildaCartForm.querySelector('button[type="submit"], .t-submit');
-          if (submitBtn) {
-            try { submitBtn.click(); } catch(_) {}
-          }
-          if (window.jQuery) {
-            try { window.jQuery(tildaCartForm).trigger('submit'); } catch(_) {}
-          }
-          try {
-            tildaCartForm.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
-          } catch(_) {}
+          if (submitBtn) submitBtn.click();
           console.log('[GeekNook 1-Click] Order bridged to Tilda Cart form successfully!');
         }
       } catch(tildaErr) {
         console.warn('[GeekNook 1-Click] Tilda background form error:', tildaErr);
+      } finally {
+        isTildaQuickBuySubmitting = false;
       }
     };
 
@@ -963,116 +934,73 @@
 
     window.geekNookApp.handleB2bSubmit = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
-
-      // 1. CAPTURE ALL VALUES FIRST BEFORE ANY FORM RESETS HAPPEN!
-      const company = (document.getElementById('b2bLandingCompany')?.value || document.getElementById('b2bCompany')?.value || '').trim();
-      const inn = (document.getElementById('b2bLandingInn')?.value || document.getElementById('b2bInn')?.value || '').trim();
-      const contact = (document.getElementById('b2bLandingContact')?.value || document.getElementById('b2bContactName')?.value || '').trim();
-      const email = (document.getElementById('b2bLandingEmail')?.value || document.getElementById('b2bEmail')?.value || '').trim();
-      const phone = (document.getElementById('b2bLandingPhone')?.value || document.getElementById('b2bPhone')?.value || '').trim();
-      const workplaces = (document.getElementById('b2bLandingPlaces')?.value || document.getElementById('b2bWorkplaces')?.value || '15').trim();
-      const requestType = document.getElementById('b2bRequestType')?.value || 'test_drive';
-      const comment = (document.getElementById('b2bComment')?.value || '').trim();
-
-      // 2. DISPATCH TO BACKGROUND TILDA FORM (Sends to Telegram Bot)
-      const tildaForms = document.querySelectorAll('form.t-form, .t-form form, form[name^="form"]');
-      let tildaForm = null;
-      const mount = document.getElementById('geeknook-mount-point');
-      for (let i = 0; i < tildaForms.length; i++) {
-        if (!mount || !mount.contains(tildaForms[i])) {
-          tildaForm = tildaForms[i];
-          break;
-        }
+      const source = e && e.target;
+      const button = source && source.querySelector('button[type="submit"]');
+      if (button && button.disabled) return;
+      const nativeForm = document.getElementById('form4749392701');
+      const success = nativeForm && nativeForm.querySelector('.js-successbox');
+      const field = id => (document.getElementById(id)?.value || '').trim();
+      const company = field('b2bLandingCompany') || field('b2bCompany');
+      const contact = field('b2bLandingContact') || field('b2bContactName');
+      const email = field('b2bLandingEmail') || field('b2bEmail');
+      const phone = field('b2bLandingPhone') || field('b2bPhone');
+      const comment = field('b2bComment');
+      const inn = field('b2bLandingInn') || field('b2bInn');
+      const places = field('b2bLandingPlaces') || field('b2bWorkplaces');
+      const requestType = field('b2bRequestType') || 'test_drive';
+      if (!company || !email) {
+        window.geekNookApp.showToast('Укажите компанию и email для отправки заявки.', 'error');
+        return;
       }
-
-      if (tildaForm) {
-        // Tilda rule="name" strictly validates letters and spaces (no digits, colons, or brackets)
-        let cleanName = (contact || company || 'Представитель').replace(/[^a-zA-Zа-яА-ЯёЁ\s\-]/g, '').trim();
-        if (!cleanName || cleanName.length < 2) {
-          cleanName = 'Представитель компании';
-        }
-
-        let cleanEmail = (email && email.includes('@')) ? email : 'b2b-lead@geeknook.ru';
-        let cleanPhone = phone || '+7 (999) 000-00-00';
-
-        const typeNames = {
-          test_drive: '🚗 Заказ бесплатного тест-драйва (14 дней)',
-          kp_calculation: '📄 Расчет официального счета / КП',
-          cad_library: '📐 Запрос 3D CAD-библиотеки для архитектора',
-          general: '💼 Консультация по нестандартному сетапу'
-        };
-
-        const textContent = [
-          `[B2B Заявка: ${typeNames[requestType] || requestType}]`,
-          company ? `Компания: ${company}` : '',
-          inn ? `ИНН: ${inn}` : '',
-          contact ? `Контакт: ${contact}` : '',
-          email ? `Email: ${email}` : '',
-          phone ? `Телефон: ${phone}` : '',
-          `Рабочих мест: ${workplaces}`,
-          comment ? `Пожелания: ${comment}` : ''
-        ].filter(Boolean).join('\n');
-
-        const inpEmail = tildaForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
-        const inpName = tildaForm.querySelector('input[name="Name"], input[name="name"]');
-        const inpCompany = tildaForm.querySelector('input[name="Company"], input[name="company"]');
-        const inpPhone = tildaForm.querySelector('input[type="tel"], input[name="Phone"], input[name="phone"]');
-        const inpText = tildaForm.querySelector('textarea, input[name="Comments"], input[name="comments"], input[name="Comment"], input[name="comment"], input[name="Text"], input[name="text"]');
-
-        if (inpName) {
-          inpName.value = cleanName;
-          try { inpName.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpName.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-        if (inpEmail) {
-          inpEmail.value = cleanEmail;
-          try { inpEmail.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-        if (inpPhone) {
-          inpPhone.value = cleanPhone;
-          try { inpPhone.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpPhone.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-        if (inpCompany && company) {
-          inpCompany.value = company;
-          try { inpCompany.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpCompany.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-        if (inpText) {
-          inpText.value = textContent;
-          try { inpText.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
-          try { inpText.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
-        }
-
-        // Clear any Tilda validation error badges
-        tildaForm.querySelectorAll('.js-error-rule-wa, .t-form__errorbox-wrapper').forEach(el => { el.style.display = 'none'; });
-        tildaForm.querySelectorAll('.js-tilda-rule-error').forEach(el => { el.classList.remove('js-tilda-rule-error'); });
-
-        // Trigger Tilda submit
-        const submitBtn = tildaForm.querySelector('button[type="submit"], .t-submit');
-        if (submitBtn) {
-          try {
-            submitBtn.click();
-            console.log('[GeekNook B2B] Triggered native Tilda submitBtn.click() successfully!');
-          } catch(err) {
-            console.warn('[GeekNook B2B] Native Tilda submitBtn error:', err);
-          }
-        }
-        if (window.jQuery) {
-          try {
-            window.jQuery(tildaForm).trigger('submit');
-          } catch(_) {}
-        }
-        try {
-          const submitEvt = new Event('submit', { bubbles: true, cancelable: true });
-          tildaForm.dispatchEvent(submitEvt);
-        } catch(_) {}
+      const fields = nativeForm && {
+        email: nativeForm.querySelector('[name="Email"]'),
+        name: nativeForm.querySelector('[name="Name"]'),
+        phone: nativeForm.querySelector('[name="Phone"]'),
+        comments: nativeForm.querySelector('[name="Comments"]'),
+        submit: nativeForm.querySelector('button[type="submit"]')
+      };
+      if (!success || !fields || !fields.email || !fields.comments || !fields.submit || getComputedStyle(success).display !== 'none') {
+        window.geekNookApp.showToast('Форма временно недоступна. Напишите нам на b2b@geeknook.ru.', 'error');
+        return;
       }
-
-      // 3. EXECUTE NATIVE LEAD HANDLER (feedback, sounds, analytics, storage)
-      if (typeof nativeHandleB2bSubmit === 'function') {
-        nativeHandleB2bSubmit(e);
+      const assign = (input, value) => {
+        if (!input) return;
+        input.value = value;
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        input.dispatchEvent(new Event('change', { bubbles: true }));
+      };
+      assign(fields.email, email);
+      assign(fields.name, contact);
+      assign(fields.phone, phone);
+      assign(fields.comments, [
+        `Компания: ${company}`, inn && `ИНН: ${inn}`, contact && `Контакт: ${contact}`,
+        phone && `Телефон: ${phone}`, places && `Рабочих мест: ${places}`,
+        `Тип запроса: ${requestType}`, comment && `Комментарий: ${comment}`
+      ].filter(Boolean).join('\n'));
+      if (button) button.disabled = true;
+      try {
+        await new Promise((resolve, reject) => {
+          let done = false;
+          const finish = ok => {
+            if (done) return;
+            done = true;
+            observer.disconnect();
+            clearTimeout(timer);
+            ok ? resolve() : reject(new Error('Tilda did not confirm submission'));
+          };
+          const observer = new MutationObserver(() => {
+            if (getComputedStyle(success).display !== 'none') finish(true);
+          });
+          observer.observe(nativeForm, { attributes: true, childList: true, subtree: true });
+          const timer = setTimeout(() => finish(false), 15000);
+          fields.submit.click();
+        });
+        if (source && typeof source.reset === 'function') source.reset();
+        window.geekNookApp.showToast('Заявка отправлена. Мы свяжемся с вами.', 'success');
+      } catch (_) {
+        window.geekNookApp.showToast('Не удалось подтвердить отправку. Свяжитесь с нами: b2b@geeknook.ru.', 'error');
+      } finally {
+        if (button) button.disabled = false;
       }
     };
 

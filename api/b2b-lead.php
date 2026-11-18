@@ -142,7 +142,8 @@ $typeTitle = $typeLabels[$requestType] ?? $typeLabels['general'];
 
 // 8. Generate Lead ID and log locally to disk (never lose leads!)
 $leadId = 'LEAD-' . date('Ymd-His') . '-' . substr(md5(uniqid(mt_rand(), true)), 0, 4);
-$logFile = __DIR__ . '/leads.log';
+$logDir = getenv('GEEKNOOK_PRIVATE_LOG_DIR') ?: dirname(__DIR__, 2);
+$logFile = rtrim($logDir, DIRECTORY_SEPARATOR) . '/geeknook-b2b-leads.log';
 $logEntry = json_encode([
     'lead_id'      => $leadId,
     'timestamp'    => date('Y-m-d H:i:s'),
@@ -159,7 +160,11 @@ $logEntry = json_encode([
     'comment'      => $comment
 ], JSON_UNESCAPED_UNICODE) . PHP_EOL;
 
-@file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
+if (@file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX) === false) {
+    http_response_code(503);
+    echo json_encode(['success' => false, 'error' => 'Не удалось сохранить заявку. Попробуйте позже.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 // 9. Telegram Bot Notification (Protected: no hardcoded secrets, safe HTML formatting)
 $telegramSuccess = false;

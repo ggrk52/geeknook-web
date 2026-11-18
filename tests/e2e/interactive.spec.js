@@ -225,7 +225,7 @@ test.describe('R2: Interactive Components & Catalog Mechanics', () => {
       await expect(xrayBtn.locator('span')).toHaveText('Фото');
 
       // Verify CAD schematic header and SVG
-      await expect(blueprint.locator('.xray-header-tag')).toHaveText('ISO-9241 // CAD SCHEMATIC');
+      await expect(blueprint.locator('.xray-header-tag')).toHaveText('Схема и габариты Focus Station');
       const schematicSvg = blueprint.locator('svg.xray-schematic-svg');
       await expect(schematicSvg).toBeVisible();
 
@@ -249,7 +249,7 @@ test.describe('R2: Interactive Components & Catalog Mechanics', () => {
       await xrayBtn.click();
       await expect(blueprint).not.toHaveClass(/active/);
       await expect(xrayBtn).not.toHaveClass(/active/);
-      await expect(xrayBtn.locator('span')).toHaveText('X-Ray');
+      await expect(xrayBtn.locator('span')).toHaveText('Схема');
     });
   });
 

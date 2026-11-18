@@ -24,10 +24,10 @@
     </header>
     <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;max-width:800px;margin:0 auto;">
       <h1 style="font-size:clamp(1.8rem, 5vw, 3.2rem);font-weight:900;letter-spacing:-0.03em;line-height:1.15;margin:0 0 16px;color:#ffffff;">
-        Инженерная точность на твоём столе
+        Больше места на столе
       </h1>
       <p style="font-size:clamp(0.95rem, 2vw, 1.15rem);color:#94a3b8;line-height:1.6;margin:0 0 28px;max-width:620px;">
-        Премиальные аксессуары из металла, дерева и фетра. Созданы для порядка, комфорта и концентрации.
+        Подставки Focus Station, аксессуары T-Track и коврики для рабочего стола.
       </p>
       <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
         <span style="display:inline-flex;padding:12px 28px;background:#2b70f0;color:#ffffff;border-radius:10px;font-weight:700;font-size:14px;">Смотреть каталог</span>
@@ -93,7 +93,7 @@
   window.GEEKNOOK_CDN_URL = BASE_URL;
 
   // Dynamic build version and cache-busting to bypass aggressive browser caching in Safari
-  const BUILD_VER = Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 6);
+  const BUILD_VER = '2026-11-18-5';
 
   // DNS & TLS Preconnect to GitHub Pages CDN
   try {
@@ -194,7 +194,7 @@
       const [, , htmlText] = await Promise.all([
         loadAsset('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap'),
         loadAsset('css', BASE_URL + 'css/modern-style.min.css?v=' + BUILD_VER),
-        fetch(BASE_URL + 'index.html?v=' + BUILD_VER, { cache: 'no-store' }).then(r => {
+        fetch(BASE_URL + 'index.html?v=' + BUILD_VER, { cache: 'no-cache' }).then(r => {
           if (!r.ok) throw new Error('HTTP ' + r.status);
           return r.text();
         })
@@ -263,7 +263,7 @@
       // Ensure hero video triggers load() after dynamic append
       const heroVid = mountPoint.querySelector('.hero-video-bg');
       const connection = navigator.connection;
-      const skipHeroVideo = window.innerWidth < 768 || (connection && (connection.saveData || connection.effectiveType === '2g' || connection.effectiveType === '3g'));
+      const skipHeroVideo = window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth < 768 || (connection && (connection.saveData || connection.effectiveType === '2g' || connection.effectiveType === '3g'));
       if (heroVid && !skipHeroVideo) {
         heroVid.muted = true;
         heroVid.defaultMuted = true;

@@ -288,7 +288,7 @@ test.describe('Adversarial Interactive Stress-Testing (Challenger 2)', () => {
 
       await xrayBtn.click();
       await expect(blueprint).not.toHaveClass(/active/);
-      await expect(xrayBtn.locator('span')).toHaveText('X-Ray');
+      await expect(xrayBtn.locator('span')).toHaveText('Схема');
     }
 
     // 2. Turn X-Ray ON and spam click pins 1-4
@@ -314,7 +314,7 @@ test.describe('Adversarial Interactive Stress-Testing (Challenger 2)', () => {
     // Turn X-Ray back OFF
     await xrayBtn.click();
     await expect(blueprint).not.toHaveClass(/active/);
-    await expect(xrayBtn.locator('span')).toHaveText('X-Ray');
+    await expect(xrayBtn.locator('span')).toHaveText('Схема');
 
     const allErrors = [
       ...sniffer.errors,
