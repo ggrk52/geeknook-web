@@ -971,6 +971,11 @@
       };
       assign(fields.email, email);
       assign(fields.name, contact);
+      // The native phone field is a mask result; B2B also accepts Telegram handles.
+      // The complete contact is always included in Comments below.
+      if (fields.phone && fields.phone.classList.contains('js-phonemask-result')) {
+        fields.phone.classList.remove('js-tilda-rule');
+      }
       assign(fields.phone, phone);
       assign(fields.comments, [
         `Компания: ${company}`, inn && `ИНН: ${inn}`, contact && `Контакт: ${contact}`,
