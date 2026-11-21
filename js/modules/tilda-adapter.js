@@ -277,7 +277,7 @@
       syncTildaCartBadge();
 
       // Track Analytics & Ecommerce
-      if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackAddToCart === 'function') {
+      if (typeof nativeAddToCart !== 'function' && window.geekNookAnalytics && typeof window.geekNookAnalytics.trackAddToCart === 'function') {
         const prod = (window.GEEKNOOK_DATA?.allProducts || []).find(p => p.id === productId);
         const item = mapProductToTilda(productId, optionName);
         window.geekNookAnalytics.trackAddToCart({

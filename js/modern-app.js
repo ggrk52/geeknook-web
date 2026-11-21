@@ -331,11 +331,10 @@
   // --- ANALYTICS MICRO-CONVERSIONS HELPER ---
   const trackGoal = (goalName, params = {}) => {
     try {
-      if (typeof window.ym === 'function') {
-        window.ym(113130622, 'reachGoal', goalName, params);
-      }
       if (window.geekNookAnalytics && typeof window.geekNookAnalytics.reachGoal === 'function') {
         window.geekNookAnalytics.reachGoal(goalName, params);
+      } else if (typeof window.ym === 'function') {
+        window.ym(113130622, 'reachGoal', goalName, params);
       }
     } catch (e) {
       console.warn('[Analytics] reachGoal error:', e);
@@ -1916,7 +1915,7 @@
           </div>
           <div class="quick-gallery-thumbs">
             ${product.images.map((img, idx) => `
-              <img class="quick-thumb ${idx === 0 ? 'active' : ''}" src="${toAssetUrl(img)}" onclick="window.geekNookApp.switchQvImage('${toAssetUrl(img)}', this)" />
+              <button type="button" class="quick-thumb ${idx === 0 ? 'active' : ''}" aria-label="Фото ${idx + 1}: ${escapeHTML(product.title)}" aria-pressed="${idx === 0}" onclick="window.geekNookApp.switchQvImage('${toAssetUrl(img)}', this)"><img src="${toAssetUrl(img)}" alt="" loading="lazy" /></button>
             `).join('')}
           </div>
         </div>
@@ -1939,29 +1938,27 @@
             <span id="qvDiscountBadge" style="background:rgba(16,185,129,0.12);color:#10b981;font-size:0.75rem;font-weight:700;padding:3px 8px;border-radius:4px;border:1px solid rgba(16,185,129,0.3);">-20% в корзине: ${formatPrice(Math.round(product.price * 0.8))}</span>
           </div>
 
-          <p style="font-size:0.9375rem;line-height:1.65;color:var(--text-main);margin-bottom:20px;">${product.fullDescr || product.shortDescr || ''}</p>
+          <p style="font-size:0.9375rem;line-height:1.65;color:var(--text-main);margin-bottom:20px;">${product.category === 'boards' ? 'Полка для монитора высотой 9 см. Держатели для устройств можно закрепить в верхнем и нижнем пазах T-Track.' : (product.fullDescr || product.shortDescr || '')}</p>
 
           ${optionsHtml}
 
-          <table class="specs-table">
+          <div class="qv-purchase-actions">
+            <button class="btn-checkout" onclick="window.geekNookApp.addFromQuickView('${product.id}')">Добавить в корзину</button>
+            <button class="btn-secondary" onclick="window.geekNookApp.openQuickBuy('${product.id}')">Купить в 1 клик</button>
+          </div>
+
+          ${product.category === 'boards' ? '<div class="qv-fit-guide"><strong>Как выбрать длину</strong><p>85 см для компактного рабочего места. 116 см для широкой полки под монитор и ноутбук. Сверьте размеры техники и стола с габаритами ниже.</p><p>Держатели T-Track и коврик выбираются отдельно.</p></div>' : ''}
+
+          <details class="qv-spec-details" open><summary>Габариты и характеристики</summary><table class="specs-table">
             <tbody>
               ${specsHtml}
             </tbody>
-          </table>
-
-          <div style="margin-top:auto;display:flex;gap:10px;padding-top:16px;flex-wrap:wrap;">
-            <button class="btn-checkout" onclick="window.geekNookApp.addFromQuickView('${product.id}')" style="flex:1;min-width:140px;">
-              Добавить в корзину
-            </button>
-            <button class="btn-secondary" onclick="window.geekNookApp.openQuickBuy('${product.id}')" style="flex:1;min-width:140px;display:inline-flex;align-items:center;justify-content:center;font-weight:700;">
-              Купить в 1 клик
-            </button>
-          </div>
+          </table></details>
 
           <div class="qv-trust-badges">
             <div class="qv-trust-item">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-              <span>СДЭК 1–2 дня</span>
+              <span>Бесплатная доставка СДЭК</span>
             </div>
             <div class="qv-trust-item">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
@@ -2023,13 +2020,20 @@
     });
 
     modalManager.open('quickViewModal');
+    window.geekNookAnalytics?.trackProductView?.(product);
   };
 
   const switchQvImage = (src, thumbEl) => {
     const mainImg = document.getElementById('qvMainImg');
     if (mainImg) mainImg.src = src;
-    document.querySelectorAll('.quick-thumb').forEach(t => t.classList.remove('active'));
-    if (thumbEl) thumbEl.classList.add('active');
+    document.querySelectorAll('.quick-thumb').forEach(t => {
+      t.classList.remove('active');
+      t.setAttribute('aria-pressed', 'false');
+    });
+    if (thumbEl) {
+      thumbEl.classList.add('active');
+      thumbEl.setAttribute('aria-pressed', 'true');
+    }
   };
 
   const addFromQuickView = (productId) => {
@@ -3960,6 +3964,7 @@
 
     dismissToasts();
     closeCartDrawer();
+    window.geekNookAnalytics?.trackCheckoutStart?.(state.cart);
     const summaryList = document.getElementById('checkoutItemsSummary');
     const summaryTotal = document.getElementById('checkoutGrandTotalSummary');
     const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
@@ -3972,7 +3977,7 @@
         const discountedTotal = Math.round(safeTotal * ((100 - discountPercent) / 100));
         return `
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.875rem;">
-            <span style="color:var(--text-muted);">${safeTitle} × ${safeQty}</span>
+            <span style="color:var(--text-muted);">${safeTitle} × ${safeQty}${i.option && i.option !== 'Стандарт' ? `<small class="checkout-item-option">${escapeHTML(i.option)}</small>` : ''}</span>
             <span style="font-weight:600;">
               <span style="text-decoration:line-through;color:var(--text-muted);font-size:0.8rem;margin-right:6px;opacity:0.75;">${formatPrice(safeTotal)}</span>
               <span>${formatPrice(discountedTotal)}</span>

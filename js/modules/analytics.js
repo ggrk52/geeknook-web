@@ -142,8 +142,24 @@
   }
 
   // E-commerce: Order Success (Purchase)
+  const trackedOrders = new Set();
+
+  function trackProductView(product) {
+    if (!product) return;
+    reachGoal('VIEW_PRODUCT', { id: product.id, category: product.category, price: Number(product.price) || 0 });
+  }
+
+  function trackCheckoutStart(items) {
+    reachGoal('BEGIN_CHECKOUT', {
+      itemsCount: items.reduce((sum, item) => sum + (parseInt(item.quantity, 10) || 1), 0),
+      cartValue: items.reduce((sum, item) => sum + (Number(item.price) || 0) * (parseInt(item.quantity, 10) || 1), 0)
+    });
+  }
+
   function trackOrderSubmit(orderId, revenue, items = [], delivery = 'СДЭК', payment = 'При получении') {
     const safeOrderId = orderId || ('GN-' + Math.floor(100000 + Math.random() * 900000));
+    if (trackedOrders.has(safeOrderId)) return;
+    trackedOrders.add(safeOrderId);
     const safeRevenue = Number(revenue) || 0;
 
     const formattedProducts = (items || []).map(i => ({
@@ -165,7 +181,7 @@
             actionField: {
               id: safeOrderId,
               revenue: safeRevenue,
-              shipping: delivery.includes('Бесплат') ? 0 : 490
+              shipping: 0
             },
             products: formattedProducts
           }
@@ -192,8 +208,6 @@
 
   function trackB2bLead(company, email, workplaces) {
     reachGoal('B2B_LEAD', {
-      company: company || 'Не указано',
-      email: email || '',
       workplaces: workplaces || '5-10'
     });
   }
@@ -301,6 +315,8 @@
   window.geekNookAnalytics = {
     reachGoal,
     trackAddToCart,
+    trackProductView,
+    trackCheckoutStart,
     trackOrderSubmit,
     trackCartOpen,
     trackCdekMapClick,
@@ -365,6 +381,7 @@
 
   // Tilda native cart success listener
   document.addEventListener('tilda-cart-order-success', function() {
+    if (window.geekNookApp) return;
     try {
       const cartData = window.tcart || {};
       const prods = (cartData.products || []).map(p => ({
@@ -386,6 +403,7 @@
   if (typeof MutationObserver !== 'undefined') {
     let firedTildaSuccess = false;
     const observer = new MutationObserver(function() {
+      if (window.geekNookApp) return;
       const successBox = document.querySelector('.t706__orderform .t-form__successbox, .t706 .js-successbox');
       if (successBox && !firedTildaSuccess) {
         const style = window.getComputedStyle(successBox);

@@ -15012,6 +15012,27 @@ textarea.input-error {
 }
 
 /* Shared motion for navigation, catalog and dialogs. */
+.qv-fit-guide { padding: 16px 0; border-block: 1px solid var(--border); margin-bottom: 16px; }
+.qv-purchase-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+.qv-purchase-actions > button { flex: 1; min-width: 140px; min-height: 48px; justify-content: center; }
+.quick-thumb { flex-shrink: 0; }
+.quick-thumb img { width: 100%; height: 100%; object-fit: contain; }
+.quick-gallery-thumbs { overflow-x: auto; padding-block: 4px; }
+.quick-thumb:focus-visible, .qv-spec-details summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.qv-fit-guide p { margin-top: 8px; color: var(--text-muted); font-size: .875rem; line-height: 1.6; }
+.qv-spec-details summary { cursor: pointer; padding: 12px 0; font-weight: 700; }
+.qv-spec-details { margin-bottom: 16px; }
+.checkout-item-option { display: block; font-size: .8125rem; margin-top: 4px; }
+#checkoutItemsSummary > div { gap: 12px; flex-wrap: wrap; }
+.qv-spec-details[open] .specs-table { margin-top: 8px; }
+@media (max-width: 640px) {
+  #quickViewModal .modal-card, .checkout-modal-card { padding: 48px 16px 24px; max-height: calc(100dvh - 16px); }
+  #quickViewModal .option-chip { min-height: 44px; }
+  .checkout-input, .checkout-select { font-size: 16px; min-height: 48px; }
+  .checkout-field-header-row { flex-wrap: wrap; gap: 8px; }
+  .btn-cdek-pick-action { min-height: 44px; }
+  .qv-trust-badges { flex-wrap: wrap; }
+}
 :root { --motion-quick: 180ms; --motion-enter: 380ms; --motion-ease: cubic-bezier(.2,.7,.2,1); }
 .reveal-on-scroll, .reveal-card {
   transform: translateY(12px);
