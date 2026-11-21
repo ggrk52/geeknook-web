@@ -1197,6 +1197,19 @@ textarea:focus-visible {
   color: var(--text-main);
 }
 
+.purchase-conditions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin-bottom: 24px; }
+.qv-order-terms { font-size: 14px; line-height: 20px; color: var(--text-muted); margin: 0 0 16px; }
+.qv-order-terms a { color: var(--primary); text-decoration: underline; }
+@media (max-width: 600px) { .purchase-conditions { grid-template-columns: 1fr; gap: 24px; } }
+.purchase-conditions h3 { font-size: 20px; line-height: 28px; margin: 0 0 12px; }
+.purchase-conditions { margin-top: 24px; }
+.purchase-conditions-links { margin-bottom: 32px; }
+@media (max-width: 640px) { .purchase-conditions { grid-template-columns: 1fr; gap: 24px; } }
+.purchase-conditions p { font-size: 16px; line-height: 24px; color: var(--text-muted); margin: 0; text-wrap: pretty; }
+.purchase-conditions a, .purchase-conditions-links a { color: var(--primary); text-underline-offset: 4px; }
+.purchase-conditions-links { margin: 0 0 32px; line-height: 28px; }
+@media (max-width: 768px) { .purchase-conditions { grid-template-columns: 1fr; gap: 24px; } }
+
 /* Catalog Trust Strip */
 .catalog-trust-strip {
   display: grid;

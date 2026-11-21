@@ -11,6 +11,9 @@ test('Focus Station selection and checkout emit each funnel event once on mobile
   await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
   await page.locator('#focus-station-walnut .btn-card-details').click();
   const modal = page.locator('#quickViewModal');
+  await expect(modal.locator('.qv-live-stock-badge')).toContainText('2 рабочих дней');
+  await expect(modal.locator('.qv-trust-badges')).toContainText('Гарантия 6 месяцев');
+  await expect(modal.locator('.qv-order-terms')).toContainText('Осмотрите товар до оплаты');
   await expect(modal.locator('.qv-fit-guide')).toContainText('выбираются отдельно');
   await modal.getByRole('button', { name: 'Фото 2:', exact: false }).press('Enter');
   await expect(modal.getByRole('button', { name: 'Фото 2:', exact: false })).toHaveAttribute('aria-pressed', 'true');
