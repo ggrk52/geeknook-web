@@ -163,8 +163,8 @@
         itemOptions.push({ option: 'Вариант', name: 'Вариант', variant: opt });
       }
 
-      if (p.skus && p.skus[opt]) {
-        const skuInfo = p.skus[opt];
+      const skuInfo = window.GEEKNOOK_DATA.getVariant?.(productId, opt) || p.skus?.[opt];
+      if (skuInfo && skuInfo !== p && skuInfo.part) {
         resolvedSku = skuInfo.sku || resolvedSku;
         if (skuInfo.dimensions) {
           itemOptions.push({ option: 'Габариты', name: 'Габариты', variant: skuInfo.dimensions });
@@ -231,7 +231,7 @@
 
       window.tcart.products = cartItems.map(i => {
         const mapped = mapProductToTilda(i.id, i.option);
-        const itemCatalogPrice = (mapped && mapped.price) ? mapped.price : (i.price || 0);
+        const itemCatalogPrice = Number(i.price) || 0;
         const itemQty = i.quantity || 1;
         subTotal += itemCatalogPrice * itemQty;
 
@@ -252,8 +252,8 @@
         };
       });
 
-      const discountSum = Math.round(subTotal * (effectiveDiscountPercent / 100));
-      const grandTotal = Math.max(0, subTotal - discountSum);
+      const grandTotal = window.tcart.products.reduce((sum, item) => sum + item.amount, 0);
+      const discountSum = subTotal - grandTotal;
 
       window.tcart.amount = grandTotal;
       window.tcart.total = grandTotal;
@@ -343,6 +343,7 @@
     // --- 7. OVERRIDE: handleCheckoutSubmit (Sync with Tilda CRM, TG & Email in background) ---
     window.geekNookApp.handleCheckoutSubmit = function(e) {
       if (e && e.preventDefault) e.preventDefault();
+      if (window.geekNookApp.checkStock?.() === false) return false;
       const form = e.target;
       const formData = new FormData(form);
 
@@ -608,6 +609,7 @@
     let isTildaQuickBuySubmitting = false;
     window.geekNookApp.handleQuickBuySubmit = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
+      if (window.geekNookApp.checkQuickBuyStock?.() === false) return false;
       if (isTildaQuickBuySubmitting) return false;
 
       const nameInput = document.getElementById('quickBuyName');

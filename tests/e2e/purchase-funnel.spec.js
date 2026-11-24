@@ -11,7 +11,7 @@ test('Focus Station selection and checkout emit each funnel event once on mobile
   await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
   await page.locator('#focus-station-walnut .btn-card-details').click();
   const modal = page.locator('#quickViewModal');
-  await expect(modal.locator('.qv-live-stock-badge')).toContainText('2 рабочих дней');
+  await expect(modal.locator('.qv-live-stock-badge')).toContainText('В наличии: 189 шт.');
   await expect(modal.locator('.qv-trust-badges')).toContainText('Гарантия 6 месяцев');
   await expect(modal.locator('.qv-order-terms')).toContainText('Осмотрите товар до оплаты');
   await expect(modal.locator('.qv-fit-guide')).toContainText('выбираются отдельно');
@@ -50,4 +50,41 @@ test('purchase tracking deduplicates acknowledgements and B2B analytics excludes
   const lead = result.find(item => item.event === 'B2B_LEAD');
   expect(lead.goalParams).toEqual({ workplaces: '15' });
   expect(JSON.stringify(lead)).not.toContain('private@example.com');
+});
+
+
+test('one remaining mat is shared between an individual item and a bundle', async ({ page }) => {
+  await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(() => window.geekNookApp && window.GEEKNOOK_DATA);
+  const cart = await page.evaluate(() => {
+    const app = window.geekNookApp;
+    app.addBundleToCart('bundle-minimalist-focus');
+    app.addToCart('desk-mat-light', '80 × 40 см', false);
+    app.addToCart('desk-mat-light', '100 × 50 см', false);
+    return app.state.cart.map(({ id, option, price, quantity }) => ({ id, option, price, quantity }));
+  });
+  expect(cart).toHaveLength(2);
+  expect(cart[1]).toMatchObject({ id: 'desk-mat-light', option: '100 × 50 см', price: 2499, quantity: 1 });
+});
+
+test('unavailable variant disables purchase and totals match Tilda for multiple units', async ({ page }) => {
+  await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(() => window.geekNookApp && window.GEEKNOOK_DATA);
+  await page.evaluate(() => {
+    window.GEEKNOOK_DATA.getVariant('desk-mat-light', '80 × 40 см').stock = 0;
+    window.geekNookApp.openQuickView('desk-mat-light');
+  });
+  const modal = page.locator('#quickViewModal');
+  await expect(modal.locator('.qv-live-stock-badge')).toContainText('Нет в наличии');
+  await expect(modal.getByRole('button', { name: 'Добавить в корзину', exact: true })).toBeDisabled();
+  await modal.locator('.option-chip[data-val="100 × 50 см"]').click();
+  await expect(modal.getByRole('button', { name: 'Добавить в корзину', exact: true })).toBeEnabled();
+  await page.evaluate(() => {
+    window.tcart = { products: [] };
+    for (let i = 0; i < 3; i++) window.geekNookApp.addToCart('desk-mat-light', '100 × 50 см', false);
+    window.geekNookApp.closeModal('quickViewModal');
+    window.geekNookApp.openCheckout();
+  });
+  await expect(page.locator('#checkoutGrandTotalSummary')).toContainText('5 997');
+  expect(await page.evaluate(() => window.tcart.amount)).toBe(5997);
 });

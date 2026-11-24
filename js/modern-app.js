@@ -208,11 +208,11 @@
       if (dataStore && dataStore.allProducts && id) {
         const found = dataStore.allProducts.find(p => p.id === id);
         if (found) {
-          let catPrice = found.price;
-          if (option && found.optionPrices && found.optionPrices[option]) {
-            catPrice = found.optionPrices[option];
-          }
-          price = catPrice;
+          const variant = dataStore.getVariant(id, option);
+          const catalogPrice = variant?.price ?? found.price;
+          price = option.startsWith('В комплекте со скидкой 15%')
+            ? Math.round(catalogPrice * 0.85)
+            : catalogPrice + (option.includes(' + Шильдик (') ? 1200 : 0);
           if (!image && found.images && found.images[0]) image = found.images[0];
           title = found.title;
         }
@@ -241,10 +241,12 @@
     return Array.from(sanitizedMap.values());
   };
 
+  let savedCartPriceChanged = false;
   const loadCart = () => {
     try {
       const stored = JSON.parse(safeStorage.getItem('geeknook_cart') || '[]');
       const clean = sanitizeCart(stored);
+      savedCartPriceChanged = Array.isArray(stored) && clean.some(item => stored.some(old => old?.id === item.id && old.option === item.option && old.price !== item.price));
       if (JSON.stringify(stored) !== JSON.stringify(clean)) {
         safeStorage.setItem('geeknook_cart', JSON.stringify(clean));
       }
@@ -655,6 +657,36 @@
     checkScroll();
   };
 
+  const discountedUnitPrice = (price, percent) => Math.round(price * (100 - percent) / 100);
+
+  const cartDiscount = percent => state.cart.reduce((sum, item) => {
+    const price = Number(item.price) || 0;
+    return sum + (price - discountedUnitPrice(price, percent)) * (Number(item.quantity) || 1);
+  }, 0);
+
+  const stockRequirements = (item) =>
+    GEEKNOOK_DATA.bundles.find(bundle => bundle.id === item.id)?.components || [item];
+
+  const checkStock = (additions = [], includeCart = true) => {
+    const counts = new Map();
+    for (const item of [...(includeCart ? state.cart : []), ...additions]) {
+      for (const component of stockRequirements(item)) {
+        const variant = GEEKNOOK_DATA.getVariant(component.id, component.option || '');
+        if (!Number.isInteger(variant?.stock)) continue;
+        const count = (counts.get(variant.part) || 0) + (Number(item.quantity) || 1);
+        if (count > variant.stock) {
+          showToast(`Недостаточно товара на складе. Артикул ${variant.part}, доступно: ${variant.stock} шт.`, 'error');
+          return false;
+        }
+        counts.set(variant.part, count);
+      }
+    }
+    return true;
+  };
+
+  const checkQuickBuyStock = () => state.quickBuyProduct &&
+    checkStock([{ id: state.quickBuyProduct.id, option: state.quickBuyProductOption }], false);
+
   // --- CART MANAGEMENT ---
   const addToCart = (productId, optionName = 'Стандарт', openDrawer = true) => {
     if (!productId || typeof productId !== 'string') {
@@ -674,9 +706,10 @@
     }
 
     let cleanOption = String(optionName || 'Стандарт').trim();
-    if (cleanOption === 'Стандарт' && product.options && product.options.lengths && product.options.lengths.length) {
-      cleanOption = product.options.lengths[0];
+    if (cleanOption === 'Стандарт') {
+      cleanOption = (product.options?.lengths || product.options?.sizes)?.[0] || cleanOption;
     }
+    if (!checkStock([{ id: product.id, option: cleanOption }])) return;
     const cartKey = `${product.id}_${cleanOption}`;
     const existing = state.cart.find(i => i.cartKey === cartKey);
 
@@ -731,9 +764,10 @@
     }
 
     let cleanOption = String(optionName || 'Стандарт').trim();
-    if (cleanOption === 'Стандарт' && product.options && product.options.lengths && product.options.lengths.length) {
-      cleanOption = product.options.lengths[0];
+    if (cleanOption === 'Стандарт') {
+      cleanOption = (product.options?.lengths || product.options?.sizes)?.[0] || cleanOption;
     }
+    if (!checkStock([{ id: product.id, option: cleanOption }])) return;
     const cartKey = `${product.id}_${cleanOption}`;
     const existing = state.cart.find(i => i.cartKey === cartKey);
 
@@ -791,6 +825,7 @@
 
     const currentQty = parseInt(item.quantity, 10) || 1;
     const newQty = currentQty + safeDelta;
+    if (safeDelta > 0 && currentQty < 99 && !checkStock([{ ...item, quantity: Math.min(99, newQty) - currentQty }])) return;
 
     if (newQty <= 0) {
       const idx = state.cart.indexOf(item);
@@ -815,7 +850,7 @@
       const removed = state.cart.splice(idx, 1)[0];
       saveCart();
       if (removed) {
-        showToast(`«${removed.title}» удалён из корзины`, 'success');
+        showToast(`«${escapeHTML(removed.title)}» удалён из корзины`, 'success');
       }
     }
   };
@@ -856,7 +891,7 @@
 
     const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
     const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = Math.round(subtotal * (discountPercent / 100));
+    const discountAmount = cartDiscount(discountPercent);
     const shippingCost = 0;
     const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
 
@@ -913,7 +948,7 @@
           const safeQty = Math.max(1, Math.min(99, parseInt(item.quantity, 10) || 1));
           const unitCatalogPrice = Number(item.price) || 0;
           const safeItemTotal = unitCatalogPrice * safeQty;
-          const discountedItemTotal = Math.round(safeItemTotal * ((100 - discountPercent) / 100));
+          const discountedItemTotal = discountedUnitPrice(unitCatalogPrice, discountPercent) * safeQty;
 
           return `
             <div class="cart-item-row">
@@ -956,6 +991,12 @@
           { id: 'desk-mat-light', name: 'Серый меланж', size: '80 × 40 см', price: 1499, discPrice: 1274, img: 'images/tild3139-3036-4738-b765-383337383336__dsc_3319.jpg' },
           { id: 'desk-mat-xl', name: 'XL Формат', size: '120 × 60 см', price: 2999, discPrice: 2549, img: 'images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg' }
         ];
+        for (const mat of matOptions) {
+          const variant = GEEKNOOK_DATA.getVariant(mat.id, mat.size);
+          mat.price = variant?.price ?? mat.price;
+          mat.discPrice = discountedUnitPrice(mat.price, 15);
+          mat.stock = variant?.stock;
+        }
         const curMat = matOptions.find(m => m.id === selectedMatId) || matOptions[0];
 
         bundleWrap.innerHTML = `
@@ -983,8 +1024,8 @@
                     <span class="bundle-price-current">${formatPrice(curMat.discPrice)}</span>
                     <span class="bundle-price-old">${formatPrice(curMat.price)}</span>
                   </div>
-                  <button type="button" class="btn-bundle-add" onclick="window.geekNookApp.addBundleMatToCart('${curMat.id}', '${curMat.size}', ${curMat.discPrice})">
-                    + В комплект (-15%)
+                  <button type="button" class="btn-bundle-add" ${curMat.stock === 0 ? 'disabled' : ''} onclick="window.geekNookApp.addBundleMatToCart('${curMat.id}', '${curMat.size}', ${curMat.discPrice})">
+                    ${curMat.stock === 0 ? 'Нет в наличии' : '+ В комплект (-15%)'}
                   </button>
                 </div>
               </div>
@@ -1031,7 +1072,7 @@
     const totalCount = state.cart.reduce((sum, i) => sum + (parseInt(i.quantity, 10) || 0), 0);
     const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
     const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = Math.round(subtotal * (discountPercent / 100));
+    const discountAmount = cartDiscount(discountPercent);
     const shippingCost = 0;
     const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
 
@@ -1116,11 +1157,13 @@
       ? GEEKNOOK_DATA.allProducts.find(p => p.id === matId) 
       : null;
     const title = matProduct ? matProduct.title : 'Коврик Desk Mat';
-    const price = customPrice || (matProduct ? Math.round(matProduct.price * 0.85) : 1274);
+    const variant = GEEKNOOK_DATA.getVariant(matId, sizeStr || '80 × 40 см');
+    const price = variant ? Math.round((variant.price ?? matProduct.price) * 0.85) : customPrice || 1274;
     const image = (matProduct && matProduct.images && matProduct.images[0]) 
       ? matProduct.images[0] 
       : 'images/tild3835-3834-4638-b030-666334626134__dsc_3305.jpg';
     const option = `В комплекте со скидкой 15% (${sizeStr || '80 × 40 см'})`;
+    if (!checkStock([{ id: matId, option }])) return;
     const cartKey = `${matId}_${option}`;
 
     const existing = state.cart.find(i => i.cartKey === cartKey);
@@ -1144,6 +1187,10 @@
   };
 
   const openCartDrawer = () => {
+    if (savedCartPriceChanged) {
+      savedCartPriceChanged = false;
+      showToast('Цены в сохранённой корзине обновились. Проверьте итог заказа.', 'warning');
+    }
     const drawer = document.getElementById('cartDrawerOverlay');
     if (drawer) {
       drawer.classList.add('active');
@@ -1328,7 +1375,7 @@
 
     const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
     const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = Math.round(subtotal * (discountPercent / 100));
+    const discountAmount = cartDiscount(discountPercent);
     const itemsTotal = Math.max(0, subtotal - discountAmount);
     
     const shippingCost = 0;
@@ -1445,6 +1492,10 @@
 
   // --- PRODUCT CARD COMPONENT ---
   const renderProductCard = (p, idx = 0) => {
+    const variants = p.skus ? Object.values(p.skus) : [p];
+    const unavailable = variants.every(variant => variant.stock === 0);
+    const availability = unavailable ? 'Нет в наличии' :
+      variants.some(variant => variant.stock > 0) ? 'В наличии • Отправка до 2 рабочих дней' : 'Наличие уточняется';
     const badgeHtml = p.badge ? `<span class="card-badge">${p.badge}</span>` : '';
     const oldPriceHtml = p.oldPrice ? `<span class="old-price">${formatPrice(p.oldPrice)}</span>` : '';
     const materialTag = p.materials ? p.materials.split(',')[0].trim() : 'Инженерный массив';
@@ -1525,7 +1576,7 @@
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
               <span>Обзор</span>
             </button>
-            <button class="glass-action-btn quick-add-btn" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}');" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
+            <button class="glass-action-btn quick-add-btn" ${unavailable ? 'disabled' : ''} onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}');" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
               <span>В корзину</span>
             </button>
@@ -1549,7 +1600,7 @@
         </div>
         <div class="card-stock-indicator in-stock">
           <span class="stock-pulse-dot"></span>
-          <span class="stock-text">Отправка со склада за 2 рабочих дня</span>
+          <span class="stock-text">${availability}</span>
         </div>
         <div class="card-actions-row">
           <a href="#${p.id}" class="btn-card-details" onclick="window.geekNookApp.openQuickView('${p.id}'); return false;">
@@ -1558,7 +1609,7 @@
           <button type="button" class="btn-card-one-click" onclick="window.geekNookApp.openQuickBuy('${p.id}'); event.stopPropagation();" title="Быстрый заказ в 1 клик" aria-label="Быстрый заказ «${escapeHTML(p.title)}» в 1 клик">
             <span>В 1 клик</span>
           </button>
-          <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
+          <button class="btn-card-quick-add" ${unavailable ? 'disabled' : ''} onclick="window.geekNookApp.quickAddWithFeedback(this, '${p.id}'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «${escapeHTML(p.title)}» в корзину">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
           </button>
         </div>
@@ -1974,6 +2025,17 @@
       </div>
     `;
 
+    const showVariantStock = option => {
+      const stock = GEEKNOOK_DATA.getVariant(product.id, option || '')?.stock;
+      const badge = content.querySelector('.qv-live-stock-badge span:last-child');
+      badge.textContent = stock === 0 ? 'Нет в наличии' :
+        Number.isInteger(stock) ? `В наличии: ${stock} шт. • Отправка до 2 рабочих дней` : 'Наличие уточняется';
+      content.querySelectorAll('.qv-purchase-actions button').forEach(button => {
+        button.disabled = stock === 0;
+      });
+    };
+    showVariantStock(defaultOption);
+
     // Dynamic Option Chips Click Handler (Price & Specs Switching)
     content.querySelectorAll('.option-chip').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -1982,6 +2044,8 @@
 
         const val = btn.getAttribute('data-val');
         if (!val) return;
+
+        showVariantStock(val);
 
         // Dynamic price update
         if (product.optionPrices && product.optionPrices[val]) {
@@ -2082,7 +2146,9 @@
     }, 0);
 
     const engravingPrice = state.config.engravingEnabled ? 1200 : 0;
-    const grandTotal = length.priceBase + finish.priceDelta + addonsTotal + engravingPrice;
+    const shelfPrice = GEEKNOOK_DATA.getVariant(`focus-station-${finish.id}`, `${length.id} см`)?.price
+      ?? length.priceBase + finish.priceDelta;
+    const grandTotal = shelfPrice + addonsTotal + engravingPrice;
     if (totalPriceEl) totalPriceEl.textContent = formatPrice(grandTotal);
 
     // Sync Engraving badge and inputs
@@ -3902,10 +3968,17 @@
     const engravingSuffix = state.config.engravingEnabled 
       ? ` + Шильдик (${matNames[state.config.engravingMaterial] || 'Латунь'}, ${fontNames[state.config.engravingFont] || 'Mono'}) «${state.config.engravingText || 'GEEKNOOK LAB'}»` 
       : '';
-    const mainShelfPrice = length.priceBase + finish.priceDelta + (state.config.engravingEnabled ? 1200 : 0);
+
     
     // Custom shelf cart key
     const boardId = finish.id === 'oak' ? 'focus-station-oak' : (finish.id === 'black' ? 'focus-station-black' : 'focus-station-walnut');
+    const boardOption = `${length.id} см`;
+    if (!checkStock([
+      { id: boardId, option: boardOption },
+      ...state.config.selectedAddonIds.map(id => ({ id }))
+    ])) return;
+    const mainShelfPrice = (GEEKNOOK_DATA.getVariant(boardId, boardOption)?.price ?? length.priceBase + finish.priceDelta)
+      + (state.config.engravingEnabled ? 1200 : 0);
     const boardTitle = `Focus Station ${length.id} (${finish.name})`;
     const shelfKey = `${boardId}_${length.id}_${state.config.engravingEnabled ? `engraved_${state.config.engravingMaterial}_${state.config.engravingFont}` : 'plain'}`;
     const existingShelf = state.cart.find(i => i.cartKey === shelfKey);
@@ -3963,6 +4036,7 @@
       return;
     }
 
+    if (!checkStock()) return;
     dismissToasts();
     closeCartDrawer();
     window.geekNookAnalytics?.trackCheckoutStart?.(state.cart);
@@ -3975,7 +4049,7 @@
         const safeTitle = escapeHTML(i.title);
         const safeQty = Math.max(1, Math.min(99, parseInt(i.quantity, 10) || 1));
         const safeTotal = (Number(i.price) || 0) * safeQty;
-        const discountedTotal = Math.round(safeTotal * ((100 - discountPercent) / 100));
+        const discountedTotal = discountedUnitPrice(Number(i.price) || 0, discountPercent) * safeQty;
         return `
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.875rem;">
             <span style="color:var(--text-muted);">${safeTitle} × ${safeQty}${i.option && i.option !== 'Стандарт' ? `<small class="checkout-item-option">${escapeHTML(i.option)}</small>` : ''}</span>
@@ -3989,7 +4063,7 @@
     }
 
     const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = Math.round(subtotal * (discountPercent / 100));
+    const discountAmount = cartDiscount(discountPercent);
     const shippingCost = 0;
     const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
 
@@ -4098,6 +4172,7 @@
 
   const handleCheckoutSubmit = withActionLock(async (e) => {
     e.preventDefault();
+    if (!checkStock()) return;
     const form = e.target;
     if (form.querySelector('button[type="submit"]')?.disabled) return;
     const formData = new FormData(form);
@@ -4215,7 +4290,7 @@
     const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
     const orderNumber = form.dataset.orderNumber || ('GN-' + Math.floor(100000 + Math.random() * 900000));
     const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = Math.round(subtotal * (discountPercent / 100));
+    const discountAmount = cartDiscount(discountPercent);
     const itemsTotal = Math.max(0, subtotal - discountAmount);
     const isFreeShipping = true;
     const shippingCost = 0;
@@ -4423,7 +4498,11 @@
       if (activeChip) chosenOption = activeChip.getAttribute('data-val') || 'Стандарт';
       modalManager.close('quickViewModal');
     }
-    state.quickBuyProductOption = chosenOption;
+    state.quickBuyProductOption = chosenOption === 'Стандарт'
+      ? (product.options?.lengths || product.options?.sizes)?.[0] || chosenOption
+      : chosenOption;
+    chosenOption = state.quickBuyProductOption;
+    if (!checkQuickBuyStock()) return;
 
     const summaryEl = document.getElementById('quickBuyProductSummary');
     if (summaryEl) {
@@ -4676,6 +4755,7 @@
 
   const handleQuickBuySubmit = withActionLock(async (e) => {
     if (e && e.preventDefault) e.preventDefault();
+    if (!checkQuickBuyStock()) return;
     if (document.querySelector('#quickBuyModal button[type="submit"]')?.disabled) return;
     const nameInput = document.getElementById('quickBuyName');
     const phoneInput = document.getElementById('quickBuyPhone');
@@ -5668,6 +5748,7 @@
 
     soundEngine.play('cart');
 
+    if (!checkStock([{ id: bundle.id }])) return;
     const cartKey = `bundle_${bundle.id}`;
     const existing = state.cart.find(i => i.cartKey === cartKey);
 
@@ -9972,6 +10053,8 @@
     modalManager,
     safeStorage,
     escapeHTML,
+    checkStock,
+    checkQuickBuyStock,
     acceptCookies,
     initCookieConsent,
     state

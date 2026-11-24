@@ -2634,6 +2634,163 @@ GEEKNOOK_DATA.allProducts = [
   ...GEEKNOOK_DATA.mats
 ];
 
+// BEGIN STOCK IMPORT
+const stockSnapshot = {
+  "202404201": [
+    19999,
+    189
+  ],
+  "202404202": [
+    24999,
+    187
+  ],
+  "2024042003": [
+    19999,
+    199
+  ],
+  "2024042004": [
+    24999,
+    195
+  ],
+  "202404205": [
+    19999,
+    193
+  ],
+  "2024042006": [
+    24999,
+    196
+  ],
+  "202404203": [
+    4999,
+    84
+  ],
+  "202404204": [
+    4999,
+    88
+  ],
+  "202404206": [
+    4999,
+    33
+  ],
+  "202404207": [
+    2999,
+    110
+  ],
+  "202404208": [
+    2999,
+    144
+  ],
+  "202404210": [
+    2999,
+    44
+  ],
+  "202404213": [
+    1999,
+    367
+  ],
+  "202404214": [
+    6999,
+    8
+  ],
+  "202404217": [
+    4999,
+    40
+  ],
+  "202404219": [
+    4999,
+    27
+  ],
+  "202404218": [
+    4999,
+    9
+  ],
+  "20240400": [
+    1499,
+    185
+  ],
+  "20240402": [
+    2499,
+    226
+  ],
+  "20240403": [
+    2999,
+    223
+  ],
+  "20240404": [
+    1499,
+    190
+  ],
+  "20240406": [
+    2499,
+    435
+  ],
+  "20240407": [
+    2999,
+    227
+  ],
+  "20240408": [
+    1499,
+    1
+  ],
+  "20240410": [
+    2499,
+    437
+  ],
+  "20240411": [
+    2999,
+    217
+  ]
+};
+GEEKNOOK_DATA.stockDate = "2026-10-02";
+// END STOCK IMPORT
+
+const inventoryAliases = {
+  'addon-laptop': 'laptop-open',
+  'addon-headphones': 'headphone-stand',
+  'addon-gamepad': 'gamepad-stand',
+  'addon-phone': 'phone-dock',
+  'addon-mac': 'mac-shelf',
+  'addon-cable': 'cable-organizer',
+  'addon-mat': 'desk-mat-xl'
+};
+
+GEEKNOOK_DATA.getProduct = id => GEEKNOOK_DATA.allProducts.find(product => product.id === (inventoryAliases[id] || id));
+GEEKNOOK_DATA.getVariant = (id, option = '') => {
+  const product = GEEKNOOK_DATA.getProduct(id);
+  if (!product) return null;
+  const options = Object.keys(product.skus || {});
+  const selected = options.find(label => option === label || option.startsWith(label + ' (') || option.includes('(' + label + ')'))
+    || options[0];
+  return product.skus?.[selected] || product;
+};
+
+for (const product of GEEKNOOK_DATA.allProducts) {
+  for (const [option, variant] of Object.entries(product.skus || {})) {
+    const entry = stockSnapshot[variant.part];
+    if (!entry) continue;
+    [variant.price, variant.stock] = entry;
+    (product.optionPrices ||= {})[option] = variant.price;
+  }
+  const variant = GEEKNOOK_DATA.getVariant(product.id);
+  const entry = stockSnapshot[variant?.part];
+  if (entry && variant === product) [product.price, product.stock] = entry;
+  else if (entry) product.price = variant.price;
+}
+
+const bundleOptions = {
+  'bundle-developer-pro': ['85 см', '', '', '80 × 40 см'],
+  'bundle-creator-studio': ['116 см', '', '', '120 × 60 см'],
+  'bundle-minimalist-focus': ['85 см', '', '', '80 × 40 см']
+};
+for (const bundle of GEEKNOOK_DATA.bundles) {
+  bundle.components = bundle.productIds.map((id, index) => ({ id, option: bundleOptions[bundle.id][index] }));
+}
+
+for (const addon of GEEKNOOK_DATA.configurator.addons) {
+  const product = GEEKNOOK_DATA.getProduct(addon.id);
+  if (product) addon.price = product.price;
+}
+
 if (typeof window !== 'undefined') {
   window.GEEKNOOK_DATA = GEEKNOOK_DATA;
 }
