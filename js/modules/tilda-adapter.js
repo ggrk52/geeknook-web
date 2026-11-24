@@ -603,7 +603,8 @@
           const inpName = tildaCartForm.querySelector('input[name="Name"], input[name="name"]');
           const inpEmail = tildaCartForm.querySelector('input[type="email"], input[name="Email"], input[name="email"]');
           const inpPhone = tildaCartForm.querySelector('input[name="Phone"], input[name="phone"]');
-          const inpPvz = tildaCartForm.querySelector('input[name="Код ПВЗ СДЭК"], input[name*="ПВЗ"], input[name*="CDEK"], input[name*="cdek"], input[name="Address"], input[name="address"], textarea');
+          const inpPvz = tildaCartForm.querySelector('#input_1790269790207, input[name="Код ПВЗ СДЭК"], input[name="Код_ПВЗ_СДЭК"]')
+            || tildaCartForm.querySelector('input[name*="ПВЗ"], input[name*="CDEK"], input[name*="cdek"], input[name="Address"], input[name="address"]');
           const inpComment = tildaCartForm.querySelector('textarea, input[name="Comment"], input[name="comment"]');
 
           if (inpName) {
@@ -919,12 +920,12 @@
               try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
             }
             if (inpPvz) {
-              inpPvz.value = 'MSK2181';
+              inpPvz.value = 'Уточнить при подтверждении';
               try { inpPvz.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
               try { inpPvz.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
             }
             if (inpComment) {
-              inpComment.value = `1. ${fullProdTitle}: ${finalPrice} (1 x ${finalPrice}) ${prod.sku || 'GN-ACC-002'}, Артикул: ${prod.part || '202404212'}, Штрихкод: ${prod.barcode || '460042888815'}, SKU: ${prod.sku || 'GN-ACC-002'}\nСумма платежа: ${finalPrice} RUB\nПлатежная система: Наличные\n\nИнформация о покупателе:\nName: ${cleanName}\nEmail: sergeykozlov20066@mail.ru\nPhone: ${formattedPhone}\nКод_ПВЗ_СДЭК: MSK2181\n\nДополнительная информация:\nКод заявки: 10075109:${Math.floor(1000000000 + Math.random() * 9000000000)}\nКод блока: rec3929429901\nФорма: QuickBuy\nhttps://geeknook.ru/#boards\n-----`;
+              inpComment.value = `Быстрый заказ ${orderNumber}. ${fullProdTitle}. К оплате при получении: ${finalPrice} ₽. Пункт выдачи уточнить при подтверждении.`;
               try { inpComment.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
               try { inpComment.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
             }

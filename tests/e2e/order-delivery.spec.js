@@ -90,7 +90,7 @@ test('main catalog checkout sends mat details to Tilda and the email fallback', 
     const nativeForm = document.createElement('form');
     nativeForm.name = 'form3929429901';
     nativeForm.hidden = true;
-    nativeForm.innerHTML = '<input name="Name"><input name="Email" type="email"><input name="Phone"><input name="Address"><button type="submit">Send</button>';
+    nativeForm.innerHTML = '<input name="Name"><input name="Email" type="email"><input name="Phone"><textarea name="Comment"></textarea><input name="Код ПВЗ СДЭК" value="MSK2181"><button type="submit">Send</button>';
     nativeForm.addEventListener('submit', event => {
       event.preventDefault();
       window.testTildaOrders ??= [];
@@ -116,7 +116,7 @@ test('main catalog checkout sends mat details to Tilda and the email fallback', 
   await expect(page.locator('#successModal')).toHaveClass(/active/);
   const tildaOrders = await page.evaluate(() => window.testTildaOrders);
   expect(tildaOrders).toHaveLength(1);
-  expect(tildaOrders[0]).toMatchObject({ Email: 'test@example.com', Address: 'MSK2499' });
+  expect(tildaOrders[0]).toMatchObject({ Email: 'test@example.com', 'Код ПВЗ СДЭК': 'MSK2499' });
   expect(tildaOrders[0]['Пункт выдачи полностью']).toBe('MSK2499 ТЕСТ НЕ ОТПРАВЛЯТЬ');
   expect(tildaOrders[0]['Стоимость доставки']).toBe('0 ₽ (бесплатно)');
   expect(JSON.parse(tildaOrders[0].tildapayment).amount).toBe(1199);
