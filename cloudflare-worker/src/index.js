@@ -285,7 +285,8 @@ export class StockLedgerDO {
     const maxQty = sanitizePositiveInt(this.env?.MAX_PUBLIC_QTY_PER_ITEM, DEFAULT_MAX_PUBLIC_QTY) || DEFAULT_MAX_PUBLIC_QTY;
 
     if (request.method === 'GET') {
-      return jsonResponse(toPublicView(this.state, publicCap), 200, origin, this.env);
+      const commitMode = String(this.env.STOCK_WEBHOOK_MODE || '') === 'active' ? 'tilda-webhook' : 'legacy';
+      return jsonResponse({ ...toPublicView(this.state, publicCap), commitMode }, 200, origin, this.env);
     }
 
     if (request.method !== 'POST') {

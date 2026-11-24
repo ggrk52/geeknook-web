@@ -12,6 +12,7 @@ tag = "v1"
 new_sqlite_classes = ["StockLedgerDO"]
 
 [vars]
+STOCK_WEBHOOK_MODE = "active"
 PUBLIC_STOCK_CAP = "6"
 MAX_PUBLIC_QTY_PER_ITEM = "20"
 ALLOWED_ORIGINS = "https://geeknook.ru,https://www.geeknook.ru,https://ggrk52.github.io"
