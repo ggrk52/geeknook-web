@@ -4551,7 +4551,6 @@
       promo_code: state.activePromoCode || '',
       utm: getCapturedUtm(),
       tildaDispatched: form.dataset.tildaDispatched === 'true',
-      stockCommitted: form.dataset.stockCommitted === 'true',
       timestamp: new Date().toISOString()
     };
 
@@ -4570,7 +4569,6 @@
 
     delete form.dataset.orderNumber;
     delete form.dataset.tildaDispatched;
-    delete form.dataset.stockCommitted;
 
     if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackOrderSubmit === 'function') {
       window.geekNookAnalytics.trackOrderSubmit(orderNumber, grandTotal, state.cart, safeDelivery, safePayment);
@@ -4882,13 +4880,12 @@
     const isQuickBuy = orderPayload.type === 'quick_buy';
     const recipientEmail = 'sergeykozlov20066@mail.ru';
     const tildaDispatched = Boolean(orderPayload.tildaDispatched);
-    const stockAlreadyCommitted = Boolean(orderPayload.stockCommitted);
 
     const itemsForStock = isQuickBuy
       ? (orderPayload.product_id ? [{ id: orderPayload.product_id, option: orderPayload.product_option || 'Стандарт', quantity: 1 }] : [])
       : (Array.isArray(orderPayload.items) ? orderPayload.items : []);
 
-    if (!stockAlreadyCommitted && GEEKNOOK_DATA?.stock?.checkAvailability && itemsForStock.length > 0) {
+    if (!tildaDispatched && GEEKNOOK_DATA?.stock?.checkAvailability && itemsForStock.length > 0) {
       const availability = await GEEKNOOK_DATA.stock.checkAvailability(itemsForStock, [], false);
       if (!availability.ok) {
         refreshCatalogStockUI();
@@ -4965,8 +4962,8 @@
       throw new Error('Order delivery failed');
     }
 
-    // Deduct stock atomically after delivery acknowledgement (if not already committed before Tilda submit)
-    if (!stockAlreadyCommitted && GEEKNOOK_DATA?.stock?.commitOrder && itemsForStock.length > 0) {
+    // Deduct stock only after a notification service acknowledges delivery.
+    if (GEEKNOOK_DATA?.stock?.commitOrder && itemsForStock.length > 0) {
       const commitRes = await GEEKNOOK_DATA.stock.commitOrder(std.orderNumberStr, itemsForStock, orderPayload.type || 'cart');
       if (commitRes && commitRes.ok === false) {
         refreshCatalogStockUI();

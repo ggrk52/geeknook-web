@@ -229,6 +229,7 @@ test.describe('Live Stock Management & Cloudflare Worker Security', () => {
       wrap.querySelector('form').addEventListener('submit', (ev) => {
         ev.preventDefault();
         window.__tildaSubmittedCount++;
+        ev.target.dispatchEvent(new Event('tildaform:aftersuccess'));
       });
       document.body.appendChild(wrap);
 

@@ -1,3 +1,4 @@
+import stockSkuMap from './stock-sku-map.json' with { type: 'json' };
 /**
  * GeekNook Atomic Stock Service (Cloudflare Worker + Durable Object)
  *
@@ -268,6 +269,17 @@ export class StockLedgerDO {
 
   async fetch(request) {
     const url = new URL(request.url);
+    if (url.hostname === 'geeknook-internal.invalid' && url.pathname === '/webhook-probe') {
+      if (request.method === 'POST') {
+        const receipt = await request.json();
+        await this.ctx.storage.put(receipt.kind === 'setup' ? 'webhookSetupProbe' : 'webhookProbe', receipt);
+        return new Response(null, { status: 204 });
+      }
+      return jsonResponse({
+        probe: await this.ctx.storage.get('webhookProbe') ?? null,
+        setupProbe: await this.ctx.storage.get('webhookSetupProbe') ?? null
+      }, 200, '', this.env);
+    }
     const origin = request.headers.get('Origin') || '';
     const publicCap = sanitizePositiveInt(this.env?.PUBLIC_STOCK_CAP, DEFAULT_PUBLIC_CAP) || DEFAULT_PUBLIC_CAP;
     const maxQty = sanitizePositiveInt(this.env?.MAX_PUBLIC_QTY_PER_ITEM, DEFAULT_MAX_PUBLIC_QTY) || DEFAULT_MAX_PUBLIC_QTY;
@@ -327,8 +339,10 @@ export class StockLedgerDO {
     }
 
     if (action === 'commit') {
+      const trusted = url.hostname === 'geeknook-internal.invalid' && path === '/webhook-commit';
+      const webhookOnly = String(this.env.STOCK_WEBHOOK_MODE || '') === 'active';
       const clientIp = request.headers.get('CF-Connecting-IP') || '127.0.0.1';
-      if (!this.checkRateLimit(clientIp)) {
+      if (!trusted && !webhookOnly && !this.checkRateLimit(clientIp)) {
         return jsonResponse({ ok: false, error: 'Слишком много запросов. Подождите минуту.' }, 429, origin, this.env);
       }
 
@@ -337,7 +351,15 @@ export class StockLedgerDO {
         return jsonResponse({ ok: false, error: 'Некорректный номер заказа' }, 400, origin, this.env);
       }
 
-      if ((this.state.committedOrders || []).includes(orderNumber)) {
+      const receiptKey = 'tilda-order:' + orderNumber;
+      if (webhookOnly && !trusted) {
+        // Existing clients can read acknowledgement, but their items never mutate stock.
+        const receipt = await this.ctx.storage.get(receiptKey);
+        if (!receipt) return jsonResponse({ ok: false, pending: true, error: 'Ожидается подтверждение склада' }, 409, origin, this.env);
+        return jsonResponse({ ok: true, alreadyCommitted: true, ...toPublicView(this.state, publicCap) }, 200, origin, this.env);
+      }
+
+      if ((trusted && await this.ctx.storage.get(receiptKey)) || (this.state.committedOrders || []).includes(orderNumber)) {
         return jsonResponse({ ok: true, alreadyCommitted: true, ...toPublicView(this.state, publicCap) }, 200, origin, this.env);
       }
 
@@ -384,7 +406,12 @@ export class StockLedgerDO {
         this.state.movements.length = 50;
       }
 
-      await this.persist();
+      if (trusted) {
+        this.state.updatedAt = new Date().toISOString();
+        await this.ctx.storage.put({ ledger: this.state, [receiptKey]: true });
+      } else {
+        await this.persist();
+      }
       return jsonResponse({ ok: true, committed: true, ...toPublicView(this.state, publicCap) }, 200, origin, this.env);
     }
 
@@ -466,8 +493,123 @@ export class StockLedgerDO {
   }
 }
 
+// Verify the Tilda connection before enabling inventory writes.
+async function verifyTildaWebhook(request, env, secret) {
+  const configured = String(env.STOCK_WEBHOOK_SECRET || '');
+  if (configured.length < 32 || !await timingSafeSecretEquals(secret, configured)) {
+    return new Response(null, { status: 404, headers: { 'Cache-Control': 'no-store' } });
+  }
+  const ledger = env.STOCK_LEDGER.get(env.STOCK_LEDGER.idFromName('global-stock-v1'));
+  const internalUrl = 'https://geeknook-internal.invalid/webhook-probe';
+  if (request.method === 'GET') return ledger.fetch(new Request(internalUrl));
+  if (request.method !== 'POST') {
+    return new Response(null, { status: 405, headers: { Allow: 'GET, POST', 'Cache-Control': 'no-store' } });
+  }
+  // Bound body reads even when the sender omits Content-Length.
+  const reader = request.body?.getReader();
+  const decoder = new TextDecoder();
+  let size = 0;
+  let raw = '';
+  if (reader) {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      size += value.byteLength;
+      if (size > 65536) {
+        await reader.cancel();
+        raw = '';
+        break;
+      }
+      raw += decoder.decode(value, { stream: true });
+    }
+    raw += decoder.decode();
+  }
+  const parseJson = value => {
+    if (typeof value !== 'string') return value;
+    try { return JSON.parse(value); } catch (_) { return null; }
+  };
+  const json = parseJson(raw);
+  const payload = json && typeof json === 'object' ? json : Object.fromEntries(new URLSearchParams(raw));
+  const payment = parseJson(payload.payment ?? payload.tildapayment);
+  const arrayProducts = [payload.products, payload.goods, payment?.products, payment?.goods]
+    .map(parseJson).find(Array.isArray);
+  // URL-encoded forms may flatten nested arrays into PHP-style bracket keys.
+  const indexed = new Map();
+  const itemKeys = ['sku', 'externalid', 'quantity', 'options', 'uid'];
+  for (const field of Object.keys(payload)) {
+    const match = field.match(/^(?:(?:payment|tildapayment)\[(?:products|goods)\]|products|goods)\[(\d{1,4})\](?:\[(\w+)\]|$)/);
+    if (!match) continue;
+    const [, index, key] = match;
+    const item = indexed.get(index) || {};
+    if (itemKeys.includes(key)) item[key] = payload[field];
+    indexed.set(index, item);
+  }
+  const items = arrayProducts?.length ? arrayProducts : [...indexed.values()];
+  const productCount = items.length;
+  const itemFields = itemKeys.filter(key => Object.hasOwn(items[0] || {}, key));
+  const stockLines = items.map(item => {
+    const sku = item?.sku;
+    const quantity = String(item?.quantity ?? '');
+    const codes = typeof sku === 'string' && Object.hasOwn(stockSkuMap, sku) ? stockSkuMap[sku] : null;
+    return codes?.length && /^[1-9]\d{0,2}$/.test(quantity) ? { codes, quantity: Number(quantity) } : null;
+  });
+  {
+    const receipt = {
+      receivedAt: new Date().toISOString(),
+      kind: payload.test === 'test' && !productCount ? 'setup' : 'submission',
+      bodyFormat: size > 65536 ? 'too_large' : json && typeof json === 'object' ? 'json' :
+        request.headers.get('Content-Type')?.includes('application/x-www-form-urlencoded') ? 'form' : 'unknown',
+      products: productCount,
+      matchedProducts: stockLines.filter(Boolean).length,
+      stockLines: stockLines.reduce((sum, codes) => sum + (codes?.codes.length || 0), 0),
+      hasPayment: Boolean(payment) || Object.keys(payload).some(key => /^(?:payment|tildapayment)\[/.test(key)),
+      orderReference: Boolean(payload['Номер заказа сайта'] || payload['Номер_заказа_сайта'] || payment?.orderid),
+      itemFields
+    };
+    const result = await ledger.fetch(new Request(internalUrl, {
+      method: 'POST',
+      body: JSON.stringify(receipt)
+    }));
+    if (!result.ok) return new Response('Diagnostic storage unavailable', { status: 503 });
+  }
+  if (String(env.STOCK_WEBHOOK_MODE || '') === 'active' && !(payload.test === 'test' && !productCount)) {
+    const orderNumber = payload['Номер заказа сайта'] || payload['Номер_заказа_сайта'];
+    if (typeof orderNumber !== 'string' || !/^GN-(?:1C-)?[A-Z0-9_-]{4,40}$/i.test(orderNumber) ||
+        !productCount || !stockLines.every(Boolean)) {
+      return new Response('Order could not be matched to stock', { status: 422 });
+    }
+    const result = await ledger.fetch(new Request('https://geeknook-internal.invalid/webhook-commit', {
+      method: 'POST',
+      body: JSON.stringify({
+        action: 'commit',
+        orderNumber,
+        orderType: orderNumber.startsWith('GN-1C-') ? 'quick_buy' : 'cart',
+        items: stockLines.flatMap(line => line.codes.map(code => ({ code, quantity: line.quantity })))
+      })
+    }));
+    if (!result.ok) return new Response('Stock could not be confirmed', { status: result.status });
+  }
+  return new Response('ok', {
+    headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' }
+  });
+}
+
 export default {
   async fetch(request, env) {
+    const url = new URL(request.url);
+    if (url.hostname === 'geeknook-internal.invalid' || url.pathname === '/webhook-probe') {
+      return new Response(null, { status: 404 });
+    }
+    const webhook = url.pathname.match(/^\/webhooks\/tilda\/([^/]+)$/);
+    if (webhook) {
+      let secret;
+      try {
+        secret = decodeURIComponent(webhook[1]);
+      } catch (_) {
+        return new Response(null, { status: 404, headers: { 'Cache-Control': 'no-store' } });
+      }
+      return verifyTildaWebhook(request, env, secret);
+    }
     const origin = request.headers.get('Origin') || '';
     if (!isOriginAllowed(origin, env)) {
       return jsonResponse({ ok: false, error: 'Forbidden: Origin not allowed' }, 403, origin, env);

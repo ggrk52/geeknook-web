@@ -178,7 +178,8 @@
         BASE_URL + 'js/modules/analytics.js?v=' + BUILD_VER,
         BASE_URL + 'js/modules/cdek-picker.js?v=' + BUILD_VER,
         BASE_URL + 'js/modern-app.js?v=' + BUILD_VER,
-        BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_VER
+        BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_VER,
+        BASE_URL + 'js/modules/papercraft.js?v=' + BUILD_VER
       ];
       jsAssets.forEach(src => {
         try {
@@ -191,9 +192,10 @@
       });
 
       // 1. Fetch Fonts, Main Stylesheet & HTML template concurrently
-      const [, , htmlText] = await Promise.all([
+      const [, , , htmlText] = await Promise.all([
         loadAsset('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap'),
         loadAsset('css', BASE_URL + 'css/modern-style.min.css?v=' + BUILD_VER),
+        loadAsset('css', BASE_URL + 'css/papercraft.css?v=' + BUILD_VER),
         fetch(BASE_URL + 'index.html?v=' + BUILD_VER, { cache: 'no-cache' }).then(r => {
           if (!r.ok) throw new Error('HTTP ' + r.status);
           return r.text();

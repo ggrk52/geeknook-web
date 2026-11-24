@@ -79,6 +79,44 @@
     }
   }
 
+  async function verifyOrderAvailability(items) {
+    const result = await window.GEEKNOOK_DATA?.stock?.checkAvailability?.(items, [], false);
+    if (result?.ok !== false) return true;
+    window.geekNookApp.refreshCatalogStockUI?.();
+    window.geekNookApp.showToast?.(result.error || 'Недостаточно товара на складе', 'error');
+    return false;
+  }
+
+  function submitTildaOrder(form, button) {
+    return new Promise(resolve => {
+      const success = form.querySelector('.js-successbox');
+      const visible = () => success && getComputedStyle(success).display !== 'none';
+      let wasVisible = visible();
+      const observer = new MutationObserver(() => {
+        const nowVisible = visible();
+        if (nowVisible && !wasVisible) finish(true);
+        wasVisible = nowVisible;
+      });
+      const timer = setTimeout(() => finish(false), 12000);
+      function finish(accepted) {
+        observer.disconnect();
+        clearTimeout(timer);
+        form.removeEventListener('tildaform:aftersuccess', onSuccess);
+        resolve(accepted);
+      }
+      function onSuccess(event) {
+        if (event.target === form) finish(true);
+      }
+      form.addEventListener('tildaform:aftersuccess', onSuccess);
+      observer.observe(form, { attributes: true, childList: true, subtree: true });
+      try {
+        button.click();
+      } catch (_) {
+        finish(false);
+      }
+    });
+  }
+
   let isTildaAdapterInitialized = false;
 
   function initTildaAdapter() {
@@ -492,25 +530,11 @@
       }
 
       try {
-        const cartItems = Array.isArray(window.geekNookApp.state?.cart) ? window.geekNookApp.state.cart : [];
         const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form');
         const tildaSubmitBtn = tildaCartForm ? tildaCartForm.querySelector('button[type="submit"], .t-submit') : null;
 
-        // If Tilda cart form is active on geeknook.ru, reserve/deduct stock BEFORE dispatching to Tilda TG
-        if (tildaCartForm && tildaSubmitBtn && window.GEEKNOOK_DATA?.stock?.commitOrder && cartItems.length > 0) {
-          const commitRes = await window.GEEKNOOK_DATA.stock.commitOrder(form.dataset.orderNumber, cartItems, 'cart');
-          if (commitRes && commitRes.ok === false) {
-            window.geekNookApp.refreshCatalogStockUI?.();
-            window.geekNookApp.showToast?.(commitRes.error || 'Товар только что закончился на складе', 'error');
-            if (uiSubmitBtn) {
-              uiSubmitBtn.disabled = false;
-              uiSubmitBtn.innerHTML = origUiBtnHtml;
-            }
-            return false;
-          }
-          form.dataset.stockCommitted = 'true';
-          window.geekNookApp.refreshCatalogStockUI?.();
-        }
+        const tildaAlreadyAccepted = form.dataset.tildaDispatched === 'true';
+        if (!tildaAlreadyAccepted && tildaSubmitBtn && !await verifyOrderAvailability(window.geekNookApp.state.cart)) return false;
 
         // 1. Sync Tilda's background tcart products object & grand total
         syncTildaInMemory();
@@ -659,8 +683,9 @@
 
           // Submit once; Tilda's own handler processes this button.
           if (tildaSubmitBtn) {
-            tildaSubmitBtn.click();
-            form.dataset.tildaDispatched = 'true';
+            if (!tildaAlreadyAccepted && await submitTildaOrder(tildaCartForm, tildaSubmitBtn)) {
+              form.dataset.tildaDispatched = 'true';
+            }
           }
         }
 
@@ -817,18 +842,7 @@
 
         const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form, form.t706__orderform');
         const tildaSubmitBtn = tildaCartForm ? tildaCartForm.querySelector('button[type="submit"], .t-submit') : null;
-        let stockAlreadyCommitted = false;
-
-        if (tildaCartForm && tildaSubmitBtn && window.GEEKNOOK_DATA?.stock?.commitOrder) {
-          const commitRes = await window.GEEKNOOK_DATA.stock.commitOrder(orderNumber, [{ id: prod.id, option: opt, quantity: 1 }], 'quick_buy');
-          if (commitRes && commitRes.ok === false) {
-            window.geekNookApp.refreshCatalogStockUI?.();
-            window.geekNookApp.showToast?.(commitRes.error || 'Товар только что закончился на складе', 'error');
-            return false;
-          }
-          stockAlreadyCommitted = true;
-          window.geekNookApp.refreshCatalogStockUI?.();
-        }
+        if (tildaSubmitBtn && !await verifyOrderAvailability([{ id: prod.id, option: opt, quantity: 1 }])) return false;
 
         // 1. BACKGROUND TILDA CART FORM DISPATCH FIRST (Sends to Tilda Forms Telegram Bot & Email)
         let tildaDispatched = false;
@@ -938,11 +952,17 @@
             const cartWin = document.querySelector('.t706__cartwin');
             if (cartWin) cartWin.classList.add('t706__cartwin_showed');
 
-            if (tildaSubmitBtn) {
-              tildaSubmitBtn.click();
-              tildaDispatched = true;
+            let orderReference = tildaCartForm.querySelector('input[name="Номер заказа сайта"]');
+            if (!orderReference) {
+              orderReference = document.createElement('input');
+              orderReference.type = 'hidden';
+              orderReference.name = 'Номер заказа сайта';
+              tildaCartForm.appendChild(orderReference);
             }
-            console.log('[GeekNook 1-Click] Order bridged to Tilda Cart form successfully!');
+            orderReference.value = orderNumber;
+            if (tildaSubmitBtn) {
+              tildaDispatched = await submitTildaOrder(tildaCartForm, tildaSubmitBtn);
+            }
           }
         } catch(tildaErr) {
           console.warn('[GeekNook 1-Click] Tilda background form error:', tildaErr);
@@ -963,7 +983,6 @@
           promo_code: appliedPromo,
           utm: utmParams,
           tildaDispatched,
-          stockCommitted: stockAlreadyCommitted,
           type: 'quick_buy',
           timestamp: new Date().toISOString()
         };

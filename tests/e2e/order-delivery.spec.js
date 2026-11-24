@@ -95,6 +95,7 @@ test('main catalog checkout sends mat details to Tilda and the email fallback', 
       event.preventDefault();
       window.testTildaOrders ??= [];
       window.testTildaOrders.push(Object.fromEntries(new FormData(nativeForm)));
+      nativeForm.dispatchEvent(new Event('tildaform:aftersuccess'));
     });
     document.body.append(nativeForm);
   });

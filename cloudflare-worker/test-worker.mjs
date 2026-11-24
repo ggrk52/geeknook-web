@@ -1,6 +1,9 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { pathToFileURL } from 'node:url';
+
+const isMain = process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href;
 import workerDefault, { StockLedgerDO } from './src/index.js';
 
 class MockStorage {
@@ -11,7 +14,11 @@ class MockStorage {
     return this.map.get(key);
   }
   async put(key, val) {
-    this.map.set(key, structuredClone(val));
+    if (typeof key === 'object') {
+      for (const [name, value] of Object.entries(key)) this.map.set(name, structuredClone(value));
+    } else {
+      this.map.set(key, structuredClone(val));
+    }
   }
 }
 
@@ -40,7 +47,7 @@ export function createWorkerHarness(overrides = {}) {
   };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (isMain) {
   const stockJsonPath = path.resolve(process.cwd(), 'data/stock.json');
   const stockDoc = JSON.parse(fs.readFileSync(stockJsonPath, 'utf8'));
   const harness = createWorkerHarness();
@@ -149,4 +156,32 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   assert.equal(saw429, true);
 
   console.log('CLOUDFLARE_WORKER_TESTS_PASSED');
+}
+
+if (isMain) {
+  const secret = 'webhook-test-only-'.repeat(3);
+  const host = 'https://stock.example';
+  const webhook = createWorkerHarness({ STOCK_WEBHOOK_MODE: 'active', STOCK_WEBHOOK_SECRET: secret });
+  const send = (path, body, headers = {}) => webhook.fetch(new Request(host + path, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...headers },
+    body: JSON.stringify(body)
+  }));
+  const initialStock = 4;
+  const seeded = await send('/admin/seed', {
+    items: { '202404205': { code: '202404205', stock: initialStock, initialStock, price: 19999 } }
+  }, { 'X-Admin-Key': webhook.env.STOCK_ADMIN_KEY });
+  assert.equal(seeded.status, 200);
+
+  const orderNumber = 'GN-123456';
+  const body = { 'Номер_заказа_сайта': orderNumber, products: [{ sku: '1000830016', quantity: 1 }] };
+  const publicCommit = { orderNumber, items: [{ code: '202404205', quantity: 1 }] };
+  assert.equal((await send('/commit', publicCommit)).status, 409);
+  assert.equal((await send('/webhooks/tilda/invalid', body)).status, 404);
+  assert.equal((await send('/webhooks/tilda/' + secret, body)).status, 200);
+  assert.equal((await send('/webhooks/tilda/' + secret, body)).status, 200);
+  assert.equal((await send('/commit', publicCommit)).status, 200);
+  const stock = await (await webhook.fetch(new Request(host))).json();
+  assert.equal(stock.items['202404205'].stock, initialStock - 1);
+  console.log('TILDA_WEBHOOK_TESTS_PASSED');
 }

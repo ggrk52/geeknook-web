@@ -3454,9 +3454,10 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
 
     const movementItems = Array.from(counts.entries()).map(([code, qty]) => ({ code, qty }));
     const endpoint = getApiEndpoint();
+    let serverAcknowledged = false;
     if (endpoint && typeof fetch === 'function') {
       try {
-        const res = await fetchWithTimeout(endpoint, {
+        const options = {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3467,10 +3468,20 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
             type: orderType,
             items: movementItems.map(m => ({ code: m.code, quantity: m.qty }))
           })
-        }, 8000);
-        const ctype = res.headers?.get?.('content-type') || '';
-        if (ctype.includes('application/json')) {
+        };
+        const deadline = Date.now() + 8000;
+        for (let attempt = 0; attempt < 4 && Date.now() < deadline; attempt++) {
+          const res = await fetchWithTimeout(endpoint, options, Math.max(1, deadline - Date.now()));
+          if (!res.headers?.get?.('content-type')?.includes('application/json')) break;
           const json = await res.json();
+          if (res.status === 409 && json?.pending === true) {
+            if (attempt < 3 && Date.now() + 750 < deadline) {
+              await new Promise(resolve => setTimeout(resolve, 750));
+              continue;
+            }
+            break;
+          }
+          serverAcknowledged = res.ok && json?.ok === true && Boolean(json.committed || json.alreadyCommitted || (json.success === true && json.items));
           if (json && json.items) {
             serverItems = json.items;
             serverMovements = Array.isArray(json.recentMovements) ? json.recentMovements : serverMovements;
@@ -3485,8 +3496,13 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
               error: json?.error || 'Товар закончился на складе'
             };
           }
+          break;
         }
       } catch (_) {}
+    }
+
+    if (endpoint && !serverAcknowledged) {
+      return { ok: false, error: 'Не удалось подтвердить списание на складе. Уточните статус заказа перед повторной отправкой.' };
     }
 
     const deducted = {};
