@@ -20,6 +20,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&family=Manrope:wght@600;700;800&family=Onest:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/papercraft.css" />
+  <script defer src="js/modules/papercraft.js"></script>
 
   <style>
     :root {
@@ -97,32 +99,6 @@
       width: 32px;
       height: 32px;
       object-fit: contain;
-    }
-
-    .status-badge {
-      display: inline-block;
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      color: var(--accent);
-      background: rgba(49, 134, 255, 0.1);
-      border: 1px solid rgba(49, 134, 255, 0.25);
-      padding: 6px 14px;
-      border-radius: 999px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 20px;
-    }
-
-    .error-code {
-      font-family: var(--display);
-      font-size: 5rem;
-      font-weight: 800;
-      line-height: 1;
-      letter-spacing: -0.04em;
-      background: linear-gradient(180deg, #ffffff 0%, #717684 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 16px;
     }
 
     .error-title {
@@ -206,8 +182,17 @@
       <span>GEEK NOOK</span>
     </a>
 
-    <div class="status-badge">ERROR_NODE // 404 NOT FOUND</div>
-    <div class="error-code">404</div>
+    <figure class="paper-desk paper-desk--error" data-paper-desk role="img" aria-label="Ошибка 404">
+      <div class="paper-desk__art" aria-hidden="true">
+        <div class="paper-desk__world">
+          <div class="paper-desk__sheet"></div>
+          <div class="paper-desk__leg paper-desk__leg--left"><span></span></div>
+          <div class="paper-desk__leg paper-desk__leg--right"><span></span></div>
+          <div class="paper-desk__shelf"><span></span></div>
+          <div class="paper-desk__monitor"><span>404</span></div>
+        </div>
+      </div>
+    </figure>
     <h1 class="error-title">Страница не найдена</h1>
     <p class="error-desc">
       Запрошенная страница была перемещена, переименована или не существует. 
@@ -215,7 +200,7 @@
     </p>
 
     <div class="action-group" style="flex-wrap: wrap;">
-      <a href="https://geeknook.ru/podstavki-pod-monitor" class="btn btn-primary">Подставки под монитор</a>
+      <a href="https://geeknook.ru/podstavki-pod-monitor" class="btn btn-primary">В каталог подставок</a>
       <a href="https://geeknook.ru/kovriki-dlya-stola" class="btn btn-outline">Коврики для стола</a>
       <a href="https://geeknook.ru/kabel-menedzhment" class="btn btn-outline">Кабель-менеджмент</a>
       <a href="https://geeknook.ru/journal" class="btn btn-outline">Журнал и гайды</a>

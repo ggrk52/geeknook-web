@@ -10,6 +10,21 @@
 (function() {
   'use strict';
 
+  const paperDesk = document.querySelector('#geeknook-mount-point [data-paper-desk]');
+  if (paperDesk && !document.querySelector('link[data-paper-desk-styles]')) {
+    const assetBase = new URL('../../', document.currentScript.src);
+    const styles = document.createElement('link');
+    styles.rel = 'stylesheet';
+    styles.href = new URL('css/papercraft.css', assetBase).href;
+    styles.dataset.paperDeskStyles = '';
+    styles.addEventListener('load', () => {
+      const script = document.createElement('script');
+      script.src = new URL('js/modules/papercraft.js', assetBase).href;
+      document.head.appendChild(script);
+    }, { once: true });
+    document.head.appendChild(styles);
+  }
+
   function isTildaActive() {
     return (
       typeof window.tcart__addProduct === 'function' ||
