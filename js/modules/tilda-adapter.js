@@ -156,10 +156,14 @@
       const imgPath = (p.images && p.images[0]) ? p.images[0] : (p.image || '');
       let opt = optionName;
       if (!opt || opt === 'Стандарт') {
-        if (p.options && p.options.lengths && p.options.lengths.length) {
+        if (window.GEEKNOOK_DATA?.getFirstAvailableOption) {
+          opt = window.GEEKNOOK_DATA.getFirstAvailableOption(p);
+        } else if (p.options && p.options.lengths && p.options.lengths.length) {
           opt = p.options.lengths[0];
         } else if (p.options && p.options.sizes && p.options.sizes.length) {
           opt = p.options.sizes[0];
+        } else if (p.options && p.options.variants && p.options.variants.length) {
+          opt = p.options.variants[0];
         } else {
           opt = 'Стандарт';
         }
@@ -173,7 +177,7 @@
       let resolvedSku = p.sku || '';
       const itemOptions = [];
 
-      const hasRealVariants = (p.options && p.options.lengths && p.options.lengths.length) || (p.options && p.options.sizes && p.options.sizes.length) || (opt !== 'Стандарт');
+      const hasRealVariants = (p.options && p.options.lengths && p.options.lengths.length) || (p.options && p.options.sizes && p.options.sizes.length) || (p.options && p.options.variants && p.options.variants.length) || (opt !== 'Стандарт');
       if (hasRealVariants) {
         itemOptions.push({ option: 'Вариант', name: 'Вариант', variant: opt });
       }
@@ -358,6 +362,7 @@
     // --- 7. OVERRIDE: handleCheckoutSubmit (Sync with Tilda CRM, TG & Email in background) ---
     window.geekNookApp.handleCheckoutSubmit = function(e) {
       if (e && e.preventDefault) e.preventDefault();
+      window.GEEKNOOK_DATA?.stock?.applyAllToCatalog?.();
       if (window.geekNookApp.checkStock?.() === false) return false;
       const form = e.target;
       const formData = new FormData(form);
@@ -624,6 +629,7 @@
     let isTildaQuickBuySubmitting = false;
     window.geekNookApp.handleQuickBuySubmit = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
+      window.GEEKNOOK_DATA?.stock?.applyAllToCatalog?.();
       if (window.geekNookApp.checkQuickBuyStock?.() === false) return false;
       if (isTildaQuickBuySubmitting) return false;
 

@@ -45,6 +45,8 @@ api/leads.log
 api/orders.log
 api/*.log
 *cdek_token_cache*.json
+data/stock.json
+.wrangler/
 .env
 .env.*
 

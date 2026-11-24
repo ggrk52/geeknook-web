@@ -13,8 +13,18 @@ import sys
 def minify_css(css_text):
     # Remove comments
     css = re.sub(r'/\*[\s\S]*?\*/', '', css_text)
-    # Remove space around symbols
-    css = re.sub(r'\s*([\{\};:,>+~])\s*', r'\1', css)
+    # Remove space around symbols (keep + separated by single spaces so calc(+/-) remains valid CSS)
+    css = re.sub(r'\s*([\{\};:,>~])\s*', r'\1', css)
+    # Standardize spaces around +
+    css = re.sub(r'\s*\+\s*', ' + ', css)
+    # Ensure calc expressions have valid spacing around + and - operators
+    def fix_calc_expr(match):
+        s = match.group(0)
+        s = re.sub(r'(?<=[0-9a-zA-Z%)])\s*\+\s*(?=[0-9a-zA-Z(])', ' + ', s)
+        s = re.sub(r'(?<=[0-9a-zA-Z%)])\s*-\s*(?=[0-9a-zA-Z(])', ' - ', s)
+        s = re.sub(r'safe\s*-\s*area\s*-\s*inset\s*-\s*bottom', 'safe-area-inset-bottom', s)
+        return s
+    css = re.sub(r'calc\([^;\}]+\)', fix_calc_expr, css)
     # Remove double spaces and newlines
     css = re.sub(r'\s+', ' ', css)
     # Remove unnecessary semicolons

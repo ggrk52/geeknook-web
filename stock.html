@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https: http://127.0.0.1:* http://localhost:*; form-action 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+  <title>Текущие остатки на складе (Live Stock) | GEEK NOOK</title>
+  <meta name="description" content="Актуальная таблица складских остатков GEEK NOOK с автоматическим учётом списаний после каждого заказа.">
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" href="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script>
+    (function() {
+      try {
+        var manual = localStorage.getItem('geeknook_theme_manual');
+        var theme = (manual === 'dark' || manual === 'light')
+          ? manual
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+      }
+    })();
+  </script>
+  <style>
+    :root {
+      --bg-page: #0c0d10;
+      --surface: #13151b;
+      --surface-card: #181b23;
+      --border: rgba(255, 255, 255, 0.09);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #2b70f0;
+      --primary-hover: #1d5ed8;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --red: #ef4444;
+      --font-main: 'Onest', 'Manrope', -apple-system, sans-serif;
+      --font-display: 'Manrope', 'Onest', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    [data-theme="light"] {
+      --bg-page: #f4f6fa;
+      --surface: #ffffff;
+      --surface-card: #ffffff;
+      --border: rgba(15, 23, 42, 0.1);
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: var(--bg-page);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      line-height: 1.5;
+      overflow-x: clip;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* Header */
+    .stock-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(12, 13, 16, 0.88);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    [data-theme="light"] .stock-header {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .header-inner {
+      min-height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 8px 0;
+    }
+
+    .brand-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-display);
+      font-weight: 800;
+      letter-spacing: 0.06em;
+      font-size: 1rem;
+      min-height: 44px;
+    }
+
+    .brand-link img {
+      width: 28px;
+      height: 28px;
+      object-fit: contain;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-nav {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      min-height: 44px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .btn-nav:hover {
+      border-color: var(--primary);
+    }
+
+    .btn-nav.primary {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    .btn-nav.primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .cart-pill {
+      display: none;
+      align-items: center;
+      justify-content: center;
+      min-width: 20px;
+      height: 20px;
+      padding: 0 6px;
+      border-radius: 999px;
+      background: #fff;
+      color: var(--primary);
+      font-size: 0.72rem;
+      font-weight: 800;
+      font-family: var(--font-mono);
+    }
+
+    /* Page Hero */
+    .stock-main {
+      padding: 28px 0 60px;
+    }
+
+    .hero-bar {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      display: inline-block;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 4vw, 2.25rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 0.9375rem;
+      max-width: 720px;
+    }
+
+    .sync-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* KPI Grid */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .kpi-card {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+
+    .kpi-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: 1.55rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    .kpi-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* Controls Toolbar */
+    .toolbar-panel {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .toolbar-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      flex: 1 1 240px;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 44px;
+      padding: 10px 14px 10px 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--bg-page);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      font-size: 0.9375rem;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .toolbar-buttons {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .filter-pill {
+      min-height: 44px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text-muted);
+      font-family: var(--font-main);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .filter-pill.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* Stock Table */
+    .table-wrap {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead th {
+      text-align: left;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 12px 14px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+      white-space: nowrap;
+    }
+
+    [data-theme="light"] thead th {
+      background: #f8fafc;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.15s;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    tbody tr:hover {
+      background: rgba(43, 112, 240, 0.05);
+    }
+
+    td {
+      padding: 12px 14px;
+      font-size: 0.875rem;
+      vertical-align: middle;
+    }
+
+    .code-cell {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--primary);
+      white-space: nowrap;
+    }
+
+    .name-cell {
+      font-weight: 600;
+      min-width: 220px;
+    }
+
+    .name-sub {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .num-cell {
+      font-family: var(--font-mono);
+      white-space: nowrap;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .status-badge.ok {
+      background: rgba(16, 185, 129, 0.14);
+      color: var(--green);
+    }
+
+    .status-badge.low {
+      background: rgba(245, 158, 11, 0.16);
+      color: var(--amber);
+    }
+
+    .status-badge.zero {
+      background: rgba(239, 68, 68, 0.16);
+      color: var(--red);
+    }
+
+    .promo-tag {
+      display: block;
+      font-size: 0.72rem;
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    /* Movements */
+    .movements-panel {
+      background: var(--surface-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+
+    .movements-panel h2 {
+      margin: 0 0 12px;
+      font-size: 1.05rem;
+      font-family: var(--font-display);
+    }
+
+    .movements-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .movement-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      font-size: 0.8125rem;
+    }
+
+    .movement-order {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .movement-items {
+      font-family: var(--font-mono);
+      color: var(--text-main);
+    }
+
+    .movement-time {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Footer */
+    .stock-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0 36px;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+    }
+
+    .footer-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .footer-author-credit {
+      margin-top: 14px;
+      text-align: center;
+      font-size: 0.75rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .footer-author-credit a {
+      color: var(--text-main);
+      font-weight: 800;
+    }
+
+    .toast-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1e293b;
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      z-index: 999;
+      opacity: 0;
+      transition: transform 0.25s, opacity 0.25s;
+      max-width: calc(100vw - 32px);
+      text-align: center;
+    }
+
+    .toast-bar.visible {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .auth-gate-wrap {
+      max-width: 440px;
+      margin: 48px auto;
+      padding: 28px 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: var(--surface-card);
+    }
+
+    .auth-gate-wrap h1 {
+      margin: 0 0 8px;
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 800;
+    }
+
+    .auth-gate-wrap p {
+      margin: 0 0 18px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .auth-form {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .auth-input {
+      width: 100%;
+      min-height: 46px;
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-size: 16px;
+    }
+
+    .auth-input:focus {
+      outline: 2px solid var(--primary);
+      border-color: var(--primary);
+    }
+
+    .auth-error {
+      color: var(--red);
+      font-size: 0.84rem;
+      font-weight: 600;
+      min-height: 1.2em;
+    }
+
+    .adj-controls {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .adj-btn {
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-main);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .adj-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Mobile Card Stack (Zero horizontal overflow down to 320px) */
+    @media (max-width: 820px) {
+      .container {
+        padding: 0 12px;
+      }
+
+      .sync-meta {
+        align-items: flex-start;
+      }
+
+      thead {
+        display: none;
+      }
+
+      table, tbody, tr, td {
+        display: block;
+        width: 100%;
+      }
+
+      tbody tr {
+        padding: 12px 14px;
+      }
+
+      td {
+        padding: 4px 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px;
+      }
+
+      td::before {
+        content: attr(data-label);
+        font-size: 0.72rem;
+        color: var(--text-muted);
+        font-weight: 600;
+        flex-shrink: 0;
+      }
+
+      td.name-cell {
+        display: block;
+        min-width: 0;
+        margin-bottom: 6px;
+      }
+
+      td.name-cell::before {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="stock-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-link" aria-label="На главную GeekNook">
+        <img src="images/tild6164-6364-4661-b835-636430386562__logo_oo.png" alt="GEEK NOOK" width="28" height="28">
+        <span>GEEK NOOK // СТОК</span>
+      </a>
+      <div class="header-actions">
+        <a href="index.html#boards" class="btn-nav">← В каталог</a>
+        <button type="button" class="btn-nav" id="stockLogoutBtn" onclick="logoutStock()" hidden>Выйти</button>
+        <button type="button" class="btn-nav" id="themeBtn" onclick="togglePageTheme()" aria-label="Сменить тему">Тема</button>
+        <a href="index.html?openCart=1#cart" class="btn-nav primary">
+          <span>Корзина</span>
+          <span class="cart-pill" id="stockCartBadge">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="stock-main">
+    <div class="container">
+      <section class="auth-gate-wrap" id="stockAuthGate" aria-label="Вход в панель остатков">
+        <div class="kicker" style="margin-bottom:10px;">
+          <span class="live-dot"></span>
+          <span>Admin Warehouse Access</span>
+        </div>
+        <h1>Доступ к складским остаткам</h1>
+        <p>Данные склада хранятся на сервере Cloudflare Worker / Durable Object. Проверка пароля выполняется только на сервере — в коде сайта секреты и база отсутствуют.</p>
+        <form class="auth-form" id="stockAuthForm" novalidate>
+          <input type="url" id="stockWorkerUrlInput" class="auth-input" placeholder="URL Worker API (https://geeknook-stock....workers.dev)" aria-label="URL Cloudflare Worker API">
+          <input type="password" id="stockPasswordInput" class="auth-input" placeholder="Пароль администратора (STOCK_ADMIN_KEY)" autocomplete="current-password" required aria-label="Пароль администратора">
+          <div class="auth-error" id="stockAuthError" role="alert"></div>
+          <button type="submit" class="btn-nav primary" id="stockAuthSubmitBtn">Открыть таблицу остатков</button>
+          <a href="index.html" class="btn-nav">Вернуться в магазин</a>
+        </form>
+      </section>
+
+      <div id="stockProtectedContent" hidden>
+      <div class="hero-bar">
+        <div>
+          <div class="kicker">
+            <span class="live-dot"></span>
+            <span>Live Warehouse Stock Control</span>
+          </div>
+          <h1>Актуальные остатки склада GEEK NOOK</h1>
+          <p class="subtitle">
+            Единый складской учёт: остатки автоматически пересчитываются после каждого подтверждённого заказа, а товары с нулевым остатком блокируются на всех формах заказа.
+          </p>
+        </div>
+        <div class="sync-meta" id="syncMeta">
+          <span>База прайса: <strong id="metaStockDate">—</strong></span>
+          <span id="metaMode">Режим: синхронизировано</span>
+        </div>
+      </div>
+
+      <section class="kpi-grid" aria-label="Сводка по складу">
+        <div class="kpi-card">
+          <div class="kpi-label">Всего артикулов в учёте</div>
+          <div class="kpi-value" id="kpiSkus">0</div>
+          <div class="kpi-sub">включая отсутствующие позиции</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Доступно единиц (Free Stock)</div>
+          <div class="kpi-value" id="kpiTotalUnits" style="color:var(--green);">0</div>
+          <div class="kpi-sub">готовы к отгрузке</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Списано всего (Расход)</div>
+          <div class="kpi-value" id="kpiTotalSpent" style="color:var(--primary);">0</div>
+          <div class="kpi-sub">таблица + автосписания с сайта</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-label">Заканчиваются / Нет в наличии</div>
+          <div class="kpi-value" id="kpiLowZero" style="color:var(--amber);">0 / 0</div>
+          <div class="kpi-sub">≤ 10 шт. / 0 шт.</div>
+        </div>
+      </section>
+
+      <section class="toolbar-panel" aria-label="Фильтры и управление таблицей остатков">
+        <div class="toolbar-top">
+          <div class="search-box">
+            <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="search" id="stockSearch" class="search-input" placeholder="Поиск по артикулу (напр. 20240408) или названию..." aria-label="Поиск по артикулу или названию">
+          </div>
+          <div class="toolbar-buttons">
+            <button type="button" class="btn-nav" onclick="refreshAll(true)">Обновить</button>
+            <button type="button" class="btn-nav" onclick="downloadCurrentCsv()">Скачать остаток (.csv)</button>
+            <label class="btn-nav" style="cursor:pointer;">
+              <input type="file" id="csvUploadInput" accept=".csv" style="display:none;" onchange="handleCsvUpload(this)">
+              <span>Загрузить CSV</span>
+            </label>
+            <button type="button" class="btn-nav" onclick="resetLedger()">Сбросить к базе</button>
+          </div>
+        </div>
+
+        <div class="filter-pills" id="filterPills" role="tablist" aria-label="Фильтр категорий и статусов">
+          <button type="button" class="filter-pill active" data-filter="all">Все позиции</button>
+          <button type="button" class="filter-pill" data-filter="Подставки">Подставки</button>
+          <button type="button" class="filter-pill" data-filter="Кронштейны и модули">Кронштейны и модули</button>
+          <button type="button" class="filter-pill" data-filter="Коврики">Коврики</button>
+          <button type="button" class="filter-pill" data-filter="low">Мало (1–10 шт.)</button>
+          <button type="button" class="filter-pill" data-filter="zero">Нет в наличии (0)</button>
+        </div>
+      </section>
+
+      <section class="table-wrap" aria-label="Таблица складских остатков">
+        <table>
+          <thead>
+            <tr>
+              <th>Артикул (Code)</th>
+              <th>Наименование</th>
+              <th>Категория</th>
+              <th>РРЦ / −20%</th>
+              <th>База</th>
+              <th>Расход</th>
+              <th>Остаток</th>
+              <th>Коррекция</th>
+              <th>Статус</th>
+            </tr>
+          </thead>
+          <tbody id="stockTableBody"></tbody>
+        </table>
+      </section>
+
+      <section class="movements-panel" aria-label="Журнал списаний">
+        <h2>Автоматические списания по заказам</h2>
+        <div class="movements-list" id="movementsList"></div>
+      </section>
+      </div>
+    </div>
+  </main>
+
+  <footer class="stock-footer">
+    <div class="container">
+      <div class="footer-row">
+        <div>© 2026 ООО «ГИК НУК» (ИНН 9723239478). <a href="tel:+70000000000" style="text-decoration:underline;">+7 (000) 000-00-00</a> • <a href="mailto:info@geeknook.ru" style="text-decoration:underline;">info@geeknook.ru</a></div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap;">
+          <a href="index.html">Главная</a>
+          <a href="podstavki-pod-monitor.html">Подставки</a>
+          <a href="kovriki-dlya-stola.html">Коврики</a>
+          <a href="kabel-menedzhment.html">Кабель-менеджмент</a>
+          <a href="b2b.html">B2B</a>
+        </div>
+      </div>
+      <div class="footer-author-credit">
+        MADE BY <a href="https://t.me/ggrk52" target="_blank" rel="noopener">SERGEY GOAT</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="toast-bar" id="stockToast" role="status" aria-live="polite"></div>
+
+  <script src="js/products-data.js"></script>
+  <script>
+    'use strict';
+
+    const WORKER_URL_KEY = 'geeknook_worker_admin_url';
+    const ADMIN_SESSION_URL_KEY = 'geeknook_admin_worker_url';
+    const ADMIN_SESSION_TOKEN_KEY = 'geeknook_admin_worker_key';
+
+    let activeFilter = 'all';
+    let searchQuery = '';
+    let adminPayload = null;
+
+    function getSavedWorkerUrl() {
+      const configured = window.GEEKNOOK_DATA?.stock?.getApiEndpoint?.() || '';
+      if (configured) return configured;
+      try {
+        return sessionStorage.getItem(ADMIN_SESSION_URL_KEY) || localStorage.getItem(WORKER_URL_KEY) || '';
+      } catch (_) {
+        return '';
+      }
+    }
+
+    function getAdminCredentials() {
+      try {
+        return {
+          url: sessionStorage.getItem(ADMIN_SESSION_URL_KEY) || getSavedWorkerUrl(),
+          key: sessionStorage.getItem(ADMIN_SESSION_TOKEN_KEY) || ''
+        };
+      } catch (_) {
+        return { url: '', key: '' };
+      }
+    }
+
+    function isStockAuthorized() {
+      const creds = getAdminCredentials();
+      return Boolean(creds.url && creds.key && adminPayload && adminPayload.mode === 'admin');
+    }
+
+    function applyAuthGateState() {
+      const authed = isStockAuthorized();
+      const gate = document.getElementById('stockAuthGate');
+      const panel = document.getElementById('stockProtectedContent');
+      const logoutBtn = document.getElementById('stockLogoutBtn');
+      const urlInput = document.getElementById('stockWorkerUrlInput');
+      if (urlInput && !urlInput.value) {
+        urlInput.value = getSavedWorkerUrl();
+      }
+      if (gate) gate.hidden = authed;
+      if (panel) panel.hidden = !authed;
+      if (logoutBtn) logoutBtn.hidden = !authed;
+      if (!authed) {
+        const tbody = document.getElementById('stockTableBody');
+        const mov = document.getElementById('movementsList');
+        if (tbody) tbody.innerHTML = '';
+        if (mov) mov.innerHTML = '';
+      }
+      return authed;
+    }
+
+    async function callAdminWorker(workerUrl, adminKey, action, extraBody = {}) {
+      const cleanUrl = String(workerUrl || '').trim().replace(/\/+$/, '');
+      if (!cleanUrl) throw new Error('Укажите URL Cloudflare Worker');
+      const res = await fetch(cleanUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Admin-Key': adminKey
+        },
+        body: JSON.stringify({ action, ...extraBody })
+      });
+      const json = await res.json().catch(() => ({}));
+      if (!res.ok || json.ok === false) {
+        const err = new Error(json.error || `Ошибка сервера (HTTP ${res.status})`);
+        err.status = res.status;
+        throw err;
+      }
+      return json;
+    }
+
+    function logoutStock() {
+      adminPayload = null;
+      try {
+        sessionStorage.removeItem(ADMIN_SESSION_URL_KEY);
+        sessionStorage.removeItem(ADMIN_SESSION_TOKEN_KEY);
+      } catch (_) {}
+      const input = document.getElementById('stockPasswordInput');
+      const err = document.getElementById('stockAuthError');
+      if (input) input.value = '';
+      if (err) err.textContent = '';
+      applyAuthGateState();
+    }
+
+    function showStockToast(msg) {
+      const el = document.getElementById('stockToast');
+      if (!el) return;
+      el.textContent = msg;
+      el.classList.add('visible');
+      clearTimeout(showStockToast._t);
+      showStockToast._t = setTimeout(() => el.classList.remove('visible'), 3000);
+    }
+
+    function togglePageTheme() {
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('geeknook_theme_manual', next); } catch (_) {}
+    }
+
+    function escapeHtml(s) {
+      return String(s ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+
+    function formatRub(n) {
+      return Math.round(Number(n) || 0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' ₽';
+    }
+
+    function updateCartBadge() {
+      let count = 0;
+      try {
+        const raw = JSON.parse(localStorage.getItem('geeknook_cart') || '[]');
+        if (Array.isArray(raw)) count = raw.reduce((s, i) => s + (parseInt(i.quantity, 10) || 1), 0);
+      } catch (_) {}
+      const badge = document.getElementById('stockCartBadge');
+      if (badge) {
+        badge.textContent = count;
+        badge.style.display = count > 0 ? 'inline-flex' : 'none';
+      }
+    }
+
+    function getFullDisplayRows() {
+      const table = adminPayload?.items || {};
+      const rows = Object.values(table).map(r => ({ ...r, catalogId: findCatalogIdByPart(r.code) }));
+
+      // Include catalog entries with 0 stock absent from the 28-row warehouse sheet (e.g. Desk Mat Double)
+      const knownCodes = new Set(rows.map(r => r.code));
+      for (const prod of (window.GEEKNOOK_DATA?.allProducts || [])) {
+        if (prod.id.startsWith('focus-station-1200') || prod.id.startsWith('focus-board-') || prod.id.startsWith('focus-station-900')) continue;
+        const variants = prod.skus ? Object.entries(prod.skus) : [['', prod]];
+        for (const [opt, v] of variants) {
+          const part = String(v.part || prod.part || '').trim();
+          if (!part || knownCodes.has(part)) continue;
+          knownCodes.add(part);
+          rows.push({
+            code: part,
+            name: `${prod.title}${opt ? ' (' + opt + ')' : ''}`,
+            category: prod.category === 'mats' ? 'Коврики' : (prod.category === 'boards' ? 'Подставки' : 'Кронштейны и модули'),
+            price: Number(v.price ?? prod.price ?? 0) || 0,
+            initialStock: 0,
+            initialSpent: 0,
+            orderSpent: 0,
+            totalSpent: 0,
+            stock: 0,
+            catalogId: prod.id,
+            catalogOnlyZero: true
+          });
+        }
+      }
+      return rows;
+    }
+
+    function findCatalogIdByPart(code) {
+      for (const p of (window.GEEKNOOK_DATA?.allProducts || [])) {
+        if (p.part === code) return p.id;
+        if (p.skus && Object.values(p.skus).some(v => v.part === code)) return p.id;
+      }
+      return '';
+    }
+
+    function renderStockPage() {
+      if (!applyAuthGateState()) {
+        updateCartBadge();
+        return;
+      }
+
+      const allRows = getFullDisplayRows();
+      const totalUnits = allRows.reduce((s, r) => s + r.stock, 0);
+      const totalSpent = allRows.reduce((s, r) => s + r.totalSpent, 0);
+      const lowCount = allRows.filter(r => r.stock > 0 && r.stock <= 10).length;
+      const zeroCount = allRows.filter(r => r.stock <= 0).length;
+
+      document.getElementById('kpiSkus').textContent = String(allRows.length);
+      document.getElementById('kpiTotalUnits').textContent = totalUnits.toLocaleString('ru-RU');
+      document.getElementById('kpiTotalSpent').textContent = totalSpent.toLocaleString('ru-RU');
+      document.getElementById('kpiLowZero').textContent = `${lowCount} / ${zeroCount}`;
+
+      document.getElementById('metaStockDate').textContent = adminPayload?.stockDate || '—';
+      document.getElementById('metaMode').textContent = 'Cloudflare Durable Object (Сервер)';
+
+      const q = searchQuery.trim().toLowerCase();
+      const filtered = allRows.filter(r => {
+        if (activeFilter === 'low' && !(r.stock > 0 && r.stock <= 10)) return false;
+        else if (activeFilter === 'zero' && r.stock > 0) return false;
+        else if (activeFilter !== 'all' && activeFilter !== 'low' && activeFilter !== 'zero' && r.category !== activeFilter) return false;
+        if (q) {
+          return r.code.toLowerCase().includes(q) || r.name.toLowerCase().includes(q) || r.category.toLowerCase().includes(q);
+        }
+        return true;
+      });
+
+      const tbody = document.getElementById('stockTableBody');
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;padding:28px;color:var(--text-muted);">Совпадений не найдено</td></tr>';
+      } else {
+        tbody.innerHTML = filtered.map(r => {
+          const promo = Math.round(r.price * 0.8);
+          const status = r.stock <= 0
+            ? '<span class="status-badge zero">Нет в наличии</span>'
+            : (r.stock <= 10
+              ? '<span class="status-badge low">Мало</span>'
+              : '<span class="status-badge ok">В наличии</span>');
+          const linkHtml = r.catalogId
+            ? `<a href="index.html?product=${encodeURIComponent(r.catalogId)}" class="name-sub" style="color:var(--primary);">Открыть в каталоге ↗</a>`
+            : '';
+          const adjHtml = r.catalogOnlyZero
+            ? '<span style="color:var(--text-muted);font-size:0.78rem;">не в прайсе</span>'
+            : `<div class="adj-controls">
+                 <button type="button" class="adj-btn" data-adj="-1" data-code="${escapeHtml(r.code)}" aria-label="Уменьшить на 1">−1</button>
+                 <button type="button" class="adj-btn" data-adj="1" data-code="${escapeHtml(r.code)}" aria-label="Увеличить на 1">+1</button>
+               </div>`;
+
+          return `
+            <tr data-code="${escapeHtml(r.code)}">
+              <td class="code-cell" data-label="Артикул">${escapeHtml(r.code)}</td>
+              <td class="name-cell" data-label="Товар">
+                ${escapeHtml(r.name)}
+                ${linkHtml}
+              </td>
+              <td data-label="Категория">${escapeHtml(r.category)}</td>
+              <td class="num-cell" data-label="Цена">${formatRub(r.price)}<span class="promo-tag">со скидкой ${formatRub(promo)}</span></td>
+              <td class="num-cell" data-label="База">${r.initialStock} шт.</td>
+              <td class="num-cell" data-label="Расход">${r.totalSpent} шт.</td>
+              <td class="num-cell" data-label="Остаток" style="font-weight:800;color:${r.stock <= 0 ? 'var(--red)' : (r.stock <= 10 ? 'var(--amber)' : 'var(--green)')};">${r.stock} шт.</td>
+              <td data-label="Коррекция">${adjHtml}</td>
+              <td data-label="Статус">${status}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      const movements = adminPayload?.recentMovements || [];
+      const movList = document.getElementById('movementsList');
+      if (!movements || !movements.length) {
+        movList.innerHTML = '<div style="color:var(--text-muted);font-size:0.875rem;">Списаний по новым заказам с сайта пока нет. Начальный расход из прайса уже учтён в колонке «Расход».</div>';
+      } else {
+        movList.innerHTML = movements.map(m => {
+          const itemsStr = (m.items || []).map(i => `${i.code}: ${i.qty >= 0 ? '−' + i.qty : '+' + Math.abs(i.qty)} шт.`).join(', ');
+          const dt = m.timestamp ? new Date(m.timestamp).toLocaleString('ru-RU') : '';
+          const typeLabel = m.type === 'quick_buy' ? '1 клик' : (m.type === 'adjust' ? 'Коррекция' : 'Корзина');
+          return `
+            <div class="movement-row">
+              <div>
+                <span class="movement-order">#${escapeHtml(m.orderNumber)}</span>
+                <span class="movement-time">• ${typeLabel} • ${escapeHtml(dt)}</span>
+              </div>
+              <div class="movement-items">${escapeHtml(itemsStr)}</div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      updateCartBadge();
+    }
+
+    async function refreshAll(notify) {
+      if (!isStockAuthorized()) return;
+      const { url, key } = getAdminCredentials();
+      try {
+        adminPayload = await callAdminWorker(url, key, 'admin_list');
+        renderStockPage();
+        if (notify) showStockToast('Данные синхронизированы с сервером');
+      } catch (err) {
+        if (err.status === 401) logoutStock();
+        showStockToast(err.message || 'Ошибка синхронизации');
+      }
+    }
+
+    function exportAdminCsv() {
+      if (!isStockAuthorized()) return '';
+      const esc = (v) => {
+        const s = String(v ?? '');
+        return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+      };
+      const rows = ['Code,Description,Free Stock,РРЦ,Расход'];
+      for (const r of Object.values(adminPayload?.items || {})) {
+        rows.push([esc(r.code), esc(r.name), r.stock, r.price, r.totalSpent].join(','));
+      }
+      return rows.join('\n');
+    }
+
+    function downloadCurrentCsv() {
+      const csv = exportAdminCsv();
+      if (!csv) return;
+      const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `geeknook-stock-${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(a.href), 1500);
+    }
+
+    function parseAdminCsvToItems(csvText) {
+      const lines = String(csvText || '').replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim());
+      if (lines.length < 2) throw new Error('Пустой CSV файл');
+      const parseLine = (line) => {
+        const cells = [];
+        let cur = '';
+        let inQuotes = false;
+        for (let i = 0; i < line.length; i++) {
+          const ch = line[i];
+          if (ch === '"') {
+            if (inQuotes && line[i + 1] === '"') { cur += '"'; i++; }
+            else inQuotes = !inQuotes;
+          } else if ((ch === ',' || ch === ';') && !inQuotes) {
+            cells.push(cur.trim());
+            cur = '';
+          } else {
+            cur += ch;
+          }
+        }
+        cells.push(cur.trim());
+        return cells;
+      };
+      const headers = parseLine(lines[0]);
+      const idxCode = headers.indexOf('Code');
+      const idxDesc = headers.indexOf('Description');
+      const idxStock = headers.indexOf('Free Stock');
+      const idxPrice = headers.indexOf('РРЦ');
+      const idxSpent = headers.indexOf('Расход');
+      if (idxCode === -1 || idxStock === -1) throw new Error('Нужны колонки Code и Free Stock');
+      const items = {};
+      for (let i = 1; i < lines.length; i++) {
+        const cols = parseLine(lines[i]);
+        const code = (cols[idxCode] || '').trim();
+        if (!code || !/^\d+$/.test(code)) continue;
+        const stock = Math.max(0, parseInt(cols[idxStock], 10) || 0);
+        const spent = idxSpent !== -1 ? Math.max(0, parseInt(cols[idxSpent], 10) || 0) : 0;
+        const name = idxDesc !== -1 ? (cols[idxDesc] || `Товар ${code}`) : (adminPayload?.items?.[code]?.name || `Товар ${code}`);
+        const price = idxPrice !== -1 ? (parseInt(cols[idxPrice], 10) || adminPayload?.items?.[code]?.price || 0) : (adminPayload?.items?.[code]?.price || 0);
+        const lower = name.toLowerCase();
+        const category = lower.includes('подставка под монитор') || lower.includes('focus station') ? 'Подставки'
+          : (lower.includes('коврик') || lower.includes('mouse pad') ? 'Коврики' : 'Кронштейны и модули');
+        items[code] = {
+          code,
+          name,
+          category,
+          price,
+          initialStock: stock + spent,
+          initialSpent: spent,
+          stock
+        };
+      }
+      if (!Object.keys(items).length) throw new Error('В CSV нет корректных артикулов');
+      return items;
+    }
+
+    function handleCsvUpload(input) {
+      if (!isStockAuthorized()) return;
+      const file = input?.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try {
+          const items = parseAdminCsvToItems(String(reader.result || ''));
+          const { url, key } = getAdminCredentials();
+          adminPayload = await callAdminWorker(url, key, 'seed', {
+            stockDate: new Date().toISOString().slice(0, 10),
+            items,
+            keepDeductions: false
+          });
+          renderStockPage();
+          showStockToast(`Загружено на сервер позиций: ${Object.keys(items).length}`);
+        } catch (err) {
+          showStockToast('Ошибка загрузки: ' + (err?.message || 'неверный формат'));
+        } finally {
+          input.value = '';
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+    }
+
+    async function resetLedger() {
+      if (!isStockAuthorized()) return;
+      const { url, key } = getAdminCredentials();
+      try {
+        adminPayload = await callAdminWorker(url, key, 'reset');
+        renderStockPage();
+        showStockToast('Списания на сервере сброшены к базовому прайсу');
+      } catch (err) {
+        showStockToast(err.message || 'Ошибка сброса');
+      }
+    }
+
+    document.getElementById('stockTableBody').addEventListener('click', async (e) => {
+      const btn = e.target.closest('.adj-btn');
+      if (!btn || !isStockAuthorized()) return;
+      const code = btn.getAttribute('data-code');
+      const delta = parseInt(btn.getAttribute('data-adj'), 10);
+      if (!code || !delta) return;
+      const { url, key } = getAdminCredentials();
+      btn.disabled = true;
+      try {
+        adminPayload = await callAdminWorker(url, key, 'adjust', { code, delta });
+        renderStockPage();
+        showStockToast(`Артикул ${code}: ${delta > 0 ? '+1' : '−1'} шт.`);
+      } catch (err) {
+        showStockToast(err.message || 'Ошибка корректировки');
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    document.getElementById('stockSearch').addEventListener('input', (e) => {
+      searchQuery = e.target.value || '';
+      renderStockPage();
+    });
+
+    document.getElementById('filterPills').addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-pill');
+      if (!btn) return;
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeFilter = btn.getAttribute('data-filter') || 'all';
+      renderStockPage();
+    });
+
+    document.getElementById('stockAuthForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const urlInput = document.getElementById('stockWorkerUrlInput');
+      const pwdInput = document.getElementById('stockPasswordInput');
+      const err = document.getElementById('stockAuthError');
+      const submitBtn = document.getElementById('stockAuthSubmitBtn');
+      const workerUrl = (urlInput?.value || getSavedWorkerUrl()).trim().replace(/\/+$/, '');
+      const pwd = (pwdInput?.value || '').trim();
+
+      if (!workerUrl) {
+        if (err) err.textContent = 'Укажите URL вашего Cloudflare Worker';
+        return;
+      }
+      if (!pwd) {
+        if (err) err.textContent = 'Введите пароль администратора';
+        return;
+      }
+
+      if (submitBtn) submitBtn.disabled = true;
+      if (err) err.textContent = '';
+
+      try {
+        adminPayload = await callAdminWorker(workerUrl, pwd, 'admin_list');
+        try {
+          localStorage.setItem(WORKER_URL_KEY, workerUrl);
+          sessionStorage.setItem(ADMIN_SESSION_URL_KEY, workerUrl);
+          sessionStorage.setItem(ADMIN_SESSION_TOKEN_KEY, pwd);
+        } catch (_) {}
+        if (pwdInput) pwdInput.value = '';
+        renderStockPage();
+        showStockToast('Вход выполнен');
+      } catch (authErr) {
+        adminPayload = null;
+        if (err) err.textContent = authErr.message || 'Не удалось подключиться к серверу';
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
+    });
+
+    window.geekNookStockAdmin = { exportCsv: exportAdminCsv };
+
+    (async function restoreSessionIfAny() {
+      const creds = getAdminCredentials();
+      if (creds.url && creds.key) {
+        try {
+          adminPayload = await callAdminWorker(creds.url, creds.key, 'admin_list');
+        } catch (_) {
+          adminPayload = null;
+        }
+      }
+      renderStockPage();
+    })();
+  </script>
+</body>
+</html>

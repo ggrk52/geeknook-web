@@ -14,6 +14,12 @@ return [
     // Optional notification email address
     'notification_email' => 'b2b@geeknook.ru',
 
+    // Optional admin key for stock reset API (keep secret on server)
+    'stock_admin_key' => '',
+
+    // Optional explicit preview/Tilda origins allowed for CORS (e.g. ['https://project12345.tilda.ws'])
+    'allowed_origins' => [],
+
     // Environment: 'production' or 'development'
     'environment' => 'production'
 ];

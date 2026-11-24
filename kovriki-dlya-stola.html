@@ -2,7 +2,7 @@
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co https://forms.tildacdn.com https://geeknook.ru https://www.geeknook.ru; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Коврики для рабочего стола из войлока и кожи | GeekNook Desk Mat</title>
@@ -1568,6 +1568,7 @@
     <span id="toast-text">Товар добавлен в корзину</span>
   </div>
 
+  <script src="js/products-data.js"></script>
   <script>
     'use strict';
 
@@ -1600,6 +1601,17 @@
       document.getElementById(`${model}-oldprice`).textContent = data.oldPrice;
       document.getElementById(`${model}-dim`).textContent = data.dim;
       document.getElementById(`${model}-sku`).textContent = data.sku;
+      syncMatStockUI();
+    }
+
+    function syncMatStockUI() {
+      const api = window.GEEKNOOK_DATA?.stock;
+      if (!api) return;
+      const sizeLabels = { '80x40': '80 × 40 см', '100x50': '100 × 50 см', '120x60': '120 × 60 см' };
+      api.renderCategoryBadge(document.getElementById('desk-mat-light'), 'desk-mat-light', sizeLabels[currentMatSizes.light] || '80 × 40 см');
+      api.renderCategoryBadge(document.getElementById('desk-mat-dark'), 'desk-mat-dark', sizeLabels[currentMatSizes.dark] || '80 × 40 см');
+      api.renderCategoryBadge(document.getElementById('desk-mat-xl'), 'desk-mat-xl', '120 × 60 см');
+      api.renderCategoryBadge(document.getElementById('desk-mat-double'), 'desk-mat-double', '90 × 45 см');
     }
 
     function filterMats(cat, btn) {
@@ -1631,6 +1643,15 @@
 
     function saveToGeekNookCart(item) {
       try {
+        const stockApi = window.GEEKNOOK_DATA?.stock;
+        if (stockApi?.canAddFromStorage) {
+          const check = stockApi.canAddFromStorage(item.id, item.option || 'Стандарт', item.quantity || 1);
+          if (!check.ok) {
+            showToast(check.error || 'Товар закончился на складе');
+            syncMatStockUI();
+            return false;
+          }
+        }
         const raw = localStorage.getItem('geeknook_cart');
         let cart = [];
         try { cart = JSON.parse(raw || '[]'); } catch (e) { cart = []; }
@@ -1748,14 +1769,14 @@
       const title = names[productId] || 'Desk Mat';
 
       // Save to centralized geeknook_cart storage
-      saveToGeekNookCart({
+      if (!saveToGeekNookCart({
         id: productId,
         title: title,
         option: optionLabel,
         price: price,
         image: images[productId] || '',
         quantity: 1
-      });
+      })) return;
 
       // Tactile button feedback
       if (btn) {
@@ -1776,8 +1797,13 @@
       }, 550);
     }
 
-    // Initialize cart badge counter on page load
-    document.addEventListener('DOMContentLoaded', updateCategoryCartBadge);
+    // Initialize cart badge counter & live stock on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCategoryCartBadge();
+      syncMatStockUI();
+    });
+    window.addEventListener('geeknook:stock-updated', syncMatStockUI);
+    syncMatStockUI();
     updateCategoryCartBadge();
   </script>
 </body>

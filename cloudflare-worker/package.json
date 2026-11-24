@@ -1,0 +1,5 @@
+{
+  "name": "geeknook-stock-worker",
+  "private": true,
+  "type": "module"
+}

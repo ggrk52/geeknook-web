@@ -1,0 +1,17 @@
+name = "geeknook-stock"
+main = "src/index.js"
+compatibility_date = "2025-11-01"
+workers_dev = true
+
+[[durable_objects.bindings]]
+name = "STOCK_LEDGER"
+class_name = "StockLedgerDO"
+
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["StockLedgerDO"]
+
+[vars]
+PUBLIC_STOCK_CAP = "6"
+MAX_PUBLIC_QTY_PER_ITEM = "20"
+ALLOWED_ORIGINS = "https://geeknook.ru,https://www.geeknook.ru,https://ggrk52.github.io"

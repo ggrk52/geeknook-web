@@ -5,43 +5,10 @@
  * Hardened with Origin whitelisting, IP rate limiting, anti-bot honeypot, and safe HTML Telegram formatting.
  */
 
-header('Content-Type: application/json; charset=utf-8');
-header('X-Content-Type-Options: nosniff');
+require_once __DIR__ . '/stock-lib.php';
 
 // 1. Strict CORS Whitelist
-$allowedOrigins = [
-    'https://geeknook.ru',
-    'https://www.geeknook.ru',
-    'http://geeknook.ru',
-    'http://www.geeknook.ru',
-    'https://ggrk52.github.io'
-];
-
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if (!empty($origin)) {
-    $parsedHost = parse_url($origin, PHP_URL_HOST);
-    $isLocal = in_array($parsedHost, ['localhost', '127.0.0.1'], true);
-    $isTilda = $parsedHost && preg_match('/\.tilda\.(ws|cc)$/i', $parsedHost);
-    if (in_array($origin, $allowedOrigins, true) || $isLocal || $isTilda) {
-        header('Access-Control-Allow-Origin: ' . $origin);
-        header('Vary: Origin');
-    } else {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'Forbidden: Origin not allowed']);
-        exit;
-    }
-} else {
-    header('Access-Control-Allow-Origin: https://geeknook.ru');
-}
-
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-header('Access-Control-Max-Age: 86400');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
-    exit;
-}
+gn_send_cors_headers('POST, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);

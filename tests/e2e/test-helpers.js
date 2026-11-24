@@ -19,6 +19,14 @@ async function setupPageRoutes(page) {
   await page.route(/(mc\.yandex\.ru|google-analytics\.com|googletagmanager\.com|tilda\.ws|fonts\.googleapis\.com|fonts\.gstatic\.com)/i, route => {
     route.abort();
   });
+
+  await page.route(/^https:\/\/geeknook-stock\.sergeykozlov2006\.workers\.dev\b/i, route => {
+    route.fulfill({
+      status: 200,
+      contentType: 'application/json',
+      body: JSON.stringify({ ok: true, success: true, items: {} })
+    });
+  });
 }
 
 /**

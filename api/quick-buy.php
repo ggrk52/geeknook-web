@@ -8,40 +8,10 @@
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
 
+require_once __DIR__ . '/stock-lib.php';
+
 // 1. Strict CORS Whitelist
-$allowedOrigins = [
-    'https://geeknook.ru',
-    'https://www.geeknook.ru',
-    'http://geeknook.ru',
-    'http://www.geeknook.ru',
-    'https://ggrk52.github.io'
-];
-
-$origin = $_SERVER['HTTP_ORIGIN'] ?? '';
-if (!empty($origin)) {
-    $parsedHost = parse_url($origin, PHP_URL_HOST);
-    $isLocal = in_array($parsedHost, ['localhost', '127.0.0.1'], true);
-    $isTilda = $parsedHost && preg_match('/\.tilda\.(ws|cc)$/i', $parsedHost);
-    if (in_array($origin, $allowedOrigins, true) || $isLocal || $isTilda) {
-        header('Access-Control-Allow-Origin: ' . $origin);
-        header('Vary: Origin');
-    } else {
-        http_response_code(403);
-        echo json_encode(['success' => false, 'error' => 'Forbidden: Origin not allowed']);
-        exit;
-    }
-} else {
-    header('Access-Control-Allow-Origin: https://geeknook.ru');
-}
-
-header('Access-Control-Allow-Methods: POST, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-header('Access-Control-Max-Age: 86400');
-
-if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    http_response_code(204);
-    exit;
-}
+gn_send_cors_headers('POST, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
@@ -131,41 +101,23 @@ if (!empty($errors)) {
     exit;
 }
 
-// 7. Catalog Price Verification
-$catalogPrices = [
-    'focus-station-walnut' => ['85' => 19999, '116' => 24999, 'default' => 19999],
-    'focus-station-oak'    => ['85' => 19999, '116' => 24999, 'default' => 19999],
-    'focus-station-black'  => ['85' => 19999, '116' => 24999, 'default' => 19999],
-    'headphone-stand'      => 2999,
-    'gamepad-stand'        => 2999,
-    'phone-dock'           => 2999,
-    'cable-organizer'      => 4999,
-    'cable-organizer-mini' => 1999,
-    'laptop-open'          => 4999,
-    'laptop-closed'        => 4999,
-    'mac-shelf'            => 4999,
-    'u-shelf'              => 4999,
-    'shelf-45'             => 6999,
-    'switch-stand'         => 4999,
-    'desk-mat-light'       => 1499,
-    'desk-mat-dark'        => 1499
-];
+// 7. Atomic Stock Reservation & Catalog Price Verification
+$resolvedCodes = gn_resolve_item_codes($productId, $productOption, intval($data['quantity'] ?? 1));
+$primaryCode = $resolvedCodes[0]['code'] ?? $productId;
+$stockTx = gn_stock_transaction('commit', [
+    'order_number' => $orderNumber,
+    'type'         => 'quick_buy',
+    'items'        => $resolvedCodes
+]);
 
-$expectedPrice = null;
-if (isset($catalogPrices[$productId])) {
-    $ref = $catalogPrices[$productId];
-    if (is_array($ref)) {
-        if (strpos($productOption, '116') !== false) {
-            $expectedPrice = $ref['116'] ?? $ref['default'];
-        } elseif (strpos($productOption, '85') !== false) {
-            $expectedPrice = $ref['85'] ?? $ref['default'];
-        } else {
-            $expectedPrice = $ref['default'] ?? 19999;
-        }
-    } else {
-        $expectedPrice = $ref;
-    }
+if ($stockTx['httpCode'] !== 200) {
+    http_response_code($stockTx['httpCode']);
+    echo json_encode($stockTx['body'], JSON_UNESCAPED_UNICODE);
+    exit;
 }
+
+$expectedPrice = $stockTx['body']['items'][$primaryCode]['price'] ?? null;
+$remainingAfterOrder = $stockTx['body']['items'][$primaryCode]['stock'] ?? null;
 
 $numericClientPrice = (float)preg_replace('/[^\d.]/', '', (string)$price);
 $priceWarning = '';
@@ -174,7 +126,10 @@ if ($expectedPrice !== null && $numericClientPrice > 0 && abs($numericClientPric
 }
 
 // 8. Log order to disk (guaranteed persistent record)
-$logFile = __DIR__ . '/orders.log';
+$logDir = getenv('GEEKNOOK_PRIVATE_LOG_DIR');
+$logFile = ($logDir && is_dir($logDir) && is_writable($logDir))
+    ? (rtrim($logDir, DIRECTORY_SEPARATOR) . '/geeknook-orders.log')
+    : (__DIR__ . '/orders.log');
 $logEntry = json_encode([
     'type'           => 'quick_buy_1click',
     'order_number'   => $orderNumber,
@@ -184,10 +139,12 @@ $logEntry = json_encode([
     'name'           => $name,
     'phone'          => $phone,
     'product_id'     => $productId,
+    'article_code'   => $primaryCode,
     'product_title'  => $productTitle,
     'product_option' => $productOption,
     'client_price'   => $price,
     'catalog_price'  => $expectedPrice,
+    'remaining_stock'=> $remainingAfterOrder,
     'promo_code'     => $promoCode,
     'utm'            => $utm
 ], JSON_UNESCAPED_UNICODE) . PHP_EOL;
@@ -228,6 +185,7 @@ if (!empty($botToken) && !empty($chatId) && $botToken !== 'YOUR_TELEGRAM_BOT_TOK
         "👤 <b>Имя:</b> " . $escName,
         "📞 <b>Телефон:</b> <code>" . $escPhone . "</code>",
         "🛒 <b>Товар:</b> " . $escProduct,
+        $remainingAfterOrder !== null ? ("📦 <b>Склад (арт. <code>" . htmlspecialchars($primaryCode, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8') . "</code>):</b> осталось " . intval($remainingAfterOrder) . " шт.") : null,
         "💰 <b>Сумма:</b> " . $escPrice,
         !empty($escPromo) ? ("🏷 <b>Промокод:</b> <code>" . $escPromo . "</code>") : null,
         "━━━━━━━━━━━━━━━━━━━━━━",
@@ -266,6 +224,7 @@ if (!empty($botToken) && !empty($chatId) && $botToken !== 'YOUR_TELEGRAM_BOT_TOK
 echo json_encode([
     'success'           => true,
     'order_number'      => $orderNumber,
+    'remaining_stock'   => $remainingAfterOrder,
     'message'           => 'Заказ успешно оформлен! Менеджер свяжется с вами в течение 10 минут.',
     'telegram_notified' => $telegramSuccess
 ], JSON_UNESCAPED_UNICODE);

@@ -2,7 +2,7 @@
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="UTF-8">
-  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co https://forms.tildacdn.com https://geeknook.ru https://www.geeknook.ru; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Деревянные подставки под монитор из массива дуба и ореха | GeekNook Focus Station</title>
@@ -1399,6 +1399,7 @@
     <span id="toast-text">Товар добавлен в корзину</span>
   </div>
 
+  <script src="js/products-data.js"></script>
   <script>
     // Product data state for interactive size toggling
     const productSpecs = {
@@ -1434,6 +1435,15 @@
       document.getElementById(`${model}-dim`).textContent = data.dim;
       document.getElementById(`${model}-sku`).textContent = data.sku;
       document.getElementById(`${model}-weight`).textContent = data.weight;
+      syncStandStockUI();
+    }
+
+    function syncStandStockUI() {
+      const api = window.GEEKNOOK_DATA?.stock;
+      if (!api) return;
+      ['walnut', 'oak', 'black'].forEach(model => {
+        api.renderCategoryBadge(document.getElementById(model), `focus-station-${model}`, `${currentSizes[model] || '85'} см`);
+      });
     }
 
     function filterLength(len, btn) {
@@ -1469,6 +1479,15 @@
 
     function saveToGeekNookCart(item) {
       try {
+        const stockApi = window.GEEKNOOK_DATA?.stock;
+        if (stockApi?.canAddFromStorage) {
+          const check = stockApi.canAddFromStorage(item.id, item.option || 'Стандарт', item.quantity || 1);
+          if (!check.ok) {
+            showToast(check.error || 'Товар закончился на складе');
+            syncStandStockUI();
+            return false;
+          }
+        }
         const raw = localStorage.getItem('geeknook_cart');
         let cart = [];
         try { cart = JSON.parse(raw || '[]'); } catch (e) { cart = []; }
@@ -1567,14 +1586,14 @@
       const numPrice = parseInt(itemData.oldPrice.replace(/\D/g, ''), 10);
 
       // Save to centralized geeknook_cart storage
-      saveToGeekNookCart({
+      if (!saveToGeekNookCart({
         id: productId,
         title: title,
         option: optionStr,
         price: numPrice,
         image: images[productId] || '',
         quantity: 1
-      });
+      })) return;
 
       // Tactile button feedback
       if (btn) {
@@ -1595,9 +1614,14 @@
       }, 550);
     }
 
-    // Initialize cart badge counter on page load
-    document.addEventListener('DOMContentLoaded', updateCategoryCartBadge);
+    // Initialize cart badge counter & live stock on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCategoryCartBadge();
+      syncStandStockUI();
+    });
+    window.addEventListener('geeknook:stock-updated', syncStandStockUI);
     updateCategoryCartBadge();
+    syncStandStockUI();
   </script>
 </body>
 </html>

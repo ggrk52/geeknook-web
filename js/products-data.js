@@ -216,17 +216,28 @@ const GEEKNOOK_DATA = {
         "Крепление": "Паз T-Track или отдельная настольная установка",
         "Покрытие": "Матовая износостойкая порошковая краска"
       },
-      shortDescr: "Эргономичная подставка для геймпадов PlayStation и Xbox. Фиксирует контроллер под удобным углом.",
+      shortDescr: "Эргономичная подставка для геймпадов PlayStation, Xbox и Nintendo Switch. Фиксирует контроллер под удобным углом.",
       fullDescr: "Держатель для контроллера спроектирован с учетом геометрии современных геймпадов. Фетровые демпферы бережно фиксируют корпус, не допуская люфтов и потертостей.",
       images: [
         "images/tild3039-3737-4533-b936-653936613663__2_2.jpg",
         "images/tild3165-3839-4064-b237-353264643561__3_1.jpg"
-      ]
+      ],
+      options: {
+        variants: ["Xbox / PS5", "Nintendo Switch"]
+      },
+      optionPrices: {
+        "Xbox / PS5": 2999,
+        "Nintendo Switch": 2999
+      },
+      skus: {
+        "Xbox / PS5": { sku: "GN-ACC-002", part: "202404210", barcode: "460042888815", price: 2999, dimensions: "19,1 × 6 × 8 см" },
+        "Nintendo Switch": { sku: "GN-ACC-002-NS", part: "202404209", barcode: "460042888814", price: 2999, dimensions: "19,1 × 5,6 × 11,6 см" }
+      }
     },
     {
       id: "phone-dock",
       title: "Phone Dock",
-      subtitle: "Док-станция для телефона",
+      subtitle: "Док-станция для телефона (Сталь / Орех)",
       category: "accessories",
       price: 2999,
       oldPrice: 3800,
@@ -235,7 +246,7 @@ const GEEKNOOK_DATA = {
       barcode: "460042888811",
       rating: 4.8,
       reviewsCount: 35,
-      materials: "Сталь, шерстяной фетр, силикон",
+      materials: "Сталь / американский орех, шерстяной фетр, силикон",
       specs: {
         "Артикул": "202404208 (SKU GN-ACC-003)",
         "Штрихкод (EAN13)": "460042888811",
@@ -245,12 +256,23 @@ const GEEKNOOK_DATA = {
         "Угол наклона": "70 градусов (оптимально для FaceID и видеозвонков)",
         "Крепление": "Нижний направляющий паз Focus Station"
       },
-      shortDescr: "Подвесная док-станция для смартфона. Уведомления считываются взглядом, а стол остаётся свободным.",
-      fullDescr: "Закрепляется по центру или сбоку подставки Focus Station. Позволяет разблокировать телефон взглядом через FaceID прямо во время набора текста на клавиатуре.",
+      shortDescr: "Подвесная или настольная док-станция для смартфона. Доступна в матовой стали и массиве ореха.",
+      fullDescr: "Закрепляется по центру или сбоку подставки Focus Station (стальная версия) либо устанавливается отдельно на столе (версия из американского ореха). Позволяет считывать уведомления и разблокировать телефон через FaceID во время работы.",
       images: [
         "images/tild6566-3439-4264-a237-633566656531__6.jpg",
         "images/phone-dock-walnut.jpg"
-      ]
+      ],
+      options: {
+        variants: ["Чёрный (сталь)", "Орех (Walnut)"]
+      },
+      optionPrices: {
+        "Чёрный (сталь)": 2999,
+        "Орех (Walnut)": 4999
+      },
+      skus: {
+        "Чёрный (сталь)": { sku: "GN-ACC-003", part: "202404208", barcode: "460042888811", price: 2999, dimensions: "14,6 × 4 × 6,1 см", image: "images/tild6566-3439-4264-a237-633566656531__6.jpg" },
+        "Орех (Walnut)": { sku: "GN-ACC-003-W", part: "202404220", barcode: "460042888823", price: 4999, dimensions: "11 × 10,3 × 11 см", image: "images/phone-dock-walnut.jpg" }
+      }
     },
     {
       id: "cable-organizer",
@@ -2323,14 +2345,25 @@ const VERIFIED_CATALOGUE = {
     "variants": [
       {
         "article": "202404208",
-        "option": null,
+        "option": "Чёрный (сталь)",
         "rrp": 2999,
         "dimensions": [
           14.6,
           4.0,
           6.1
         ],
-        "name": "Phone Stand GEEK NOOK  14.6x4x6.1 cm, Black"
+        "name": "Phone Stand GEEK NOOK 14.6x4x6.1 cm, Black"
+      },
+      {
+        "article": "202404220",
+        "option": "Орех (Walnut)",
+        "rrp": 4999,
+        "dimensions": [
+          11.0,
+          10.3,
+          11.0
+        ],
+        "name": "Bracket stand for IPhone, GEEK NOOK 11x10.3x11 cm, Walnut"
       }
     ]
   },
@@ -2340,7 +2373,7 @@ const VERIFIED_CATALOGUE = {
     "variants": [
       {
         "article": "202404210",
-        "option": null,
+        "option": "Xbox / PS5",
         "rrp": 2999,
         "dimensions": [
           19.1,
@@ -2348,6 +2381,17 @@ const VERIFIED_CATALOGUE = {
           8.0
         ],
         "name": "Gamepad Stand GEEK NOOK XBOX 19.1x6x8 cm, Black"
+      },
+      {
+        "article": "202404209",
+        "option": "Nintendo Switch",
+        "rrp": 2999,
+        "dimensions": [
+          19.1,
+          5.6,
+          11.6
+        ],
+        "name": "Gamepad Stand GEEK NOOK Nintendo Switch 19.1x5.6x11.6 cm, Black"
       }
     ]
   },
@@ -2596,15 +2640,15 @@ const legacyAliases = [
     title: "T-Track Magnetic Catch (4 шт.)",
     subtitle: "Комплект неодимовых магнитных фиксаторов N52",
     category: "accessories",
-    price: 1590,
-    oldPrice: 1990,
-    sku: "GN-ACC-005",
-    part: "202404207",
-    barcode: "460042888810",
+    price: 2999,
+    oldPrice: 2999,
+    sku: "GN-MAG-4",
+    part: "GN-MAG-4",
+    barcode: "460042888890",
     images: ["images/tild6565-3263-4938-b233-376334646532__14.jpg"],
     specs: {
-      "Артикул": "202404207 (SKU GN-ACC-005)",
-      "Штрихкод (EAN13)": "460042888810",
+      "Артикул": "GN-MAG-4",
+      "Штрихкод (EAN13)": "460042888890",
       "Комплектность": "4 магнитных фиксатора N52"
     }
   },
@@ -2615,13 +2659,13 @@ const legacyAliases = [
     category: "accessories",
     price: 5490,
     oldPrice: 6890,
-    sku: "GN-ACC-006",
-    part: "202404208",
-    barcode: "460042888811",
+    sku: "GN-STEALTH-KIT",
+    part: "GN-STEALTH-KIT",
+    barcode: "460042888891",
     images: ["images/tild3931-6666-4933-a466-373836393933__1.jpg"],
     specs: {
-      "Артикул": "202404208 (SKU GN-ACC-006)",
-      "Штрихкод (EAN13)": "460042888811",
+      "Артикул": "GN-STEALTH-KIT",
+      "Штрихкод (EAN13)": "460042888891",
       "Состав комплекта": "Подвесной лоток Power Strip + 4 магнитных держателя N52 + клипсы"
     }
   }
@@ -2638,110 +2682,345 @@ GEEKNOOK_DATA.allProducts = [
 const stockSnapshot = {
   "202404201": [
     19999,
-    189
+    6,
+    0
   ],
   "202404202": [
     24999,
-    187
+    6,
+    0
   ],
   "2024042003": [
     19999,
-    199
+    6,
+    0
   ],
   "2024042004": [
     24999,
-    195
+    6,
+    0
   ],
   "202404205": [
     19999,
-    193
+    6,
+    0
   ],
   "2024042006": [
     24999,
-    196
+    6,
+    0
   ],
   "202404203": [
     4999,
-    84
+    6,
+    0
   ],
   "202404204": [
     4999,
-    88
+    6,
+    0
   ],
   "202404206": [
     4999,
-    33
+    6,
+    0
   ],
   "202404207": [
     2999,
-    110
+    6,
+    0
   ],
   "202404208": [
     2999,
-    144
+    6,
+    0
+  ],
+  "202404209": [
+    2999,
+    6,
+    0
   ],
   "202404210": [
     2999,
-    44
+    6,
+    0
   ],
   "202404213": [
     1999,
-    367
+    6,
+    0
   ],
   "202404214": [
     6999,
-    8
+    6,
+    0
   ],
   "202404217": [
     4999,
-    40
+    6,
+    0
   ],
   "202404219": [
     4999,
-    27
+    6,
+    0
   ],
   "202404218": [
     4999,
-    9
+    6,
+    0
+  ],
+  "202404220": [
+    4999,
+    6,
+    0
   ],
   "20240400": [
     1499,
-    185
+    6,
+    0
   ],
   "20240402": [
     2499,
-    226
+    6,
+    0
   ],
   "20240403": [
     2999,
-    223
+    6,
+    0
   ],
   "20240404": [
     1499,
-    190
+    6,
+    0
   ],
   "20240406": [
     2499,
-    435
+    6,
+    0
   ],
   "20240407": [
     2999,
-    227
+    6,
+    0
   ],
   "20240408": [
     1499,
-    1
+    1,
+    0
   ],
   "20240410": [
     2499,
-    437
+    6,
+    0
   ],
   "20240411": [
     2999,
-    217
+    6,
+    0
   ]
 };
-GEEKNOOK_DATA.stockDate = "2026-10-02";
+const stockCatalogTable = {
+  "202404201": {
+    "name": "Подставка под монитор / G4N-202404201 / Monitor Stand GEEK NOOK Focus Station 85x9x23 cm, Walnut",
+    "category": "Подставки",
+    "price": 19999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404202": {
+    "name": "Подставка под монитор / G4N-202404202 / Monitor Stand GEEK NOOK Focus Station 116x9x23 cm, Walnut",
+    "category": "Подставки",
+    "price": 24999,
+    "stock": 6,
+    "capped": true
+  },
+  "2024042003": {
+    "name": "Подставка под монитор / G4N-2024042003 / Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Oak",
+    "category": "Подставки",
+    "price": 19999,
+    "stock": 6,
+    "capped": true
+  },
+  "2024042004": {
+    "name": "Подставка под монитор / G4N-2024042004 / Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Oak",
+    "category": "Подставки",
+    "price": 24999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404205": {
+    "name": "Подставка под монитор / G4N-202404205 / Monitor stand GEEK NOOK Focus Station 85x9x23 cm, Black",
+    "category": "Подставки",
+    "price": 19999,
+    "stock": 6,
+    "capped": true
+  },
+  "2024042006": {
+    "name": "Подставка под монитор / G4N-2024042006 / Monitor stand GEEK NOOK Focus Station 116x9x23 cm, Black",
+    "category": "Подставки",
+    "price": 24999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404203": {
+    "name": "Кронштейн / G4N-202404203 / Laptop Closed GEEK NOOK Bracket 18.8x8.4x13.9 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 4999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404204": {
+    "name": "Кронштейн / G4N-202404204 / Laptop Open GEEK NOOK Bracket 28.2 x 14.8 x 21.2 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 4999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404206": {
+    "name": "Кронштейн / G4N-202404206 / Cable Manager Bracket GEEK NOOK Power Strip 35x7.6x10.6 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 4999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404207": {
+    "name": "Кронштейн / G4N-202404207 / Headphones Stand GEEK NOOK 28.6 x 3.7 x 10.6 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 2999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404208": {
+    "name": "Кронштейн / G4N-202404208 / Phone Stand GEEK NOOK  14.6x4x6.1 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 2999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404209": {
+    "name": "Кронштейн / G4N-202404209 / Gamepad Stand GEEK NOOK Nintendo Switch 19.1x5.6x11.6 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 2999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404210": {
+    "name": "Кронштейн / G4N-202404210 / Gamepad Stand GEEK NOOK XBOX 19.1x6x8 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 2999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404213": {
+    "name": "Кронштейн / G4N-202404213 / Cable Manager GEEK NOOK Mini 4x2.7x5 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 1999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404214": {
+    "name": "Кронштейн / G4N-202404214 / Bracket Shelf GEEK NOOK  45x3.7x23.6 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 6999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404217": {
+    "name": "Кронштейн / G4N-202404217 / Bracket shelf GEEK NOOK for MAC MINI 20x6.7x20 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 4999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404219": {
+    "name": "Кронштейн / G4N-202404219 / Bracket shelf universal GEEK NOOK U-Shelf 20x4.7x20 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 4999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404218": {
+    "name": "Кронштейн / G4N-202404218 / Stand Bracket GEEK NOOK for Nintendo Switch Console 20x7.6x17.4 cm, Black",
+    "category": "Кронштейны и модули",
+    "price": 4999,
+    "stock": 6,
+    "capped": true
+  },
+  "202404220": {
+    "name": "Кронштейн / G4N-202404220 / Bracket stand for IPhone, GEEK NOOK 11x10.3x11 cm, Walnut",
+    "category": "Кронштейны и модули",
+    "price": 4999,
+    "stock": 6,
+    "capped": true
+  },
+  "20240400": {
+    "name": "Коврик для мыши / G4N-20240400 / Mouse pad GEEK NOOK 80*40CM Black Felt",
+    "category": "Коврики",
+    "price": 1499,
+    "stock": 6,
+    "capped": true
+  },
+  "20240402": {
+    "name": "Коврик для мыши / G4N-20240402 / Mouse pad GEEK NOOK 100*50CM Black Felt",
+    "category": "Коврики",
+    "price": 2499,
+    "stock": 6,
+    "capped": true
+  },
+  "20240403": {
+    "name": "Коврик для мыши / G4N-20240403 / Mouse pad GEEK NOOK 120*60CM Black Felt",
+    "category": "Коврики",
+    "price": 2999,
+    "stock": 6,
+    "capped": true
+  },
+  "20240404": {
+    "name": "Коврик для мыши / G4N-20240404 / Mouse pad GEEK NOOK 80*40CM Dark Gray Felt",
+    "category": "Коврики",
+    "price": 1499,
+    "stock": 6,
+    "capped": true
+  },
+  "20240406": {
+    "name": "Коврик для мыши / G4N-20240406 / Mouse pad GEEK NOOK 100*50CM Dark Gray Felt",
+    "category": "Коврики",
+    "price": 2499,
+    "stock": 6,
+    "capped": true
+  },
+  "20240407": {
+    "name": "Коврик для мыши / G4N-20240407 / Mouse pad GEEK NOOK 120*60CM Dark Gray Felt",
+    "category": "Коврики",
+    "price": 2999,
+    "stock": 6,
+    "capped": true
+  },
+  "20240408": {
+    "name": "Коврик для мыши / G4N-20240408 / Mouse pad GEEK NOOK 80*40CM Light Gray Felt",
+    "category": "Коврики",
+    "price": 1499,
+    "stock": 1,
+    "capped": false
+  },
+  "20240410": {
+    "name": "Коврик для мыши / G4N-20240410 / Mouse pad GEEK NOOK 100*50CM Light Gray Felt",
+    "category": "Коврики",
+    "price": 2499,
+    "stock": 6,
+    "capped": true
+  },
+  "20240411": {
+    "name": "Коврик для мыши / G4N-20240411 / Mouse pad GEEK NOOK 120*60CM Light Gray Felt",
+    "category": "Коврики",
+    "price": 2999,
+    "stock": 6,
+    "capped": true
+  }
+};
+GEEKNOOK_DATA.stockDate = "2026-11-24";
+GEEKNOOK_DATA.stockSnapshotHash = "1a196aa0170b01fa";
 // END STOCK IMPORT
 
 const inventoryAliases = {
@@ -2755,6 +3034,20 @@ const inventoryAliases = {
 };
 
 GEEKNOOK_DATA.getProduct = id => GEEKNOOK_DATA.allProducts.find(product => product.id === (inventoryAliases[id] || id));
+GEEKNOOK_DATA.getDefaultOption = (product) => {
+  if (!product) return 'Стандарт';
+  return (product.options?.lengths || product.options?.sizes || product.options?.variants || [])[0] || 'Стандарт';
+};
+GEEKNOOK_DATA.getFirstAvailableOption = (product) => {
+  if (!product) return 'Стандарт';
+  const options = product.options?.lengths || product.options?.sizes || product.options?.variants || [];
+  if (!options.length) return 'Стандарт';
+  const inStockOpt = options.find(opt => {
+    const v = product.skus?.[opt];
+    return v && (v.stock ?? 0) > 0;
+  });
+  return inStockOpt || options[0];
+};
 GEEKNOOK_DATA.getVariant = (id, option = '') => {
   const product = GEEKNOOK_DATA.getProduct(id);
   if (!product) return null;
@@ -2764,18 +3057,40 @@ GEEKNOOK_DATA.getVariant = (id, option = '') => {
   return product.skus?.[selected] || product;
 };
 
-for (const product of GEEKNOOK_DATA.allProducts) {
-  for (const [option, variant] of Object.entries(product.skus || {})) {
-    const entry = stockSnapshot[variant.part];
-    if (!entry) continue;
-    [variant.price, variant.stock] = entry;
-    (product.optionPrices ||= {})[option] = variant.price;
+const syncBaselineCatalogStock = () => {
+  for (const product of GEEKNOOK_DATA.allProducts) {
+    if (product.skus) {
+      for (const [option, variant] of Object.entries(product.skus)) {
+        const entry = stockSnapshot[variant.part];
+        if (entry) {
+          [variant.price, variant.stock, variant.initialSpent = 0] = entry;
+          variant.initialStock = variant.stock + (variant.initialSpent || 0);
+          (product.optionPrices ||= {})[option] = variant.price;
+        } else {
+          // Anything absent from active stock table is strictly unavailable (0 left)
+          variant.stock = 0;
+          variant.initialStock = 0;
+          variant.initialSpent = 0;
+        }
+      }
+      const defVariant = GEEKNOOK_DATA.getVariant(product.id);
+      if (defVariant && defVariant !== product) {
+        product.price = defVariant.price || product.price;
+      }
+    } else {
+      const entry = stockSnapshot[product.part];
+      if (entry) {
+        [product.price, product.stock, product.initialSpent = 0] = entry;
+        product.initialStock = product.stock + (product.initialSpent || 0);
+      } else {
+        product.stock = 0;
+        product.initialStock = 0;
+        product.initialSpent = 0;
+      }
+    }
   }
-  const variant = GEEKNOOK_DATA.getVariant(product.id);
-  const entry = stockSnapshot[variant?.part];
-  if (entry && variant === product) [product.price, product.stock] = entry;
-  else if (entry) product.price = variant.price;
-}
+};
+syncBaselineCatalogStock();
 
 const bundleOptions = {
   'bundle-developer-pro': ['85 см', '', '', '80 × 40 см'],
@@ -2790,6 +3105,617 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
   const product = GEEKNOOK_DATA.getProduct(addon.id);
   if (product) addon.price = product.price;
 }
+
+// --- LIVE REACTIVE STOCK LEDGER ENGINE ---
+(function initGeekNookStockEngine() {
+  const STORAGE_KEY = 'geeknook_stock_ledger';
+  const CHANNEL_NAME = 'geeknook_stock_sync';
+  const listeners = new Set();
+  const baseTable = {};
+
+  const MAX_PUBLIC_QTY = 20;
+  const DEFAULT_STOCK_WORKER_URL = 'https://geeknook-stock.sergeykozlov2006.workers.dev';
+
+  for (const [code, entry] of Object.entries(stockSnapshot)) {
+    const meta = stockCatalogTable[code] || {};
+    const freeStock = Number(entry[1]) || 0;
+    const initialSpent = Number(entry[2] ?? meta.initialSpent ?? 0) || 0;
+    baseTable[code] = {
+      code,
+      name: meta.name || `Товар ${code}`,
+      category: meta.category || 'Каталог',
+      price: Number(entry[0] ?? meta.price ?? 0) || 0,
+      initialStock: meta.initialStock ?? (freeStock + initialSpent),
+      initialSpent,
+      baseFreeStock: freeStock,
+      capped: meta.capped ?? (freeStock >= 6)
+    };
+  }
+
+  let serverItems = null;
+  let serverMovements = null;
+  let serverConnected = false;
+
+  const emptyLedger = () => ({
+    snapshotHash: GEEKNOOK_DATA.stockSnapshotHash || '',
+    stockDate: GEEKNOOK_DATA.stockDate || '',
+    deductions: {},
+    committedOrders: [],
+    movements: [],
+    customOverride: null,
+    updatedAt: null
+  });
+
+  const getStorage = () => {
+    try {
+      if (typeof window !== 'undefined' && window.localStorage) return window.localStorage;
+    } catch (_) {}
+    return null;
+  };
+
+  const readLedger = () => {
+    const store = getStorage();
+    if (!store) return emptyLedger();
+    try {
+      const raw = store.getItem(STORAGE_KEY);
+      if (!raw) return emptyLedger();
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== 'object') return emptyLedger();
+      const curHash = GEEKNOOK_DATA.stockSnapshotHash || '';
+      // If a newer stock table was deployed in repo, discard obsolete deltas from old tables
+      if (curHash && parsed.snapshotHash && parsed.snapshotHash !== curHash) {
+        const fresh = emptyLedger();
+        try { store.setItem(STORAGE_KEY, JSON.stringify(fresh)); } catch (_) {}
+        return fresh;
+      }
+      return {
+        ...emptyLedger(),
+        ...parsed,
+        deductions: (parsed.deductions && typeof parsed.deductions === 'object') ? parsed.deductions : {},
+        committedOrders: Array.isArray(parsed.committedOrders) ? parsed.committedOrders : [],
+        movements: Array.isArray(parsed.movements) ? parsed.movements : []
+      };
+    } catch (_) {
+      return emptyLedger();
+    }
+  };
+
+  const writeLedger = (ledger) => {
+    const store = getStorage();
+    if (!store) return;
+    try {
+      store.setItem(STORAGE_KEY, JSON.stringify(ledger));
+    } catch (_) {}
+  };
+
+  const emitUpdate = (detail = {}) => {
+    listeners.forEach(fn => {
+      try { fn(detail); } catch (_) {}
+    });
+    if (typeof window !== 'undefined' && typeof window.dispatchEvent === 'function') {
+      try {
+        window.dispatchEvent(new CustomEvent('geeknook:stock-updated', { detail }));
+      } catch (_) {}
+    }
+  };
+
+  let bc = null;
+  if (typeof window !== 'undefined' && typeof window.BroadcastChannel !== 'undefined') {
+    try {
+      bc = new window.BroadcastChannel(CHANNEL_NAME);
+      bc.onmessage = (event) => {
+        if (event?.data?.type === 'STOCK_SYNC') {
+          applyAllToCatalog();
+          emitUpdate({ source: 'broadcast' });
+        }
+      };
+    } catch (_) {}
+  }
+  if (typeof window !== 'undefined') {
+    window.addEventListener('storage', (e) => {
+      if (e.key === STORAGE_KEY || e.key === 'geeknook_cart') {
+        applyAllToCatalog();
+        emitUpdate({ source: 'storage' });
+      }
+    });
+  }
+
+  const getComputedTable = () => {
+    const ledger = readLedger();
+    const sourceTable = (ledger.customOverride && typeof ledger.customOverride === 'object')
+      ? ledger.customOverride
+      : baseTable;
+    const result = {};
+    for (const [code, row] of Object.entries(sourceTable)) {
+      const serverRow = serverItems?.[code];
+      const baseFree = serverRow ? Number(serverRow.stock) : Number(row.baseFreeStock ?? row.stock ?? 0);
+      const localDelta = serverRow ? 0 : (Number(ledger.deductions[code]) || 0);
+      const initialStock = serverRow
+        ? Number(serverRow.initialStock ?? serverRow.stock ?? 0)
+        : Number(row.initialStock ?? (baseFree + (Number(row.initialSpent) || 0)));
+      const initialSpent = serverRow ? Number(serverRow.initialSpent || 0) : (Number(row.initialSpent) || 0);
+      const orderSpent = serverRow ? Number(serverRow.orderSpent || 0) : Math.max(0, localDelta);
+      const stock = Math.max(0, baseFree - localDelta);
+      const capped = serverRow ? Boolean(serverRow.capped) : (Boolean(row.capped) && stock >= 6);
+      const totalSpent = serverRow ? Number(serverRow.totalSpent ?? (initialSpent + orderSpent)) : (initialSpent + orderSpent);
+      result[code] = {
+        code,
+        name: serverRow?.name || row.name || `Товар ${code}`,
+        category: serverRow?.category || row.category || 'Каталог',
+        price: Number(serverRow?.price ?? row.price ?? 0) || 0,
+        initialStock,
+        initialSpent,
+        orderSpent,
+        totalSpent,
+        stock,
+        capped
+      };
+    }
+    return result;
+  };
+
+  const applyAllToCatalog = () => {
+    const computed = getComputedTable();
+    for (const product of GEEKNOOK_DATA.allProducts) {
+      if (product.skus) {
+        for (const variant of Object.values(product.skus)) {
+          const entry = computed[variant.part];
+          if (entry) {
+            variant.stock = entry.stock;
+            variant.stockCapped = Boolean(entry.capped);
+            variant.initialStock = entry.initialStock;
+            variant.totalSpent = entry.totalSpent;
+            if (entry.price > 0) variant.price = entry.price;
+          } else {
+            variant.stock = 0;
+            variant.stockCapped = false;
+            variant.initialStock = 0;
+            variant.totalSpent = 0;
+          }
+        }
+        const firstVar = GEEKNOOK_DATA.getVariant(product.id);
+        if (firstVar && firstVar !== product && firstVar.price) {
+          product.price = firstVar.price;
+        }
+      } else {
+        const entry = computed[product.part];
+        if (entry) {
+          product.stock = entry.stock;
+          product.stockCapped = Boolean(entry.capped);
+          product.initialStock = entry.initialStock;
+          product.totalSpent = entry.totalSpent;
+          if (entry.price > 0) product.price = entry.price;
+        } else {
+          product.stock = 0;
+          product.stockCapped = false;
+          product.initialStock = 0;
+          product.totalSpent = 0;
+        }
+      }
+    }
+    return computed;
+  };
+
+  applyAllToCatalog();
+
+  const expandItems = (items = []) => {
+    const counts = new Map();
+    const metaByCode = new Map();
+    for (const rawItem of items) {
+      if (!rawItem || !rawItem.id) continue;
+      const itemQty = Math.max(1, parseInt(rawItem.quantity, 10) || 1);
+      const bundle = GEEKNOOK_DATA.bundles?.find(b => b.id === rawItem.id);
+      const components = bundle ? bundle.components : [{ id: rawItem.id, option: rawItem.option || '' }];
+      for (const comp of components) {
+        const product = GEEKNOOK_DATA.getProduct(comp.id);
+        const opt = (comp.option && comp.option !== 'Стандарт') ? comp.option : (product ? GEEKNOOK_DATA.getDefaultOption(product) : '');
+        const variant = GEEKNOOK_DATA.getVariant(comp.id, opt);
+        const code = variant?.part || product?.part || comp.id;
+        const available = Number.isInteger(variant?.stock) ? variant.stock : 0;
+        counts.set(code, (counts.get(code) || 0) + itemQty);
+        if (!metaByCode.has(code)) {
+          metaByCode.set(code, {
+            code,
+            title: product?.title || rawItem.title || code,
+            option: opt && opt !== 'Стандарт' ? opt : '',
+            available
+          });
+        }
+      }
+    }
+    return { counts, metaByCode };
+  };
+
+  const getProductTotalStock = (product) => {
+    if (!product) return 0;
+    const bundle = GEEKNOOK_DATA.bundles?.find(b => b.id === product.id);
+    if (bundle) {
+      const stocks = (bundle.components || []).map(comp => {
+        const v = GEEKNOOK_DATA.getVariant(comp.id, comp.option || '');
+        return Number.isInteger(v?.stock) ? v.stock : 0;
+      });
+      return stocks.length ? Math.min(...stocks) : 0;
+    }
+    const variants = product.skus ? Object.values(product.skus) : [product];
+    return variants.reduce((sum, v) => sum + (Number.isInteger(v?.stock) ? Math.max(0, v.stock) : 0), 0);
+  };
+
+  const getVariantStock = (id, option = '') => {
+    const bundle = GEEKNOOK_DATA.bundles?.find(b => b.id === id);
+    if (bundle) {
+      const stocks = (bundle.components || []).map(comp => {
+        const v = GEEKNOOK_DATA.getVariant(comp.id, comp.option || '');
+        return Number.isInteger(v?.stock) ? v.stock : 0;
+      });
+      return stocks.length ? Math.min(...stocks) : 0;
+    }
+    const v = GEEKNOOK_DATA.getVariant(id, option);
+    return Number.isInteger(v?.stock) ? Math.max(0, v.stock) : 0;
+  };
+
+  const getApiEndpoint = () => {
+    if (typeof window === 'undefined') return '';
+    const explicit = window.GEEKNOOK_STOCK_API_URL || window.GEEKNOOK_WORKER_URL || DEFAULT_STOCK_WORKER_URL || '';
+    if (explicit) return String(explicit).replace(/\/+$/, '');
+    const apiBase = (window.GEEKNOOK_API_BASE_URL || '').replace(/\/$/, '');
+    if (apiBase) return `${apiBase}/api/stock.php`;
+    if (window.GEEKNOOK_ENABLE_STOCK_API === true) return '/api/stock.php';
+    return '';
+  };
+
+  const syncWithServer = async () => {
+    const endpoint = getApiEndpoint();
+    if (!endpoint || typeof fetch !== 'function') return null;
+    try {
+      const res = await fetch(endpoint, { method: 'GET', cache: 'no-store' });
+      const ctype = res.headers?.get?.('content-type') || '';
+      if (!res.ok || !ctype.includes('application/json')) return null;
+      const json = await res.json();
+      if (json && json.success && json.items && Object.keys(json.items).length > 0) {
+        serverItems = json.items;
+        serverMovements = Array.isArray(json.recentMovements) ? json.recentMovements : [];
+        serverConnected = true;
+        applyAllToCatalog();
+        emitUpdate({ source: 'server' });
+        return json;
+      }
+    } catch (_) {}
+    return null;
+  };
+
+  const checkAvailability = async (additions = [], existingCart = [], includeExisting = true) => {
+    const combined = [...(includeExisting ? existingCart : []), ...additions];
+    const { counts, metaByCode } = expandItems(combined);
+    const shortages = [];
+    for (const [code, reqQty] of counts.entries()) {
+      const info = metaByCode.get(code) || { code, available: 0, title: code };
+      const vEntry = getComputedTable()[code];
+      const maxClient = vEntry?.capped ? MAX_PUBLIC_QTY : info.available;
+      if (reqQty > maxClient) {
+        shortages.push({ ...info, available: maxClient, requested: reqQty });
+      }
+    }
+    if (shortages.length > 0) {
+      return { ok: false, shortages, counts };
+    }
+    const endpoint = getApiEndpoint();
+    if (endpoint && typeof fetch === 'function') {
+      try {
+        const itemsPayload = Array.from(counts.entries()).map(([code, quantity]) => ({ code, quantity }));
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action: 'check', items: itemsPayload })
+        });
+        const ctype = res.headers?.get?.('content-type') || '';
+        if (ctype.includes('application/json')) {
+          const json = await res.json();
+          if (json && json.items) {
+            serverItems = json.items;
+            serverConnected = true;
+            applyAllToCatalog();
+            emitUpdate({ source: 'server' });
+          }
+          if (res.status === 409 || json?.ok === false || json?.outOfStock) {
+            return {
+              ok: false,
+              shortages: json.shortages || shortages,
+              error: json.error || 'Недостаточно товара на складе'
+            };
+          }
+        }
+      } catch (_) {}
+    }
+    return { ok: true, shortages: [], counts };
+  };
+
+  const commitOrder = async (orderNumber, items = [], orderType = 'cart') => {
+    const safeOrderNo = String(orderNumber || `GN-${Date.now()}`).trim();
+    const { counts } = expandItems(items);
+    if (!counts.size) return { ok: true, deducted: {} };
+
+    const ledger = readLedger();
+    if (ledger.committedOrders.includes(safeOrderNo)) {
+      return { ok: true, alreadyCommitted: true, deducted: {} };
+    }
+
+    const movementItems = Array.from(counts.entries()).map(([code, qty]) => ({ code, qty }));
+    const endpoint = getApiEndpoint();
+    if (endpoint && typeof fetch === 'function') {
+      try {
+        const res = await fetch(endpoint, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'commit',
+            orderNumber: safeOrderNo,
+            order_number: safeOrderNo,
+            orderType,
+            type: orderType,
+            items: movementItems.map(m => ({ code: m.code, quantity: m.qty }))
+          })
+        });
+        const ctype = res.headers?.get?.('content-type') || '';
+        if (ctype.includes('application/json')) {
+          const json = await res.json();
+          if (json && json.items) {
+            serverItems = json.items;
+            serverMovements = Array.isArray(json.recentMovements) ? json.recentMovements : serverMovements;
+            serverConnected = true;
+          }
+          if (res.status === 409 || json?.outOfStock || json?.ok === false) {
+            applyAllToCatalog();
+            emitUpdate({ source: 'server-conflict', orderNumber: safeOrderNo });
+            return {
+              ok: false,
+              conflict: true,
+              error: json?.error || 'Товар закончился на складе'
+            };
+          }
+        }
+      } catch (_) {}
+    }
+
+    const deducted = {};
+    for (const { code, qty } of movementItems) {
+      ledger.deductions[code] = (Number(ledger.deductions[code]) || 0) + qty;
+      deducted[code] = qty;
+    }
+    ledger.committedOrders.push(safeOrderNo);
+    if (ledger.committedOrders.length > 100) ledger.committedOrders.shift();
+    ledger.movements.unshift({
+      timestamp: new Date().toISOString(),
+      orderNumber: safeOrderNo,
+      type: orderType,
+      items: movementItems
+    });
+    if (ledger.movements.length > 50) ledger.movements.length = 50;
+    ledger.updatedAt = new Date().toISOString();
+    writeLedger(ledger);
+
+    applyAllToCatalog();
+    emitUpdate({ source: 'order', orderNumber: safeOrderNo, deducted });
+    if (bc) {
+      try { bc.postMessage({ type: 'STOCK_SYNC', orderNumber: safeOrderNo }); } catch (_) {}
+    }
+    return { ok: true, deducted };
+  };
+
+  const resetLocalLedger = () => {
+    const fresh = emptyLedger();
+    writeLedger(fresh);
+    serverItems = null;
+    serverMovements = null;
+    applyAllToCatalog();
+    emitUpdate({ source: 'reset' });
+    if (bc) {
+      try { bc.postMessage({ type: 'STOCK_SYNC' }); } catch (_) {}
+    }
+  };
+
+  const importCustomCsv = (csvText, newDate = new Date().toISOString().slice(0, 10)) => {
+    const lines = String(csvText || '').replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim());
+    if (lines.length < 2) throw new Error('Пустой CSV файл');
+    const parseLine = (line) => {
+      const cells = [];
+      let cur = '';
+      let inQuotes = false;
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        if (ch === '"') {
+          if (inQuotes && line[i + 1] === '"') { cur += '"'; i++; }
+          else inQuotes = !inQuotes;
+        } else if ((ch === ',' || ch === ';') && !inQuotes) {
+          cells.push(cur.trim());
+          cur = '';
+        } else {
+          cur += ch;
+        }
+      }
+      cells.push(cur.trim());
+      return cells;
+    };
+    const headers = parseLine(lines[0]);
+    const idxCode = headers.indexOf('Code');
+    const idxDesc = headers.indexOf('Description');
+    const idxStock = headers.indexOf('Free Stock');
+    const idxPrice = headers.indexOf('РРЦ');
+    const idxSpent = headers.indexOf('Расход');
+    if (idxCode === -1 || idxStock === -1) {
+      throw new Error('Нужны колонки Code и Free Stock');
+    }
+    const override = {};
+    for (let i = 1; i < lines.length; i++) {
+      const cols = parseLine(lines[i]);
+      const code = (cols[idxCode] || '').trim();
+      if (!code) continue;
+      const freeStock = Math.max(0, parseInt(cols[idxStock], 10) || 0);
+      const spent = idxSpent !== -1 ? Math.max(0, parseInt(cols[idxSpent], 10) || 0) : 0;
+      const desc = idxDesc !== -1 ? (cols[idxDesc] || `Товар ${code}`) : (baseTable[code]?.name || `Товар ${code}`);
+      const price = idxPrice !== -1 ? (parseInt(cols[idxPrice], 10) || baseTable[code]?.price || 0) : (baseTable[code]?.price || 0);
+      const lower = desc.toLowerCase();
+      const cat = lower.includes('подставка под монитор') || lower.includes('focus station') ? 'Подставки'
+        : (lower.includes('коврик') || lower.includes('mouse pad') ? 'Коврики' : 'Кронштейны и модули');
+      override[code] = {
+        code,
+        name: desc,
+        category: cat,
+        price,
+        initialStock: freeStock + spent,
+        initialSpent: spent,
+        baseFreeStock: freeStock
+      };
+    }
+    const ledger = emptyLedger();
+    ledger.stockDate = newDate;
+    ledger.customOverride = override;
+    ledger.updatedAt = new Date().toISOString();
+    writeLedger(ledger);
+    applyAllToCatalog();
+    emitUpdate({ source: 'csv-import' });
+    if (bc) {
+      try { bc.postMessage({ type: 'STOCK_SYNC' }); } catch (_) {}
+    }
+    return Object.keys(override).length;
+  };
+
+  const exportCsv = () => {
+    const computed = getComputedTable();
+    const esc = (v) => {
+      const s = String(v ?? '');
+      return /[",\n;]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+    };
+    const rows = ['Code,Description,Free Stock,РРЦ,Расход'];
+    for (const row of Object.values(computed)) {
+      rows.push([esc(row.code), esc(row.name), row.stock, row.price, row.totalSpent].join(','));
+    }
+    return rows.join('\n');
+  };
+
+  const canAddFromStorage = (productId, optionName = '', extraQty = 1) => {
+    applyAllToCatalog();
+    const store = getStorage();
+    let cart = [];
+    if (store) {
+      try {
+        const parsed = JSON.parse(store.getItem('geeknook_cart') || '[]');
+        if (Array.isArray(parsed)) cart = parsed;
+      } catch (_) {}
+    }
+    const candidate = [{ id: productId, option: optionName || '', quantity: Math.max(1, parseInt(extraQty, 10) || 1) }];
+    const { counts, metaByCode } = expandItems([...cart, ...candidate]);
+    const shortages = [];
+    for (const [code, reqQty] of counts.entries()) {
+      const info = metaByCode.get(code) || { code, available: 0, title: code };
+      const vEntry = getComputedTable()[code];
+      const maxClient = vEntry?.capped ? MAX_PUBLIC_QTY : info.available;
+      if (reqQty > maxClient) {
+        shortages.push({ ...info, available: maxClient, requested: reqQty });
+      }
+    }
+    const { counts: candCounts } = expandItems(candidate);
+    let minAvailable = Infinity;
+    for (const [code] of candCounts.entries()) {
+      const entry = getComputedTable()[code];
+      minAvailable = Math.min(minAvailable, entry ? entry.stock : 0);
+    }
+    if (minAvailable === Infinity) minAvailable = 0;
+    return {
+      ok: shortages.length === 0,
+      shortages,
+      available: minAvailable,
+      error: shortages[0]
+        ? (shortages[0].available === 0
+          ? 'Товар временно отсутствует на складе'
+          : (shortages[0].available <= 5
+            ? `Осталось всего ${shortages[0].available} шт. — больше оформить нельзя`
+            : 'Превышен доступный остаток на складе для онлайн-заказа'))
+        : ''
+    };
+  };
+
+  const renderCategoryBadge = (cardEl, productId, optionName = '') => {
+    if (!cardEl) return;
+    applyAllToCatalog();
+    const avail = getVariantStock(productId, optionName);
+    const btn = cardEl.querySelector('.btn-buy, .btn-card-buy');
+    let badge = cardEl.querySelector('.cat-stock-line');
+    if (!badge) {
+      badge = document.createElement('div');
+      badge.className = 'cat-stock-line';
+      badge.style.cssText = 'font-size:0.78rem;font-weight:600;margin:8px 0 4px;';
+      const footer = cardEl.querySelector('.card-footer, .card-actions, .card-price-row');
+      if (footer && footer.parentNode) footer.parentNode.insertBefore(badge, footer);
+      else cardEl.appendChild(badge);
+    }
+    badge.style.color = avail <= 0 ? '#ef4444' : (avail <= 5 ? '#f59e0b' : '#10b981');
+    badge.textContent = avail <= 0
+      ? '● Нет в наличии'
+      : (avail <= 5 ? `● Осталось: ${avail} шт.` : '● В наличии');
+    if (btn) {
+      btn.disabled = avail <= 0;
+      btn.style.opacity = avail <= 0 ? '0.45' : '';
+      btn.style.cursor = avail <= 0 ? 'not-allowed' : '';
+      const sp = btn.querySelector('span');
+      if (sp && !btn.dataset.origLabel) btn.dataset.origLabel = sp.textContent;
+      if (sp) sp.textContent = avail <= 0 ? 'Нет в наличии' : (btn.dataset.origLabel || 'В корзину');
+    }
+  };
+
+  const getVariantMaxOrderQty = (id, option = '') => {
+    const bundle = GEEKNOOK_DATA.bundles?.find(b => b.id === id);
+    if (bundle) {
+      const limits = (bundle.components || []).map(comp => {
+        const v = GEEKNOOK_DATA.getVariant(comp.id, comp.option || '');
+        if (!v || !Number.isInteger(v.stock) || v.stock <= 0) return 0;
+        return v.stockCapped ? MAX_PUBLIC_QTY : v.stock;
+      });
+      return limits.length ? Math.min(...limits) : 0;
+    }
+    const v = GEEKNOOK_DATA.getVariant(id, option);
+    if (!v || !Number.isInteger(v.stock) || v.stock <= 0) return 0;
+    return v.stockCapped ? MAX_PUBLIC_QTY : v.stock;
+  };
+
+  GEEKNOOK_DATA.stock = {
+    getTable: getComputedTable,
+    getAllInventory: () => Object.values(getComputedTable()),
+    getByCode: (code) => getComputedTable()[String(code || '').trim()] || null,
+    getVariantStock,
+    getVariantMaxOrderQty,
+    getProductTotalStock,
+    getApiEndpoint,
+    expandItems,
+    canAddFromStorage,
+    renderCategoryBadge,
+    checkAvailability,
+    commitOrder,
+    applyAllToCatalog,
+    syncWithServer,
+    resetLocalLedger,
+    importCustomCsv,
+    exportCsv,
+    getMovements: () => serverMovements || readLedger().movements,
+    getMeta: () => {
+      const ledger = readLedger();
+      return {
+        stockDate: ledger.stockDate || GEEKNOOK_DATA.stockDate,
+        updatedAt: ledger.updatedAt,
+        serverConnected,
+        isEndpointConfigured: Boolean(getApiEndpoint()),
+        hasCustomOverride: Boolean(ledger.customOverride)
+      };
+    },
+    subscribe: (fn) => {
+      if (typeof fn === 'function') listeners.add(fn);
+      return () => listeners.delete(fn);
+    }
+  };
+
+  if (typeof window !== 'undefined' && getApiEndpoint()) {
+    syncWithServer();
+  }
+})();
 
 if (typeof window !== 'undefined') {
   window.GEEKNOOK_DATA = GEEKNOOK_DATA;

@@ -2,7 +2,7 @@
 <html lang="ru" data-theme="dark">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="object-src 'none'; base-uri 'self'; form-action 'self' https://formsubmit.co https://forms.tildacdn.com https://geeknook.ru https://www.geeknook.ru; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GEEK NOOK — подставки под монитор и аксессуары для стола</title>
@@ -1396,18 +1396,18 @@
               <span class="card-discount-pill"><span class="discount-pill-tag">−20%</span></span>
             </div>
           </div>
-          <div class="card-stock-indicator in-stock">
+          <div class="card-stock-indicator out-of-stock">
             <span class="stock-pulse-dot"></span>
-            <span class="stock-text">Отправка со склада за 2 рабочих дня</span>
+            <span class="stock-text">Нет в наличии</span>
           </div>
           <div class="card-actions-row">
             <a href="#desk-mat-double" class="btn-card-details" onclick="window.geekNookApp.openQuickView('desk-mat-double'); return false;">
               <span>Подробнее</span>
             </a>
-            <button type="button" class="btn-card-one-click" onclick="window.geekNookApp.openQuickBuy('desk-mat-double'); event.stopPropagation();" title="Быстрый заказ в 1 клик">
-              <span>В 1 клик</span>
+            <button type="button" class="btn-card-one-click" disabled onclick="window.geekNookApp.openQuickBuy('desk-mat-double'); event.stopPropagation();" title="Быстрый заказ в 1 клик">
+              <span>Нет в наличии</span>
             </button>
-            <button class="btn-card-quick-add" onclick="window.geekNookApp.quickAddWithFeedback(this, 'desk-mat-double'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Desk Mat Double» в корзину">
+            <button class="btn-card-quick-add" disabled onclick="window.geekNookApp.quickAddWithFeedback(this, 'desk-mat-double'); event.stopPropagation();" title="Добавить в корзину" aria-label="Добавить «Desk Mat Double» в корзину">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
             </button>
           </div>

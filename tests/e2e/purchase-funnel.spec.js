@@ -12,7 +12,7 @@ test('Focus Station selection and checkout emit each funnel event once on mobile
   await expect(page.locator('#focus-station-walnut .price-current')).toContainText('15 999');
   await page.locator('#focus-station-walnut .btn-card-details').click();
   const modal = page.locator('#quickViewModal');
-  await expect(modal.locator('.qv-live-stock-badge')).toContainText('В наличии: 189 шт.');
+  await expect(modal.locator('.qv-live-stock-badge')).toContainText('В наличии •');
   await expect(modal.locator('.qv-trust-badges')).toContainText('Гарантия 6 месяцев');
   await expect(modal.locator('.qv-order-terms')).toContainText('Осмотрите товар до оплаты');
   await expect(modal.locator('.qv-fit-guide')).toContainText('выбираются отдельно');

@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /stock.html
+Disallow: /stock
+Disallow: /api/
+Disallow: /data/
 
 Sitemap: https://geeknook.ru/sitemap.xml
 

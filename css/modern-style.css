@@ -1294,6 +1294,60 @@ textarea:focus-visible {
   flex-shrink: 0;
 }
 
+.card-stock-indicator.low-stock {
+  color: #d97706;
+}
+
+[data-theme="dark"] .card-stock-indicator.low-stock {
+  color: #fbbf24;
+}
+
+.card-stock-indicator.low-stock .stock-pulse-dot {
+  background: #f59e0b;
+}
+
+.card-stock-indicator.out-of-stock {
+  color: #dc2626;
+}
+
+[data-theme="dark"] .card-stock-indicator.out-of-stock {
+  color: #f87171;
+}
+
+.card-stock-indicator.out-of-stock .stock-pulse-dot {
+  background: #ef4444;
+}
+
+.bundle-stock-status {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #10b981;
+  margin-bottom: 10px;
+}
+
+.bundle-stock-status.low-stock {
+  color: #f59e0b;
+}
+
+.bundle-stock-status.out-of-stock {
+  color: #ef4444;
+}
+
+.cart-item-stock-note {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #f59e0b;
+  margin-bottom: 4px;
+}
+
+.product-item-card button:disabled,
+.btn-bundle-buy:disabled,
+.qty-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
 .stock-pulse-dot::after {
   display: none !important;
 }
@@ -12290,122 +12344,6 @@ textarea.input-error {
   }
 }
 
-@media (max-width: 768px) {
-  .anatomy-section {
-    position: relative;
-    height: 250vh;
-    overflow: visible;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  .anatomy-sticky-container {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
-    gap: 4px;
-    padding: 62px 14px 40px;
-    box-sizing: border-box;
-    z-index: 2;
-  }
-  .anatomy-header-wrap {
-    margin-bottom: 2px;
-    width: 100%;
-  }
-  .anatomy-header-row {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    width: 100%;
-  }
-  .anatomy-header-left {
-    min-width: 0;
-    width: 100%;
-  }
-  .anatomy-header-left .section-kicker {
-    font-size: 0.65rem;
-    letter-spacing: 0.04em;
-    margin-bottom: 2px;
-    display: block;
-  }
-  .anatomy-header-left .block-title {
-    font-size: clamp(1.05rem, 4.5vw, 1.25rem);
-    line-height: 1.2;
-    margin: 0 0 4px 0;
-  }
-  .anatomy-sub {
-    display: none;
-  }
-  .anatomy-controls-side {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    gap: 8px;
-    width: 100%;
-  }
-  .anatomy-stepper-pills {
-    display: flex;
-    gap: 5px;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    flex: 1;
-    min-width: 0;
-    padding: 2px 0;
-  }
-  .anatomy-step-pill {
-    padding: 4px 8px;
-    font-size: 0.68rem;
-    min-height: 28px;
-    height: 28px;
-    border-radius: 6px;
-    white-space: nowrap;
-    flex-shrink: 0;
-    position: relative;
-  }
-  .anatomy-step-pill::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    min-height: 44px;
-    height: 44px;
-  }
-  .anatomy-nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    flex-shrink: 0;
-  }
-  .anatomy-counter {
-    font-size: 0.7rem;
-    min-width: 42px;
-  }
-  .anatomy-arrow-btn {
-    width: 28px;
-    height: 28px;
-    min-height: 28px;
-    min-width: 28px;
-    padding: 0;
-    border-radius: 6px;
-  }
-  .anatomy-progress-track {
-    margin-top: 4px;
-    height: 2px;
-  }
-}
-
 .anatomy-header-wrap {
   margin-bottom: 24px;
 }
@@ -12442,32 +12380,12 @@ textarea.input-error {
   gap: 12px;
 }
 
-@media (max-width: 768px) {
-  .anatomy-controls-side {
-    align-items: flex-start;
-    width: 100%;
-  }
-}
-
 /* Stepper Pills */
 .anatomy-stepper-pills {
   display: flex;
   align-items: center;
   gap: 8px;
   max-width: 100%;
-}
-
-@media (max-width: 768px) {
-  .anatomy-stepper-pills {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    padding-bottom: 4px;
-    width: 100%;
-  }
-  .anatomy-stepper-pills::-webkit-scrollbar {
-    display: none;
-  }
 }
 
 .anatomy-step-pill {
@@ -12600,95 +12518,6 @@ textarea.input-error {
     transition: transform 0.05s linear;
     padding: 10px 0 20px;
     box-sizing: border-box;
-  }
-}
-
-@media (max-width: 768px) {
-  .anatomy-rail-viewport {
-    overflow: hidden;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .anatomy-rail-viewport::-webkit-scrollbar {
-    display: none;
-  }
-  .anatomy-rail-track {
-    display: flex;
-    gap: 14px;
-    width: max-content;
-    padding: 6px 0 16px;
-    box-sizing: border-box;
-    will-change: transform;
-    transition: transform 0.05s linear;
-  }
-  .anatomy-card {
-    width: clamp(280px, 84vw, 340px);
-    max-width: 84vw;
-    height: auto;
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    border-radius: 14px;
-    overflow: hidden;
-  }
-  .anatomy-card-content {
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    gap: 4px;
-    box-sizing: border-box;
-  }
-  .anatomy-card-meta {
-    margin-bottom: 2px;
-    gap: 4px;
-  }
-  .anatomy-card-level {
-    font-size: 0.62rem;
-  }
-  .anatomy-card-tag {
-    font-size: 0.62rem;
-  }
-  .anatomy-card-title {
-    font-size: 0.95rem;
-    line-height: 1.2;
-    margin-bottom: 4px;
-  }
-  .anatomy-card-desc {
-    font-size: 0.74rem;
-    line-height: 1.35;
-    margin-bottom: 4px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .anatomy-specs-row {
-    gap: 4px;
-    margin-bottom: 4px;
-  }
-  .anatomy-spec-box {
-    padding: 3px 6px;
-    border-radius: 6px;
-  }
-  .anatomy-spec-val {
-    font-size: 0.8rem;
-  }
-  .anatomy-spec-lbl {
-    font-size: 0.58rem;
-  }
-  .anatomy-card-visual {
-    height: 105px;
-    min-height: 105px;
-    max-height: 105px;
-    order: -1;
-  }
-  .anatomy-card-btn {
-    padding: 4px 10px;
-    font-size: 0.72rem;
-    min-height: 30px;
-    height: 30px;
   }
 }
 
@@ -12871,92 +12700,6 @@ textarea.input-error {
   height: 100%;
 }
 
-@media (max-width: 768px) {
-  .anatomy-card {
-    width: clamp(280px, 84vw, 340px) !important;
-    max-width: 84vw !important;
-    height: auto !important;
-    max-height: calc(100vh - 210px) !important;
-    border-radius: 14px !important;
-    overflow: hidden !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: flex-start !important;
-  }
-  .anatomy-card-visual {
-    height: 105px !important;
-    min-height: 105px !important;
-    max-height: 105px !important;
-    order: -1 !important;
-  }
-  .anatomy-card-content {
-    padding: 8px 12px !important;
-    gap: 4px !important;
-    box-sizing: border-box !important;
-  }
-  .anatomy-card-meta {
-    margin-bottom: 2px !important;
-    gap: 4px !important;
-  }
-  .anatomy-card-level,
-  .anatomy-card-tag {
-    font-size: 0.6rem !important;
-    padding: 2px 6px !important;
-  }
-  .anatomy-card-title {
-    font-size: 0.95rem !important;
-    line-height: 1.2 !important;
-    margin-bottom: 2px !important;
-  }
-  .anatomy-card-desc {
-    font-size: 0.72rem !important;
-    line-height: 1.3 !important;
-    margin-bottom: 4px !important;
-    display: -webkit-box !important;
-    -webkit-line-clamp: 2 !important;
-    -webkit-box-orient: vertical !important;
-    overflow: hidden !important;
-  }
-  .anatomy-specs-row {
-    display: grid !important;
-    grid-template-columns: repeat(3, 1fr) !important;
-    gap: 4px !important;
-    padding: 4px 6px !important;
-    margin-bottom: 4px !important;
-    border-radius: 8px !important;
-  }
-  .anatomy-spec-box {
-    padding: 2px 4px !important;
-  }
-  .anatomy-spec-val {
-    font-size: 0.8rem !important;
-    line-height: 1.1 !important;
-  }
-  .anatomy-spec-lbl {
-    font-size: 0.55rem !important;
-    margin-top: 1px !important;
-    line-height: 1.1 !important;
-  }
-  .anatomy-card-btn {
-    min-height: 28px !important;
-    height: 28px !important;
-    padding: 2px 0 !important;
-    font-size: 0.72rem !important;
-    gap: 6px !important;
-    position: relative !important;
-  }
-  .anatomy-card-btn::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 0;
-    right: 0;
-    transform: translateY(-50%);
-    min-height: 44px;
-    height: 44px;
-  }
-}
-
 .anatomy-card-img {
   width: 100%;
   height: 100%;
@@ -12984,6 +12727,281 @@ textarea.input-error {
   border-radius: 4px;
   letter-spacing: 0.02em;
   pointer-events: none;
+}
+
+/* Mobile Responsive Anatomy Section (Unified & Cascade-Safe) */
+@media (max-width: 768px) {
+  .anatomy-section {
+    position: relative;
+    height: 250vh;
+    overflow: visible;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  .anatomy-sticky-container {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 6px;
+    padding: 68px 14px calc(68px + env(safe-area-inset-bottom, 0px));
+    box-sizing: border-box;
+    z-index: 2;
+  }
+
+  .anatomy-header-wrap {
+    margin-bottom: 4px;
+    width: 100%;
+  }
+
+  .anatomy-header-row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+  }
+
+  .anatomy-header-left {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .anatomy-header-left .section-kicker {
+    font-size: 0.65rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 2px;
+    display: block;
+  }
+
+  .anatomy-header-left .block-title {
+    font-size: clamp(1.05rem, 4.5vw, 1.25rem);
+    line-height: 1.2;
+    margin: 0 0 2px 0;
+  }
+
+  .anatomy-sub {
+    display: none;
+  }
+
+  .anatomy-controls-side {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .anatomy-stepper-pills {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex: 1;
+    min-width: 0;
+    padding: 2px 0;
+    margin: 0;
+  }
+
+  .anatomy-stepper-pills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .anatomy-step-pill {
+    padding: 4px 10px;
+    font-size: 0.72rem;
+    min-height: 32px;
+    height: 32px;
+    border-radius: 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .anatomy-step-pill::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    min-height: 44px;
+    height: 44px;
+  }
+
+  .anatomy-nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .anatomy-counter {
+    font-size: 0.72rem;
+    min-width: 44px;
+    text-align: center;
+  }
+
+  .anatomy-arrow-btn {
+    width: 32px;
+    height: 32px;
+    min-height: 32px;
+    min-width: 32px;
+    padding: 0;
+    border-radius: 8px;
+    position: relative;
+  }
+
+  .anatomy-arrow-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  .anatomy-progress-track {
+    margin-top: 4px;
+    height: 2px;
+    width: 100%;
+  }
+
+  .anatomy-rail-viewport {
+    overflow: hidden;
+    width: 100%;
+    box-sizing: border-box;
+    touch-action: pan-y;
+  }
+
+  .anatomy-rail-viewport::-webkit-scrollbar {
+    display: none;
+  }
+
+  .anatomy-rail-track {
+    display: flex;
+    gap: 14px;
+    width: max-content;
+    padding: 4px 0 12px;
+    box-sizing: border-box;
+    will-change: transform;
+    transition: transform 0.05s linear;
+  }
+
+  .anatomy-card {
+    width: clamp(280px, 86vw, 340px);
+    max-width: 86vw;
+    height: auto;
+    max-height: calc(100dvh - 210px);
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+
+  .anatomy-card-visual {
+    height: 110px;
+    min-height: 110px;
+    max-height: 110px;
+    order: -1;
+  }
+
+  .anatomy-card-content {
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 4px;
+    box-sizing: border-box;
+  }
+
+  .anatomy-card-meta {
+    margin-bottom: 2px;
+    gap: 4px;
+  }
+
+  .anatomy-card-level,
+  .anatomy-card-tag {
+    font-size: 0.6rem;
+    padding: 2px 6px;
+  }
+
+  .anatomy-card-title {
+    font-size: 0.95rem;
+    line-height: 1.2;
+    margin-bottom: 2px;
+  }
+
+  .anatomy-card-desc {
+    font-size: 0.72rem;
+    line-height: 1.3;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .anatomy-specs-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    padding: 4px 6px;
+    margin-bottom: 4px;
+    border-radius: 8px;
+  }
+
+  .anatomy-spec-box {
+    padding: 2px 4px;
+  }
+
+  .anatomy-spec-val {
+    font-size: 0.8rem;
+    line-height: 1.1;
+  }
+
+  .anatomy-spec-lbl {
+    font-size: 0.55rem;
+    margin-top: 1px;
+    line-height: 1.1;
+  }
+
+  .anatomy-card-btn {
+    min-height: 32px;
+    height: 32px;
+    padding: 2px 0;
+    font-size: 0.72rem;
+    gap: 6px;
+    position: relative;
+  }
+
+  .anatomy-card-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    transform: translateY(-50%);
+    min-height: 44px;
+    height: 44px;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
