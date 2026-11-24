@@ -180,6 +180,7 @@ if (isMain) {
   assert.equal((await send('/webhooks/tilda/invalid', body)).status, 404);
   assert.equal((await send('/webhooks/tilda/' + secret, body)).status, 200);
   assert.equal((await send('/webhooks/tilda/' + secret, body)).status, 200);
+  assert.equal((await send('/webhooks/tilda/' + secret, { ...body, products: [{ sku: '1000830016', quantity: 2 }] })).status, 409);
   assert.equal((await send('/commit', publicCommit)).status, 200);
   const stock = await (await webhook.fetch(new Request(host))).json();
   assert.equal(stock.items['202404205'].stock, initialStock - 1);

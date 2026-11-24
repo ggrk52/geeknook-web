@@ -359,7 +359,7 @@ export class StockLedgerDO {
         return jsonResponse({ ok: true, alreadyCommitted: true, ...toPublicView(this.state, publicCap) }, 200, origin, this.env);
       }
 
-      if ((trusted && await this.ctx.storage.get(receiptKey)) || (this.state.committedOrders || []).includes(orderNumber)) {
+      if (!trusted && (this.state.committedOrders || []).includes(orderNumber)) {
         return jsonResponse({ ok: true, alreadyCommitted: true, ...toPublicView(this.state, publicCap) }, 200, origin, this.env);
       }
 
@@ -369,6 +369,17 @@ export class StockLedgerDO {
       }
       if (!counts.size) {
         return jsonResponse({ ok: false, error: 'Пустой список позиций' }, 400, origin, this.env);
+      }
+
+      const signature = JSON.stringify([...counts.entries()].sort(([a], [b]) => a.localeCompare(b)));
+      if (trusted) {
+        const receipt = await this.ctx.storage.get(receiptKey);
+        if (receipt && receipt.signature === signature) {
+          return jsonResponse({ ok: true, alreadyCommitted: true, ...toPublicView(this.state, publicCap) }, 200, origin, this.env);
+        }
+        if (receipt || (this.state.committedOrders || []).includes(orderNumber)) {
+          return jsonResponse({ ok: false, error: 'Номер заказа уже использован' }, 409, origin, this.env);
+        }
       }
 
       const shortages = this.evaluateAvailability(counts);
@@ -408,7 +419,7 @@ export class StockLedgerDO {
 
       if (trusted) {
         this.state.updatedAt = new Date().toISOString();
-        await this.ctx.storage.put({ ledger: this.state, [receiptKey]: true });
+        await this.ctx.storage.put({ ledger: this.state, [receiptKey]: { signature } });
       } else {
         await this.persist();
       }

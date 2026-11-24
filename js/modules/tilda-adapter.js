@@ -79,6 +79,16 @@
     }
   }
 
+  function getNativeCartForm() {
+    return document.querySelector('form#form3929429901, form[name="form3929429901"]')
+      || document.querySelector('.t706 form, .t706__orderform form, form.t706__orderform');
+  }
+
+  function newOrderNumber(prefix = 'GN-') {
+    const values = crypto.getRandomValues(new Uint32Array(2));
+    return prefix + Array.from(values, value => String(value).padStart(10, '0')).join('');
+  }
+
   async function verifyOrderAvailability(items) {
     const result = await window.GEEKNOOK_DATA?.stock?.checkAvailability?.(items, [], false);
     if (result?.ok !== false) return true;
@@ -399,6 +409,7 @@
 
     // --- 7. OVERRIDE: handleCheckoutSubmit (Atomic stock commit + Tilda CRM, TG & Email) ---
     let isTildaCheckoutSubmitting = false;
+    const checkoutFingerprints = new WeakMap();
     window.geekNookApp.handleCheckoutSubmit = async function(e) {
       if (e && e.preventDefault) e.preventDefault();
       if (isTildaCheckoutSubmitting) return false;
@@ -518,7 +529,15 @@
       const address = formData.get('address') || '';
       const checkoutPromo = (window.geekNookApp.state?.activePromoCode || (typeof localStorage !== 'undefined' ? localStorage.getItem('geeknook_promo') : '') || '').trim().toUpperCase();
       const pvz = window.geekNookApp.state?.selectedPvz;
-      form.dataset.orderNumber = form.dataset.orderNumber || ('GN-' + Math.floor(100000 + Math.random() * 900000));
+      const fingerprint = JSON.stringify([
+        name, phone, email, rawAddress, currentPvz?.code, checkoutPromo,
+        window.geekNookApp.state.cart.map(item => [item.id, item.option, item.quantity, item.price])
+      ]);
+      if (!form.dataset.orderNumber || checkoutFingerprints.get(form) !== fingerprint) {
+        form.dataset.orderNumber = newOrderNumber();
+        delete form.dataset.tildaDispatched;
+        checkoutFingerprints.set(form, fingerprint);
+      }
 
       const uiSubmitBtn = form.querySelector('button[type="submit"]');
       const origUiBtnHtml = uiSubmitBtn ? uiSubmitBtn.innerHTML : '';
@@ -530,7 +549,7 @@
       }
 
       try {
-        const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form');
+        const tildaCartForm = getNativeCartForm();
         const tildaSubmitBtn = tildaCartForm ? tildaCartForm.querySelector('button[type="submit"], .t-submit') : null;
 
         const tildaAlreadyAccepted = form.dataset.tildaDispatched === 'true';
@@ -834,14 +853,14 @@
         const finalPrice = Math.max(0, basePrice - discountAmount);
         const optText = (opt && opt !== 'Стандарт') ? ` (${opt})` : '';
         const fullProdTitle = `${prod.title}${optText}`;
-        const orderNumber = 'GN-1C-' + Math.floor(100000 + Math.random() * 900000);
+        const orderNumber = newOrderNumber('GN-1C-');
 
         // Retrieve captured UTM params
         const utmParams = (window.geekNookAnalytics && typeof window.geekNookAnalytics.getUtmParams === 'function')
           ? window.geekNookAnalytics.getUtmParams()
           : {};
 
-        const tildaCartForm = document.querySelector('.t706 form, form[name="form3929429901"], .t706__orderform form, form.t706__orderform');
+        const tildaCartForm = getNativeCartForm();
         const tildaSubmitBtn = tildaCartForm ? tildaCartForm.querySelector('button[type="submit"], .t-submit') : null;
         if (tildaSubmitBtn && !await verifyOrderAvailability([{ id: prod.id, option: opt, quantity: 1 }])) return false;
 
