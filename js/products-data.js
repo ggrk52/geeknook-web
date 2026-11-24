@@ -3363,11 +3363,24 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
     return '';
   };
 
+  const fetchWithTimeout = async (url, options = {}, timeoutMs = 8000) => {
+    if (typeof AbortController !== 'function') {
+      return fetch(url, options);
+    }
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      return await fetch(url, { ...options, signal: ctrl.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  };
+
   const syncWithServer = async () => {
     const endpoint = getApiEndpoint();
     if (!endpoint || typeof fetch !== 'function') return null;
     try {
-      const res = await fetch(endpoint, { method: 'GET', cache: 'no-store' });
+      const res = await fetchWithTimeout(endpoint, { method: 'GET', cache: 'no-store' }, 6000);
       const ctype = res.headers?.get?.('content-type') || '';
       if (!res.ok || !ctype.includes('application/json')) return null;
       const json = await res.json();
@@ -3402,11 +3415,11 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
     if (endpoint && typeof fetch === 'function') {
       try {
         const itemsPayload = Array.from(counts.entries()).map(([code, quantity]) => ({ code, quantity }));
-        const res = await fetch(endpoint, {
+        const res = await fetchWithTimeout(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ action: 'check', items: itemsPayload })
-        });
+        }, 7000);
         const ctype = res.headers?.get?.('content-type') || '';
         if (ctype.includes('application/json')) {
           const json = await res.json();
@@ -3443,7 +3456,7 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
     const endpoint = getApiEndpoint();
     if (endpoint && typeof fetch === 'function') {
       try {
-        const res = await fetch(endpoint, {
+        const res = await fetchWithTimeout(endpoint, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -3454,7 +3467,7 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
             type: orderType,
             items: movementItems.map(m => ({ code: m.code, quantity: m.qty }))
           })
-        });
+        }, 8000);
         const ctype = res.headers?.get?.('content-type') || '';
         if (ctype.includes('application/json')) {
           const json = await res.json();

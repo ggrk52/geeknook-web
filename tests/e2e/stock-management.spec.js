@@ -199,4 +199,64 @@ test.describe('Live Stock Management & Cloudflare Worker Security', () => {
 
     expect(errors).toEqual([]);
   });
+
+  test('Tilda checkout deducts Worker stock and opens successModal even when formsubmit.co hangs/fails', async ({ page }) => {
+    await attachRealWorkerMock(page);
+    await page.addInitScript(() => { window.GEEKNOOK_FORCE_TILDA = true; });
+    await page.route('https://formsubmit.co/ajax/**', route => route.abort('timedout'));
+
+    await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(() => window.geekNookApp && window.geekNookTilda && window.GEEKNOOK_DATA?.stock?.getMeta().serverConnected);
+
+    // Inject mock hidden Tilda .t706 order form matching geeknook.ru
+    await page.evaluate(() => {
+      window.__tildaSubmittedCount = 0;
+      window.tcart = { products: [] };
+      const wrap = document.createElement('div');
+      wrap.className = 't706';
+      wrap.style.display = 'none';
+      wrap.innerHTML = `
+        <form name="form3929429901">
+          <input name="Name" />
+          <input name="Email" type="email" />
+          <input name="Phone" />
+          <input name="Код ПВЗ СДЭК" />
+          <textarea name="Comment"></textarea>
+          <input type="radio" name="paymentsystem" value="cash" />
+          <button type="submit" class="t-submit">Checkout</button>
+        </form>
+      `;
+      wrap.querySelector('form').addEventListener('submit', (ev) => {
+        ev.preventDefault();
+        window.__tildaSubmittedCount++;
+      });
+      document.body.appendChild(wrap);
+
+      window.geekNookApp.addToCart('gamepad-stand', 'Xbox / PS5', false);
+      window.geekNookApp.openCheckout();
+    });
+
+    await page.locator('#checkoutForm input[name="name"]').fill('Сергей Козлов');
+    await page.locator('#checkoutForm input[name="phone"]').fill('9991112233');
+    await page.locator('#checkoutForm input[name="email"]').fill('test@example.com');
+    await page.locator('#checkoutForm input[name="address"]').fill('[MSK2181] Москва');
+    await page.locator('#checkoutConsentCheckbox').check();
+    await page.locator('#checkoutForm button[type="submit"]').click();
+
+    await expect(page.locator('#successModal')).toHaveClass(/active/, { timeout: 8000 });
+    expect(await page.evaluate(() => window.__tildaSubmittedCount)).toBe(1);
+
+    // Confirm Worker actually deducted 202404210 by 1 unit
+    const workerRes = await page.evaluate(async (url) => {
+      const r = await fetch(url + '/admin/list', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Admin-Key': 'gn-worker-secret-2026' },
+        body: JSON.stringify({})
+      });
+      return r.json();
+    }, WORKER_TEST_URL);
+    const row = workerRes.items['202404210'];
+    expect(row.orderSpent).toBe(1);
+    expect(row.stock).toBe(row.initialStock - row.initialSpent - 1);
+  });
 });

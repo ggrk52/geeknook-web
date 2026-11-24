@@ -4360,7 +4360,8 @@
     e.preventDefault();
     if (!checkStock()) return;
     const form = e.target;
-    if (form.querySelector('button[type="submit"]')?.disabled) return;
+    const isTildaSubmitting = form.dataset.tildaSubmitting === '1';
+    if (!isTildaSubmitting && form.querySelector('button[type="submit"]')?.disabled) return;
     const formData = new FormData(form);
 
     const nameInput = form.querySelector('input[name="name"]');
@@ -4549,6 +4550,8 @@
       grand_total: grandTotal,
       promo_code: state.activePromoCode || '',
       utm: getCapturedUtm(),
+      tildaDispatched: form.dataset.tildaDispatched === 'true',
+      stockCommitted: form.dataset.stockCommitted === 'true',
       timestamp: new Date().toISOString()
     };
 
@@ -4558,10 +4561,16 @@
       await dispatchUnifiedOrder(cartOrderPayload);
     } catch(err) {
       console.warn('[GeekNook] dispatchCartOrder error:', err);
-      showToast('Не удалось отправить заказ. Проверьте соединение и попробуйте ещё раз.', 'error');
+      showToast(err?.isStockError ? err.message : 'Не удалось отправить заказ. Проверьте соединение и попробуйте ещё раз.', 'error');
       if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText; }
       return;
+    } finally {
+      delete form.dataset.tildaSubmitting;
     }
+
+    delete form.dataset.orderNumber;
+    delete form.dataset.tildaDispatched;
+    delete form.dataset.stockCommitted;
 
     if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackOrderSubmit === 'function') {
       window.geekNookAnalytics.trackOrderSubmit(orderNumber, grandTotal, state.cart, safeDelivery, safePayment);
@@ -4872,30 +4881,35 @@
   const dispatchUnifiedOrder = async (orderPayload) => {
     const isQuickBuy = orderPayload.type === 'quick_buy';
     const recipientEmail = 'sergeykozlov20066@mail.ru';
+    const tildaDispatched = Boolean(orderPayload.tildaDispatched);
+    const stockAlreadyCommitted = Boolean(orderPayload.stockCommitted);
 
     const itemsForStock = isQuickBuy
       ? (orderPayload.product_id ? [{ id: orderPayload.product_id, option: orderPayload.product_option || 'Стандарт', quantity: 1 }] : [])
       : (Array.isArray(orderPayload.items) ? orderPayload.items : []);
 
-    if (GEEKNOOK_DATA?.stock?.checkAvailability && itemsForStock.length > 0) {
+    if (!stockAlreadyCommitted && GEEKNOOK_DATA?.stock?.checkAvailability && itemsForStock.length > 0) {
       const availability = await GEEKNOOK_DATA.stock.checkAvailability(itemsForStock, [], false);
       if (!availability.ok) {
         refreshCatalogStockUI();
-        throw new Error(availability.error || 'Недостаточно товара на складе');
+        const err = new Error(availability.error || 'Недостаточно товара на складе');
+        err.isStockError = true;
+        throw err;
       }
     }
 
     const std = formatOrderStandardMessage(orderPayload);
 
-    // Guaranteed Email Notification via FormSubmit AJAX (100% Works in Russia without VPN)
-    try {
-      // Anti-Bot Honeypot trap check
-      const honeyVal = (document.getElementById('quickBuyHoneypot')?.value || document.getElementById('checkoutHoneypot')?.value || '').trim();
-      if (honeyVal) {
-        console.warn('[GeekNook Security] Automated bot detected via honeypot trap, dropping spam submission.');
-        return;
-      }
+    // Anti-Bot Honeypot trap check
+    const honeyVal = (document.getElementById('quickBuyHoneypot')?.value || document.getElementById('checkoutHoneypot')?.value || '').trim();
+    if (honeyVal) {
+      console.warn('[GeekNook Security] Automated bot detected via honeypot trap, dropping spam submission.');
+      return;
+    }
 
+    // Email Notification via FormSubmit AJAX (bounded timeout so blocked networks never freeze checkout)
+    let emailAck = false;
+    try {
       const emailSubject = `Заказ №${std.orderNumberStr}`;
 
       const emailPayload = {
@@ -4919,27 +4933,48 @@
         'Сообщение': std.fullMessage
       };
 
-      const response = await fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(emailPayload)
-      });
-      const result = await response.json();
-      if (!response.ok || (result.success !== true && result.success !== 'true')) {
-        throw new Error('Order delivery was not acknowledged');
+      const controller = typeof AbortController === 'function' ? new AbortController() : null;
+      const timeoutMs = tildaDispatched ? 3500 : 8000;
+      const timerId = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
+      try {
+        const response = await fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(emailPayload),
+          signal: controller ? controller.signal : undefined
+        });
+        const result = await response.json();
+        if (!response.ok || (result.success !== true && result.success !== 'true')) {
+          throw new Error('Order delivery was not acknowledged');
+        }
+        emailAck = true;
+      } finally {
+        if (timerId) clearTimeout(timerId);
       }
     } catch (e) {
-      throw new Error('Order delivery failed', { cause: e });
+      if (!tildaDispatched) {
+        throw new Error('Order delivery failed', { cause: e });
+      }
+      console.warn('[GeekNook] Secondary FormSubmit notification skipped/timed out after Tilda delivery:', e?.message || e);
     }
 
-    // Deduct stock atomically after order delivery acknowledgement
-    if (GEEKNOOK_DATA?.stock?.commitOrder && itemsForStock.length > 0) {
-      try {
-        await GEEKNOOK_DATA.stock.commitOrder(std.orderNumberStr, itemsForStock, orderPayload.type || 'cart');
-      } catch (_) {}
+    if (!tildaDispatched && !emailAck) {
+      throw new Error('Order delivery failed');
+    }
+
+    // Deduct stock atomically after delivery acknowledgement (if not already committed before Tilda submit)
+    if (!stockAlreadyCommitted && GEEKNOOK_DATA?.stock?.commitOrder && itemsForStock.length > 0) {
+      const commitRes = await GEEKNOOK_DATA.stock.commitOrder(std.orderNumberStr, itemsForStock, orderPayload.type || 'cart');
+      if (commitRes && commitRes.ok === false) {
+        refreshCatalogStockUI();
+        const err = new Error(commitRes.error || 'Товар только что закончился на складе');
+        err.isStockError = true;
+        throw err;
+      }
+      refreshCatalogStockUI();
     }
 
     // 3. Fallback queue in localStorage (Sanitized metadata only — 152-FZ zero-PII data minimization)
@@ -5086,7 +5121,7 @@
       await dispatchQuickBuyOrder(orderPayload);
     } catch(err) {
       console.warn('[GeekNook] dispatchQuickBuyOrder error:', err);
-      showToast('Не удалось отправить заказ. Проверьте соединение и попробуйте ещё раз.', 'error');
+      showToast(err?.isStockError ? err.message : 'Не удалось отправить заказ. Проверьте соединение и попробуйте ещё раз.', 'error');
       if (qbSubmitBtn) { qbSubmitBtn.disabled = false; qbSubmitBtn.innerHTML = 'Подтвердить заказ в 1 клик'; }
       return;
     }
