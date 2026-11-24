@@ -104,7 +104,7 @@ test.describe('R2: Interactive Components & Catalog Mechanics', () => {
 
       // Strikethrough price and discount badge must be visible
       await expect(modal.locator('#qvPriceOld')).toBeVisible();
-      await expect(modal.locator('#qvDiscountBadge')).toContainText('-20%');
+      await expect(modal.locator('#qvDiscountBadge')).toContainText(/[−-]20%/);
 
       // Click back to 85 cm
       await chip85.click();
