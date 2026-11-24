@@ -25,6 +25,7 @@
   border: 1px solid var(--border, #30333a);
   border-radius: var(--radius-xs, 4px);
   color: #4a505a;
+  text-align: left;
   --studio-edge: #e0e1e2;
   --studio-light: #fdfdfc;
   --paper: #deddda;
@@ -169,12 +170,14 @@
 .paper-desk__shelf::after {
   content: "";
   position: absolute;
+  top: 0;
   height: 100%;
   background: repeating-linear-gradient(0deg, #553e2d55 0 1px, transparent 1px 3px), #a47a59;
   box-shadow: inset 0 1px #cf9e79, inset 0 -1px #5b3a2a;
 }
 
 .paper-desk__shelf::before {
+  left: 0;
   width: 100%;
   transform: translateZ(11cqw);
 }
@@ -188,6 +191,7 @@
 
 .paper-desk__shelf span {
   position: absolute;
+  left: 0;
   top: -11cqw;
   width: 100%;
   height: 22cqw;
