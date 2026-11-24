@@ -126,15 +126,15 @@ test.describe('Adversarial Interactive Stress-Testing (Challenger 2)', () => {
 
       expect(price116).not.toContain('NaN');
       expect(price116).not.toContain('undefined');
-      expect(norm(price116)).toContain('24 999');
+      expect(norm(price116)).toContain('19 999');
       expect(price116).toContain('₽');
 
       expect(old116).not.toContain('NaN');
-      expect(norm(old116)).toContain('29 000');
+      expect(norm(old116)).toContain('24 999');
       expect(old116).toContain('₽');
 
       expect(disc116).not.toContain('NaN');
-      expect(norm(disc116)).toContain('19 999');
+      expect(norm(disc116)).toContain('−20%');
 
       expect(dims116).toContain('116');
       expect(art116).toBe('202404202');
@@ -150,15 +150,15 @@ test.describe('Adversarial Interactive Stress-Testing (Challenger 2)', () => {
 
       expect(price85).not.toContain('NaN');
       expect(price85).not.toContain('undefined');
-      expect(norm(price85)).toContain('19 999');
+      expect(norm(price85)).toContain('15 999');
       expect(price85).toContain('₽');
 
       expect(old85).not.toContain('NaN');
-      expect(norm(old85)).toContain('25 000');
+      expect(norm(old85)).toContain('19 999');
       expect(old85).toContain('₽');
 
       expect(disc85).not.toContain('NaN');
-      expect(norm(disc85)).toContain('15 999');
+      expect(norm(disc85)).toContain('−20%');
 
       expect(dims85).toContain('85');
       expect(art85).toBe('202404201');

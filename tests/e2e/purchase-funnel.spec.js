@@ -9,6 +9,7 @@ test.beforeEach(async ({ page }) => {
 test('Focus Station selection and checkout emit each funnel event once on mobile', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+  await expect(page.locator('#focus-station-walnut .price-current')).toContainText('15 999');
   await page.locator('#focus-station-walnut .btn-card-details').click();
   const modal = page.locator('#quickViewModal');
   await expect(modal.locator('.qv-live-stock-badge')).toContainText('В наличии: 189 шт.');
@@ -21,6 +22,9 @@ test('Focus Station selection and checkout emit each funnel event once on mobile
   await expect(modal.locator('.specs-table')).toBeVisible();
   await modal.getByRole('button', { name: 'Добавить в корзину', exact: true }).click();
   await page.locator('#siteHeader').getByRole('button', { name: 'Корзина', exact: true }).click();
+  await expect(page.locator('#cartSubtotal')).toContainText('24 999');
+  await expect(page.locator('#cartDiscountLabel')).toHaveText('Акция −20%');
+  await expect(page.locator('#cartDiscount')).toContainText('5 000');
   await page.getByRole('button', { name: 'Перейти к оформлению' }).click();
   await expect(page.locator('#checkoutItemsSummary')).toContainText('116 см');
   await expect(page.locator('#checkoutGrandTotalSummary')).toContainText('19 999');

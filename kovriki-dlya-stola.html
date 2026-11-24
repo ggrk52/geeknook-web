@@ -1108,6 +1108,7 @@
     <section class="collection-intro" aria-labelledby="collectionTitle">
       <div>
         <h1 id="collectionTitle">Коврики для рабочего стола</h1>
+    <p><strong>Акция −20%.</strong> Цены уже со скидкой.</p>
         <p>Войлочные и двусторонние коврики Geek Nook защищают столешницу. Подберите размер под клавиатуру, мышь или всю рабочую зону.</p>
         <a href="#productGrid">Выбрать коврик <span aria-hidden="true">&nbsp;↓</span></a>
       </div>
@@ -1241,8 +1242,8 @@
 
           <div class="card-footer">
             <div class="card-price-box">
-              <span class="price-main">2 999 ₽</span>
-              <span class="price-old">3 800 ₽</span>
+              <span class="price-main">2 399 ₽</span>
+              <span class="price-old">2 999 ₽</span>
             </div>
             <button type="button" class="btn-buy" onclick="addToCartMat('desk-mat-xl', '120x60', this)">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -1282,8 +1283,8 @@
 
           <div class="card-footer">
             <div class="card-price-box">
-              <span class="price-main">2 990 ₽</span>
-              <span class="price-old">3 800 ₽</span>
+              <span class="price-main">2 392 ₽</span>
+              <span class="price-old">2 990 ₽</span>
             </div>
             <button type="button" class="btn-buy" onclick="addToCartMat('desk-mat-double', '90x45', this)">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -1572,14 +1573,14 @@
 
     const matSpecs = {
       light: {
-        '80x40': { price: '1 499 ₽', oldPrice: '1 999 ₽', dim: '80.0 × 40.0 × 0.4 см', sku: '20240408' },
-        '100x50': { price: '2 499 ₽', oldPrice: '3 200 ₽', dim: '100.0 × 50.0 × 0.4 см', sku: '20240410' },
-        '120x60': { price: '2 999 ₽', oldPrice: '3 800 ₽', dim: '120.0 × 60.0 × 0.4 см', sku: '20240411' }
+        '80x40': { price: '1 199 ₽', oldPrice: '1 499 ₽', dim: '80.0 × 40.0 × 0.4 см', sku: '20240408' },
+        '100x50': { price: '1 999 ₽', oldPrice: '2 499 ₽', dim: '100.0 × 50.0 × 0.4 см', sku: '20240410' },
+        '120x60': { price: '2 399 ₽', oldPrice: '2 999 ₽', dim: '120.0 × 60.0 × 0.4 см', sku: '20240411' }
       },
       dark: {
-        '80x40': { price: '1 499 ₽', oldPrice: '1 999 ₽', dim: '80.0 × 40.0 × 0.4 см', sku: '20240404' },
-        '100x50': { price: '2 499 ₽', oldPrice: '3 200 ₽', dim: '100.0 × 50.0 × 0.4 см', sku: '20240406' },
-        '120x60': { price: '2 999 ₽', oldPrice: '3 800 ₽', dim: '120.0 × 60.0 × 0.4 см', sku: '20240407' }
+        '80x40': { price: '1 199 ₽', oldPrice: '1 499 ₽', dim: '80.0 × 40.0 × 0.4 см', sku: '20240404' },
+        '100x50': { price: '1 999 ₽', oldPrice: '2 499 ₽', dim: '100.0 × 50.0 × 0.4 см', sku: '20240406' },
+        '120x60': { price: '2 399 ₽', oldPrice: '2 999 ₽', dim: '120.0 × 60.0 × 0.4 см', sku: '20240407' }
       }
     };
 
@@ -1740,7 +1741,7 @@
       } else {
         const modelKey = productId.replace('desk-mat-', '');
         const data = matSpecs[modelKey][sizeCode];
-        price = parseInt(data.price.replace(/\D/g, ''), 10);
+        price = parseInt(data.oldPrice.replace(/\D/g, ''), 10);
       }
 
       const optionLabel = sizeLabels[sizeCode] || 'Стандарт';

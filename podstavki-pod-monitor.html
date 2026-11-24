@@ -1011,6 +1011,7 @@
     <section class="collection-intro" aria-labelledby="collectionTitle">
       <div>
         <h1 id="collectionTitle">Подставки под монитор</h1>
+    <p><strong>Акция −20%.</strong> Цены уже со скидкой.</p>
         <p>Focus Station поднимает монитор на 9 см и освобождает место под ним. Выберите дуб или орех и длину 85 или 116 см.</p>
         <a href="#productGrid">Выбрать подставку <span aria-hidden="true">&nbsp;↓</span></a>
       </div>
@@ -1142,8 +1143,8 @@
 
           <div class="card-footer">
             <div class="card-price-box">
-              <span class="price-main" id="black-price">17 599 ₽</span>
-              <span class="price-old" id="black-oldprice">21 999 ₽</span>
+              <span class="price-main" id="black-price">15 999 ₽</span>
+              <span class="price-old" id="black-oldprice">19 999 ₽</span>
             </div>
             <button type="button" class="btn-buy" onclick="addToCartItem('focus-station-black', currentSizes['black'], this)" aria-label="Добавить Focus Station Black в корзину">
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
@@ -1403,15 +1404,15 @@
     const productSpecs = {
       walnut: {
         '85': { price: '15 999 ₽', oldPrice: '19 999 ₽', dim: '85.0 × 9.0 × 23.0 см', sku: '202404201', weight: '3.85 кг' },
-        '116': { price: '19 199 ₽', oldPrice: '23 999 ₽', dim: '116.0 × 9.0 × 23.0 см', sku: '202404202', weight: '5.75 кг' }
+        '116': { price: '19 999 ₽', oldPrice: '24 999 ₽', dim: '116.0 × 9.0 × 23.0 см', sku: '202404202', weight: '5.75 кг' }
       },
       oak: {
         '85': { price: '15 999 ₽', oldPrice: '19 999 ₽', dim: '85.0 × 9.0 × 23.0 см', sku: '2024042003', weight: '3.85 кг' },
-        '116': { price: '19 199 ₽', oldPrice: '23 999 ₽', dim: '116.0 × 9.0 × 23.0 см', sku: '2024042004', weight: '5.75 кг' }
+        '116': { price: '19 999 ₽', oldPrice: '24 999 ₽', dim: '116.0 × 9.0 × 23.0 см', sku: '2024042004', weight: '5.75 кг' }
       },
       black: {
-        '85': { price: '17 599 ₽', oldPrice: '21 999 ₽', dim: '85.0 × 9.0 × 23.0 см', sku: '202404205', weight: '3.85 кг' },
-        '116': { price: '20 799 ₽', oldPrice: '25 999 ₽', dim: '116.0 × 9.0 × 23.0 см', sku: '2024042006', weight: '5.75 кг' }
+        '85': { price: '15 999 ₽', oldPrice: '19 999 ₽', dim: '85.0 × 9.0 × 23.0 см', sku: '202404205', weight: '3.85 кг' },
+        '116': { price: '19 999 ₽', oldPrice: '24 999 ₽', dim: '116.0 × 9.0 × 23.0 см', sku: '2024042006', weight: '5.75 кг' }
       }
     };
 
@@ -1563,7 +1564,7 @@
       const itemData = productSpecs[modelKey][size];
       const optionStr = `${size} см`;
       const title = names[productId] || 'Focus Station';
-      const numPrice = parseInt(itemData.price.replace(/\D/g, ''), 10);
+      const numPrice = parseInt(itemData.oldPrice.replace(/\D/g, ''), 10);
 
       // Save to centralized geeknook_cart storage
       saveToGeekNookCart({
