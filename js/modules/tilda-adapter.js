@@ -278,21 +278,16 @@
         : [];
 
       const savedPromo = (typeof localStorage !== 'undefined' ? localStorage.getItem('geeknook_promo') : '') || '';
-      const promoCode = (window.geekNookApp?.state?.activePromoCode || savedPromo).trim().toUpperCase();
-      const PROMOS = {
-        'DEVTOOLS10': 10,
-        'GEEK10': 10,
-        'ДАША': 10,
-        'DASHA': 10,
-        'FOCUS15': 15,
-        'WELCOME5': 5
-      };
-      const promoDiscount = PROMOS[promoCode] || 0;
-      // Automatic 20% site discount on all orders
+      const rawPromoCode = (window.geekNookApp?.state?.activePromoCode || savedPromo).trim().toUpperCase();
+      const promoInfo = window.GEEKNOOK_DATA?.getPromoInfo?.(rawPromoCode);
+      const promoCode = promoInfo ? promoInfo.code : '';
+      const promoDiscount = promoInfo ? promoInfo.discount : 0;
       const siteDiscount = (typeof window.geekNookApp?.state?.siteDiscountPercent === 'number')
         ? window.geekNookApp.state.siteDiscountPercent
-        : 20;
-      const effectiveDiscountPercent = Math.max(siteDiscount, promoDiscount);
+        : (window.GEEKNOOK_DATA?.SITE_DISCOUNT_PERCENT ?? 20);
+      const badgeStr = window.GEEKNOOK_DATA?.formatDiscountBadge
+        ? window.GEEKNOOK_DATA.formatDiscountBadge(siteDiscount, promoDiscount)
+        : (promoDiscount > 0 ? `-${siteDiscount}% + -${promoDiscount}%` : `-${siteDiscount}%`);
 
       let subTotal = 0;
 
@@ -302,19 +297,25 @@
         const itemQty = i.quantity || 1;
         subTotal += itemCatalogPrice * itemQty;
 
-        // Discounted unit price (so CDEK cash-on-delivery & Tilda notifications charge the discounted amount)
-        const discountedUnitPrice = Math.round(itemCatalogPrice * ((100 - effectiveDiscountPercent) / 100));
+        // Discounted unit price: base site discount + extra promo discount on top
+        const calcPrice = window.GEEKNOOK_DATA?.calcDiscountedUnitPrice;
+        const unitPrice = typeof calcPrice === 'function'
+          ? calcPrice(itemCatalogPrice, siteDiscount, promoDiscount)
+          : Math.round(Math.round(itemCatalogPrice * (100 - siteDiscount) / 100) * (100 - promoDiscount) / 100);
 
         const itemOpts = mapped ? [...(mapped.options || [])] : [];
         itemOpts.push({ option: 'РРЦ', name: 'РРЦ', variant: `${itemCatalogPrice} ₽` });
-        itemOpts.push({ option: 'Скидка на сайте', name: 'Скидка', variant: `-${effectiveDiscountPercent}%` });
+        itemOpts.push({ option: 'Скидка на сайте', name: 'Скидка', variant: badgeStr });
+        if (promoCode && promoDiscount > 0) {
+          itemOpts.push({ option: 'Промокод', name: 'Промокод', variant: `${promoCode} (-${promoDiscount}%)` });
+        }
 
         return {
           ...(mapped || { name: i.title }),
-          price: discountedUnitPrice,
+          price: unitPrice,
           catalogPrice: itemCatalogPrice,
           quantity: itemQty,
-          amount: discountedUnitPrice * itemQty,
+          amount: unitPrice * itemQty,
           options: itemOpts
         };
       });
@@ -376,6 +377,12 @@
       syncTildaInMemory();
       syncTildaCartBadge();
     };
+
+    // Keep Tilda cart & badge synced whenever GeekNook cart or promo code changes
+    window.addEventListener('geeknook:cart-updated', () => {
+      syncTildaInMemory();
+      syncTildaCartBadge();
+    });
 
     // --- 4. OVERRIDE: openCartDrawer ---
     window.geekNookApp.openCartDrawer = function() {
@@ -823,34 +830,23 @@
         }
 
         const promoInput = document.getElementById('quickBuyPromo');
-        let promoCodeVal = promoInput ? promoInput.value.trim().toUpperCase() : '';
-        let promoPct = 0;
-        let appliedPromo = '';
-
-        const PROMOS = {
-          'DEVTOOLS10': 10,
-          'GEEK10': 10,
-          'ДАША': 10,
-          'DASHA': 10,
-          'FOCUS15': 15,
-          'WELCOME5': 5
-        };
-
+        const promoCodeVal = promoInput ? promoInput.value.trim().toUpperCase() : '';
         const activePromo = window.geekNookApp?.state?.activePromoCode;
-        if (promoCodeVal && PROMOS[promoCodeVal]) {
-          promoPct = PROMOS[promoCodeVal];
-          appliedPromo = promoCodeVal;
-        } else if (!promoCodeVal && activePromo && PROMOS[activePromo]) {
-          promoPct = PROMOS[activePromo];
-          appliedPromo = activePromo;
-        }
+        const promoInfo = window.GEEKNOOK_DATA?.getPromoInfo?.(promoCodeVal || activePromo);
+        const promoPct = promoInfo ? promoInfo.discount : 0;
+        const appliedPromo = promoInfo ? promoInfo.code : '';
 
         const siteDiscount = (typeof window.geekNookApp?.state?.siteDiscountPercent === 'number')
           ? window.geekNookApp.state.siteDiscountPercent
-          : 20;
-        const discountPct = Math.max(siteDiscount, promoPct);
-        const discountAmount = Math.round(basePrice * (discountPct / 100));
-        const finalPrice = Math.max(0, basePrice - discountAmount);
+          : (window.GEEKNOOK_DATA?.SITE_DISCOUNT_PERCENT ?? 20);
+        const discountPct = siteDiscount;
+        const badgeStr = window.GEEKNOOK_DATA?.formatDiscountBadge
+          ? window.GEEKNOOK_DATA.formatDiscountBadge(siteDiscount, promoPct)
+          : (promoPct > 0 ? `-${siteDiscount}% + -${promoPct}%` : `-${siteDiscount}%`);
+        const finalPrice = window.GEEKNOOK_DATA?.calcDiscountedUnitPrice
+          ? window.GEEKNOOK_DATA.calcDiscountedUnitPrice(basePrice, siteDiscount, promoPct)
+          : Math.round(Math.round(basePrice * (100 - siteDiscount) / 100) * (100 - promoPct) / 100);
+        const discountAmount = Math.max(0, basePrice - finalPrice);
         const optText = (opt && opt !== 'Стандарт') ? ` (${opt})` : '';
         const fullProdTitle = `${prod.title}${optText}`;
         const orderNumber = newOrderNumber('GN-1C-');
@@ -871,8 +867,8 @@
           const itemCatalogPrice = (mapped && mapped.price) ? mapped.price : basePrice;
           const itemOpts = mapped ? [...(mapped.options || [])] : [];
           itemOpts.push({ option: 'РРЦ', name: 'РРЦ', variant: `${itemCatalogPrice} ₽` });
-          itemOpts.push({ option: 'Скидка на сайте', name: 'Скидка', variant: `-${discountPct}%` });
-          if (appliedPromo) itemOpts.push({ option: 'Промокод', name: 'Промокод', variant: appliedPromo });
+          itemOpts.push({ option: 'Скидка на сайте', name: 'Скидка', variant: badgeStr });
+          if (appliedPromo) itemOpts.push({ option: 'Промокод', name: 'Промокод', variant: `${appliedPromo} (-${promoPct}%)` });
 
           const tildaProduct = {
             ...(mapped || { name: fullProdTitle }),
@@ -934,7 +930,7 @@
               }
             }
             if (inpEmail) {
-              inpEmail.value = 'sergeykozlov20066@mail.ru';
+              inpEmail.value = window.GEEKNOOK_QUICKBUY_EMAIL || 'quickbuy@geeknook.ru';
               try { inpEmail.dispatchEvent(new Event('input', { bubbles: true })); } catch(_) {}
               try { inpEmail.dispatchEvent(new Event('change', { bubbles: true })); } catch(_) {}
             }
@@ -1450,17 +1446,9 @@
       promoWrap.className = 't706-promo-box';
       promoWrap.style.cssText = 'margin: 14px 0; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; font-family: "Onest", sans-serif;';
 
-      const PROMOS = {
-        'DEVTOOLS10': 10,
-        'GEEK10': 10,
-        'ДАША': 10,
-        'DASHA': 10,
-        'FOCUS15': 15,
-        'WELCOME5': 5
-      };
-
       const savedCode = (localStorage.getItem('geeknook_promo') || '').trim().toUpperCase();
-      const isApplied = savedCode && PROMOS[savedCode];
+      const savedPromoInfo = window.GEEKNOOK_DATA?.getPromoInfo?.(savedCode);
+      const isApplied = Boolean(savedPromoInfo);
 
       promoWrap.innerHTML = `
         <div style="font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.85); margin-bottom: 8px;">
@@ -1471,7 +1459,7 @@
           <button type="button" class="t706-promo-btn" style="min-height: 40px; padding: 0 16px; background: #2b70f0; color: #fff; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: background 0.2s;">Применить</button>
         </div>
         <div class="t706-promo-applied" style="display: ${isApplied ? 'flex' : 'none'}; align-items: center; justify-content: space-between; padding: 8px 12px; background: rgba(16,185,129,0.12); border: 1px solid rgba(16,185,129,0.3); border-radius: 6px;">
-          <span class="t706-promo-applied-text" style="color: #10b981; font-size: 13px; font-weight: 700; font-family: monospace;">✓ ${isApplied ? `${savedCode} (-${PROMOS[savedCode]}%)` : ''}</span>
+          <span class="t706-promo-applied-text" style="color: #10b981; font-size: 13px; font-weight: 700; font-family: monospace;">✓ ${isApplied ? `${savedPromoInfo.code} (-${savedPromoInfo.discount}%)` : ''}</span>
           <button type="button" class="t706-promo-remove" style="background: none; border: none; color: rgba(255,255,255,0.6); cursor: pointer; font-size: 16px; padding: 2px 8px; line-height: 1;">✕</button>
         </div>
       `;
@@ -1504,12 +1492,13 @@
 
       function applyCode() {
         const val = (input.value || '').trim().toUpperCase();
-        if (PROMOS[val]) {
-          localStorage.setItem('geeknook_promo', val);
+        const found = window.GEEKNOOK_DATA?.getPromoInfo?.(val);
+        if (found) {
+          localStorage.setItem('geeknook_promo', found.code);
           row.style.display = 'none';
           appliedBox.style.display = 'flex';
-          appliedText.textContent = `✓ ${val} (-${PROMOS[val]}%)`;
-          syncTildaOrderComment(val, PROMOS[val]);
+          appliedText.textContent = `✓ ${found.code} (-${found.discount}%)`;
+          syncTildaOrderComment(found.code, found.discount);
         } else {
           alert('Неверный промокод');
         }

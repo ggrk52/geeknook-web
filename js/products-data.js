@@ -3019,8 +3019,8 @@ const stockCatalogTable = {
     "capped": true
   }
 };
-GEEKNOOK_DATA.stockDate = "2026-11-24";
-GEEKNOOK_DATA.stockSnapshotHash = "1a196aa0170b01fa";
+GEEKNOOK_DATA.stockDate = "2026-11-25";
+GEEKNOOK_DATA.stockSnapshotHash = "597d449b42006b2c";
 // END STOCK IMPORT
 
 const inventoryAliases = {
@@ -3745,6 +3745,38 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
     syncWithServer();
   }
 })();
+
+// --- SHARED SITE DISCOUNT & ADDITIVE PROMO CODES ---
+GEEKNOOK_DATA.SITE_DISCOUNT_PERCENT = 20;
+GEEKNOOK_DATA.PROMO_CODES = {
+  'DEVTOOLS10': { discount: 10, label: 'DEVTOOLS10 (−10%)', description: 'Инженерная скидка разработчика' },
+  'GEEK10': { discount: 10, label: 'GEEK10 (−10%)', description: 'Приветственная скидка GeekNook' },
+  'ДАША': { discount: 10, label: 'ДАША (−10%)', description: 'Специальный промокод команды' },
+  'DASHA': { discount: 10, label: 'DASHA (−10%)', description: 'Специальный промокод команды' },
+  'FOCUS15': { discount: 15, label: 'FOCUS15 (−15%)', description: 'Дополнительная скидка 15%' },
+  'WELCOME5': { discount: 5, label: 'WELCOME5 (−5%)', description: 'Приветственный бонус 5%' }
+};
+
+GEEKNOOK_DATA.getPromoInfo = (code) => {
+  const clean = String(code || '').trim().toUpperCase();
+  if (!clean) return null;
+  const entry = GEEKNOOK_DATA.PROMO_CODES[clean];
+  return entry ? { code: clean, ...entry } : null;
+};
+
+GEEKNOOK_DATA.calcDiscountedUnitPrice = (basePrice, sitePercent = GEEKNOOK_DATA.SITE_DISCOUNT_PERCENT, promoPercent = 0) => {
+  const price = Number(basePrice) || 0;
+  const sitePct = Math.max(0, Math.min(90, Number(sitePercent) || 0));
+  const promoPct = Math.max(0, Math.min(90, Number(promoPercent) || 0));
+  const afterSite = Math.round(price * (100 - sitePct) / 100);
+  return promoPct > 0 ? Math.round(afterSite * (100 - promoPct) / 100) : afterSite;
+};
+
+GEEKNOOK_DATA.formatDiscountBadge = (sitePercent = GEEKNOOK_DATA.SITE_DISCOUNT_PERCENT, promoPercent = 0) => {
+  const sitePct = Math.max(0, Number(sitePercent) || 0);
+  const promoPct = Math.max(0, Number(promoPercent) || 0);
+  return promoPct > 0 ? `-${sitePct}% + -${promoPct}%` : `-${sitePct}%`;
+};
 
 if (typeof window !== 'undefined') {
   window.GEEKNOOK_DATA = GEEKNOOK_DATA;

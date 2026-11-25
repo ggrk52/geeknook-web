@@ -8,6 +8,8 @@ Usage:
 
 import os
 import re
+import shutil
+import subprocess
 import sys
 
 def minify_css(css_text):
@@ -203,19 +205,45 @@ def main():
         saving = (1 - (min_kb / orig_kb)) * 100
         print(f"✓ modern-style.css: {orig_kb:.1f} KB -> {min_kb:.1f} KB (-{saving:.1f}%) -> css/modern-style.min.css")
 
-    # 2. Minify modern-app.js
+    # 2. Minify modern-app.js (prefer esbuild AST minifier, fallback to safe Python minifier)
     js_path = os.path.join(base_dir, 'js', 'modern-app.js')
     js_out = os.path.join(base_dir, 'js', 'modern-app.min.js')
     if os.path.exists(js_path):
         with open(js_path, 'r', encoding='utf-8') as f:
             raw_js = f.read()
-        min_js = minify_js_safe(raw_js)
-        with open(js_out, 'w', encoding='utf-8') as f:
-            f.write(min_js)
         orig_kb = len(raw_js.encode('utf-8')) / 1024
-        min_kb = len(min_js.encode('utf-8')) / 1024
+        used_tool = 'python-safe'
+
+        esbuild_bin = shutil.which('esbuild')
+        cmd = (
+            [esbuild_bin, js_path, '--minify', '--target=es2020', '--charset=utf8', f'--outfile={js_out}']
+            if esbuild_bin
+            else (
+                ['npx', '--yes', 'esbuild', js_path, '--minify', '--target=es2020', '--charset=utf8', f'--outfile={js_out}']
+                if shutil.which('npx')
+                else None
+            )
+        )
+
+        esbuild_ok = False
+        if cmd:
+            try:
+                proc = subprocess.run(cmd, capture_output=True, text=True, timeout=30)
+                if proc.returncode == 0 and os.path.exists(js_out) and os.path.getsize(js_out) > 0:
+                    esbuild_ok = True
+                    used_tool = 'esbuild'
+            except Exception:
+                esbuild_ok = False
+
+        if not esbuild_ok:
+            min_js = minify_js_safe(raw_js)
+            with open(js_out, 'w', encoding='utf-8') as f:
+                f.write(min_js)
+
+        with open(js_out, 'rb') as f:
+            min_kb = len(f.read()) / 1024
         saving = (1 - (min_kb / orig_kb)) * 100
-        print(f"✓ modern-app.js: {orig_kb:.1f} KB -> {min_kb:.1f} KB (-{saving:.1f}%) -> js/modern-app.min.js")
+        print(f"✓ modern-app.js ({used_tool}): {orig_kb:.1f} KB -> {min_kb:.1f} KB (-{saving:.1f}%) -> js/modern-app.min.js")
 
     print("=" * 60)
     print("✨ Minification finished successfully!")

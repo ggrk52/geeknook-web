@@ -93,7 +93,7 @@
   window.GEEKNOOK_CDN_URL = BASE_URL;
 
   // Dynamic build version and cache-busting to bypass aggressive browser caching in Safari
-  const BUILD_VER = '2026-11-20-storefront-1';
+  const BUILD_VER = '2026-11-25-1';
 
   // DNS & TLS Preconnect to GitHub Pages CDN
   try {
@@ -118,10 +118,7 @@
     if (!img) return;
     const rawSrc = img.getAttribute('src') || '';
     const propSrc = img.src || '';
-    let srcToCheck = rawSrc || propSrc;
-    if (img.classList && img.classList.contains('card-img-main') && ((img.alt && img.alt.includes('Walnut')) || (img.closest && img.closest('#focus-station-walnut')))) {
-      srcToCheck = 'images/focus-station-walnut-studio.jpg';
-    }
+    const srcToCheck = rawSrc || propSrc;
     if (srcToCheck.includes('images/') && !srcToCheck.includes('github.io')) {
       const clean = srcToCheck.substring(srcToCheck.indexOf('images/')).replace(/^\.?\//, '');
       const newUrl = BASE_URL + clean;
@@ -177,7 +174,7 @@
         BASE_URL + 'js/products-data.js?v=' + BUILD_VER,
         BASE_URL + 'js/modules/analytics.js?v=' + BUILD_VER,
         BASE_URL + 'js/modules/cdek-picker.js?v=' + BUILD_VER,
-        BASE_URL + 'js/modern-app.js?v=' + BUILD_VER,
+        BASE_URL + 'js/modern-app.min.js?v=' + BUILD_VER,
         BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_VER,
         BASE_URL + 'js/modules/papercraft.js?v=' + BUILD_VER
       ];
@@ -230,13 +227,14 @@
         });
       });
 
-      // Ensure journal and legal links resolve to live CDN on Tilda
+      // Keep journal, B2B and legal links on geeknook.ru for SEO authority
       doc.querySelectorAll('a').forEach(a => {
         const href = a.getAttribute('href');
-        if (href && (href === 'journal.html' || href.startsWith('journal/'))) {
-          a.setAttribute('href', BASE_URL + href.replace(/^\.?\//, ''));
-          a.setAttribute('target', '_blank');
-          a.setAttribute('rel', 'noopener');
+        if (href && (href === 'journal.html' || href === '/journal.html' || href === 'journal' || href === '/journal')) {
+          a.setAttribute('href', '/journal');
+        } else if (href && href.startsWith('journal/')) {
+          const slug = href.replace(/^journal\//, '').replace(/\.html$/, '');
+          a.setAttribute('href', '/journal?article=' + encodeURIComponent(slug));
         } else if (href && (href === 'legal.html' || href.startsWith('legal.html#') || href === '/legal' || href.startsWith('/legal#'))) {
           if (!a.getAttribute('onclick')) {
             const hash = href.includes('#') ? href.substring(href.indexOf('#')) : '';
@@ -310,12 +308,6 @@
         }
       });
       observer.observe(document.body, { childList: true, subtree: true });
-
-      // Periodic sweep for 6 seconds to ensure any async/delayed renderers are caught
-      const sweepInterval = setInterval(() => {
-        document.querySelectorAll('img').forEach(fixAnyImage);
-      }, 250);
-      setTimeout(() => clearInterval(sweepInterval), 6000);
 
       // 2. Load Application Scripts in dependency order (already prefetched in parallel!)
       for (const src of jsAssets) {

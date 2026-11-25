@@ -293,22 +293,16 @@
     }
   };
 
-  // --- PROMO CODES SYSTEM ---
-  const PROMO_CODES = {
-    'DEVTOOLS10': { discount: 10, label: 'DEVTOOLS10 (-10%)', description: 'Инженерная скидка разработчика' },
-    'GEEK10': { discount: 10, label: 'GEEK10 (-10%)', description: 'Приветственная скидка GeekNook' },
-    'ДАША': { discount: 10, label: 'ДАША (-10%)', description: 'Специальный промокод команды' },
-    'DASHA': { discount: 10, label: 'DASHA (-10%)', description: 'Специальный промокод команды' },
-    'FOCUS15': { discount: 15, label: 'FOCUS15 (-15%)', description: 'Скидка на рабочее место Focus' },
-    'WELCOME5': { discount: 5, label: 'WELCOME5 (-5%)', description: 'Приветственный бонус 5%' }
-  };
+  // --- PROMO CODES SYSTEM (Single source of truth in GEEKNOOK_DATA) ---
+  const PROMO_CODES = (typeof GEEKNOOK_DATA !== 'undefined' && GEEKNOOK_DATA.PROMO_CODES) || {};
 
   const loadPromo = () => {
     try {
       const saved = safeStorage.getItem('geeknook_promo');
-      if (saved && PROMO_CODES[saved.toUpperCase()]) {
-        return saved.toUpperCase();
-      }
+      const info = typeof GEEKNOOK_DATA !== 'undefined' && GEEKNOOK_DATA.getPromoInfo
+        ? GEEKNOOK_DATA.getPromoInfo(saved)
+        : (saved && PROMO_CODES[saved.toUpperCase()] ? { code: saved.toUpperCase(), ...PROMO_CODES[saved.toUpperCase()] } : null);
+      if (info) return info.code;
     } catch (e) {
       console.warn('[Defensive] Failed to load promo from storage:', e);
     }
@@ -320,8 +314,8 @@
   // --- APPLICATION STATE ---
   const state = {
     cart: loadCart(),
-    siteDiscountPercent: 20, // Automatic site discount on all orders
-    promoDiscountPercent: initialPromo ? PROMO_CODES[initialPromo].discount : 0,
+    siteDiscountPercent: (typeof GEEKNOOK_DATA !== 'undefined' && GEEKNOOK_DATA.SITE_DISCOUNT_PERCENT) || 20, // Automatic site discount on all orders
+    promoDiscountPercent: initialPromo && PROMO_CODES[initialPromo] ? PROMO_CODES[initialPromo].discount : 0,
     activePromoCode: initialPromo || '',
     config: {
       finishId: 'black',
@@ -386,6 +380,9 @@
       console.warn('[Defensive] saveCart failed:', e);
     }
     updateCartUI();
+    try {
+      window.dispatchEvent(new CustomEvent('geeknook:cart-updated'));
+    } catch (_) {}
   };
 
   const triggerBadgeBounce = () => {
@@ -697,12 +694,31 @@
     checkScroll();
   };
 
-  const discountedUnitPrice = (price, percent) => Math.round(price * (100 - percent) / 100);
+  const discountedUnitPrice = (price, sitePercent = 20, promoPercent = 0) => {
+    if (typeof GEEKNOOK_DATA !== 'undefined' && typeof GEEKNOOK_DATA.calcDiscountedUnitPrice === 'function') {
+      return GEEKNOOK_DATA.calcDiscountedUnitPrice(price, sitePercent, promoPercent);
+    }
+    const afterSite = Math.round((Number(price) || 0) * (100 - sitePercent) / 100);
+    return promoPercent > 0 ? Math.round(afterSite * (100 - promoPercent) / 100) : afterSite;
+  };
 
-  const cartDiscount = percent => state.cart.reduce((sum, item) => {
+  const cartDiscount = (sitePercent = 20, promoPercent = 0) => state.cart.reduce((sum, item) => {
     const price = Number(item.price) || 0;
-    return sum + (price - discountedUnitPrice(price, percent)) * (Number(item.quantity) || 1);
+    return sum + (price - discountedUnitPrice(price, sitePercent, promoPercent)) * (Number(item.quantity) || 1);
   }, 0);
+
+  const getCartPricing = () => {
+    const sitePercent = state.siteDiscountPercent || 20;
+    const activePromo = state.activePromoCode && PROMO_CODES[state.activePromoCode] ? state.activePromoCode : '';
+    const promoPercent = activePromo ? (PROMO_CODES[activePromo].discount || 0) : 0;
+    const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
+    const discountAmount = cartDiscount(sitePercent, promoPercent);
+    const grandTotal = Math.max(0, subtotal - discountAmount);
+    const badge = (typeof GEEKNOOK_DATA !== 'undefined' && GEEKNOOK_DATA.formatDiscountBadge)
+      ? GEEKNOOK_DATA.formatDiscountBadge(sitePercent, promoPercent)
+      : (promoPercent > 0 ? `-${sitePercent}% + -${promoPercent}%` : `-${sitePercent}%`);
+    return { sitePercent, promoPercent, activePromo, subtotal, discountAmount, grandTotal, badge };
+  };
 
   const stockRequirements = (item) =>
     GEEKNOOK_DATA.bundles.find(bundle => bundle.id === item.id)?.components || [item];
@@ -1037,16 +1053,16 @@
       mobileCartBadge.textContent = totalCount;
     }
 
-    const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
-    const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = cartDiscount(discountPercent);
-    const shippingCost = 0;
-    const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
+    const { sitePercent, promoPercent, activePromo, subtotal, discountAmount, grandTotal, badge: discountBadge } = getCartPricing();
 
     if (subtotalEl) subtotalEl.textContent = formatPrice(subtotal);
     if (discountEl) discountEl.textContent = discountAmount > 0 ? `−${formatPrice(discountAmount)}` : '0 ₽';
     const discountLabel = document.getElementById('cartDiscountLabel');
-    if (discountLabel) discountLabel.textContent = `Акция −${discountPercent}%`;
+    if (discountLabel) {
+      discountLabel.textContent = activePromo
+        ? `Акция −${sitePercent}% + ${activePromo} (−${promoPercent}%)`
+        : `Акция −${sitePercent}%`;
+    }
     if (shippingEl) shippingEl.textContent = 'Бесплатно';
     if (grandTotalEl) grandTotalEl.textContent = formatPrice(grandTotal);
 
@@ -1056,8 +1072,8 @@
     const cartPromoTag = document.getElementById('cartPromoTag');
     const promoInput = document.getElementById('promoInput');
 
-    if (state.activePromoCode && PROMO_CODES[state.activePromoCode]) {
-      const pData = PROMO_CODES[state.activePromoCode];
+    if (activePromo) {
+      const pData = PROMO_CODES[activePromo];
       if (cartPromoRow) cartPromoRow.style.display = 'none';
       if (cartPromoApplied) cartPromoApplied.style.display = 'flex';
       if (cartPromoTag) cartPromoTag.textContent = `✓ ${pData.label}`;
@@ -1098,7 +1114,7 @@
           const safeQty = Math.max(1, Math.min(99, parseInt(item.quantity, 10) || 1));
           const unitCatalogPrice = Number(item.price) || 0;
           const safeItemTotal = unitCatalogPrice * safeQty;
-          const discountedItemTotal = discountedUnitPrice(unitCatalogPrice, discountPercent) * safeQty;
+          const discountedItemTotal = discountedUnitPrice(unitCatalogPrice, sitePercent, promoPercent) * safeQty;
           const displayStock = GEEKNOOK_DATA?.stock?.getVariantStock
             ? GEEKNOOK_DATA.stock.getVariantStock(item.id, item.option || '')
             : 99;
@@ -1128,7 +1144,7 @@
                   <div class="cart-item-price-wrap">
                     <div class="cart-item-old-price">${formatPrice(safeItemTotal)}</div>
                     <div class="cart-item-price">${formatPrice(discountedItemTotal)}</div>
-                    <span class="cart-item-discount-badge">-${discountPercent}%</span>
+                    <span class="cart-item-discount-badge">${discountBadge}</span>
                   </div>
                 </div>
               </div>
@@ -1230,17 +1246,17 @@
     if (!titleEl || !priceEl || !btnTextEl) return;
 
     const totalCount = state.cart.reduce((sum, i) => sum + (parseInt(i.quantity, 10) || 0), 0);
-    const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
-    const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = cartDiscount(discountPercent);
-    const shippingCost = 0;
-    const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
+    const { sitePercent, promoPercent, grandTotal } = getCartPricing();
 
     if (totalCount > 0) {
       const itemWord = totalCount === 1 ? 'товар' : (totalCount < 5 ? 'товара' : 'товаров');
       titleEl.textContent = `В корзине ${totalCount} ${itemWord}`;
       priceEl.textContent = formatPrice(grandTotal);
-      if (badgeEl) badgeEl.textContent = `Скидка ${discountPercent}%`;
+      if (badgeEl) {
+        badgeEl.textContent = promoPercent > 0
+          ? `Скидка ${sitePercent}% + ${promoPercent}%`
+          : `Скидка ${sitePercent}%`;
+      }
       btnTextEl.textContent = 'Оформить';
     } else {
       titleEl.textContent = 'Focus Station 22 мм';
@@ -1538,16 +1554,10 @@
     const shippingVal = document.getElementById('checkoutShippingVal');
     const grandTotalEl = document.getElementById('checkoutGrandTotalSummary');
 
-    const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
-    const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = cartDiscount(discountPercent);
-    const itemsTotal = Math.max(0, subtotal - discountAmount);
-    
-    const shippingCost = 0;
-    const grandTotal = Math.max(0, itemsTotal + shippingCost);
+    const { sitePercent, promoPercent, activePromo, subtotal, discountAmount, grandTotal } = getCartPricing();
 
-    if (state.activePromoCode && PROMO_CODES[state.activePromoCode]) {
-      const pData = PROMO_CODES[state.activePromoCode];
+    if (activePromo) {
+      const pData = PROMO_CODES[activePromo];
       if (row) row.style.display = 'none';
       if (applied) applied.style.display = 'flex';
       if (tag) tag.textContent = `✓ ${pData.label}`;
@@ -1561,9 +1571,9 @@
       if (discountAmount > 0) {
         discountRow.style.display = 'flex';
         if (discountLabel) {
-          discountLabel.textContent = (state.activePromoCode && PROMO_CODES[state.activePromoCode])
-            ? `Скидка (${state.activePromoCode}):`
-            : `Скидка на сайте (-${discountPercent}%):`;
+          discountLabel.textContent = activePromo
+            ? `Скидка −${sitePercent}% + ${activePromo} (−${promoPercent}%):`
+            : `Скидка на сайте (-${sitePercent}%):`;
         }
         if (discountVal) discountVal.textContent = `-${formatPrice(discountAmount)}`;
       } else {
@@ -1592,6 +1602,7 @@
 
     if (PROMO_CODES[code]) {
       const promo = PROMO_CODES[code];
+      const sitePct = state.siteDiscountPercent || 20;
       state.promoDiscountPercent = promo.discount;
       state.activePromoCode = code;
       try {
@@ -1599,11 +1610,7 @@
       } catch (e) {}
       saveCart();
       updateCheckoutPromoUI();
-      if (promo.discount <= (state.siteDiscountPercent || 20)) {
-        showToast(`Промокод ${code} активирован! На сайте уже действует спецскидка 20%`, 'success');
-      } else {
-        showToast(`Промокод ${code} применён: скидка ${promo.discount}%!`, 'success');
-      }
+      showToast(`Промокод ${code} активирован: доп. скидка ${promo.discount}% поверх скидки сайта −${sitePct}%!`, 'success');
       return true;
     } else {
       showToast('Неверный промокод', 'error');
@@ -4228,14 +4235,14 @@
     window.geekNookAnalytics?.trackCheckoutStart?.(state.cart);
     const summaryList = document.getElementById('checkoutItemsSummary');
     const summaryTotal = document.getElementById('checkoutGrandTotalSummary');
-    const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
+    const { sitePercent, promoPercent, grandTotal } = getCartPricing();
 
     if (summaryList) {
       summaryList.innerHTML = state.cart.map(i => {
         const safeTitle = escapeHTML(i.title);
         const safeQty = Math.max(1, Math.min(99, parseInt(i.quantity, 10) || 1));
         const safeTotal = (Number(i.price) || 0) * safeQty;
-        const discountedTotal = discountedUnitPrice(Number(i.price) || 0, discountPercent) * safeQty;
+        const discountedTotal = discountedUnitPrice(Number(i.price) || 0, sitePercent, promoPercent) * safeQty;
         return `
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:0.875rem;">
             <span style="color:var(--text-muted);">${safeTitle} × ${safeQty}${i.option && i.option !== 'Стандарт' ? `<small class="checkout-item-option">${escapeHTML(i.option)}</small>` : ''}</span>
@@ -4247,11 +4254,6 @@
         `;
       }).join('');
     }
-
-    const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = cartDiscount(discountPercent);
-    const shippingCost = 0;
-    const grandTotal = Math.max(0, (subtotal - discountAmount) + shippingCost);
 
     if (summaryTotal) summaryTotal.textContent = formatPrice(grandTotal);
     updateCheckoutPromoUI();
@@ -4474,19 +4476,15 @@
     const safeDelivery = escapeHTML(formData.get('delivery') || 'СДЭК');
     const safePayment = escapeHTML(formData.get('payment') || 'При получении');
 
-    const discountPercent = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
+    const { sitePercent, promoPercent, activePromo, subtotal, discountAmount, grandTotal } = getCartPricing();
     const orderNumber = form.dataset.orderNumber || ('GN-' + Math.floor(100000 + Math.random() * 900000));
-    const subtotal = state.cart.reduce((sum, i) => sum + ((Number(i.price) || 0) * (parseInt(i.quantity, 10) || 1)), 0);
-    const discountAmount = cartDiscount(discountPercent);
-    const itemsTotal = Math.max(0, subtotal - discountAmount);
     const isFreeShipping = true;
     const shippingCost = 0;
-    const grandTotal = Math.max(0, itemsTotal + shippingCost);
 
     const detailsEl = document.getElementById('successOrderDetails');
     if (detailsEl) {
       const promoInfoHtml = discountAmount > 0
-        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Скидка на сайте (-${discountPercent}%):</strong> -${formatPrice(discountAmount)} ${state.activePromoCode ? `(Промокод: ${escapeHTML(state.activePromoCode)})` : ''}</div>`
+        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Скидка (${activePromo ? `−${sitePercent}% + ${activePromo} −${promoPercent}%` : `−${sitePercent}%`}):</strong> -${formatPrice(discountAmount)}</div>`
         : '';
 
       const pvzInfoHtml = state.selectedPvz
@@ -4543,12 +4541,13 @@
       })),
       items_summary: itemsList.join('\n'),
       subtotal: subtotal,
-      discount_percent: discountPercent,
+      discount_percent: sitePercent,
+      promo_discount_percent: promoPercent,
       discount_amount: discountAmount,
       shipping_cost: shippingCost,
       is_free_shipping: isFreeShipping,
       grand_total: grandTotal,
-      promo_code: state.activePromoCode || '',
+      promo_code: activePromo || '',
       utm: getCapturedUtm(),
       tildaDispatched: form.dataset.tildaDispatched === 'true',
       timestamp: new Date().toISOString()
@@ -4705,8 +4704,10 @@
       if (chosenOption !== 'Стандарт' && product.optionPrices && product.optionPrices[chosenOption]) {
         basePrice = product.optionPrices[chosenOption];
       }
-      const discountPct = Math.max(state.siteDiscountPercent || 20, state.promoDiscountPercent || 0);
-      const discountedPrice = Math.round(basePrice * ((100 - discountPct) / 100));
+      const sitePct = state.siteDiscountPercent || 20;
+      const promoPct = (state.activePromoCode && PROMO_CODES[state.activePromoCode]) ? PROMO_CODES[state.activePromoCode].discount : 0;
+      const discountedPrice = discountedUnitPrice(basePrice, sitePct, promoPct);
+      const badgeLabel = promoPct > 0 ? `-${sitePct}% + -${promoPct}%` : `-${sitePct}%`;
 
       summaryEl.innerHTML = `
         <img class="quick-buy-prod-img" src="${toAssetUrl(product.images && product.images[0])}" alt="${safeTitle}" onerror="this.onerror=null;this.src=toAssetUrl('images/tild6138-3463-4138-b133-323262633039__2.jpg')" />
@@ -4715,7 +4716,7 @@
           <div class="quick-buy-prod-price" style="display:flex;align-items:center;gap:8px;margin-top:4px;">
             <span style="text-decoration:line-through;color:var(--text-muted);font-size:0.9rem;opacity:0.75;">${formatPrice(basePrice)}</span>
             <span style="color:var(--text-main);font-weight:800;">${formatPrice(discountedPrice)}</span>
-            <span class="cart-item-discount-badge" style="background:rgba(16,185,129,0.15);color:#10b981;font-size:0.75rem;padding:2px 6px;border-radius:4px;font-weight:700;">-${discountPct}%</span>
+            <span class="cart-item-discount-badge" style="background:rgba(16,185,129,0.15);color:#10b981;font-size:0.75rem;padding:2px 6px;border-radius:4px;font-weight:700;">${badgeLabel}</span>
           </div>
         </div>
       `;
@@ -4878,14 +4879,15 @@
 
   const dispatchUnifiedOrder = async (orderPayload) => {
     const isQuickBuy = orderPayload.type === 'quick_buy';
-    const recipientEmail = 'sergeykozlov20066@mail.ru';
+    const recipientEmail = (typeof window !== 'undefined' && window.GEEKNOOK_FORMSUBMIT_EMAIL) || 'orders@geeknook.ru';
     const tildaDispatched = Boolean(orderPayload.tildaDispatched);
+    const stockAlreadyCommitted = Boolean(orderPayload.stockCommitted);
 
     const itemsForStock = isQuickBuy
       ? (orderPayload.product_id ? [{ id: orderPayload.product_id, option: orderPayload.product_option || 'Стандарт', quantity: 1 }] : [])
       : (Array.isArray(orderPayload.items) ? orderPayload.items : []);
 
-    if (!tildaDispatched && GEEKNOOK_DATA?.stock?.checkAvailability && itemsForStock.length > 0) {
+    if (!tildaDispatched && !stockAlreadyCommitted && GEEKNOOK_DATA?.stock?.checkAvailability && itemsForStock.length > 0) {
       const availability = await GEEKNOOK_DATA.stock.checkAvailability(itemsForStock, [], false);
       if (!availability.ok) {
         refreshCatalogStockUI();
@@ -4904,34 +4906,30 @@
       return;
     }
 
-    // Email Notification via FormSubmit AJAX (bounded timeout so blocked networks never freeze checkout)
-    let emailAck = false;
-    try {
-      const emailSubject = `Заказ №${std.orderNumberStr}`;
+    // Secondary FormSubmit notification: awaited only in standalone mode; non-blocking with 3s timeout on Tilda
+    const emailPayload = {
+      _subject: `Заказ №${std.orderNumberStr}`,
+      _template: 'box',
+      _captcha: 'false',
+      _honey: '',
+      _autoresponse: 'false',
+      'Заказ': `Заказ №${std.orderNumberStr}`,
+      'Товары': std.itemsText,
+      'Сумма платежа': `${std.totalPayment} RUB`,
+      'Платежная система': orderPayload.payment || 'Уточнить при звонке',
+      'Name': std.cleanName,
+      'Email': std.cleanEmail,
+      'Phone': std.cleanPhone,
+      'Код_ПВЗ_СДЭК': std.pvzCode,
+      'Код заявки': std.leadCode,
+      'Код блока': std.blockCode,
+      'Форма': std.formType,
+      'URL': std.pageUrl,
+      'Сообщение': std.fullMessage
+    };
 
-      const emailPayload = {
-        _subject: emailSubject,
-        _template: 'box',
-        _captcha: 'false',
-        _honey: '',
-        _autoresponse: 'false',
-        'Заказ': `Заказ №${std.orderNumberStr}`,
-        'Товары': std.itemsText,
-        'Сумма платежа': `${std.totalPayment} RUB`,
-        'Платежная система': orderPayload.payment || 'Уточнить при звонке',
-        'Name': std.cleanName,
-        'Email': std.cleanEmail,
-        'Phone': std.cleanPhone,
-        'Код_ПВЗ_СДЭК': std.pvzCode,
-        'Код заявки': std.leadCode,
-        'Код блока': std.blockCode,
-        'Форма': std.formType,
-        'URL': std.pageUrl,
-        'Сообщение': std.fullMessage
-      };
-
+    const sendFormSubmit = async (timeoutMs) => {
       const controller = typeof AbortController === 'function' ? new AbortController() : null;
-      const timeoutMs = tildaDispatched ? 3500 : 8000;
       const timerId = controller ? setTimeout(() => controller.abort(), timeoutMs) : null;
       try {
         const response = await fetch(`https://formsubmit.co/ajax/${recipientEmail}`, {
@@ -4941,29 +4939,36 @@
             'Accept': 'application/json'
           },
           body: JSON.stringify(emailPayload),
+          keepalive: true,
           signal: controller ? controller.signal : undefined
         });
         const result = await response.json();
         if (!response.ok || (result.success !== true && result.success !== 'true')) {
           throw new Error('Order delivery was not acknowledged');
         }
-        emailAck = true;
+        return true;
       } finally {
         if (timerId) clearTimeout(timerId);
       }
-    } catch (e) {
-      if (!tildaDispatched) {
+    };
+
+    let emailAck = false;
+    if (tildaDispatched) {
+      // Fire-and-forget secondary backup without blocking UX or stock commit
+      sendFormSubmit(3000).catch(() => {});
+    } else {
+      try {
+        emailAck = await sendFormSubmit(8000);
+      } catch (e) {
         throw new Error('Order delivery failed', { cause: e });
       }
-      console.warn('[GeekNook] Secondary FormSubmit notification skipped/timed out after Tilda delivery:', e?.message || e);
+      if (!emailAck) {
+        throw new Error('Order delivery failed');
+      }
     }
 
-    if (!tildaDispatched && !emailAck) {
-      throw new Error('Order delivery failed');
-    }
-
-    // Deduct stock only after a notification service acknowledges delivery.
-    if (GEEKNOOK_DATA?.stock?.commitOrder && itemsForStock.length > 0) {
+    // Deduct stock after delivery acknowledgement (idempotent if already committed)
+    if (!stockAlreadyCommitted && GEEKNOOK_DATA?.stock?.commitOrder && itemsForStock.length > 0) {
       const commitRes = await GEEKNOOK_DATA.stock.commitOrder(std.orderNumberStr, itemsForStock, orderPayload.type || 'cart');
       if (commitRes && commitRes.ok === false) {
         refreshCatalogStockUI();
@@ -5089,9 +5094,9 @@
       appliedPromo = state.activePromoCode;
     }
 
-    const discountPct = Math.max(state.siteDiscountPercent || 20, promoPct);
-    const discountAmount = Math.round(basePrice * (discountPct / 100));
-    const finalPrice = Math.max(0, basePrice - discountAmount);
+    const sitePct = state.siteDiscountPercent || 20;
+    const finalPrice = discountedUnitPrice(basePrice, sitePct, promoPct);
+    const discountAmount = Math.max(0, basePrice - finalPrice);
 
     const safeTitle = escapeHTML(prod.title);
     const safeOpt = escapeHTML(option !== 'Стандарт' ? `(${option})` : '');
@@ -5107,7 +5112,8 @@
       price: finalPrice,
       base_price: basePrice,
       discount_amount: discountAmount,
-      discount_percent: discountPct,
+      discount_percent: sitePct,
+      promo_discount_percent: promoPct,
       promo_code: appliedPromo,
       utm: getCapturedUtm(),
       timestamp: new Date().toISOString()
@@ -5128,7 +5134,7 @@
     const detailsEl = document.getElementById('successOrderDetails');
     if (detailsEl) {
       const promoHtml = discountAmount > 0
-        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Скидка на сайте (-${discountPct}%):</strong> -${formatPrice(discountAmount)} ${appliedPromo ? `(Промокод: ${escapeHTML(appliedPromo)})` : ''}</div>`
+        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Скидка (${appliedPromo ? `−${sitePct}% + ${appliedPromo} −${promoPct}%` : `−${sitePct}%`}):</strong> -${formatPrice(discountAmount)}</div>`
         : '';
 
       detailsEl.innerHTML = `
