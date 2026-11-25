@@ -104,10 +104,18 @@ function sanitizePositiveInt(val, fallback = 0) {
 
 function normalizeSeedItem(raw) {
   const code = String(raw?.code || '').trim();
-  if (!code) return null;
-  const initialStock = sanitizePositiveInt(raw?.initialStock ?? (sanitizePositiveInt(raw?.stock) + sanitizePositiveInt(raw?.initialSpent)));
-  const initialSpent = sanitizePositiveInt(raw?.initialSpent);
-  const stock = raw?.stock !== undefined ? sanitizePositiveInt(raw.stock) : Math.max(0, initialStock - initialSpent);
+  if (!/^\d{1,32}$/.test(code)) return null;
+  const integer = value => (typeof value === 'number' || typeof value === 'string') &&
+    /^\d+$/.test(String(value)) && Number.isSafeInteger(Number(value));
+  const spent = raw.initialSpent ?? 0;
+  if (!integer(spent) || !integer(raw.price) || Number(raw.price) <= 0) return null;
+  const initialSpent = Number(spent);
+  const available = raw.stock ?? (Number(raw.initialStock) - initialSpent);
+  if (!integer(available)) return null;
+  const stock = Number(available);
+  const total = raw.initialStock ?? (stock + initialSpent);
+  if (!integer(total) || Number(total) !== stock + initialSpent) return null;
+  const initialStock = Number(total);
   return {
     code,
     name: String(raw?.name || code).slice(0, 240),
@@ -172,6 +180,8 @@ function toAdminView(state) {
     ok: true,
     success: true,
     mode: 'admin',
+    revision: state.revision || 0,
+    canRestoreImport: Boolean(state.importBackup),
     capped: false,
     stockDate: state.stockDate || '',
     snapshotHash: state.snapshotHash || '',
@@ -218,8 +228,14 @@ export class StockLedgerDO {
   }
 
   async persist() {
+    this.state.revision = (this.state.revision || 0) + 1;
     this.state.updatedAt = new Date().toISOString();
     await this.ctx.storage.put('ledger', this.state);
+  }
+
+  async adminView() {
+    const rows = await this.ctx.storage.list({ prefix: 'review:', limit: 51 });
+    return { ...toAdminView(this.state), unresolvedOrders: [...rows.values()].slice(0, 50), moreUnresolved: rows.size > 50 };
   }
 
   checkRateLimit(ip) {
@@ -269,6 +285,16 @@ export class StockLedgerDO {
 
   async fetch(request) {
     const url = new URL(request.url);
+    if (url.hostname === 'geeknook-internal.invalid' && url.pathname === '/review-webhook') {
+      const { orderNumber, reason } = await request.json();
+      if (!/^GN-[A-Z0-9_-]{4,43}$/i.test(orderNumber) || !['catalog', 'shortage', 'conflict', 'invalid'].includes(reason)) {
+        return new Response(null, { status: 400 });
+      }
+      const key = 'review:' + orderNumber;
+      const review = await this.ctx.storage.get(key);
+      await this.ctx.storage.put(key, { orderNumber, reason, receivedAt: review?.receivedAt || new Date().toISOString() });
+      return new Response(null, { status: 204 });
+    }
     if (url.hostname === 'geeknook-internal.invalid' && url.pathname === '/webhook-probe') {
       if (request.method === 'POST') {
         const receipt = await request.json();
@@ -333,7 +359,8 @@ export class StockLedgerDO {
             : (first.available <= 5
               ? `Осталось всего ${first.available} шт. — больше оформить нельзя`
               : 'Превышен доступный остаток на складе для онлайн-заказа'),
-          ...toPublicView(this.state, publicCap)
+          ...toPublicView(this.state, publicCap),
+          ok: false, success: false
         }, 409, origin, this.env);
       }
       return jsonResponse({ ok: true, shortages: [], ...toPublicView(this.state, publicCap) }, 200, origin, this.env);
@@ -395,7 +422,8 @@ export class StockLedgerDO {
             : (first.available <= 5
               ? `На складе осталось только ${first.available} шт.`
               : 'Недостаточно товара на складе'),
-          ...toPublicView(this.state, publicCap)
+          ...toPublicView(this.state, publicCap),
+          ok: false, success: false
         }, 409, origin, this.env);
       }
 
@@ -418,9 +446,17 @@ export class StockLedgerDO {
         this.state.movements.length = 50;
       }
 
+      if (this.state.importBackup) {
+        for (const [code, qty] of counts) {
+          const spent = this.state.importBackup.sold;
+          spent[code] = (spent[code] || 0) + qty;
+        }
+      }
       if (trusted) {
+        this.state.revision = (this.state.revision || 0) + 1;
         this.state.updatedAt = new Date().toISOString();
         await this.ctx.storage.put({ ledger: this.state, [receiptKey]: { signature } });
+        await this.ctx.storage.delete('review:' + orderNumber);
       } else {
         await this.persist();
       }
@@ -438,8 +474,39 @@ export class StockLedgerDO {
       return jsonResponse({ ok: false, error: 'Unauthorized: неверный пароль администратора' }, 401, origin, this.env);
     }
 
+    if (action === 'resolve_review') {
+      if (!/^GN-[A-Z0-9_-]{4,43}$/i.test(body.orderNumber || '')) return jsonResponse({ ok: false }, 400, origin, this.env);
+      await this.ctx.storage.delete('review:' + body.orderNumber);
+      return jsonResponse(await this.adminView(), 200, origin, this.env);
+    }
     if (action === 'admin_list') {
-      return jsonResponse(toAdminView(this.state), 200, origin, this.env);
+      return jsonResponse(await this.adminView(), 200, origin, this.env);
+    }
+
+    if (['seed', 'restore_import', 'reset'].includes(action) && Object.keys(this.state.items).length &&
+        body.expectedRevision !== (this.state.revision || 0)) {
+      return jsonResponse({ ok: false, error: 'Версия склада изменилась. Обновите данные и проверьте изменения ещё раз.' }, 409, origin, this.env);
+    }
+
+    if (action === 'restore_import') {
+      const backup = this.state.importBackup;
+      if (!backup) return jsonResponse({ ok: false, error: 'Нет предыдущего снимка' }, 409, origin, this.env);
+      const items = structuredClone(backup.items);
+      const deductions = { ...backup.deductions };
+      for (const code of new Set([...Object.keys(backup.sold), ...Object.keys(backup.adjusted)])) {
+        const row = items[code];
+        const delta = backup.adjusted[code] || 0;
+        const spent = (deductions[code] || 0) + (backup.sold[code] || 0) + Math.max(0, -delta);
+        if (!row || row.initialStock + Math.max(0, delta) < row.initialSpent + spent) {
+          return jsonResponse({ ok: false, error: 'Восстановление конфликтует с движениями по артикулу ' + code }, 409, origin, this.env);
+        }
+        row.initialStock += Math.max(0, delta);
+        row.stock = row.initialStock - row.initialSpent;
+        deductions[code] = spent;
+      }
+      Object.assign(this.state, { items, deductions, stockDate: backup.stockDate, snapshotHash: backup.snapshotHash, importBackup: null });
+      await this.persist();
+      return jsonResponse(await this.adminView(), 200, origin, this.env);
     }
 
     if (action === 'seed') {
@@ -447,21 +514,28 @@ export class StockLedgerDO {
       const nextItems = {};
       for (const raw of rawItems) {
         const norm = normalizeSeedItem(raw);
-        if (norm) nextItems[norm.code] = norm;
+        if (!norm || nextItems[norm.code]) return jsonResponse({ ok: false, error: 'Некорректная или повторяющаяся строка прайса' }, 400, origin, this.env);
+        nextItems[norm.code] = norm;
       }
       if (!Object.keys(nextItems).length) {
         return jsonResponse({ ok: false, error: 'Пустой прайс для импорта' }, 400, origin, this.env);
+      }
+      const removed = Object.keys(this.state.items).filter(code => !nextItems[code]).sort();
+      if (removed.length && JSON.stringify(removed) !== JSON.stringify(body.confirmRemoved)) {
+        return jsonResponse({ ok: false, error: 'Подтвердите отсутствующие артикулы', removed }, 409, origin, this.env);
+      }
+      if (Object.keys(this.state.items).length) {
+        this.state.importBackup = { items: this.state.items, deductions: { ...this.state.deductions },
+          stockDate: this.state.stockDate, snapshotHash: this.state.snapshotHash, sold: {}, adjusted: {} };
       }
       this.state.items = nextItems;
       this.state.stockDate = String(body.stockDate || new Date().toISOString().slice(0, 10));
       this.state.snapshotHash = String(body.snapshotHash || '');
       if (!body.keepDeductions) {
         this.state.deductions = {};
-        this.state.committedOrders = [];
-        this.state.movements = [];
       }
       await this.persist();
-      return jsonResponse({ ok: true, imported: Object.keys(nextItems).length, ...toAdminView(this.state) }, 200, origin, this.env);
+      return jsonResponse({ ok: true, imported: Object.keys(nextItems).length, ...await this.adminView() }, 200, origin, this.env);
     }
 
     if (action === 'adjust') {
@@ -477,6 +551,10 @@ export class StockLedgerDO {
       const currentReal = this.realStockFor(code);
       const nextReal = Math.max(0, currentReal + delta);
       const actualDelta = nextReal - currentReal;
+      if (this.state.importBackup && actualDelta) {
+        const adjusted = this.state.importBackup.adjusted;
+        adjusted[code] = (adjusted[code] || 0) + actualDelta;
+      }
       if (actualDelta > 0) {
         targetItem.initialStock = sanitizePositiveInt(targetItem.initialStock) + actualDelta;
       } else if (actualDelta < 0) {
@@ -490,15 +568,16 @@ export class StockLedgerDO {
       });
       if (this.state.movements.length > 50) this.state.movements.length = 50;
       await this.persist();
-      return jsonResponse({ ok: true, ...toAdminView(this.state) }, 200, origin, this.env);
+      return jsonResponse({ ok: true, ...await this.adminView() }, 200, origin, this.env);
     }
 
     if (action === 'reset') {
+      this.state.importBackup = null;
       this.state.deductions = {};
       this.state.committedOrders = [];
       this.state.movements = [];
       await this.persist();
-      return jsonResponse({ ok: true, ...toAdminView(this.state) }, 200, origin, this.env);
+      return jsonResponse({ ok: true, ...await this.adminView() }, 200, origin, this.env);
     }
 
     return jsonResponse({ ok: false, error: 'Unknown action' }, 400, origin, this.env);
@@ -586,8 +665,16 @@ async function verifyTildaWebhook(request, env, secret) {
   }
   if (String(env.STOCK_WEBHOOK_MODE || '') === 'active' && !(payload.test === 'test' && !productCount)) {
     const orderNumber = payload['Номер заказа сайта'] || payload['Номер_заказа_сайта'];
-    if (typeof orderNumber !== 'string' || !/^GN-(?:1C-)?[A-Z0-9_-]{4,40}$/i.test(orderNumber) ||
-        !productCount || !stockLines.every(Boolean)) {
+    const validReference = typeof orderNumber === 'string' && /^GN-(?:1C-)?[A-Z0-9_-]{4,40}$/i.test(orderNumber);
+    const recordReview = async reason => {
+      if (!validReference) return;
+      const saved = await ledger.fetch(new Request('https://geeknook-internal.invalid/review-webhook', {
+        method: 'POST', body: JSON.stringify({ orderNumber, reason })
+      }));
+      if (!saved.ok) throw new Error('Cannot store order review');
+    };
+    if (!validReference || !productCount || !stockLines.every(Boolean)) {
+      await recordReview('catalog');
       return new Response('Order could not be matched to stock', { status: 422 });
     }
     const result = await ledger.fetch(new Request('https://geeknook-internal.invalid/webhook-commit', {
@@ -599,7 +686,11 @@ async function verifyTildaWebhook(request, env, secret) {
         items: stockLines.flatMap(line => line.codes.map(code => ({ code, quantity: line.quantity })))
       })
     }));
-    if (!result.ok) return new Response('Stock could not be confirmed', { status: result.status });
+    if (!result.ok) {
+      const detail = await result.json();
+      await recordReview(detail.outOfStock ? 'shortage' : result.status === 409 ? 'conflict' : 'invalid');
+      return new Response('Stock could not be confirmed', { status: result.status });
+    }
   }
   return new Response('ok', {
     headers: { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store' }

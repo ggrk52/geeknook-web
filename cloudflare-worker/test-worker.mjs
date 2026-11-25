@@ -1,10 +1,19 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const isMain = process.argv[1] && import.meta.url === pathToFileURL(fs.realpathSync(process.argv[1])).href;
 import workerDefault, { StockLedgerDO } from './src/index.js';
+
+// Deliberately synthetic quantities. These tests must run on a clean public checkout.
+export const stockFixture = {
+  stockDate: '2026-01-01', snapshotHash: 'fixture',
+  items: Object.fromEntries([
+    ['20240408', 'Тестовый коврик', 1, 2, 1499],
+    ['20240410', 'Тестовый большой коврик', 42, 0, 2499],
+    ['202404210', 'Тестовый держатель', 9, 0, 2999]
+  ].map(([code, name, stock, initialSpent, price]) => [code, { code, name, stock, initialSpent, price }]))
+};
 
 class MockStorage {
   constructor() {
@@ -13,6 +22,10 @@ class MockStorage {
   async get(key) {
     return this.map.get(key);
   }
+  async list({ prefix, limit }) {
+    return new Map([...this.map.entries()].filter(([key]) => key.startsWith(prefix)).sort().slice(0, limit));
+  }
+  async delete(key) { return this.map.delete(key); }
   async put(key, val) {
     if (typeof key === 'object') {
       for (const [name, value] of Object.entries(key)) this.map.set(name, structuredClone(value));
@@ -48,8 +61,7 @@ export function createWorkerHarness(overrides = {}) {
 }
 
 if (isMain) {
-  const stockJsonPath = path.resolve(process.cwd(), 'data/stock.json');
-  const stockDoc = JSON.parse(fs.readFileSync(stockJsonPath, 'utf8'));
+  const stockDoc = stockFixture;
   const harness = createWorkerHarness();
 
   const call = (urlPath, method = 'GET', body = null, headers = {}) => {
@@ -84,8 +96,8 @@ if (isMain) {
   }, { 'X-Admin-Key': harness.env.STOCK_ADMIN_KEY });
   assert.equal(seedRes.status, 200);
   const seedData = await seedRes.json();
-  assert.equal(seedData.imported, 28);
-  assert.equal(seedData.items['20240410'].stock, 437);
+  assert.equal(seedData.imported, 3);
+  assert.equal(seedData.items['20240410'].stock, 42);
 
   // 4. Public GET /stock exposes ONLY capped counts (<=6) and strips spent/movements
   const pubRes = await call('/stock', 'GET');
@@ -184,5 +196,33 @@ if (isMain) {
   assert.equal((await send('/commit', publicCommit)).status, 200);
   const stock = await (await webhook.fetch(new Request(host))).json();
   assert.equal(stock.items['202404205'].stock, initialStock - 1);
+  const admin = (action, fields = {}) => send('/', { action, ...fields }, { 'X-Admin-Key': webhook.env.STOCK_ADMIN_KEY });
+  const getAdmin = async () => (await admin('admin_list')).json();
+  const previous = await getAdmin();
+  assert.equal(previous.unresolvedOrders[0].reason, 'conflict');
+  assert.equal(stock.unresolvedOrders, undefined);
+  await admin('resolve_review', { orderNumber });
+  const seed = { items: [{ code: '202404205', stock: 10, price: 19999 }], expectedRevision: previous.revision };
+  assert.equal((await admin('seed', { ...seed, expectedRevision: -1 })).status, 409);
+  assert.equal((await admin('seed', { ...seed, items: [{ ...seed.items[0], stock: 'oops' }] })).status, 400);
+  assert.equal((await admin('seed', { ...seed, items: [...seed.items, ...seed.items] })).status, 400);
+  assert.equal((await admin('seed', { ...seed, items: [{ code: '111', stock: 0, price: 100 }] })).status, 409);
+  assert.deepEqual((await getAdmin()).items, previous.items);
+  assert.equal((await admin('seed', seed)).status, 200);
+  const second = { ...body, 'Номер_заказа_сайта': 'GN-999991' };
+  assert.equal((await send('/webhooks/tilda/' + secret, second)).status, 200);
+  assert.equal((await admin('adjust', { code: '202404205', delta: 2 })).status, 200);
+  const after = await getAdmin();
+  assert.equal(after.items['202404205'].stock, 11);
+  const restored = await (await admin('restore_import', { expectedRevision: after.revision })).json();
+  assert.equal(restored.items['202404205'].stock, initialStock - 2 + 2);
+  assert.equal(restored.canRestoreImport, false);
+  assert.equal(restored.recentMovements.length, 3);
+  assert.equal((await send('/webhooks/tilda/' + secret, second)).status, 200);
+  assert.equal((await getAdmin()).items['202404205'].stock, initialStock);
+  assert.equal((await send('/webhooks/tilda/' + secret, { ...second,
+    'Номер_заказа_сайта': 'GN-999992', products: [{ sku: '1000830016', quantity: 11 }] })).status, 409);
+  assert.equal((await getAdmin()).unresolvedOrders[0].reason, 'shortage');
   console.log('TILDA_WEBHOOK_TESTS_PASSED');
+  console.log('STOCK_IMPORT_RESTORE_AND_REVIEW_TESTS_PASSED');
 }

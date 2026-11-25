@@ -1,16 +1,15 @@
 // @ts-check
 const { test, expect } = require('@playwright/test');
-const fs = require('node:fs');
 const path = require('node:path');
 const { pathToFileURL } = require('node:url');
 const { setupPageRoutes, checkZeroOverflow } = require('./test-helpers');
 
-const WORKER_TEST_URL = 'https://stock-api.geeknook.test/api/stock';
+const WORKER_TEST_URL = 'http://127.0.0.1:18787/api/stock';
 const ADMIN_SECRET = 'gn-worker-secret-2026';
 
 async function attachRealWorkerMock(page) {
   const workerMod = await import(pathToFileURL(path.resolve(process.cwd(), 'cloudflare-worker/test-worker.mjs')).href);
-  const stockDoc = JSON.parse(fs.readFileSync(path.resolve(process.cwd(), 'data/stock.json'), 'utf8'));
+  const stockDoc = workerMod.stockFixture;
   const harness = workerMod.createWorkerHarness({ STOCK_ADMIN_KEY: ADMIN_SECRET });
 
   await harness.fetch(new Request(WORKER_TEST_URL + '/admin/seed', {
@@ -31,7 +30,7 @@ async function attachRealWorkerMock(page) {
     window.GEEKNOOK_STOCK_API_URL = workerUrl;
   }, WORKER_TEST_URL);
 
-  await page.route('https://stock-api.geeknook.test/**', async (route) => {
+  await page.route('http://127.0.0.1:18787/**', async (route) => {
     const req = route.request();
     const res = await harness.fetch(new Request(req.url(), {
       method: req.method(),
@@ -176,7 +175,7 @@ test.describe('Live Stock Management & Cloudflare Worker Security', () => {
     await expect(row20240408).toContainText('3 шт.');
     await expect(row20240408).toContainText('0 шт.');
     await expect(row20240408).toContainText('Нет в наличии');
-    await expect(page.locator('tr[data-code="20240410"]')).toContainText('437 шт.');
+    await expect(page.locator('tr[data-code="20240410"]')).toContainText('42 шт.');
     await expect(page.locator('#movementsList')).toContainText('20240408: −1 шт.');
 
     // Admin +1 adjustment persists via Worker
@@ -184,7 +183,7 @@ test.describe('Live Stock Management & Cloudflare Worker Security', () => {
     await expect(row20240408).toContainText('1 шт.');
 
     const exportedCsv = await page.evaluate(() => window.geekNookStockAdmin.exportCsv());
-    expect(exportedCsv).toContain('20240408,Коврик для мыши / G4N-20240408 / Mouse pad GEEK NOOK 80*40CM Light Gray Felt,1,1499,3');
+    expect(exportedCsv).toContain('20240408,Тестовый коврик,1,1499,3');
 
     const overflow1440 = await checkZeroOverflow(page);
     expect(overflow1440.hasOverflow).toBe(false);

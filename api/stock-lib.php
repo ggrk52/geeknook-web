@@ -65,6 +65,17 @@ function gn_send_cors_headers($methods = 'GET, POST, OPTIONS') {
     }
 }
 
+// Orders contain personal data. Refuse storage inside the HTTP document root.
+function gn_private_log_path($filename) {
+    $directory = realpath(getenv('GEEKNOOK_PRIVATE_LOG_DIR') ?: dirname(__DIR__, 2));
+    $publicRoot = realpath($_SERVER['DOCUMENT_ROOT'] ?? dirname(__DIR__));
+    if (!$directory || !$publicRoot || !is_dir($directory) || !is_writable($directory)) return null;
+    $prefix = rtrim($publicRoot, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR;
+    if ($directory === $publicRoot || strpos($directory . DIRECTORY_SEPARATOR, $prefix) === 0) return null;
+    $path = $directory . DIRECTORY_SEPARATOR . $filename;
+    return is_link($path) ? null : $path;
+}
+
 function gn_stock_baseline() {
     static $cached = null;
     if ($cached !== null) {

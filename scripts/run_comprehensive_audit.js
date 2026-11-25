@@ -48,7 +48,7 @@ async function runComprehensiveAudit() {
     page.on('pageerror', err => consoleErrors.push(err.message));
 
     await page.goto(LOCAL_URL, { waitUntil: 'load' });
-    await page.evaluate(() => localStorage.setItem('geeknook_cookie_consent', 'true'));
+    await page.evaluate(() => localStorage.setItem('geeknook_analytics_choice_v1', 'allow'));
     await page.reload({ waitUntil: 'load' });
     await page.waitForTimeout(300);
 
@@ -107,7 +107,7 @@ async function runComprehensiveAudit() {
     });
     const page = await context.newPage();
     await page.goto(LOCAL_URL, { waitUntil: 'load' });
-    await page.evaluate(() => localStorage.setItem('geeknook_cookie_consent', 'true'));
+    await page.evaluate(() => localStorage.setItem('geeknook_analytics_choice_v1', 'allow'));
     await page.reload({ waitUntil: 'load' });
     await page.waitForTimeout(400);
 
@@ -191,7 +191,7 @@ async function runComprehensiveAudit() {
     });
     const page = await context.newPage();
     await page.goto(LOCAL_URL, { waitUntil: 'load' });
-    await page.evaluate(() => localStorage.setItem('geeknook_cookie_consent', 'true'));
+    await page.evaluate(() => localStorage.setItem('geeknook_analytics_choice_v1', 'allow'));
     await page.reload({ waitUntil: 'load' });
     await page.waitForTimeout(400);
 
@@ -308,7 +308,7 @@ async function runComprehensiveAudit() {
     });
     const page = await context.newPage();
     await page.goto(LOCAL_URL, { waitUntil: 'load' });
-    await page.evaluate(() => localStorage.setItem('geeknook_cookie_consent', 'true'));
+    await page.evaluate(() => localStorage.setItem('geeknook_analytics_choice_v1', 'allow'));
     await page.reload({ waitUntil: 'load' });
     await page.waitForTimeout(300);
 

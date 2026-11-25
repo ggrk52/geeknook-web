@@ -112,7 +112,7 @@
   window.GEEKNOOK_CDN_URL = BASE_URL;
 
   // Dynamic build version and cache-busting to bypass aggressive browser caching in Safari
-  const BUILD_VER = '2026-11-20-storefront-1';
+  const BUILD_VER = '2026-11-25-2';
 
   // DNS & TLS Preconnect to GitHub Pages CDN
   try {
@@ -152,35 +152,23 @@
   }, true);
 
   function loadAsset(type, url) {
-    return new Promise((resolve) => {
-      let settled = false;
-      const done = () => {
-        if (!settled) {
-          settled = true;
-          resolve();
-        }
-      };
-
+    return new Promise((resolve, reject) => {
+      const element = document.createElement(type === 'css' ? 'link' : 'script');
+      const timer = setTimeout(() => reject(new Error('Asset timed out: ' + url)), 15000);
+      element.onload = () => { clearTimeout(timer); resolve(); };
+      element.onerror = () => { clearTimeout(timer); reject(new Error('Asset unavailable: ' + url)); };
       if (type === 'css') {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = url;
-        link.onload = done;
-        link.onerror = done;
-        setTimeout(done, 400);
-        document.head.appendChild(link);
-      } else if (type === 'js') {
-        const script = document.createElement('script');
-        script.src = url;
-        script.onload = done;
-        script.onerror = () => {
-          console.warn('[GeekNook B2B] Script load error:', url);
-          done();
-        };
-        setTimeout(done, 5000);
-        document.body.appendChild(script);
+        element.rel = 'stylesheet';
+        element.href = url;
+      } else {
+        element.src = url;
       }
+      document.head.appendChild(element);
     });
+  }
+
+  function loadOptional(type, url) {
+    loadAsset(type, url).catch(err => console.warn('[GeekNook]', err.message));
   }
 
   async function mountGeekNookB2B() {
@@ -193,7 +181,6 @@
       // Preload all JS modules in parallel over HTTP/2 right away
       const jsAssets = [
         BASE_URL + 'js/products-data.js?v=' + BUILD_VER,
-        BASE_URL + 'js/modules/analytics.js?v=' + BUILD_VER,
         BASE_URL + 'js/modern-app.min.js?v=' + BUILD_VER,
         BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_VER
       ];
@@ -208,8 +195,8 @@
       });
 
       // 1. Fetch Fonts, Main CSS & HTML template concurrently
-      const [, , htmlText] = await Promise.all([
-        loadAsset('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap'),
+      loadOptional('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap');
+      const [, htmlText] = await Promise.all([
         loadAsset('css', BASE_URL + 'css/modern-style.min.css?v=' + BUILD_VER),
         fetch(BASE_URL + 'b2b.html?v=' + BUILD_VER, { cache: 'no-cache' }).then(r => {
           if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -283,7 +270,7 @@
       });
       observer.observe(document.body, { childList: true, subtree: true });
 
-      // 2. Load Application Scripts in dependency order (already prefetched in parallel!)
+      loadOptional('js', BASE_URL + 'js/modules/analytics.js?v=' + BUILD_VER);
       for (const src of jsAssets) {
         await loadAsset('js', src);
       }
@@ -321,9 +308,17 @@
 
       console.log('[GeekNook B2B] Successfully mounted on Tilda at /b2b!');
     } catch (err) {
-      console.error('[GeekNook B2B] Failed to mount on Tilda:', err);
-      // Fallback redirect if fetch fails
-      window.location.replace(BASE_URL + 'b2b.html' + window.location.hash);
+      console.error('[GeekNook] Failed to mount:', err);
+      const loader = document.getElementById('gn-b2b-loader');
+      if (loader) {
+        loader.style.pointerEvents = 'auto';
+        loader.style.justifyContent = 'center';
+        loader.style.alignItems = 'center';
+        loader.innerHTML = '<p role="alert">Не удалось загрузить страницу.</p><button type="button">Попробовать снова</button>';
+        const retry = loader.querySelector('button');
+        retry.onclick = () => window.location.reload();
+        retry.focus();
+      }
     }
   }
 

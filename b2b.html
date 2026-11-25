@@ -527,7 +527,7 @@
   </footer>
 
   <!-- Modal for B2B KP Document -->
-  <div class="modal-backdrop" id="b2bKpModal" onclick="if(event.target===this) window.geekNookApp.closeModal('b2bKpModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="b2bKpModal" aria-label="Коммерческое предложение" onclick="if(event.target===this) window.geekNookApp.closeModal('b2bKpModal')">
     <div class="modal-card b2b-kp-modal-card">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('b2bKpModal')" aria-label="Закрыть">✕</button>
       <div class="b2b-kp-toolbar no-print">
@@ -545,11 +545,11 @@
   </div>
 
   <!-- Command Palette Modal -->
-  <div class="modal-backdrop command-palette-backdrop" id="commandPaletteModal" onclick="if(event.target===this) window.geekNookApp.closeCommandPalette()">
+  <div class="modal-backdrop command-palette-backdrop" id="commandPaletteModal" onclick="if(event.target===this) window.geekNookApp.closeCommandPalette()" role="dialog" aria-modal="true" aria-label="Поиск по сайту">
     <div class="command-palette-card">
       <div class="cmd-palette-search-box">
         <svg class="cmd-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-        <input type="text" id="cmdPaletteInput" class="cmd-palette-input" placeholder="Поиск по сайту..." autocomplete="off" />
+        <input type="text" id="cmdPaletteInput" aria-label="Поиск по сайту" class="cmd-palette-input" placeholder="Поиск по сайту..." autocomplete="off" />
         <span class="cmd-esc-hint" onclick="window.geekNookApp.closeCommandPalette()">ESC</span>
       </div>
       <div class="cmd-palette-results" id="cmdPaletteResults"></div>

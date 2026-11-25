@@ -720,6 +720,11 @@
     return { sitePercent, promoPercent, activePromo, subtotal, discountAmount, grandTotal, badge };
   };
 
+  const describeCartPromotion = (sitePercent, promoPercent, code, totalDiscount) => {
+    const siteAmount = cartDiscount(sitePercent);
+    return `Акция −${sitePercent}% (−${formatPrice(siteAmount)}), ${code} — ещё ${promoPercent}% от акционной цены (−${formatPrice(totalDiscount - siteAmount)})`;
+  };
+
   const stockRequirements = (item) =>
     GEEKNOOK_DATA.bundles.find(bundle => bundle.id === item.id)?.components || [item];
 
@@ -1060,7 +1065,7 @@
     const discountLabel = document.getElementById('cartDiscountLabel');
     if (discountLabel) {
       discountLabel.textContent = activePromo
-        ? `Акция −${sitePercent}% + ${activePromo} (−${promoPercent}%)`
+        ? describeCartPromotion(sitePercent, promoPercent, activePromo, discountAmount)
         : `Акция −${sitePercent}%`;
     }
     if (shippingEl) shippingEl.textContent = 'Бесплатно';
@@ -1254,7 +1259,7 @@
       priceEl.textContent = formatPrice(grandTotal);
       if (badgeEl) {
         badgeEl.textContent = promoPercent > 0
-          ? `Скидка ${sitePercent}% + ${promoPercent}%`
+          ? `−${sitePercent}% и ещё −${promoPercent}% от акционной цены`
           : `Скидка ${sitePercent}%`;
       }
       btnTextEl.textContent = 'Оформить';
@@ -1363,6 +1368,7 @@
   };
 
   const openCartDrawer = () => {
+    refreshOrderReceipts();
     reconcileCartWithStock(false);
     if (savedCartStockAdjusted) {
       savedCartStockAdjusted = false;
@@ -1572,7 +1578,7 @@
         discountRow.style.display = 'flex';
         if (discountLabel) {
           discountLabel.textContent = activePromo
-            ? `Скидка −${sitePercent}% + ${activePromo} (−${promoPercent}%):`
+            ? describeCartPromotion(sitePercent, promoPercent, activePromo, discountAmount)
             : `Скидка на сайте (-${sitePercent}%):`;
         }
         if (discountVal) discountVal.textContent = `-${formatPrice(discountAmount)}`;
@@ -2186,7 +2192,7 @@
             <button class="btn-secondary" onclick="window.geekNookApp.openQuickBuy('${product.id}')">Купить в 1 клик</button>
           </div>
 
-          ${product.category === 'boards' ? '<div class="qv-fit-guide"><strong>Как выбрать длину</strong><p>85 см для компактного рабочего места. 116 см для широкой полки под монитор и ноутбук. Сверьте размеры техники и стола с габаритами ниже.</p><p>Держатели T-Track и коврик выбираются отдельно.</p></div>' : ''}
+          ${product.category === 'boards' ? '<div class="qv-fit-guide"><details ontoggle="if(this.open) window.geekNookAnalytics?.reachGoal?.(&quot;COMPARE_STAND_SIZES&quot;)"><summary><strong>Сравнить 85 и 116 см</strong></summary><p><b>85 см</b> — для стола со свободным участком от 85 см. <b>116 см</b> — на 31 см больше для второго устройства или аксессуаров.</p><p>Измерьте свободную ширину столешницы и основание монитора целиком. Глубина обеих полок — 23 см. Все точки опоры должны помещаться на полке.</p></details><p>Держатели T-Track и коврик выбираются отдельно.</p></div>' : ''}
 
           <p class="qv-order-terms">Бесплатно в ПВЗ СДЭК. Осмотрите товар до оплаты. <a href="/legal#warranty" onclick="window.geekNookApp.openLegalModal('warranty'); return false;">Гарантия и возврат</a></p>
           <details class="qv-spec-details" open><summary>Габариты и характеристики</summary><table class="specs-table">
@@ -4360,8 +4366,8 @@
 
   const handleCheckoutSubmit = withActionLock(async (e) => {
     e.preventDefault();
-    if (!checkStock()) return;
     const form = e.target;
+    if (form.dataset.tildaDispatched !== 'true' && !checkStock()) return;
     const isTildaSubmitting = form.dataset.tildaSubmitting === '1';
     if (!isTildaSubmitting && form.querySelector('button[type="submit"]')?.disabled) return;
     const formData = new FormData(form);
@@ -4484,7 +4490,7 @@
     const detailsEl = document.getElementById('successOrderDetails');
     if (detailsEl) {
       const promoInfoHtml = discountAmount > 0
-        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Скидка (${activePromo ? `−${sitePercent}% + ${activePromo} −${promoPercent}%` : `−${sitePercent}%`}):</strong> -${formatPrice(discountAmount)}</div>`
+        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Скидка (${activePromo ? describeCartPromotion(sitePercent, promoPercent, activePromo, discountAmount) : `−${sitePercent}%`}):</strong> -${formatPrice(discountAmount)}</div>`
         : '';
 
       const pvzInfoHtml = state.selectedPvz
@@ -4556,7 +4562,8 @@
     // Dispatch the order and record analytics only after acknowledgement.
     // Dispatch the cart order to all channels (Telegram, Email, LocalStorage)
     try {
-      await dispatchUnifiedOrder(cartOrderPayload);
+      const receipt = await dispatchUnifiedOrder(cartOrderPayload);
+      displayStockStatus(receipt);
     } catch(err) {
       console.warn('[GeekNook] dispatchCartOrder error:', err);
       showToast(err?.isStockError ? err.message : 'Не удалось отправить заказ. Проверьте соединение и попробуйте ещё раз.', 'error');
@@ -4570,24 +4577,16 @@
     delete form.dataset.tildaDispatched;
 
     if (window.geekNookAnalytics && typeof window.geekNookAnalytics.trackOrderSubmit === 'function') {
-      window.geekNookAnalytics.trackOrderSubmit(orderNumber, grandTotal, state.cart, safeDelivery, safePayment);
+      window.geekNookAnalytics.trackOrderSubmit(orderNumber, grandTotal, cartOrderPayload.items, safeDelivery, safePayment);
     }
 
     // Close checkout after the notification service acknowledges the order.
     modalManager.close('checkoutModal');
     modalManager.open('successModal');
 
-    // Reset Cart & PVZ after short delay so async background form sync finishes
-    setTimeout(() => {
-      state.cart = [];
-      state.promoDiscountPercent = 0;
-      state.activePromoCode = '';
-      state.selectedPvz = null;
-      clearSelectedPvz();
-      try { safeStorage.removeItem('geeknook_promo'); } catch (e) {}
-      saveCart();
-      updateCheckoutPromoUI();
-    }, 1200);
+    if (!cartOrderPayload.tildaDispatched) clearSubmittedCart();
+    if (submitBtn) { submitBtn.disabled = false; submitBtn.innerHTML = originalBtnText; }
+
   }, 400);
 
   // --- LIGHTBOX GALLERY ---
@@ -4840,27 +4839,6 @@
     const formType = isQuickBuy ? 'QuickBuy' : 'Cart';
     const pageUrl = 'https://geeknook.ru/#boards';
 
-    // Full standard plain-text message exactly as requested by user
-    const fullMessage = [
-      `Заказ №${orderNumberStr}`,
-      itemsText,
-      `Сумма платежа: ${totalPayment} RUB`,
-      `Платежная система: ${orderPayload.payment || 'Уточнить при звонке'}`,
-      ``,
-      `Информация о покупателе:`,
-      `Name: ${cleanName}`,
-      `Email: ${cleanEmail}`,
-      `Phone: ${cleanPhone}`,
-      `Код_ПВЗ_СДЭК: ${pvzCode}`,
-      ``,
-      `Дополнительная информация:`,
-      `Код заявки: ${leadCode}`,
-      `Код блока: ${blockCode}`,
-      `Форма: ${formType}`,
-      pageUrl,
-      `-----`
-    ].join('\n');
-
     return {
       orderNumberStr,
       itemsText,
@@ -4872,10 +4850,72 @@
       leadCode,
       blockCode,
       formType,
-      pageUrl,
-      fullMessage
+      pageUrl
     };
   };
+
+  function clearSubmittedCart() {
+    state.cart = [];
+    state.promoDiscountPercent = 0;
+    state.activePromoCode = '';
+    safeStorage.removeItem('geeknook_promo');
+    clearSelectedPvz();
+    saveCart();
+  }
+
+  function recentOrders() {
+    try {
+      const rows = JSON.parse(safeStorage.getItem('geeknook_orders_history') || '[]');
+      return Array.isArray(rows) ? rows.filter(row => row && typeof row.order_number === 'string') : [];
+    } catch (_) { return []; }
+  }
+
+  function updateOrderReceipt(number, changes) {
+    const rows = recentOrders();
+    const previous = rows.find(row => row.order_number === number);
+    const receipt = { timestamp: new Date().toISOString(), ...previous, ...changes, order_number: number };
+    const next = rows.filter(row => row.order_number !== number).concat(receipt);
+    safeStorage.setItem('geeknook_orders_history', JSON.stringify(next.slice(-10)));
+    return receipt;
+  }
+
+  function displayStockStatus(receipt) {
+    const modal = document.getElementById('successModal');
+    if (!modal) return;
+    const pending = receipt?.stockStatus === 'pending';
+    const heading = modal.querySelector('h2');
+    const description = modal.querySelector('.modal-card > p');
+    if (heading) heading.textContent = pending ? 'Заказ получен' : 'Заказ успешно оформлен!';
+    if (description) description.textContent = pending
+      ? 'Проверяем наличие. Номер и статус сохранены в корзине. Менеджер уточнит детали.'
+      : 'Менеджер проверит состав заказа и свяжется с вами для подтверждения.';
+  }
+
+  function refreshOrderReceipts() {
+    const host = document.getElementById('cartScrollableBody');
+    if (!host) return;
+    const receipts = recentOrders().filter(row => row.tildaAccepted).slice(-5).reverse();
+    if (!receipts.length) return;
+    let list = document.getElementById('cartOrderReceipts');
+    if (!list) {
+      list = document.createElement('div');
+      list.id = 'cartOrderReceipts';
+      list.setAttribute('aria-live', 'polite');
+      host.prepend(list);
+    }
+    list.replaceChildren();
+    for (const receipt of receipts) {
+      const line = document.createElement('p');
+      line.textContent = `Заказ №${receipt.order_number} · ${receipt.stockStatus === 'pending' ? 'Проверяем наличие' : 'Наличие подтверждено'}`;
+      list.append(line);
+      if (receipt.stockStatus !== 'pending') continue;
+      GEEKNOOK_DATA.stock.hasOrderReceipt(receipt.order_number).then(confirmed => {
+        if (!confirmed) return;
+        updateOrderReceipt(receipt.order_number, { stockStatus: 'confirmed' });
+        line.textContent = `Заказ №${receipt.order_number} · Наличие подтверждено`;
+      });
+    }
+  }
 
   const dispatchUnifiedOrder = async (orderPayload) => {
     const isQuickBuy = orderPayload.type === 'quick_buy';
@@ -4924,8 +4964,7 @@
       'Код заявки': std.leadCode,
       'Код блока': std.blockCode,
       'Форма': std.formType,
-      'URL': std.pageUrl,
-      'Сообщение': std.fullMessage
+      'URL': std.pageUrl
     };
 
     const sendFormSubmit = async (timeoutMs) => {
@@ -4952,10 +4991,23 @@
       }
     };
 
+    const orderSummary = {
+      type: isQuickBuy ? 'quick_buy' : 'cart',
+      items_count: isQuickBuy ? 1 : itemsForStock.length,
+      amount: isQuickBuy ? orderPayload.price : orderPayload.grand_total,
+      promo_code: orderPayload.promo_code || ''
+    };
     let emailAck = false;
     if (tildaDispatched) {
-      // Fire-and-forget secondary backup without blocking UX or stock commit
-      sendFormSubmit(3000).catch(() => {});
+      const existing = recentOrders().find(row => row.order_number === std.orderNumberStr && row.tildaAccepted);
+      if (existing) return existing;
+      updateOrderReceipt(std.orderNumberStr, { ...orderSummary, tildaAccepted: true, stockStatus: 'pending', backupStatus: 'sending' });
+      if (!isQuickBuy) clearSubmittedCart();
+      const recordBackup = status => {
+        updateOrderReceipt(std.orderNumberStr, { backupStatus: status });
+        trackGoal('ORDER_BACKUP_RESULT', { status });
+      };
+      sendFormSubmit(3000).then(() => recordBackup('acknowledged'), () => recordBackup('unconfirmed'));
     } else {
       try {
         emailAck = await sendFormSubmit(8000);
@@ -4969,9 +5021,16 @@
 
     // Deduct stock after delivery acknowledgement (idempotent if already committed)
     if (!stockAlreadyCommitted && GEEKNOOK_DATA?.stock?.commitOrder && itemsForStock.length > 0) {
-      const commitRes = await GEEKNOOK_DATA.stock.commitOrder(std.orderNumberStr, itemsForStock, orderPayload.type || 'cart');
+      let commitRes;
+      try {
+        commitRes = await GEEKNOOK_DATA.stock.commitOrder(std.orderNumberStr, itemsForStock, orderPayload.type || 'cart');
+      } catch (error) {
+        if (!tildaDispatched) throw error;
+        return updateOrderReceipt(std.orderNumberStr, { stockStatus: 'pending' });
+      }
       if (commitRes && commitRes.ok === false) {
         refreshCatalogStockUI();
+        if (tildaDispatched) return updateOrderReceipt(std.orderNumberStr, { stockStatus: 'pending' });
         const err = new Error(commitRes.error || 'Товар только что закончился на складе');
         err.isStockError = true;
         throw err;
@@ -4979,20 +5038,7 @@
       refreshCatalogStockUI();
     }
 
-    // 3. Fallback queue in localStorage (Sanitized metadata only — 152-FZ zero-PII data minimization)
-    try {
-      const queue = JSON.parse(localStorage.getItem('geeknook_orders_history') || '[]');
-      queue.push({
-        order_number: std.orderNumberStr,
-        type: isQuickBuy ? 'quick_buy' : 'cart',
-        items_count: isQuickBuy ? 1 : (orderPayload.items ? orderPayload.items.length : 1),
-        amount: isQuickBuy ? orderPayload.price : orderPayload.grand_total,
-        promo_code: orderPayload.promo_code || '',
-        timestamp: new Date().toISOString()
-      });
-      if (queue.length > 5) queue.shift();
-      localStorage.setItem('geeknook_orders_history', JSON.stringify(queue));
-    } catch (_) {}
+    return updateOrderReceipt(std.orderNumberStr, { ...orderSummary, stockStatus: 'confirmed' });
   };
 
   const dispatchQuickBuyOrder = async (orderPayload) => {
@@ -5121,7 +5167,7 @@
 
     // Dispatch the order to all channels (API, Telegram, LocalStorage)
     try {
-      await dispatchQuickBuyOrder(orderPayload);
+      displayStockStatus(await dispatchQuickBuyOrder(orderPayload));
     } catch(err) {
       console.warn('[GeekNook] dispatchQuickBuyOrder error:', err);
       showToast(err?.isStockError ? err.message : 'Не удалось отправить заказ. Проверьте соединение и попробуйте ещё раз.', 'error');
@@ -5134,7 +5180,7 @@
     const detailsEl = document.getElementById('successOrderDetails');
     if (detailsEl) {
       const promoHtml = discountAmount > 0
-        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Скидка (${appliedPromo ? `−${sitePct}% + ${appliedPromo} −${promoPct}%` : `−${sitePct}%`}):</strong> -${formatPrice(discountAmount)}</div>`
+        ? `<div style="margin-bottom:8px;color:#10b981;"><strong>Скидка (${appliedPromo ? `−${sitePct}% и ещё −${promoPct}% от акционной цены по ${appliedPromo}` : `−${sitePct}%`}):</strong> -${formatPrice(discountAmount)}</div>`
         : '';
 
       detailsEl.innerHTML = `
@@ -5166,11 +5212,7 @@
         option: safeOpt
       }], 'СДЭК Быстрый (1 клик)', 'Уточнить при звонке');
     }
-    if (window.ym && typeof window.ym === 'function') {
-      try {
-        window.ym(113130622, 'reachGoal', 'quick_buy_submit');
-      } catch(_) {}
-    }
+    trackGoal('quick_buy_submit');
 
     modalManager.open('successModal');
     showToast('Быстрый заказ оформлен! Менеджер свяжется с вами.', 'success');
@@ -5185,10 +5227,6 @@
     if (window.geekNookAnalytics && typeof window.geekNookAnalytics.getUtmParams === 'function') {
       return window.geekNookAnalytics.getUtmParams();
     }
-    try {
-      const stored = localStorage.getItem('geeknook_utm_params') || sessionStorage.getItem('geeknook_utm_params');
-      if (stored) return JSON.parse(stored);
-    } catch(e) {}
     return {};
   };
 
@@ -10255,6 +10293,7 @@
     handleQuickBuySubmit,
     dispatchQuickBuyOrder,
     dispatchUnifiedOrder,
+    displayStockStatus,
     quickBuyViaTelegram,
     orderViaTelegram,
     orderConfigViaTelegram,
@@ -10283,7 +10322,6 @@
     setTheme,
     resetThemeToSystem,
     getTheme,
-    showToast,
     toggleSound,
     soundEngine,
     renderBundles,

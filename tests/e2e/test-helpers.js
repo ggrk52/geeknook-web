@@ -12,7 +12,7 @@
 async function setupPageRoutes(page) {
   await page.addInitScript(() => {
     try {
-      localStorage.setItem('geeknook_cookie_consent', 'true');
+      localStorage.setItem('geeknook_analytics_choice_v1', 'allow');
     } catch (e) {}
   });
 

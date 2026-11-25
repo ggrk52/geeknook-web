@@ -8,9 +8,12 @@
     "test:responsiveness": "playwright test tests/e2e/responsiveness.spec.js",
     "test:interactive": "playwright test tests/e2e/interactive.spec.js",
     "test:console": "playwright test tests/e2e/console-errors.spec.js",
-    "test:report": "playwright show-report"
+    "test:report": "playwright show-report",
+    "build": "python3 scripts/build-minified.py",
+    "test:worker": "node cloudflare-worker/test-worker.mjs"
   },
   "devDependencies": {
-    "@playwright/test": "^1.40.0"
+    "@playwright/test": "^1.40.0",
+    "esbuild": "0.28.2"
   }
 }

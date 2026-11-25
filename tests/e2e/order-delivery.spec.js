@@ -111,6 +111,7 @@ test('main catalog checkout sends mat details to Tilda and the email fallback', 
   await expect(page.locator('#checkoutGrandTotalSummary')).toContainText('1 199');
   await expect(page.locator('#checkoutShippingVal')).toContainText('Бесплатно');
   await page.locator('#checkoutAddressInput').fill('MSK2499 ТЕСТ НЕ ОТПРАВЛЯТЬ');
+  await page.locator('#checkoutConsentCheckbox').check();
   await page.locator('#checkoutForm').getByRole('button', { name: 'Подтвердить заказ' }).click();
 
   await expect(page.locator('#successModal')).toHaveClass(/active/);
@@ -131,4 +132,40 @@ test('main catalog checkout sends mat details to Tilda and the email fallback', 
   expect(fallbackOrders[0]['Сумма платежа']).toBe('1199 RUB');
   expect(fallbackOrders[0]['Код_ПВЗ_СДЭК']).toContain('ТЕСТ НЕ ОТПРАВЛЯТЬ');
   await expect(page.locator('#successOrderDetails')).toContainText(orderNumber);
+});
+
+test('accepted Tilda order survives a reload while waiting for stock without sending the order twice', async ({ page }) => {
+  let confirmed = false;
+  let backupCount = 0;
+  let receiptLookups = 0;
+  await page.route('https://formsubmit.co/ajax/**', route => {
+    backupCount++;
+    return route.fulfill({ json: { success: true } });
+  });
+  await page.route(/geeknook-stock.*workers\.dev/, route => {
+    const body = route.request().postDataJSON();
+    if (body?.action !== 'commit') return route.fulfill({ json: { ok: true, items: {} } });
+    if (!body.items) receiptLookups++;
+    return confirmed
+      ? route.fulfill({ json: { ok: true, alreadyCommitted: true, items: {} } })
+      : route.fulfill({ status: 409, json: { ok: false, pending: true } });
+  });
+  await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
+  const submit = () => page.evaluate(async () => {
+    const receipt = await window.geekNookApp.dispatchUnifiedOrder({
+      type: 'quick_buy', order_number: 'GN-1C-TEST12345', product_id: 'focus-station-oak',
+      product_option: '85 см', price: 15999, tildaDispatched: true
+    });
+    window.geekNookApp.displayStockStatus(receipt);
+    return receipt.stockStatus;
+  });
+  expect(await submit()).toBe('pending');
+  expect(await submit()).toBe('pending');
+  await expect(page.locator('#successModal h2')).toHaveText('Заказ получен');
+  confirmed = true;
+  await page.reload({ waitUntil: 'domcontentloaded' });
+  await page.evaluate(() => window.geekNookApp.openCartDrawer());
+  await expect(page.locator('#cartOrderReceipts')).toContainText('GN-1C-TEST12345 · Наличие подтверждено');
+  expect(backupCount).toBe(1);
+  expect(receiptLookups).toBe(1);
 });

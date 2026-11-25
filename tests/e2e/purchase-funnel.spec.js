@@ -93,7 +93,7 @@ test('unavailable variant disables purchase and totals match Tilda for multiple 
   expect(await page.evaluate(() => window.tcart.amount)).toBe(5997);
 });
 
-test('20% site discount stacks additively with promo codes across cart, checkout and Tilda', async ({ page }) => {
+test('20% site discount stacks sequentially with promo codes across cart, checkout and Tilda', async ({ page }) => {
   await page.goto('/index.html', { waitUntil: 'domcontentloaded' });
   await page.waitForFunction(() => window.geekNookApp && window.GEEKNOOK_DATA);
 
@@ -111,7 +111,7 @@ test('20% site discount stacks additively with promo codes across cart, checkout
   await page.locator('#promoInput').fill('GEEK10');
   await page.getByRole('button', { name: 'Применить', exact: true }).click();
 
-  await expect(page.locator('#cartDiscountLabel')).toContainText('Акция −20% + GEEK10 (−10%)');
+  await expect(page.locator('#cartDiscountLabel')).toContainText('Акция −20% (−5 000 ₽), GEEK10 — ещё 10% от акционной цены (−2 000 ₽)');
   await expect(page.locator('#cartGrandTotal')).toContainText('17 999');
   expect(await page.evaluate(() => window.tcart.amount)).toBe(17999);
 

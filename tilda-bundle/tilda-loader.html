@@ -93,7 +93,7 @@
   window.GEEKNOOK_CDN_URL = BASE_URL;
 
   // Dynamic build version and cache-busting to bypass aggressive browser caching in Safari
-  const BUILD_VER = '2026-11-25-1';
+  const BUILD_VER = '2026-11-25-2';
 
   // DNS & TLS Preconnect to GitHub Pages CDN
   try {
@@ -137,34 +137,22 @@
 
   function loadAsset(type, url) {
     return new Promise((resolve, reject) => {
-      let settled = false;
-      const done = () => {
-        if (!settled) {
-          settled = true;
-          resolve();
-        }
-      };
-
+      const element = document.createElement(type === 'css' ? 'link' : 'script');
+      const timer = setTimeout(() => reject(new Error('Asset timed out: ' + url)), 15000);
+      element.onload = () => { clearTimeout(timer); resolve(); };
+      element.onerror = () => { clearTimeout(timer); reject(new Error('Asset unavailable: ' + url)); };
       if (type === 'css') {
-        const link = document.createElement('link');
-        link.rel = 'stylesheet';
-        link.href = url;
-        link.onload = done;
-        link.onerror = done;
-        setTimeout(done, 300); // Safety timeout: link.onload can hang or be suppressed by browsers
-        document.head.appendChild(link);
-      } else if (type === 'js') {
-        const script = document.createElement('script');
-        script.src = url;
-        script.onload = done;
-        script.onerror = () => {
-          console.warn('[GeekNook] Script load error:', url);
-          done();
-        };
-        setTimeout(done, 5000); // Safety timeout for scripts
-        document.body.appendChild(script);
+        element.rel = 'stylesheet';
+        element.href = url;
+      } else {
+        element.src = url;
       }
+      document.head.appendChild(element);
     });
+  }
+
+  function loadOptional(type, url) {
+    loadAsset(type, url).catch(err => console.warn('[GeekNook]', err.message));
   }
 
   async function mountGeekNook() {
@@ -172,11 +160,9 @@
       // Preload all critical JS scripts in parallel over HTTP/2 right away
       const jsAssets = [
         BASE_URL + 'js/products-data.js?v=' + BUILD_VER,
-        BASE_URL + 'js/modules/analytics.js?v=' + BUILD_VER,
         BASE_URL + 'js/modules/cdek-picker.js?v=' + BUILD_VER,
         BASE_URL + 'js/modern-app.min.js?v=' + BUILD_VER,
-        BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_VER,
-        BASE_URL + 'js/modules/papercraft.js?v=' + BUILD_VER
+        BASE_URL + 'js/modules/tilda-adapter.js?v=' + BUILD_VER
       ];
       jsAssets.forEach(src => {
         try {
@@ -189,10 +175,9 @@
       });
 
       // 1. Fetch Fonts, Main Stylesheet & HTML template concurrently
-      const [, , , htmlText] = await Promise.all([
-        loadAsset('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap'),
+      loadOptional('css', 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Onest:wght@400;500;600;700&display=swap');
+      const [, htmlText] = await Promise.all([
         loadAsset('css', BASE_URL + 'css/modern-style.min.css?v=' + BUILD_VER),
-        loadAsset('css', BASE_URL + 'css/papercraft.css?v=' + BUILD_VER),
         fetch(BASE_URL + 'index.html?v=' + BUILD_VER, { cache: 'no-cache' }).then(r => {
           if (!r.ok) throw new Error('HTTP ' + r.status);
           return r.text();
@@ -309,7 +294,7 @@
       });
       observer.observe(document.body, { childList: true, subtree: true });
 
-      // 2. Load Application Scripts in dependency order (already prefetched in parallel!)
+      loadOptional('js', BASE_URL + 'js/modules/analytics.js?v=' + BUILD_VER);
       for (const src of jsAssets) {
         await loadAsset('js', src);
       }
@@ -323,6 +308,9 @@
       if (!document.documentElement.getAttribute('data-theme')) {
         document.documentElement.setAttribute('data-theme', 'dark');
       }
+
+      loadOptional('css', BASE_URL + 'css/papercraft.css?v=' + BUILD_VER);
+      loadOptional('js', BASE_URL + 'js/modules/papercraft.js?v=' + BUILD_VER);
 
       // Final sweep after all scripts executed
       setTimeout(() => {
@@ -339,15 +327,16 @@
 
       console.log('[GeekNook] Successfully mounted on Tilda with Tcart integration & CDN image resolution!');
     } catch (err) {
-      console.error('[GeekNook] Failed to mount on Tilda:', err);
+      console.error('[GeekNook] Failed to mount:', err);
       const loader = document.getElementById('gn-site-loader');
       if (loader) {
-        loader.innerHTML = `
-          <div style="color:#ef4444;font-size:14px;text-align:center;">
-            Не удалось загрузить сайт.<br>
-            <span style="font-size:12px;color:#8b949e;">Проверьте путь BASE_URL или доступность файлов.</span>
-          </div>
-        `;
+        loader.style.pointerEvents = 'auto';
+        loader.style.justifyContent = 'center';
+        loader.style.alignItems = 'center';
+        loader.innerHTML = '<p role="alert">Не удалось загрузить страницу.</p><button type="button">Попробовать снова</button>';
+        const retry = loader.querySelector('button');
+        retry.onclick = () => window.location.reload();
+        retry.focus();
       }
     }
   }

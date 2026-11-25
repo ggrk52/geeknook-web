@@ -1135,16 +1135,15 @@ const GEEKNOOK_DATA = {
 <p><strong>8.13.</strong> Ограничения права на отказ от отдельных категорий товаров применяются только в случаях, прямо предусмотренных законодательством Российской Федерации.</p>
 <h4 class="legal-h4"><strong>9. Товар ненадлежащего качества</strong></h4>
 <p><strong>9.1.</strong> В случае обнаружения недостатков Товара Покупатель вправе предъявить Продавцу требования, предусмотренные законодательством Российской Федерации.</p>
-<p><strong>9.2.</strong> Для обращения по вопросу Товара ненадлежащего качества Покупатель направляет сообщение на , указав номер Заказа, наименование Товара, описание обнаруженного недостатка и контактные данные.</p>
+<p><strong>9.2.</strong> Для обращения по вопросу Товара ненадлежащего качества Покупатель направляет сообщение на <a href="mailto:info@geeknook.ru">info@geeknook.ru</a>, указав номер Заказа, наименование Товара, описание обнаруженного недостатка и контактные данные.</p>
 <p><strong>9.3.</strong> При наличии фотографий, видеозаписей или иных материалов, позволяющих предварительно оценить характер недостатка, Покупатель может приложить их к обращению.</p>
 <p><strong>9.4.</strong> После получения обращения Продавец сообщает Покупателю порядок дальнейших действий, включая при необходимости порядок передачи Товара для проверки качества.</p>
 <p><strong>9.5.</strong> Продавец вправе провести проверку качества Товара в порядке, предусмотренном законодательством Российской Федерации.</p>
 <p><strong>9.6.</strong> В случае возникновения спора о причинах появления недостатков Товара экспертиза проводится в случаях и порядке, установленных законодательством Российской Федерации.</p>
 <p><strong>9.7.</strong> Расходы на возврат, доставку, проверку качества и иные расходы в отношении Товара ненадлежащего качества распределяются между Продавцом и Покупателем в соответствии с законодательством Российской Федерации.</p>
 <h4 class="legal-h4"><strong>10. Гарантия</strong></h4>
-<h5 class="legal-h5"><strong>10.1.</strong> Гарантийный срок на Товары устанавливается в зависимости от категории Товара:</h5>
-<p>на подставки GEEK NOOK и аксессуары к ним — <strong>12 (двенадцать) месяцев</strong> с даты передачи Товара Покупателю;</p>
-<p>на коврики для мыши, а также иные изделия из текстиля, натуральной кожи или искусственной кожи — <strong>3 (три) месяца</strong> с даты передачи Товара Покупателю.</p>
+<h5 class="legal-h5"><strong>10.1.</strong> Гарантийный срок на все Товары GEEK NOOK составляет 6 (шесть) месяцев с даты передачи Товара Покупателю.</h5>
+<p>К ранее оформленным заказам применяется редакция оферты, действовавшая при оформлении заказа.</p>
 <p><strong>10.2.</strong> В течение установленного гарантийного срока Продавец отвечает за недостатки Товара в соответствии с законодательством Российской Федерации.</p>
 <p><strong>10.3.</strong> Продавец не отвечает за недостатки Товара, если докажет, что они возникли после передачи Товара Покупателю вследствие нарушения Покупателем правил использования, хранения или транспортировки Товара, действий третьих лиц или обстоятельств непреодолимой силы.</p>
 <h5 class="legal-h5"><strong>10.4.</strong> Для обращения по гарантии Покупатель направляет сообщение на <a href="mailto:info@geeknook.ru">info@geeknook.ru</a>.</h5>
@@ -3442,6 +3441,24 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
     return { ok: true, shortages: [], counts };
   };
 
+  // Receipt-only lookup. Without any item lines a legacy backend cannot deduct stock.
+  const hasOrderReceipt = async (orderNumber) => {
+    const endpoint = getApiEndpoint();
+    if (!endpoint) return false;
+    try {
+      const response = await fetchWithTimeout(endpoint, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'commit', orderNumber })
+      }, 5000);
+      if (!response.ok) return false;
+      const result = await response.json();
+      return result.ok === true && result.alreadyCommitted === true;
+    } catch (_) {
+      return false;
+    }
+  };
+
   const commitOrder = async (orderNumber, items = [], orderType = 'cart') => {
     const safeOrderNo = String(orderNumber || `GN-${Date.now()}`).trim();
     const { counts } = expandItems(items);
@@ -3719,6 +3736,7 @@ for (const addon of GEEKNOOK_DATA.configurator.addons) {
     renderCategoryBadge,
     checkAvailability,
     commitOrder,
+    hasOrderReceipt,
     applyAllToCatalog,
     syncWithServer,
     resetLocalLedger,
@@ -3775,7 +3793,7 @@ GEEKNOOK_DATA.calcDiscountedUnitPrice = (basePrice, sitePercent = GEEKNOOK_DATA.
 GEEKNOOK_DATA.formatDiscountBadge = (sitePercent = GEEKNOOK_DATA.SITE_DISCOUNT_PERCENT, promoPercent = 0) => {
   const sitePct = Math.max(0, Number(sitePercent) || 0);
   const promoPct = Math.max(0, Number(promoPercent) || 0);
-  return promoPct > 0 ? `-${sitePct}% + -${promoPct}%` : `-${sitePct}%`;
+  return promoPct > 0 ? `−${sitePct}% и ещё −${promoPct}% от акционной цены` : `-${sitePct}%`;
 };
 
 if (typeof window !== 'undefined') {

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="robots" content="noindex, nofollow">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https: http://127.0.0.1:* http://localhost:*; form-action 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com data:; img-src 'self' data: blob:; connect-src 'self' https://geeknook-stock.sergeykozlov2006.workers.dev http://127.0.0.1:* http://localhost:*; form-action 'self'; object-src 'none'; base-uri 'self'; upgrade-insecure-requests">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
   <title>Текущие остатки на складе (Live Stock) | GEEK NOOK</title>
@@ -780,6 +780,7 @@
               <input type="file" id="csvUploadInput" accept=".csv" style="display:none;" onchange="handleCsvUpload(this)">
               <span>Загрузить CSV</span>
             </label>
+            <button type="button" class="btn-nav" id="restoreImport" onclick="restoreImport()" hidden>Отменить последний импорт</button>
             <button type="button" class="btn-nav" onclick="resetLedger()">Сбросить к базе</button>
           </div>
         </div>
@@ -816,6 +817,8 @@
       <section class="movements-panel" aria-label="Журнал списаний">
         <h2>Автоматические списания по заказам</h2>
         <div class="movements-list" id="movementsList"></div>
+        <h3>Заказы для сверки</h3>
+        <div class="movements-list" id="reviewList"></div>
       </section>
       </div>
     </div>
@@ -845,7 +848,8 @@
   <script>
     'use strict';
 
-    const WORKER_URL_KEY = 'geeknook_worker_admin_url';
+    const STOCK_ORIGIN = 'https://geeknook-stock.sergeykozlov2006.workers.dev';
+    const localAdmin = ['127.0.0.1', 'localhost'].includes(location.hostname);
     const ADMIN_SESSION_URL_KEY = 'geeknook_admin_worker_url';
     const ADMIN_SESSION_TOKEN_KEY = 'geeknook_admin_worker_key';
 
@@ -854,13 +858,7 @@
     let adminPayload = null;
 
     function getSavedWorkerUrl() {
-      const configured = window.GEEKNOOK_DATA?.stock?.getApiEndpoint?.() || '';
-      if (configured) return configured;
-      try {
-        return sessionStorage.getItem(ADMIN_SESSION_URL_KEY) || localStorage.getItem(WORKER_URL_KEY) || '';
-      } catch (_) {
-        return '';
-      }
+      return localAdmin ? (window.GEEKNOOK_STOCK_API_URL || STOCK_ORIGIN) : STOCK_ORIGIN;
     }
 
     function getAdminCredentials() {
@@ -885,6 +883,7 @@
       const panel = document.getElementById('stockProtectedContent');
       const logoutBtn = document.getElementById('stockLogoutBtn');
       const urlInput = document.getElementById('stockWorkerUrlInput');
+      if (urlInput) urlInput.readOnly = !localAdmin;
       if (urlInput && !urlInput.value) {
         urlInput.value = getSavedWorkerUrl();
       }
@@ -896,15 +895,22 @@
         const mov = document.getElementById('movementsList');
         if (tbody) tbody.innerHTML = '';
         if (mov) mov.innerHTML = '';
+        document.getElementById('reviewList').replaceChildren();
       }
       return authed;
     }
 
     async function callAdminWorker(workerUrl, adminKey, action, extraBody = {}) {
       const cleanUrl = String(workerUrl || '').trim().replace(/\/+$/, '');
-      if (!cleanUrl) throw new Error('Укажите URL Cloudflare Worker');
+      const endpoint = new URL(cleanUrl);
+      const localWorker = localAdmin && ['localhost', '127.0.0.1'].includes(endpoint.hostname) &&
+        ['http:', 'https:'].includes(endpoint.protocol);
+      if ((endpoint.origin !== STOCK_ORIGIN && !localWorker) || endpoint.username || endpoint.password || endpoint.hash || endpoint.search) {
+        throw new Error('Недопустимый адрес складского сервиса');
+      }
       const res = await fetch(cleanUrl, {
         method: 'POST',
+        redirect: 'error',
         headers: {
           'Content-Type': 'application/json',
           'X-Admin-Key': adminKey
@@ -1080,6 +1086,31 @@
         }).join('');
       }
 
+      document.getElementById('restoreImport').hidden = !adminPayload.canRestoreImport;
+      const reviews = document.getElementById('reviewList');
+      reviews.replaceChildren();
+      const reasons = { catalog: 'Состав не распознан', shortage: 'Недостаточный остаток', conflict: 'Конфликт заказа или количества', invalid: 'Ошибка подтверждения' };
+      for (const review of adminPayload.unresolvedOrders || []) {
+        const row = document.createElement('div');
+        row.className = 'movement-row';
+        row.textContent = review.orderNumber + ' · ' + new Date(review.receivedAt).toLocaleString('ru-RU') + ' · ' + reasons[review.reason];
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'btn-nav';
+        button.textContent = 'Отметить сверенным';
+        button.onclick = async () => {
+          if (!confirm('Убрать сверенный заказ ' + review.orderNumber + ' из списка?')) return;
+          try {
+            const { url, key } = getAdminCredentials();
+            adminPayload = await callAdminWorker(url, key, 'resolve_review', { orderNumber: review.orderNumber });
+            renderStockPage();
+          } catch (err) { showStockToast(err.message); }
+        };
+        row.append(button);
+        reviews.append(row);
+      }
+      if (!reviews.childElementCount) reviews.textContent = 'Полученных вебхуков с расхождениями нет.';
+      if (adminPayload.moreUnresolved) reviews.append('Показаны первые 50 заказов.');
       const movements = adminPayload?.recentMovements || [];
       const movList = document.getElementById('movementsList');
       if (!movements || !movements.length) {
@@ -1146,6 +1177,7 @@
     function parseAdminCsvToItems(csvText) {
       const lines = String(csvText || '').replace(/^\uFEFF/, '').split(/\r?\n/).filter(l => l.trim());
       if (lines.length < 2) throw new Error('Пустой CSV файл');
+      const delimiter = lines[0].includes(';') ? ';' : ',';
       const parseLine = (line) => {
         const cells = [];
         let cur = '';
@@ -1155,17 +1187,19 @@
           if (ch === '"') {
             if (inQuotes && line[i + 1] === '"') { cur += '"'; i++; }
             else inQuotes = !inQuotes;
-          } else if ((ch === ',' || ch === ';') && !inQuotes) {
+          } else if (ch === delimiter && !inQuotes) {
             cells.push(cur.trim());
             cur = '';
           } else {
             cur += ch;
           }
         }
+        if (inQuotes) throw new Error('Незакрытая кавычка в CSV');
         cells.push(cur.trim());
         return cells;
       };
       const headers = parseLine(lines[0]);
+      if (new Set(headers).size !== headers.length) throw new Error('Повторяющиеся заголовки CSV');
       const idxCode = headers.indexOf('Code');
       const idxDesc = headers.indexOf('Description');
       const idxStock = headers.indexOf('Free Stock');
@@ -1176,11 +1210,21 @@
       for (let i = 1; i < lines.length; i++) {
         const cols = parseLine(lines[i]);
         const code = (cols[idxCode] || '').trim();
-        if (!code || !/^\d+$/.test(code)) continue;
-        const stock = Math.max(0, parseInt(cols[idxStock], 10) || 0);
-        const spent = idxSpent !== -1 ? Math.max(0, parseInt(cols[idxSpent], 10) || 0) : 0;
-        const name = idxDesc !== -1 ? (cols[idxDesc] || `Товар ${code}`) : (adminPayload?.items?.[code]?.name || `Товар ${code}`);
-        const price = idxPrice !== -1 ? (parseInt(cols[idxPrice], 10) || adminPayload?.items?.[code]?.price || 0) : (adminPayload?.items?.[code]?.price || 0);
+        if (cols.length !== headers.length || !/^\d{1,32}$/.test(code) || items[code]) {
+          throw new Error('Строка ' + (i + 1) + ': проверьте столбцы и уникальность артикула');
+        }
+        const integer = (text, field) => {
+          if (!/^\d+$/.test(String(text)) || !Number.isSafeInteger(Number(text))) {
+            throw new Error('Строка ' + (i + 1) + ': некорректное значение «' + field + '»');
+          }
+          return Number(text);
+        };
+        const stock = integer(cols[idxStock], 'Free Stock');
+        const existing = adminPayload?.items?.[code];
+        const spent = idxSpent !== -1 ? integer(cols[idxSpent], 'Расход') : (existing?.totalSpent ?? 0);
+        const name = (idxDesc !== -1 && cols[idxDesc]) || existing?.name || ('Товар ' + code);
+        const price = integer(idxPrice !== -1 ? cols[idxPrice] : existing?.price, 'РРЦ');
+        if (!price) throw new Error('Строка ' + (i + 1) + ': РРЦ должна быть положительной');
         const lower = name.toLowerCase();
         const category = lower.includes('подставка под монитор') || lower.includes('focus station') ? 'Подставки'
           : (lower.includes('коврик') || lower.includes('mouse pad') ? 'Коврики' : 'Кронштейны и модули');
@@ -1206,8 +1250,20 @@
       reader.onload = async () => {
         try {
           const items = parseAdminCsvToItems(String(reader.result || ''));
+          const before = adminPayload;
+          const removed = Object.keys(before.items).filter(code => !items[code]).sort();
+          const changes = Object.values(items).filter(row => {
+            const old = before.items[row.code];
+            return !old || old.stock !== row.stock || old.price !== row.price || old.totalSpent !== row.initialSpent || old.name !== row.name;
+          }).map(row => {
+            const old = before.items[row.code];
+            return row.code + ': ' + (old?.stock ?? 'новый') + ' → ' + row.stock + ' шт., ' + (old?.price ?? '—') + ' → ' + row.price + ' ₽';
+          });
+          if (!confirm(['Применить импорт из ' + file.name + '?', 'Строк: ' + Object.keys(items).length,
+              ...changes, 'Удаляемые артикулы: ' + (removed.join(', ') || 'нет')].join('\n'))) return;
           const { url, key } = getAdminCredentials();
           adminPayload = await callAdminWorker(url, key, 'seed', {
+            expectedRevision: before.revision, confirmRemoved: removed,
             stockDate: new Date().toISOString().slice(0, 10),
             items,
             keepDeductions: false
@@ -1223,11 +1279,22 @@
       reader.readAsText(file, 'utf-8');
     }
 
+    async function restoreImport() {
+      if (!isStockAuthorized() || !confirm('Вернуть предыдущий прайс с учётом заказов и корректировок после импорта?')) return;
+      const { url, key } = getAdminCredentials();
+      try {
+        adminPayload = await callAdminWorker(url, key, 'restore_import', { expectedRevision: adminPayload.revision });
+        renderStockPage();
+        showStockToast('Предыдущий прайс восстановлен');
+      } catch (err) { showStockToast(err.message); }
+    }
+
     async function resetLedger() {
       if (!isStockAuthorized()) return;
       const { url, key } = getAdminCredentials();
       try {
-        adminPayload = await callAdminWorker(url, key, 'reset');
+        if (!confirm('Сбросить все списания к текущему прайсу и очистить журнал движений?')) return;
+        adminPayload = await callAdminWorker(url, key, 'reset', { expectedRevision: adminPayload.revision });
         renderStockPage();
         showStockToast('Списания на сервере сброшены к базовому прайсу');
       } catch (err) {
@@ -1292,7 +1359,6 @@
       try {
         adminPayload = await callAdminWorker(workerUrl, pwd, 'admin_list');
         try {
-          localStorage.setItem(WORKER_URL_KEY, workerUrl);
           sessionStorage.setItem(ADMIN_SESSION_URL_KEY, workerUrl);
           sessionStorage.setItem(ADMIN_SESSION_TOKEN_KEY, pwd);
         } catch (_) {}

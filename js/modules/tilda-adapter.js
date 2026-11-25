@@ -1007,7 +1007,8 @@
           if (!window.geekNookApp || typeof window.geekNookApp.dispatchUnifiedOrder !== 'function') {
             throw new Error('Order dispatch unavailable');
           }
-          await window.geekNookApp.dispatchUnifiedOrder(unifiedOrderPayload);
+          const receipt = await window.geekNookApp.dispatchUnifiedOrder(unifiedOrderPayload);
+          window.geekNookApp.displayStockStatus(receipt);
         } catch(dispErr) {
           console.warn('[GeekNook 1-Click] dispatchUnifiedOrder error:', dispErr);
           window.geekNookApp.showToast(dispErr?.isStockError ? dispErr.message : 'Не удалось подтвердить отправку. Свяжитесь с нами перед повторным заказом.', 'error');
@@ -1053,11 +1054,9 @@
             if (sm) sm.classList.add('active');
           }
           if (typeof window.geekNookApp?.showToast === 'function') {
-            window.geekNookApp.showToast('Быстрый заказ оформлен! Менеджер свяжется с вами.', 'success');
+            window.geekNookApp.showToast(`Заказ ${orderNumber} получен.`, 'success');
           }
-          if (window.ym && typeof window.ym === 'function') {
-            try { window.ym(113130622, 'reachGoal', 'quick_buy_submit'); } catch(_) {}
-          }
+          window.geekNookAnalytics?.reachGoal?.('quick_buy_submit');
         } catch(uiErr) {
           console.warn('[GeekNook 1-Click] UI confirmation error:', uiErr);
         }

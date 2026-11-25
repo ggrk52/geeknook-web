@@ -35,7 +35,7 @@ async function runDeepAudit() {
 
   const page = await browser.newPage();
   await page.addInitScript(() => {
-    try { localStorage.setItem('geeknook_cookie_consent', 'true'); } catch (e) {}
+    try { localStorage.setItem('geeknook_analytics_choice_v1', 'allow'); } catch (e) {}
   });
   await page.route(/(mc\.yandex\.ru|google-analytics\.com|googletagmanager\.com|tilda\.ws)/i, route => route.abort());
 

@@ -104,6 +104,31 @@ if (!empty($errors)) {
 // 7. Atomic Stock Reservation & Catalog Price Verification
 $resolvedCodes = gn_resolve_item_codes($productId, $productOption, intval($data['quantity'] ?? 1));
 $primaryCode = $resolvedCodes[0]['code'] ?? $productId;
+$logFile = gn_private_log_path('geeknook-orders.log');
+$logEntry = json_encode([
+    'type'           => 'quick_buy_received',
+    'order_number'   => $orderNumber,
+    'timestamp'      => date('Y-m-d H:i:s'),
+    'ip'             => $clientIp,
+    'user_agent'     => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
+    'name'           => $name,
+    'phone'          => $phone,
+    'product_id'     => $productId,
+    'article_code'   => $primaryCode,
+    'product_title'  => $productTitle,
+    'product_option' => $productOption,
+    'client_price'   => $price,
+    'promo_code'     => $promoCode,
+    'utm'            => $utm
+], JSON_UNESCAPED_UNICODE) . PHP_EOL;
+
+// Persist the incoming request before deducting stock. The ledger records fulfilment.
+if (!$logFile || @file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX) === false) {
+    http_response_code(503);
+    echo json_encode(['success' => false, 'error' => 'Не удалось сохранить заказ. Попробуйте позже.'], JSON_UNESCAPED_UNICODE);
+    exit;
+}
+
 $stockTx = gn_stock_transaction('commit', [
     'order_number' => $orderNumber,
     'type'         => 'quick_buy',
@@ -124,32 +149,6 @@ $priceWarning = '';
 if ($expectedPrice !== null && $numericClientPrice > 0 && abs($numericClientPrice - $expectedPrice) > 100) {
     $priceWarning = " ⚠️ <i>(Каталог: " . number_format($expectedPrice, 0, '.', ' ') . " ₽)</i>";
 }
-
-// 8. Log order to disk (guaranteed persistent record)
-$logDir = getenv('GEEKNOOK_PRIVATE_LOG_DIR');
-$logFile = ($logDir && is_dir($logDir) && is_writable($logDir))
-    ? (rtrim($logDir, DIRECTORY_SEPARATOR) . '/geeknook-orders.log')
-    : (__DIR__ . '/orders.log');
-$logEntry = json_encode([
-    'type'           => 'quick_buy_1click',
-    'order_number'   => $orderNumber,
-    'timestamp'      => date('Y-m-d H:i:s'),
-    'ip'             => $clientIp,
-    'user_agent'     => $_SERVER['HTTP_USER_AGENT'] ?? 'unknown',
-    'name'           => $name,
-    'phone'          => $phone,
-    'product_id'     => $productId,
-    'article_code'   => $primaryCode,
-    'product_title'  => $productTitle,
-    'product_option' => $productOption,
-    'client_price'   => $price,
-    'catalog_price'  => $expectedPrice,
-    'remaining_stock'=> $remainingAfterOrder,
-    'promo_code'     => $promoCode,
-    'utm'            => $utm
-], JSON_UNESCAPED_UNICODE) . PHP_EOL;
-
-@file_put_contents($logFile, $logEntry, FILE_APPEND | LOCK_EX);
 
 // 9. Telegram Bot Notification (Protected: no hardcoded secrets, safe HTML formatting)
 $telegramSuccess = false;

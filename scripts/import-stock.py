@@ -12,6 +12,7 @@ import os
 import re
 import urllib.error
 import urllib.request
+import urllib.parse
 import xml.etree.ElementTree as ET
 import zipfile
 from datetime import date, datetime, timezone
@@ -63,43 +64,55 @@ def infer_category(description: str) -> str:
     return "Кронштейны и модули"
 
 
-def parse_int(val, default=0):
+def parse_int(val, default=None):
     raw = str(val if val is not None else "").strip()
-    if not raw:
+    if not raw and default is not None:
         return default
-    return int(float(raw.replace(",", ".")))
+    if not re.fullmatch(r"[0-9]+(?:[.,]0+)?", raw):
+        raise SystemExit("Expected a non-negative whole number")
+    result = int(re.split(r"[,.]", raw)[0])
+    if result > 9007199254740991:
+        raise SystemExit("Quantity or price is too large")
+    return result
 
 
-def push_to_worker(worker_url: str, stock_doc: dict, admin_key: str, keep_deductions: bool):
-    endpoint = worker_url.rstrip("/")
-    if not endpoint.endswith("/admin/seed"):
-        endpoint = f"{endpoint}/admin/seed"
-    payload = json.dumps({
-        "action": "seed",
-        "stockDate": stock_doc["stockDate"],
-        "snapshotHash": stock_doc["snapshotHash"],
-        "items": stock_doc["items"],
-        "keepDeductions": keep_deductions,
-    }, ensure_ascii=False).encode("utf-8")
-    req = urllib.request.Request(
-        endpoint,
-        data=payload,
-        method="POST",
-        headers={
-            "Content-Type": "application/json",
-            "X-Admin-Key": admin_key,
-            "User-Agent": "GeekNook-Stock-Importer/1.0",
-        },
-    )
-    try:
-        with urllib.request.urlopen(req, timeout=20) as resp:
-            body = json.loads(resp.read().decode("utf-8"))
-            if not body.get("ok"):
-                raise SystemExit(f"Worker rejected seed: {body}")
-            print(f"Synced {body.get('imported', len(stock_doc['items']))} SKUs to Cloudflare Worker ({endpoint})")
-    except urllib.error.HTTPError as err:
-        detail = err.read().decode("utf-8", errors="replace")
-        raise SystemExit(f"Worker HTTP {err.code}: {detail}")
+def push_to_worker(worker_url, stock_doc, admin_key, keep_deductions, permitted_removals):
+    parsed = urllib.parse.urlsplit(worker_url)
+    official = "https://geeknook-stock.sergeykozlov2006.workers.dev"
+    if (f"{parsed.scheme}://{parsed.netloc}" != official and
+            not (parsed.hostname in ("localhost", "127.0.0.1") and parsed.scheme in ("https", "http"))):
+        raise SystemExit("Unknown stock service address")
+    if parsed.username or parsed.password or parsed.query or parsed.fragment or parsed.path.rstrip("/") not in ("", "/admin/seed"):
+        raise SystemExit("Invalid stock service URL")
+    base = f"{parsed.scheme}://{parsed.netloc}"
+
+    class NoRedirect(urllib.request.HTTPRedirectHandler):
+        def redirect_request(self, req, fp, code, msg, headers, newurl):
+            return None
+
+    opener = urllib.request.build_opener(NoRedirect())
+    def post(action, fields):
+        req = urllib.request.Request(base, data=json.dumps({"action": action, **fields}).encode(),
+            headers={"Content-Type": "application/json", "X-Admin-Key": admin_key})
+        try:
+            with opener.open(req, timeout=20) as resp:
+                result = json.load(resp)
+        except urllib.error.HTTPError as err:
+            raise SystemExit(f"Worker HTTP {err.code}: " + err.read(1000).decode(errors="replace"))
+        if result.get("ok") is not True:
+            raise SystemExit("Worker did not acknowledge operation")
+        return result
+
+    before = post("admin_list", {})
+    if "revision" not in before:
+        raise SystemExit("Deploy the versioned stock Worker before importing")
+    removed = sorted(before["items"].keys() - stock_doc["items"].keys())
+    if set(removed) - permitted_removals:
+        raise SystemExit("Missing SKUs on Worker (use --remove-code for each intended removal): " + ", ".join(removed))
+    result = post("seed", {"stockDate": stock_doc["stockDate"], "snapshotHash": stock_doc["snapshotHash"],
+        "items": stock_doc["items"], "keepDeductions": keep_deductions, "expectedRevision": before["revision"],
+        "confirmRemoved": removed})
+    print(f"Synced {result['imported']} SKUs to Cloudflare Worker")
 
 
 def main():
@@ -108,6 +121,7 @@ def main():
     parser.add_argument("--date", default=date.today().isoformat(), help="Snapshot date (YYYY-MM-DD)")
     parser.add_argument("--push-worker", default="", help="Cloudflare Worker URL to push full stock table")
     parser.add_argument("--keep-deductions", action="store_true", help="Preserve order deductions on Worker during seed")
+    parser.add_argument("--remove-code", action="append", default=[], help="Confirm intentional removal of one SKU")
     args = parser.parse_args()
     date.fromisoformat(args.date)
 
@@ -138,9 +152,7 @@ def main():
 
     for row in rows:
         code = str(row.get("Code", "")).strip()
-        if not code:
-            continue
-        if not code.isdecimal() or code in seen:
+        if not re.fullmatch(r"[0-9]{1,32}", code) or code in seen:
             raise SystemExit(f"Invalid or duplicate article: {code}")
         seen.add(code)
 
@@ -185,7 +197,12 @@ def main():
         "totalSkus": len(full_items),
         "items": full_items,
     }
-    stock_json_path.write_text(json.dumps(stock_doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    permitted_removals = set(args.remove_code)
+    if stock_json_path.exists():
+        previous_items = json.loads(stock_json_path.read_text(encoding="utf-8"))["items"]
+        missing = previous_items.keys() - full_items.keys() - permitted_removals
+        if missing:
+            raise SystemExit("Missing SKUs (use --remove-code for intended removals): " + ", ".join(sorted(missing)))
 
     # Public catalog snapshot exposes only price + availability capped at PUBLIC_STOCK_CAP (6 = "6+ in stock")
     public_meta = {
@@ -213,6 +230,15 @@ def main():
             end,
         ]
     )
+    if args.push_worker:
+        admin_key = os.environ.get("STOCK_ADMIN_KEY", "").strip()
+        if not admin_key:
+            admin_key = getpass.getpass("Cloudflare Worker STOCK_ADMIN_KEY: ").strip()
+        if not admin_key:
+            raise SystemExit("STOCK_ADMIN_KEY is required for --push-worker")
+        push_to_worker(args.push_worker, stock_doc, admin_key, args.keep_deductions, permitted_removals)
+
+    stock_json_path.write_text(json.dumps(stock_doc, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     catalog.write_text(f"{before}{block}{after}", encoding="utf-8")
 
     print(f"Matched {len(public_snapshot)}/{len(seen)} catalog articles -> {stock_json_path.relative_to(repo_root)} (local only)")
@@ -220,13 +246,6 @@ def main():
     print("Workbook only:", ", ".join(sorted(unmatched)) or "none")
     print("Catalog only:", ", ".join(sorted(known - public_snapshot.keys())) or "none")
 
-    if args.push_worker:
-        admin_key = os.environ.get("STOCK_ADMIN_KEY", "").strip()
-        if not admin_key:
-            admin_key = getpass.getpass("Cloudflare Worker STOCK_ADMIN_KEY: ").strip()
-        if not admin_key:
-            raise SystemExit("STOCK_ADMIN_KEY is required for --push-worker")
-        push_to_worker(args.push_worker, stock_doc, admin_key, args.keep_deductions)
 
 
 if __name__ == "__main__":

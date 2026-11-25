@@ -3304,7 +3304,7 @@
   </div>
 
   <!-- Quick View Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="quickViewModal" onclick="if(event.target===this) window.geekNookApp.closeModal('quickViewModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="quickViewModal" onclick="if(event.target===this) window.geekNookApp.closeModal('quickViewModal')" aria-label="Карточка товара">
     <div class="modal-card">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('quickViewModal')" aria-label="Закрыть">✕</button>
       <div id="quickViewContent"></div>
@@ -3312,10 +3312,10 @@
   </div>
 
   <!-- Configurator Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="configuratorModal" onclick="if(event.target===this) window.geekNookApp.closeModal('configuratorModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="configuratorModal" onclick="if(event.target===this) window.geekNookApp.closeModal('configuratorModal')" aria-labelledby="configuratorModalTitle">
     <div class="modal-card configurator-modal-card">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('configuratorModal')" aria-label="Закрыть">✕</button>
-      <h2 class="modal-title">Интерактивный конструктор Focus Station</h2>
+      <h2 class="modal-title" id="configuratorModalTitle">Интерактивный конструктор Focus Station</h2>
       <p class="modal-subtitle">Соберите свой сетап: настройте породу дерева, размер полки и модули T-Track.</p>
 
       <div class="configurator-modal-layout">
@@ -3523,10 +3523,10 @@
   </div>
 
   <!-- Checkout Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="checkoutModal" onclick="if(event.target===this) window.geekNookApp.closeModal('checkoutModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="checkoutModal" onclick="if(event.target===this) window.geekNookApp.closeModal('checkoutModal')" aria-labelledby="checkoutModalTitle">
     <div class="modal-card checkout-modal-card">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('checkoutModal')" aria-label="Закрыть">✕</button>
-      <h2 class="modal-title">Оформление заказа</h2>
+      <h2 class="modal-title" id="checkoutModalTitle">Оформление заказа</h2>
       
       <form id="checkoutForm" novalidate onsubmit="window.geekNookApp.handleCheckoutSubmit(event)">
         <!-- Anti-Spam Bot Trap (Honeypot) -->
@@ -3636,7 +3636,7 @@
 
             <div class="checkout-consent-row">
               <label class="checkout-consent-label" for="checkoutConsentCheckbox">
-                <input type="checkbox" id="checkoutConsentCheckbox" name="consent" class="checkout-consent-checkbox" required checked />
+                <input type="checkbox" id="checkoutConsentCheckbox" name="consent" class="checkout-consent-checkbox" required />
                 <span>Я даю <a href="https://geeknook.ru/legal#privacy" target="_blank" rel="noopener" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">согласие на обработку персональных данных</a> (152-ФЗ) и принимаю условия <a href="https://geeknook.ru/legal#offer" target="_blank" rel="noopener" onclick="window.geekNookApp.openLegalModal('offer'); return false;">Публичной оферты</a></span>
               </label>
               <div class="field-error-msg" id="checkoutConsentError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
@@ -3652,7 +3652,7 @@
   </div>
 
   <!-- CDEK PVZ Interactive Map & Picker Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="cdekMapModal" style="z-index: 2147483647;" onclick="if(event.target===this) window.geekNookApp.closeCdekMap()">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="cdekMapModal" style="z-index: 2147483647;" onclick="if(event.target===this) window.geekNookApp.closeCdekMap()" aria-labelledby="cdekMapModalTitle">
     <div class="modal-card cdek-modal-card">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeCdekMap()" aria-label="Закрыть окно">✕</button>
       
@@ -3661,7 +3661,7 @@
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="3 11 22 2 13 21 11 13 3 11"></polygon></svg>
           СДЭК Доставка
         </div>
-        <h2 class="modal-title" style="font-size:1.6rem;margin-top:6px;margin-bottom:4px;">Пункты выдачи СДЭК (ПВЗ)</h2>
+        <h2 class="modal-title" style="font-size:1.6rem;margin-top:6px;margin-bottom:4px;" id="cdekMapModalTitle">Пункты выдачи СДЭК (ПВЗ)</h2>
         <p class="modal-subtitle" style="margin-bottom:12px;font-size:0.875rem;">Выберите пункт на интерактивной карте или найдите по адресу, метро или коду ПВЗ</p>
       </div>
 
@@ -3735,7 +3735,7 @@
   </div>
 
   <!-- Success Celebration Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="successModal" onclick="if(event.target===this) window.geekNookApp.closeModal('successModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="successModal" onclick="if(event.target===this) window.geekNookApp.closeModal('successModal')" aria-label="Статус заказа">
     <div class="modal-card" style="max-width:540px;text-align:center;padding:48px 32px;">
       <button class="btn-close-modal" aria-label="Закрыть окно" onclick="window.geekNookApp.closeModal('successModal')">✕</button>
       <div style="display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border-radius:50%;background:rgba(16,185,129,0.1);color:#10b981;margin-bottom:20px;border:1px solid rgba(16,185,129,0.25);">
@@ -3759,7 +3759,7 @@
   </div>
 
   <!-- Lightbox Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="lightboxModal" onclick="if(event.target===this) window.geekNookApp.closeModal('lightboxModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="lightboxModal" onclick="if(event.target===this) window.geekNookApp.closeModal('lightboxModal')" aria-label="Увеличенное фото">
     <div style="max-width:1100px;max-height:90vh;position:relative;display:flex;flex-direction:column;align-items:center;">
       <button class="btn-close-modal" aria-label="Закрыть окно" style="background:rgba(255,255,255,0.2);color:#fff;" onclick="window.geekNookApp.closeModal('lightboxModal')">✕</button>
       <img id="lightboxImg" src="" alt="Увеличенное фото" style="max-height:80vh;max-width:100%;border-radius:8px;object-fit:contain;" />
@@ -3768,7 +3768,7 @@
   </div>
 
   <!-- Article Reader Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="articleModal" onclick="if(event.target===this) window.geekNookApp.closeModal('articleModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="articleModal" onclick="if(event.target===this) window.geekNookApp.closeModal('articleModal')" aria-label="Статья">
     <div class="modal-card" style="max-width:960px;">
       <button class="btn-close-modal" aria-label="Закрыть окно" onclick="window.geekNookApp.closeModal('articleModal')">✕</button>
       <div id="articleModalContent"></div>
@@ -3776,11 +3776,11 @@
   </div>
 
   <!-- Quick Buy Modal (1-Click Buy) -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="quickBuyModal" onclick="if(event.target===this) window.geekNookApp.closeModal('quickBuyModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="quickBuyModal" onclick="if(event.target===this) window.geekNookApp.closeModal('quickBuyModal')" aria-labelledby="quickBuyModalTitle">
     <div class="modal-card quick-buy-card" style="max-width:480px;">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('quickBuyModal')" aria-label="Закрыть">✕</button>
       <div class="quick-buy-header">
-        <h3 class="modal-title" style="font-size:1.4rem;">Быстрый заказ в 1 клик</h3>
+        <h3 class="modal-title" style="font-size:1.4rem;" id="quickBuyModalTitle">Быстрый заказ в 1 клик</h3>
         <p class="modal-subtitle" style="margin-bottom:16px;">Менеджер свяжется с вами в течение 10 минут для уточнения адреса.</p>
       </div>
       <div id="quickBuyProductSummary" class="quick-buy-prod-summary"></div>
@@ -3806,7 +3806,7 @@
         </button>
         <div class="checkout-consent-row" style="margin-top:12px;">
           <label class="checkout-consent-label" for="quickBuyConsentCheckbox">
-            <input type="checkbox" id="quickBuyConsentCheckbox" name="consent" class="checkout-consent-checkbox" required checked />
+            <input type="checkbox" id="quickBuyConsentCheckbox" name="consent" class="checkout-consent-checkbox" required />
             <span>Согласен на <a href="https://geeknook.ru/legal#privacy" target="_blank" rel="noopener" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">обработку персональных данных</a> (152-ФЗ)</span>
           </label>
           <div class="field-error-msg" id="quickBuyConsentError" style="display:none;color:#ef4444;font-size:0.75rem;margin-top:4px;font-weight:500;"></div>
@@ -3816,12 +3816,12 @@
   </div>
 
   <!-- Setup Finder Quiz Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="quizModal" onclick="if(event.target===this) window.geekNookApp.closeModal('quizModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="quizModal" onclick="if(event.target===this) window.geekNookApp.closeModal('quizModal')" aria-labelledby="quizModalTitle">
     <div class="modal-card quiz-modal-card" style="max-width:680px;">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('quizModal')" aria-label="Закрыть">✕</button>
       <div class="quiz-header">
         <div class="quiz-badge">Интерактивный конфигуратор</div>
-        <h2 class="modal-title" style="margin-top:8px;font-size:1.6rem;">Подберите идеальную станцию GeekNook</h2>
+        <h2 class="modal-title" style="margin-top:8px;font-size:1.6rem;" id="quizModalTitle">Подберите идеальную станцию GeekNook</h2>
         <p class="modal-subtitle">Ответьте на 3 вопроса — мы рассчитаем длину полки и оптимальный набор модулей T-Track.</p>
         <div class="quiz-progress-bar">
           <div class="quiz-progress-fill" id="quizProgressFill" style="width:33.3%;"></div>
@@ -3856,7 +3856,7 @@
   </div>
 
   <!-- Command Palette (Cmd+K / Ctrl+K) -->
-  <div class="modal-backdrop command-palette-backdrop" id="commandPaletteModal" onclick="if(event.target===this) window.geekNookApp.closeCommandPalette()">
+  <div class="modal-backdrop command-palette-backdrop" id="commandPaletteModal" onclick="if(event.target===this) window.geekNookApp.closeCommandPalette()" role="dialog" aria-modal="true" aria-label="Поиск по сайту">
     <div class="command-palette-card">
       <div class="cmd-palette-search-box">
         <svg class="cmd-search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -3876,12 +3876,12 @@
   </div>
 
   <!-- Setup Matcher Modal (Инженерный примерщик мониторов) -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="setupMatcherModal" onclick="if(event.target===this) window.geekNookApp.closeModal('setupMatcherModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="setupMatcherModal" onclick="if(event.target===this) window.geekNookApp.closeModal('setupMatcherModal')" aria-labelledby="setupMatcherModalTitle">
     <div class="modal-card setup-matcher-card" style="max-width:880px;">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('setupMatcherModal')" aria-label="Закрыть">✕</button>
       <div class="matcher-header">
         <span class="section-kicker kicker-dark" style="color:var(--primary);">Инженерный примерщик · Масштаб 1:15</span>
-        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Примерщик рабочего пространства</h2>
+        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;" id="setupMatcherModalTitle">Примерщик рабочего пространства</h2>
         <p class="modal-subtitle">Рассчитайте идеальную посадку подставки GeekNook под размер ваших мониторов и ширину стола.</p>
       </div>
 
@@ -3936,12 +3936,12 @@
   </div>
 
   <!-- Ergonomics Calculator Modal (ISO 9241-5) -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="ergonomicsModal" onclick="if(event.target===this) window.geekNookApp.closeModal('ergonomicsModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="ergonomicsModal" onclick="if(event.target===this) window.geekNookApp.closeModal('ergonomicsModal')" aria-labelledby="ergonomicsModalTitle">
     <div class="modal-card ergonomics-modal-card" style="max-width:860px;">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('ergonomicsModal')" aria-label="Закрыть">✕</button>
       <div class="ergo-modal-header">
         <span class="section-kicker kicker-dark" style="color:var(--primary);">Эргономика рабочего места · Стандарт ISO 9241-5</span>
-        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Инженерный калькулятор здоровой осанки</h2>
+        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;" id="ergonomicsModalTitle">Инженерный калькулятор здоровой осанки</h2>
         <p class="modal-subtitle">Рассчитайте персональную высоту расположения монитора, чтобы устранить синдром «текстовой шеи» и напряжение в трапециевидных мышцах.</p>
       </div>
 
@@ -4022,12 +4022,12 @@
   </div>
 
   <!-- B2B & 3D CAD Asset Library Modal -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="cadLibraryModal" onclick="if(event.target===this) window.geekNookApp.closeModal('cadLibraryModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="cadLibraryModal" onclick="if(event.target===this) window.geekNookApp.closeModal('cadLibraryModal')" aria-labelledby="cadLibraryModalTitle">
     <div class="modal-card cad-library-card" style="max-width:1080px;">
       <button class="btn-close-modal" onclick="window.geekNookApp.closeModal('cadLibraryModal')" aria-label="Закрыть">✕</button>
       <div class="cad-header">
         <span class="section-kicker kicker-dark" style="color:var(--primary);">B2B & ARCHITECTURE PORTAL</span>
-        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;">Оснащение IT-офисов & 3D CAD библиотека</h2>
+        <h2 class="modal-title" style="margin-top:6px;font-size:1.65rem;" id="cadLibraryModalTitle">Оснащение IT-офисов & 3D CAD библиотека</h2>
         <p class="modal-subtitle">Интерактивный конфигуратор оснащения офисов от 5 до 100+ мест со скидкой до 25%, официальное КП с печатью и 3D-модели для архитекторов.</p>
 
         <div class="cad-modal-tabs" role="tablist" aria-label="Разделы B2B портала">
@@ -4249,7 +4249,7 @@
   </div>
 
   <!-- B2B Commercial Proposal (КП) Modal & Printable Sheet -->
-  <div class="modal-backdrop" role="dialog" aria-modal="true" id="b2bKpModal" onclick="if(event.target===this) window.geekNookApp.closeModal('b2bKpModal')">
+  <div class="modal-backdrop" role="dialog" aria-modal="true" id="b2bKpModal" aria-label="Коммерческое предложение" onclick="if(event.target===this) window.geekNookApp.closeModal('b2bKpModal')">
     <div class="modal-card b2b-kp-modal-card">
       <div class="b2b-kp-toolbar">
         <div style="display:flex;align-items:center;gap:10px;">
@@ -4325,25 +4325,6 @@
   </div>
 
 
-  <!-- Cookie Consent Banner (152-ФЗ) -->
-  <aside id="cookieBanner" class="cookie-consent-banner" aria-label="Уведомление об использовании файлов cookie" role="region">
-    <div class="cookie-consent-header">
-      <svg class="cookie-consent-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 2a10 10 0 1 0 10 10 4 4 0 0 1-5-5 4 4 0 0 1-5-5"></path>
-        <path d="M8.5 8.5v.01"></path>
-        <path d="M7 14v.01"></path>
-        <path d="M15 15v.01"></path>
-      </svg>
-      <div class="cookie-consent-title">Файлы cookie и безопасность</div>
-    </div>
-    <p class="cookie-consent-text">
-      Мы используем файлы cookie и аналитику для улучшения работы каталога и корзины. Оставаясь на сайте, вы соглашаетесь с условиями <a href="https://geeknook.ru/legal#privacy" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Политики конфиденциальности</a>.
-    </p>
-    <div class="cookie-consent-actions">
-      <button class="btn-cookie-accept" onclick="window.geekNookApp.acceptCookies()">Принять и продолжить</button>
-      <a href="https://geeknook.ru/legal#privacy" class="btn-cookie-details" onclick="window.geekNookApp.openLegalModal('privacy'); return false;">Подробнее</a>
-    </div>
-  </aside>
 
   <!-- Persistent Mobile Sticky Buy Bar (≤ 768px, appears past hero) -->
   <aside class="mobile-sticky-buy-bar" id="mobileStickyBuyBar" aria-label="Быстрый заказ">

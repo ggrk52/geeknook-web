@@ -772,10 +772,6 @@ textarea:focus-visible {
   border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-1px);
 }
-  background: rgba(255, 255, 255, 0.16);
-  border-color: #ffffff;
-  transform: translateY(-2px);
-}
 
 .hero-trust-row {
   display: flex;
