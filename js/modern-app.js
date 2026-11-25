@@ -4879,7 +4879,7 @@
 
   const dispatchUnifiedOrder = async (orderPayload) => {
     const isQuickBuy = orderPayload.type === 'quick_buy';
-    const recipientEmail = (typeof window !== 'undefined' && window.GEEKNOOK_FORMSUBMIT_EMAIL) || 'orders@geeknook.ru';
+    const recipientEmail = (typeof window !== 'undefined' && window.GEEKNOOK_FORMSUBMIT_EMAIL) || 'sergeykozlov20066@mail.ru';
     const tildaDispatched = Boolean(orderPayload.tildaDispatched);
     const stockAlreadyCommitted = Boolean(orderPayload.stockCommitted);
 
