@@ -427,6 +427,7 @@
 
   // --- JOURNAL ARTICLE CONVERSION FLOATING CTA ---
   function initJournalFloatingCta() {
+    if (document.body.hasAttribute('data-journal-product-pilot')) return;
     const isJournalArticle = window.location.pathname.includes('/journal/') || (window.location.pathname.endsWith('journal.html') && window.location.search.includes('article='));
     if (!isJournalArticle) return;
     if (sessionStorage.getItem('geeknook_journal_cta_closed') === '1') return;
@@ -654,6 +655,8 @@
 
   // --- INTERACTIVE ERGONOMICS CALCULATOR FOR JOURNAL ARTICLES ---
   function initJournalErgonomicsCalculator() {
+    const pilotTopic = document.body.getAttribute('data-journal-product-pilot');
+    if (pilotTopic !== null && pilotTopic !== 'monitor') return;
     const isJournalArticle = window.location.pathname.includes('/journal/') && !window.location.pathname.endsWith('/journal.html');
     if (!isJournalArticle) return;
 

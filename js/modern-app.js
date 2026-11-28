@@ -2152,6 +2152,33 @@
       </tr>
     `).join('');
 
+    const standLengths = ['85 см', '116 см'];
+    const canCompareStand = product.category === 'boards' &&
+      standLengths.every(length => product.options?.lengths?.includes(length));
+    const standComparison = canCompareStand ? `
+      <details ontoggle="if(this.open) window.geekNookAnalytics?.reachGoal?.('COMPARE_STAND_SIZES')">
+        <summary><strong>Сравнить 85 и 116 см</strong></summary>
+        <div class="qv-stand-comparison">
+          ${standLengths.map(length => {
+            const size = parseInt(length, 10);
+            const variant = GEEKNOOK_DATA.getVariant(product.id, length);
+            return `
+              <figure>
+                <div class="qv-stand-scale" style="--stand-length:${size}">
+                  <img src="${toAssetUrl('images/focus-station-compare-' + size + '.webp')}" alt="" loading="lazy" decoding="async">
+                </div>
+                <figcaption><strong>${size} × 9 × 23 см</strong>
+                  ${variant?.price ? `<span>${formatPrice(discountedUnitPrice(variant.price))}</span>` : ''}
+                </figcaption>
+              </figure>
+            `;
+          }).join('')}
+        </div>
+        <p>Визуализация в одном масштабе, отделка «Орех». Версия 116 см длиннее на 31 см. Цены показаны с акцией сайта.</p>
+        <p>Измерьте свободную ширину столешницы и основание монитора целиком. Все точки опоры должны помещаться на полке.</p>
+      </details>
+    ` : '';
+
     content.innerHTML = `
       <div class="quick-view-grid">
         <div>
@@ -2192,7 +2219,7 @@
             <button class="btn-secondary" onclick="window.geekNookApp.openQuickBuy('${product.id}')">Купить в 1 клик</button>
           </div>
 
-          ${product.category === 'boards' ? '<div class="qv-fit-guide"><details ontoggle="if(this.open) window.geekNookAnalytics?.reachGoal?.(&quot;COMPARE_STAND_SIZES&quot;)"><summary><strong>Сравнить 85 и 116 см</strong></summary><p><b>85 см</b> — для стола со свободным участком от 85 см. <b>116 см</b> — на 31 см больше для второго устройства или аксессуаров.</p><p>Измерьте свободную ширину столешницы и основание монитора целиком. Глубина обеих полок — 23 см. Все точки опоры должны помещаться на полке.</p></details><p>Держатели T-Track и коврик выбираются отдельно.</p></div>' : ''}
+          ${product.category === 'boards' ? `<div class="qv-fit-guide">${standComparison}<p>Держатели T-Track и коврик выбираются отдельно.</p></div>` : ''}
 
           <p class="qv-order-terms">Бесплатно в ПВЗ СДЭК. Осмотрите товар до оплаты. <a href="/legal#warranty" onclick="window.geekNookApp.openLegalModal('warranty'); return false;">Гарантия и возврат</a></p>
           <details class="qv-spec-details" open><summary>Габариты и характеристики</summary><table class="specs-table">

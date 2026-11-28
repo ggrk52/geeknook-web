@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#17191b">
+  <title>Focus Station 85 и 116 см — сравнение GeekNook</title>
+  <link rel="icon" href="../../favicon.ico">
+  <link rel="stylesheet" href="comparison.css">
+  <script defer src="catalog.js"></script>
+  <script defer src="comparison.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap header-inner">
+      <div class="brand">
+        <img src="../../images/tild6164-6364-4661-b835-636430386562__logo_oo.png" width="34" height="34" alt="GeekNook">
+        <span>Focus Station</span>
+      </div>
+      <button class="cart-toggle" type="button" id="open-cart" aria-haspopup="dialog" disabled>
+        Корзина <span id="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="comparison" aria-labelledby="compare-title">
+      <div class="intro">
+        <h1 id="compare-title">Какую длину выбрать?</h1>
+        <p>Версия 116 см длиннее на 31 см. У обеих подставок высота 9 см и глубина 23 см.</p>
+      </div>
+
+      <div class="visual-caption">
+        <span>Визуализация в едином масштабе</span>
+        <span>Отделка «Орех»</span>
+      </div>
+      <div class="size-grid" role="group" aria-label="Выбор длины Focus Station Walnut">
+        <article class="size-card" data-size="85" aria-labelledby="size-85">
+          <div class="studio">
+            <div class="scale-field">
+              <div class="product">
+                <canvas aria-hidden="true"></canvas>
+                <div class="ruler" aria-hidden="true"><span>85 см</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="size-info">
+            <div class="size-title">
+              <h2 id="size-85">85 см</h2>
+              <div class="prices"><del><span class="sr-only">Каталожная цена </span><span data-catalog-price></span></del><strong class="price" data-price></strong></div>
+            </div>
+            <p>Для одного монитора, если по краям стола нужно оставить больше места.</p>
+            <button class="choose-size" type="button" aria-pressed="false" disabled>
+              <span>Выбрать 85 см</span><span class="choose-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+        </article>
+
+        <article class="size-card" data-size="116" aria-labelledby="size-116">
+          <div class="studio">
+            <div class="scale-field">
+              <div class="product">
+                <canvas aria-hidden="true"></canvas>
+                <div class="ruler ruler-long" aria-hidden="true"><span>116 см</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="size-info">
+            <div class="size-title">
+              <h2 id="size-116">116 см</h2>
+              <div class="prices"><del><span class="sr-only">Каталожная цена </span><span data-catalog-price></span></del><strong class="price" data-price></strong></div>
+            </div>
+            <p>Если рядом с монитором нужно место для ноутбука или второго экрана.</p>
+            <button class="choose-size" type="button" aria-pressed="false" disabled>
+              <span>Выбрать 116 см</span><span class="choose-icon" aria-hidden="true"></span>
+            </button>
+          </div>
+        </article>
+      </div>
+
+      <p class="fit-note">Перед выбором измерьте свободный участок столешницы и основания экранов.</p>
+      <noscript><p>Включите JavaScript, чтобы увидеть цены и попробовать выбор размера.</p></noscript>
+      <p id="load-error" role="alert" hidden>Данные каталога недоступны. Обновите предпросмотр.</p>
+    </section>
+
+    <div class="purchase">
+      <div class="purchase-inner">
+        <div class="purchase-status" aria-live="polite">
+          <span id="purchase-name">Выберите длину</span>
+          <span id="purchase-meta">Focus Station Walnut</span>
+        </div>
+        <button class="buy-button" id="add-to-cart" type="button" disabled>В корзину</button>
+      </div>
+    </div>
+
+    <section class="photos" aria-labelledby="photo-title">
+      <h2 id="photo-title">Focus Station на столе</h2>
+      <div class="photo-grid">
+        <figure>
+          <img src="../../images/tild3163-3433-4266-a564-373463643232__dsc_3411_.jpg" alt="Focus Station в ореховой отделке с монитором и открытым ноутбуком" loading="lazy" decoding="async">
+          <figcaption>Монитор и ноутбук на рабочем месте</figcaption>
+        </figure>
+        <figure>
+          <img src="../../images/tild6566-3439-4264-a237-633566656531__6.jpg" alt="Крупный план кромки ореховой панели и крепления держателя" loading="lazy" decoding="async">
+          <figcaption>Кромка панели и крепление держателя</figcaption>
+        </figure>
+      </div>
+      <p>Фирменные фотографии. Аксессуары показаны как пример оформления рабочего места.</p>
+    </section>
+
+    <footer class="preview-note">Предпросмотр · Корзина работает в демонстрационном режиме</footer>
+  </main>
+
+  <dialog id="cart" aria-labelledby="cart-title">
+    <div class="dialog-head">
+      <h2 id="cart-title">Корзина</h2>
+      <form method="dialog">
+        <button class="close-cart" type="submit" aria-label="Закрыть корзину" autofocus>×</button>
+      </form>
+    </div>
+    <p id="cart-empty">В корзине пока ничего нет.</p>
+    <ul id="cart-items"></ul>
+    <p class="cart-total" id="cart-total" hidden>Итого <strong></strong></p>
+    <p class="dialog-note">Демонстрационная корзина</p>
+  </dialog>
+
+  <template id="cart-row">
+    <li class="cart-row">
+      <div><strong data-cart-title></strong><span data-cart-variant></span></div>
+      <strong data-cart-price></strong>
+    </li>
+  </template>
+</body>
+</html>

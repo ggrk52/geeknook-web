@@ -119,7 +119,7 @@
       align-items: center;
       gap: 10px;
       color: #fff;
-      font-weight: 800;
+      font-weight: 600;
       letter-spacing: 0.12em;
       font-size: 1.15rem;
       text-decoration: none;
@@ -181,19 +181,9 @@
       margin-bottom: 16px;
     }
     .category-badge {
-      font-family: var(--font-mono);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 6px;
-      background: rgba(203, 168, 112, 0.12);
-      border: 1px solid var(--primary-border);
-      color: #3b82f6;
-      font-size: 0.82rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
+      color: var(--text);
+      font-size: 0.875rem;
+      font-weight: 500;
     }
     .meta-stat {
       font-family: var(--font-mono);
@@ -204,7 +194,7 @@
       font-family: var(--font-display);
       font-size: 2.1rem;
       line-height: 1.25;
-      font-weight: 800;
+      font-weight: 600;
       color: #ffffff;
       letter-spacing: -0.02em;
       margin-bottom: 20px;
@@ -252,108 +242,48 @@
     }
     /* CTA BUY GEEKNOOK BOX */
     .cta-box {
-      background: linear-gradient(145deg, #17171d 0%, #1c1c24 100%);
-      border: 1px solid rgba(203, 168, 112, 0.4);
-      border-radius: 16px;
-      padding: 32px 28px;
-      margin: 48px 0;
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
-      position: relative;
-      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+      gap: 24px;
+      align-items: center;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 24px;
+      margin: 40px 0;
     }
-    .cta-box::before {
-      content: "";
-      position: absolute;
-      top: -50px;
-      right: -50px;
-      width: 150px;
-      height: 150px;
-      background: radial-gradient(circle, rgba(203, 168, 112, 0.2) 0%, transparent 70%);
-      pointer-events: none;
-    }
-    .cta-badge {
-      display: inline-block;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: var(--primary);
-      text-transform: uppercase;
-      margin-bottom: 8px;
+    .cta-photo {
+      display: block;
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      border-radius: 8px;
     }
     .cta-title {
-      font-family: var(--font-display);
-      font-size: 1.45rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 12px;
-      line-height: 1.3;
+      font: 600 1.5rem/1.25 var(--font-display);
+      margin: 8px 0;
     }
-    .cta-desc {
-      font-size: 0.95rem;
+    .cta-dimension {
       color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 20px;
+      font: 0.875rem/1.5 var(--font-mono);
+      font-variant-numeric: tabular-nums;
     }
-    .cta-features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 24px;
-    }
-    .cta-feat {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      color: #f0f0f3;
-    }
-    .cta-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .btn-buy-primary {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: var(--primary);
-      color: #0c0c0e;
-      font-weight: 700;
-      font-size: 0.95rem;
-      padding: 12px 24px;
+    .cta-desc { margin: 0 0 12px; }
+    .cta-terms { color: var(--text-muted); font-size: 0.875rem; }
+    .cta-actions { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 16px; }
+    .cta-actions a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 500; }
+    .cta-actions a:focus-visible { outline: 2px solid #8cb7ff; outline-offset: 4px; }
+    .cta-actions .btn-buy-primary {
+      padding: 8px 16px;
       border-radius: 8px;
-      min-height: 48px;
-      transition: all 0.2s;
-      text-decoration: none;
-    }
-    .btn-buy-primary:hover {
-      background: var(--primary-hover);
-      color: #000;
-      text-decoration: none;
-      transform: translateY(-1px);
-    }
-    .btn-tg-help {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid var(--card-border);
+      background: #1b5bc9;
       color: #fff;
-      font-size: 0.9rem;
-      font-weight: 500;
-      padding: 12px 18px;
-      border-radius: 8px;
-      min-height: 48px;
-      transition: all 0.2s;
+      scroll-margin-top: 96px;
     }
-    .btn-tg-help:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--primary);
-      color: #fff;
-      text-decoration: none;
+    .cta-actions .btn-buy-primary:hover { background: #234fa2; }
+    .cta-actions .btn-tg-help { color: var(--text); text-decoration: underline; text-underline-offset: 4px; }
+    @media (max-width: 600px) {
+      .cta-box { grid-template-columns: 1fr; padding: 16px; gap: 16px; }
     }
     /* Article Navigation footer */
     .article-nav-row {
@@ -406,7 +336,7 @@
     }
   </style>
 </head>
-<body>
+<body data-journal-product-pilot>
 
   <header class="article-header">
     <div class="header-container">
@@ -436,7 +366,7 @@
     </nav>
 
     <div class="article-kicker-row">
-      <span class="category-badge">⚡ Кабель-менеджмент</span>
+      <span class="category-badge">Кабель-менеджмент</span>
       <span class="meta-stat">Время чтения ~2 мин</span>
     </div>
 
@@ -463,25 +393,17 @@
     </article>
 
     <!-- PROMOTIONAL LEADGEN CTA: BUY GEEKNOOK -->
-    <section class="cta-box">
-      <span class="cta-badge">ИНЖЕНЕРНАЯ СИСТЕМА ДЛЯ СТОЛА</span>
-      <h3 class="cta-title">Модули кабель-менеджмента и держатели T-Track</h3>
-      <p class="cta-desc">Подвесные лотки для блоков питания, фрезерованные держатели кабелей и подставки под наушники из анодированного алюминия. Порядок без висящих проводов.</p>
-      <div class="cta-features">
-        <span class="cta-feat">✓ Натуральный массив дуба / ореха</span>
-        <span class="cta-feat">✓ Доставка в ПВЗ СДЭК</span>
-        <span class="cta-feat">✓ Оплата при получении</span>
-        <span class="cta-feat">✓ Гарантия 12 месяцев</span>
-      </div>
-      <div class="cta-actions">
-        <a href="https://geeknook.ru/kabel-menedzhment" class="btn-buy-primary">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" y1="6" x2="21" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
-          Собрать систему кабель-менеджмента (от 1 990 ₽)
-        </a>
-        <a href="https://t.me/geeknook" target="_blank" rel="noopener" class="btn-tg-help">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.52 2.77-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .37z"/></svg>
-          Задать вопрос в Telegram
-        </a>
+    <section class="cta-box" aria-labelledby="kabel-menedzhment-dlya-provodov-product">
+      <img class="cta-photo" src="../images/tild3931-6666-4933-a466-373836393933__1.jpg" alt="" loading="lazy" decoding="async">
+      <div>
+        <p class="cta-dimension">35 × 7,6 × 10,6 см</p>
+        <h2 class="cta-title" id="kabel-menedzhment-dlya-provodov-product">Лоток Cable Organizer</h2>
+        <p class="cta-desc">В лоток помещаются сетевой фильтр и блоки питания. Лоток крепится к задней грани Focus Station.</p>
+        <p class="cta-terms">Доставка в ПВЗ СДЭК · Оплата при получении · Гарантия 6 месяцев</p>
+        <div class="cta-actions">
+          <a href="https://geeknook.ru/?product=cable-organizer" class="btn-buy-primary" id="kabel-menedzhment-dlya-provodov" data-analytics-goal="JOURNAL_CTA_CLICK"> Посмотреть лоток</a>
+          <a href="https://t.me/geeknook" target="_blank" rel="noopener" class="btn-tg-help"> Задать вопрос в Telegram </a>
+        </div>
       </div>
     </section>
 

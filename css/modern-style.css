@@ -15045,7 +15045,14 @@ textarea.input-error {
 .quick-thumb { flex-shrink: 0; }
 .quick-thumb img { width: 100%; height: 100%; object-fit: contain; }
 .quick-gallery-thumbs { overflow-x: auto; padding-block: 4px; }
-.quick-thumb:focus-visible, .qv-spec-details summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+.quick-thumb:focus-visible, .qv-fit-guide summary { cursor: pointer; padding-block: 8px; }
+.qv-fit-guide summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+.qv-stand-comparison { display: grid; gap: 12px; margin-block: 12px; }
+.qv-stand-comparison figure { margin: 0; padding: 12px; border: 1px solid var(--border); border-radius: 8px; }
+.qv-stand-scale { width: calc(var(--stand-length) / 116 * 100%); border-bottom: 1px solid var(--text-muted); }
+.qv-stand-scale img { display: block; width: 100%; height: auto; }
+.qv-stand-comparison figcaption { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; padding-top: 8px; font-size: .875rem; font-variant-numeric: tabular-nums; }
+.qv-spec-details summary:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
 .qv-fit-guide p { margin-top: 8px; color: var(--text-muted); font-size: .875rem; line-height: 1.6; }
 .qv-spec-details summary { cursor: pointer; padding: 12px 0; font-weight: 700; }
 .qv-spec-details { margin-bottom: 16px; }
