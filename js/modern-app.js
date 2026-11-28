@@ -2156,26 +2156,49 @@
     const canCompareStand = product.category === 'boards' &&
       standLengths.every(length => product.options?.lengths?.includes(length));
     const standComparison = canCompareStand ? `
-      <details ontoggle="if(this.open) window.geekNookAnalytics?.reachGoal?.('COMPARE_STAND_SIZES')">
+      <details class="qv-size-guide" ontoggle="if(this.open) window.geekNookAnalytics?.reachGoal?.('COMPARE_STAND_SIZES')">
         <summary><strong>Сравнить 85 и 116 см</strong></summary>
+        <p>Версия 116 см длиннее на 31 см. У обеих подставок высота 9 см и глубина 23 см.</p>
+        <p class="qv-comparison-caption">Визуализация в едином масштабе · Отделка «Орех»</p>
         <div class="qv-stand-comparison">
           ${standLengths.map(length => {
             const size = parseInt(length, 10);
             const variant = GEEKNOOK_DATA.getVariant(product.id, length);
+            const useCase = size === 85
+              ? 'Для одного монитора, если по краям стола нужно оставить больше места.'
+              : 'Если рядом с монитором нужно место для ноутбука или второго экрана.';
             return `
-              <figure>
-                <div class="qv-stand-scale" style="--stand-length:${size}">
-                  <img src="${toAssetUrl('images/focus-station-compare-' + size + '.webp')}" alt="" loading="lazy" decoding="async">
+              <div class="qv-comparison-option">
+                <div class="qv-comparison-studio">
+                  <div class="qv-stand-scale" style="--stand-length:${size}">
+                    <img src="${toAssetUrl('images/focus-station-compare-' + size + '.webp')}" alt="" loading="lazy" decoding="async">
+                    <div class="qv-comparison-ruler" aria-hidden="true"><span>${length}</span></div>
+                  </div>
                 </div>
-                <figcaption><strong>${size} × 9 × 23 см</strong>
-                  ${variant?.price ? `<span>${formatPrice(discountedUnitPrice(variant.price))}</span>` : ''}
-                </figcaption>
-              </figure>
+                <div class="qv-comparison-info">
+                  <div class="qv-comparison-price"><strong>${size} × 9 × 23 см</strong>
+                    ${variant?.price ? `<span><del aria-label="Цена до акции ${formatPrice(variant.price)}">${formatPrice(variant.price)}</del> <strong>${formatPrice(discountedUnitPrice(variant.price))}</strong></span>` : ''}
+                  </div>
+                  <p>${useCase}</p>
+                  <button type="button" class="btn-secondary qv-compare-select" data-size="${length}">Выбрать ${length}</button>
+                </div>
+              </div>
             `;
           }).join('')}
         </div>
-        <p>Визуализация в одном масштабе, отделка «Орех». Версия 116 см длиннее на 31 см. Цены показаны с акцией сайта.</p>
-        <p>Измерьте свободную ширину столешницы и основание монитора целиком. Все точки опоры должны помещаться на полке.</p>
+        <p>Перед выбором измерьте свободный участок столешницы и основания экранов. Положение опор на визуализации условное.</p>
+        <h3>Focus Station на столе</h3>
+        <div class="qv-comparison-photos">
+          <figure>
+            <img src="${toAssetUrl('images/tild3163-3433-4266-a564-373463643232__dsc_3411_.jpg')}" alt="" loading="lazy" decoding="async">
+            <figcaption>Монитор и ноутбук на рабочем месте</figcaption>
+          </figure>
+          <figure>
+            <img src="${toAssetUrl('images/tild6566-3439-4264-a237-633566656531__6.jpg')}" alt="" loading="lazy" decoding="async">
+            <figcaption>Кромка панели и крепление держателя</figcaption>
+          </figure>
+        </div>
+        <p>Фирменные фотографии. Аксессуары показаны как пример оформления рабочего места.</p>
       </details>
     ` : '';
 
@@ -2213,13 +2236,14 @@
           <p style="font-size:0.9375rem;line-height:1.65;color:var(--text-main);margin-bottom:20px;">${product.category === 'boards' ? 'Полка для монитора высотой 9 см. Держатели для устройств можно закрепить в верхнем и нижнем пазах T-Track.' : (product.fullDescr || product.shortDescr || '')}</p>
 
           ${optionsHtml}
+          ${canCompareStand ? `<div class="qv-fit-guide">${standComparison}</div>` : ''}
 
           <div class="qv-purchase-actions">
             <button class="btn-checkout" onclick="window.geekNookApp.addFromQuickView('${product.id}')">Добавить в корзину</button>
             <button class="btn-secondary" onclick="window.geekNookApp.openQuickBuy('${product.id}')">Купить в 1 клик</button>
           </div>
 
-          ${product.category === 'boards' ? `<div class="qv-fit-guide">${standComparison}<p>Держатели T-Track и коврик выбираются отдельно.</p></div>` : ''}
+          ${product.category === 'boards' ? `<div class="qv-fit-guide"><p>Держатели T-Track и коврик выбираются отдельно.</p></div>` : ''}
 
           <p class="qv-order-terms">Бесплатно в ПВЗ СДЭК. Осмотрите товар до оплаты. <a href="/legal#warranty" onclick="window.geekNookApp.openLegalModal('warranty'); return false;">Гарантия и возврат</a></p>
           <details class="qv-spec-details" open><summary>Габариты и характеристики</summary><table class="specs-table">
@@ -2255,6 +2279,17 @@
       });
     };
     showVariantStock(defaultOption);
+
+    content.querySelectorAll('.qv-compare-select').forEach(button => {
+      button.addEventListener('click', () => {
+        const option = [...content.querySelectorAll('.option-chip')].find(chip => chip.dataset.val === button.dataset.size);
+        if (!option) return;
+        option.click();
+        button.closest('details').open = false;
+        option.focus();
+        window.geekNookAnalytics?.reachGoal?.('COMPARE_STAND_SIZE_SELECT', { id: product.id, option: option.dataset.val });
+      });
+    });
 
     // Dynamic Option Chips Click Handler (Price & Specs Switching)
     content.querySelectorAll('.option-chip').forEach(btn => {
@@ -2411,7 +2446,7 @@
     const finishesWrap = document.getElementById('modalConfigFinishes');
     if (finishesWrap) {
       finishesWrap.innerHTML = GEEKNOOK_DATA.configurator.finishes.map(f => `
-        <div class="finish-option ${f.id === state.config.finishId ? 'active' : ''}" 
+        <div class="finish-option ${f.id === state.config.finishId ? 'active' : ''}"
              onclick="window.geekNookApp.selectConfigFinish('${f.id}')"
              style="border:2px solid ${f.id === state.config.finishId ? 'var(--primary)' : 'var(--border)'};border-radius:8px;padding:12px;cursor:pointer;background:var(--surface-card);color:var(--text-main);transition:all var(--transition-fast);">
           <div style="width:24px;height:24px;border-radius:50%;background:${f.hex};margin-bottom:8px;border:1px solid rgba(128,128,128,0.3);"></div>
@@ -2427,7 +2462,7 @@
         const shelfId = `focus-station-${finish.id}`;
         const shelfStock = GEEKNOOK_DATA.stock?.getVariantStock ? GEEKNOOK_DATA.stock.getVariantStock(shelfId, `${l.id} см`) : 1;
         return `
-        <div class="length-btn ${l.id === state.config.lengthId ? 'active' : ''} ${shelfStock === 0 ? 'out-of-stock' : ''}" 
+        <div class="length-btn ${l.id === state.config.lengthId ? 'active' : ''} ${shelfStock === 0 ? 'out-of-stock' : ''}"
              onclick="window.geekNookApp.selectConfigLength('${l.id}')"
              style="border:2px solid ${l.id === state.config.lengthId ? 'var(--primary)' : 'var(--border)'};border-radius:8px;padding:12px;cursor:pointer;background:var(--surface-card);color:var(--text-main);transition:all var(--transition-fast);${shelfStock === 0 ? 'opacity:0.55;' : ''}">
           <div style="font-weight:800;font-size:0.9375rem;">${l.title}</div>
@@ -2445,7 +2480,7 @@
         const addonStock = GEEKNOOK_DATA.stock?.getVariantStock ? GEEKNOOK_DATA.stock.getVariantStock(a.id, '') : 1;
         const isSelected = addonStock > 0 && state.config.selectedAddonIds.includes(a.id);
         return `
-          <div class="addon-check-item ${isSelected ? 'active' : ''} ${addonStock === 0 ? 'out-of-stock' : ''}" 
+          <div class="addon-check-item ${isSelected ? 'active' : ''} ${addonStock === 0 ? 'out-of-stock' : ''}"
                onclick="${addonStock === 0 ? "window.geekNookApp.showToast('Модуль временно закончился на складе', 'error')" : `window.geekNookApp.toggleConfigAddon('${a.id}')`}"
                style="display:flex;align-items:center;justify-content:space-between;border:1px solid ${isSelected ? 'var(--primary)' : 'var(--border)'};border-radius:8px;padding:10px 14px;cursor:${addonStock === 0 ? 'not-allowed' : 'pointer'};background:var(--surface-card);color:var(--text-main);margin-bottom:8px;transition:all var(--transition-fast);${addonStock === 0 ? 'opacity:0.5;' : ''}">
             <div style="display:flex;align-items:center;gap:12px;">
